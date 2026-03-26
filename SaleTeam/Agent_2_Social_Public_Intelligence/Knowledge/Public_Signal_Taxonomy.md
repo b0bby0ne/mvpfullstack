@@ -24,6 +24,29 @@
   - nhắc tới đối tác
   - câu chuyện khách hàng
 
+## Nhóm tín hiệu theo nền tảng
+- LinkedIn:
+  - job change
+  - speaking / event
+  - product launch
+  - hiring update
+  - company milestone
+- Facebook:
+  - campaign / brand push
+  - community engagement
+  - page CTA thay đổi
+  - event announcement
+- X:
+  - hot take / quan điểm nhanh
+  - repost network
+  - phản ứng với tin tức ngành
+  - thread chiến lược
+- Instagram:
+  - brand narrative
+  - visual campaign
+  - founder lifestyle / speaking presence
+  - event / booth / field activity
+
 ## Chất lượng tín hiệu
 - Mạnh: được công ty hoặc cá nhân nói trực tiếp
 - Trung bình: được suy ra từ hoạt động công khai lặp lại

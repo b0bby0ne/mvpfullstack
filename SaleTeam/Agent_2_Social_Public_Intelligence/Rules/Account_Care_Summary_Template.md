@@ -1,6 +1,6 @@
 # Quy tắc: Mẫu tóm tắt chăm sóc cấp account
 
-Mỗi `Mã bản ghi` trong `02_Public_Customer_Intelligence.md` nên có một phần tóm tắt cấp account sau các tín hiệu chi tiết.
+Mỗi đối tượng nghiên cứu trong `02_Public_Customer_Intelligence.md` nên có một phần tóm tắt cấp account sau các tín hiệu chi tiết.
 
 ```md
 ### Tóm tắt cấp account

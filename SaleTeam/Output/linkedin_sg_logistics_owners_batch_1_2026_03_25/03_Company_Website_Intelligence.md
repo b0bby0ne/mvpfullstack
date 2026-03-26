@@ -1,0 +1,653 @@
+# 03_Company_Website_Intelligence - linkedin_sg_logistics_owners_batch_1_2026_03_25
+
+## Bối cảnh
+- Danh sách đầu vào: `01_Lead_List.md`
+- Nguồn vào: handoff từ Agent 1
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: làm giàu website công ty cho 14 lead logistics tại Singapore
+- Chỉ định cụ thể của người dùng:
+  - thu thập thông tin từ website công ty của từng lead
+  - ưu tiên nội dung có thể dùng tiếp cho sales enrichment
+- Mức output / độ sâu mong muốn: website intelligence ở cấp account
+- Ghi chú:
+  - 14 lead hiện tương ứng 9 công ty khác nhau
+  - với các website render hạn chế trong search index, bản ghi được gắn `Quét hạn chế` và có ghi fallback
+
+## Bản ghi website 01
+- Mã đối tượng website: `WEB-LI-SG-001`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-001`, `LEAD-LI-SG-002`
+- Tên bản ghi gốc: Alvin Ea, Sebastian Shen
+- Công ty: Haulio
+- Domain: `https://www.haulio.io`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu rõ mô tả công ty, sản phẩm, ICP và tín hiệu tăng trưởng
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng homepage, about page, trang `For Shippers`, career page và blog công ty
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - là digital haulier tại Singapore, tập trung số hóa haulage container first-mile
+  - mô tả mình là Singapore’s largest và SEA’s fastest-growing digital haulier
+  - phục vụ cộng đồng trucking / haulage và shipper có nhu cầu vận tải container
+- Coverage trang:
+  - Homepage: Có
+  - About: Có
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Hạn chế
+  - Careers: Có
+  - Blog / Newsroom: Có
+  - Contact / Locations: Có
+- Baseline website:
+  - Headline chính: `The Future of Haulage is Here`
+  - CTA chính: `Learn More`
+  - Mô tả công ty ngắn: nền tảng container trucking số hóa kết nối global trade với local first-mile transportation across ASEAN
+  - Nhóm sản phẩm / giải pháp chính:
+    - container trucking services
+    - customer portal quản lý booking
+    - công cụ cho shipper / haulier
+  - Dấu hiệu ICP nổi bật:
+    - shippers dùng container
+    - trucking / haulage companies
+    - first-mile logistics ecosystem
+  - Dấu hiệu GTM nổi bật:
+    - nhấn mạnh alliance 800 trucking companies
+    - 10,000 first-mile vehicles
+    - 2.3 million TEUs annually
+  - Dấu hiệu tăng trưởng nổi bật:
+    - đầu tư từ Heliconia / Temasek
+    - mở rộng Singapore, Indonesia, Thailand
+- Tín hiệu từ website:
+  - website nhấn rất mạnh vào collaboration và digitizing haulage workflows
+  - sản phẩm cho shipper xoá pain point quản lý trucking thủ công
+  - company blog và about page cho thấy định vị là infrastructure layer cho haulage community
+  - trang đã khai thác sâu: homepage, about, for shippers, for hauliers, HOP, HCS, customer portal, careers, blog
+  - dấu hiệu buying journey: nhiều CTA kiểu `Learn More`, `Contact`, `Sign up as a Haulier`, `Get in touch`; chưa thấy pricing public, thiên về demo / tư vấn
+  - proof points / social proof: 800 trucking companies, 10,000 first-mile vehicles, 2.3 million TEUs annually, outreach hơn 80% hauliers tại Singapore, đầu tư từ Heliconia / Temasek
+  - tín hiệu sales sử dụng được: Haulio bán theo 2 mặt rõ ràng `shipper` và `haulier`; ngoài operations còn mở rộng sang leasing, payments và early payment cho đối tác vận tải
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: hạ tầng số cho container haulage first-mile
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: visibility, digital booking, ecosystem collaboration
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: network size lớn và narrative regional expansion
+  - Rủi ro hoặc khoảng trống thông tin: chưa thấy pricing và case study chi tiết
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.haulio.io/`
+  - `https://haulio.io/about-us/`
+  - `https://www.haulio.io/for-shippers/`
+  - `https://www.haulio.io/career/`
+  - `https://www.haulio.io/blog/haulio-series-a-heliconia/`
+
+## Bản ghi website 02
+- Mã đối tượng website: `WEB-LI-SG-002`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-003`
+- Tên bản ghi gốc: Kevin Zhang
+- Công ty: Inteluck
+- Domain: `https://www.inteluck.com`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: xác định định vị sản phẩm và ICP
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: website public render hạn chế trong search index; dùng public company description gắn với domain chính và funding announcement
+- Trạng thái đầu vào: Quét hạn chế
+- Trạng thái bàn giao từ Agent 1: Đủ để quét hạn chế
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - nền tảng logistics data-driven end-to-end tại Đông Nam Á
+  - HQ tại Singapore, hoạt động ở Philippines, Thailand và các thị trường khác
+  - phục vụ enterprise cần tối ưu logistics cost và supplier network
+- Coverage trang:
+  - Homepage: Hạn chế
+  - About: Hạn chế
+  - Product / Solution: Hạn chế
+  - Pricing: Chưa thấy
+  - Customer / Case study: Chưa thấy
+  - Careers: Chưa thấy
+  - Blog / Newsroom: Hạn chế
+  - Contact / Locations: Hạn chế
+- Baseline website:
+  - Headline chính: dữ liệu crawl hạn chế; public description lặp lại định vị `technology-driven logistics platform`
+  - CTA chính: Chưa đủ dữ liệu
+  - Mô tả công ty ngắn: nền tảng logistics tối ưu cost và efficiency bằng data, analytics và supplier network
+  - Nhóm sản phẩm / giải pháp chính:
+    - FTL transportation
+    - warehouse management
+    - freight forwarding
+    - cross-border / bespoke supply chain services
+  - Dấu hiệu ICP nổi bật:
+    - telecom
+    - FMCG
+    - manufacturing
+    - e-commerce
+    - enterprise shippers
+  - Dấu hiệu GTM nổi bật:
+    - technology + analytics
+    - lower logistics cost
+    - supplier partner network
+  - Dấu hiệu tăng trưởng nổi bật:
+    - 250+ companies served
+    - 5,000+ supplier partners
+    - Singapore HQ với mở rộng regional
+- Tín hiệu từ website:
+  - định vị rõ là data-driven logistics platform
+  - breadth giải pháp rộng hơn startup point solution thông thường
+  - phù hợp nhóm enterprise logistics ops
+  - trang đã khai thác sâu: official front page ở mức index công khai hạn chế; bổ sung bằng official domain title và public company descriptions gắn với domain
+  - dấu hiệu buying journey: website public hiện không lộ pricing; thiên về enterprise / consultative sales, cần contact-led journey
+  - proof points / social proof: 250+ companies served, 5,000+ supplier partners, phủ nhiều vertical như telecom, FMCG, manufacturing, e-commerce
+  - tín hiệu sales sử dụng được: account này phù hợp angle `cost-out + control + regional execution`, nhưng nếu cần product-level detail sâu hơn thì phải có một vòng quét trực tiếp trên site render JS
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: value proposition đặt trên data + cost efficiency + end-to-end services
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: optimization, analytics, regional logistics
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: network scale và regional expansion
+  - Rủi ro hoặc khoảng trống thông tin: website crawl hạn chế; thiếu case study trực tiếp từ site
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.inteluck.com`
+  - `https://en.prnasia.com/releases/apac/inteluck-technology-driven-logistics-platform-in-southeast-asia-announced-15-million-series-b-funding-349857.shtml`
+
+## Bản ghi website 03
+- Mã đối tượng website: `WEB-LI-SG-003`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-004`
+- Tên bản ghi gốc: Nidhi Gupta
+- Công ty: Portcast
+- Domain: `https://www.portcast.io`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: xác định message, sản phẩm và growth signals
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng homepage, about us và careers
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - nền tảng real-time transportation visibility và predictive insights
+  - dùng dữ liệu và AI cho ocean supply chains
+  - founded in Singapore, team global
+- Coverage trang:
+  - Homepage: Có
+  - About: Có
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Hạn chế
+  - Careers: Có
+  - Blog / Newsroom: Có
+  - Contact / Locations: Có
+- Baseline website:
+  - Headline chính: `Real-Time Transportation Visibility and Predictive Insights`
+  - CTA chính: `Get Started`
+  - Mô tả công ty ngắn: trustworthy data visibility cho supply chains, nhất là ocean logistics
+  - Nhóm sản phẩm / giải pháp chính:
+    - real-time container tracking
+    - predictive visibility
+    - demand forecasting
+  - Dấu hiệu ICP nổi bật:
+    - shippers
+    - freight forwarders
+    - logistics tech providers
+    - shipping lines / air cargo operators
+  - Dấu hiệu GTM nổi bật:
+    - 70+ data sources
+    - 5,000 vessels
+    - 12,000 ports
+    - 100+ carriers & NVOCCs
+  - Dấu hiệu tăng trưởng nổi bật:
+    - remote-first, 10+ locations
+    - AI / data science positioning mạnh
+- Tín hiệu từ website:
+  - message rất rõ về trustworthy data và AI / predictive ETA
+  - blog liên tục cập nhật congestion, risk management, trade disruption
+  - security messaging mạnh: ISO 27001, VAPT, AES-256
+  - trang đã khai thác sâu: homepage, about, careers, predictive visibility page, blog award / recognition pages
+  - dấu hiệu buying journey: CTA `Get Started`, `Get in Touch`, `Search for Jobs`; nhiều page solution theo problem-solution với benchmark định lượng
+  - proof points / social proof: predicted ETA thường tốt hơn khoảng 30% trước 2-4 tuần, 70+ data sources, 5,000 vessels, 12,000 ports, 100+ carriers & NVOCCs, award 2025 SDCE
+  - tín hiệu sales sử dụng được: buyer likely phản ứng tốt với use case delay prediction, congestion root-cause và proactive communication hơn là generic visibility pitch
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: AI / predictive visibility cho ocean supply chain
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: trusted visibility, risk mitigation, sustainability, AI
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: content velocity cao, global team, data moat
+  - Rủi ro hoặc khoảng trống thông tin: chưa thấy pricing và customer stories cụ thể trên pages đã xem
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.portcast.io/`
+  - `https://www.portcast.io/about-us`
+  - `https://www.portcast.io/careers`
+
+## Bản ghi website 04
+- Mã đối tượng website: `WEB-LI-SG-004`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-005`
+- Tên bản ghi gốc: Wiebe Helder
+- Công ty: Cargobase
+- Domain: `https://www.cargobase.com`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: xác định signal về TMS / freight procurement
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng blog, help docs và chứng chỉ public do official domain phát hành
+- Trạng thái đầu vào: Quét hạn chế
+- Trạng thái bàn giao từ Agent 1: Đủ để quét hạn chế
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - logistics technology platform / cloud-based TMS cho enterprise shippers
+  - trọng tâm vào spot freight automation, shipment execution, visibility và invoice audit
+  - đặt mạnh vào compliance / security
+- Coverage trang:
+  - Homepage: Hạn chế
+  - About: Chưa thấy
+  - Product / Solution: Hạn chế
+  - Pricing: Chưa thấy
+  - Customer / Case study: Có
+  - Careers: Chưa thấy
+  - Blog / Newsroom: Có
+  - Contact / Locations: Có trong tài liệu chứng chỉ
+- Baseline website:
+  - Headline chính: chưa thu được trực tiếp từ homepage; official artifacts gắn mạnh với `spot freight automation` và `transportation management system`
+  - CTA chính: Chưa đủ dữ liệu
+  - Mô tả công ty ngắn: TMS và freight procurement platform cho enterprise shippers
+  - Nhóm sản phẩm / giải pháp chính:
+    - order management
+    - rate management
+    - shipment execution
+    - visibility & tracking
+    - invoice audit
+    - analytics
+    - carbon visibility
+  - Dấu hiệu ICP nổi bật:
+    - enterprise shippers
+    - automotive
+    - aviation
+    - semiconductor
+    - energy / machinery
+  - Dấu hiệu GTM nổi bật:
+    - cost savings
+    - control tower visibility
+    - security / compliance
+  - Dấu hiệu tăng trưởng nổi bật:
+    - case studies với 26% cost reduction
+    - SOC 2, ISO 27001
+- Tín hiệu từ website:
+  - content và case studies nhấn mạnh procurement automation và cost savings
+  - product surface rộng hơn point solution, thiên về enterprise process control
+  - security / compliance là trust lever mạnh
+  - trang đã khai thác sâu: blog, help center, testimonials, provider onboarding docs, mobile app docs, carrier directory
+  - dấu hiệu buying journey: không public pricing upfront; buying motion thiên onboarding với shipper + provider network, training và integration support
+  - proof points / social proof: case studies nêu 26%-27% savings, testimonials từ Continental và nhiều shipper, 1,200+ LSPs trên platform, industries page phủ automotive, aviation, semiconductor, energy
+  - tín hiệu sales sử dụng được: account này nhạy với `spot freight automation`, `private provider pool`, `invoice audit`, `ERP integration`, tức pain point enterprise vận hành hơn là growth narrative
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: automation of spot freight procurement và enterprise TMS control
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: freight cost, resilience, visibility, compliance
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: blog đều, case study rõ, certs mạnh
+  - Rủi ro hoặc khoảng trống thông tin: homepage / about crawl hạn chế
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.cargobase.com/blog`
+  - `https://assets.cargobase.com/Cargobase_ISO_27001_Certificate_May_2025_1_c6d65a2bfe.pdf?updated_at=2025-05-22T05%3A13%3A46.609Z`
+  - `https://www.prnewswire.com/apac/news-releases/cargobase-secures-soc-2-compliance-for-leading-spot-freight-automation--transportation-management-system-tms-302309324.html`
+
+## Bản ghi website 05
+- Mã đối tượng website: `WEB-LI-SG-005`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-006`
+- Tên bản ghi gốc: Glenn Lai
+- Công ty: FR8Labs
+- Domain: `https://fr8labs.co`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu định vị và ICP của startup freight software
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: marketing site crawl hạn chế; dùng public company artifacts và job page gắn trực tiếp với FR8Labs
+- Trạng thái đầu vào: Quét hạn chế
+- Trạng thái bàn giao từ Agent 1: Đủ để quét hạn chế
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - startup logistics software digitizing freight forwarding
+  - tập trung SMB và mid-market forwarders tại ASEAN / Asia
+  - định vị là operating system / freight management system với customer portal và GenAI chat
+- Coverage trang:
+  - Homepage: Hạn chế
+  - About: Chưa thấy
+  - Product / Solution: Hạn chế
+  - Pricing: Chưa thấy
+  - Customer / Case study: Hạn chế
+  - Careers: Hạn chế
+  - Blog / Newsroom: Chưa thấy
+  - Contact / Locations: Hạn chế
+- Baseline website:
+  - Headline chính: dữ liệu crawl trực tiếp hạn chế
+  - CTA chính: Chưa đủ dữ liệu
+  - Mô tả công ty ngắn: giải pháp digital-first cho freight forwarders muốn chuyển thành digital forwarders
+  - Nhóm sản phẩm / giải pháp chính:
+    - cloud-based freight management system
+    - accounting back-end
+    - customer portal
+    - real-time shipment visibility
+    - GenAI-enabled WhatsApp chat
+    - quoting systems
+  - Dấu hiệu ICP nổi bật:
+    - SMB / mid-market forwarders
+    - freight forwarders ở Singapore, Malaysia, Indonesia, Taiwan, Australia
+  - Dấu hiệu GTM nổi bật:
+    - digitizing freight forwarding
+    - revenue growth via digital engagement
+    - AI-enabled customer communication
+  - Dấu hiệu tăng trưởng nổi bật:
+    - 50+ customers
+    - seed funding
+    - expanding across Asia
+- Tín hiệu từ website:
+  - định vị rất rõ vào freight forwarders, không nhắm chung chung mọi logistics player
+  - AI / WhatsApp / customer portal được dùng như wedge GTM
+  - narrative hướng growth + retention chứ không chỉ ops
+  - trang đã khai thác sâu: homepage ở mức hạn chế, tag pages chính thức, case-study teasers, InvoiceNow article, public job / ERP login artifacts
+  - dấu hiệu buying journey: chưa thấy pricing public; CTA chủ yếu qua contact email / demo-led; có hook mạnh qua InvoiceNow và AI-enabled customer communication
+  - proof points / social proof: 50+ customers, use case teasers với ADC Shipping, WPC Logistics, PT Asia Grow, InvoiceNow readiness, Singapore compliance angle
+  - tín hiệu sales sử dụng được: FR8Labs bán rất sát freight forwarder workflow; nội dung website nghiêng về accounting, visibility, customer portal và digital engagement hơn là pure transport execution
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: operating system cho digital freight forwarders
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: digitization, customer engagement, AI workflow
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: early traction và expansion
+  - Rủi ro hoặc khoảng trống thông tin: crawl chính website còn hạn chế
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://fr8labs.co/`
+  - `https://sg.linkedin.com/company/fr8labs`
+  - `https://techcrunch.com/2023/11/29/fr8labs/`
+  - `https://my.linkedin.com/jobs/view/customer-success-product-operations-specialist-at-fr8labs-4325816287`
+
+## Bản ghi website 06
+- Mã đối tượng website: `WEB-LI-SG-006`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-007`, `LEAD-LI-SG-008`
+- Tên bản ghi gốc: Lai Chang Wen, Shaun Chong
+- Công ty: Ninja Van
+- Domain: `https://www.ninjavan.co`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu breadth giải pháp và scale khu vực
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng homepage SG, about us SG và about pages khu vực khi cần
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - công ty logistics tech-enabled, launched in Singapore năm 2014
+  - vận hành ở 6 thị trường SEA
+  - breadth solution rất rộng từ last-mile đến freight forwarding và warehousing
+- Coverage trang:
+  - Homepage: Có
+  - About: Có
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Có
+  - Careers: Có
+  - Blog / Newsroom: Có
+  - Contact / Locations: Có
+- Baseline website:
+  - Headline chính: `Singapore's leading courier & logistics partner`
+  - CTA chính: `Track`, `Get a quote for your large enterprise`
+  - Mô tả công ty ngắn: comprehensive logistics partner cho e-commerce, SMEs và enterprises
+  - Nhóm sản phẩm / giải pháp chính:
+    - cold chain delivery
+    - B2B delivery
+    - last mile parcel delivery
+    - fulfilment & warehousing
+    - international parcel delivery
+    - freight forwarding
+  - Dấu hiệu ICP nổi bật:
+    - online sellers
+    - SMEs
+    - enterprises
+    - e-commerce businesses across SEA
+  - Dấu hiệu GTM nổi bật:
+    - nearly 2,000,000 shippers across SEA
+    - enterprise quote flow
+    - sector-based solution pages
+  - Dấu hiệu tăng trưởng nổi bật:
+    - six SEA markets
+    - ISO 27001 since February 2024
+    - breadth sản phẩm rất lớn
+- Tín hiệu từ website:
+  - đang nhấn từ courier brand sang broader supply chain / logistics partner
+  - messaging rõ theo segment online sellers / SMEs / enterprises
+  - chứng chỉ và regional scale là trust lever quan trọng
+  - trang đã khai thác sâu: SG homepage, SG about, SG service pages, region about pages, certifications / culture sections
+  - dấu hiệu buying journey: CTA rõ và đa tầng như `Track`, `Get a quote`, `Contact Us`, `Subscribe`; motion bán hàng chia theo segment seller / SME / enterprise
+  - proof points / social proof: gần 2,000,000 shippers, 6 thị trường SEA, founders hiển thị rõ, ISO/IEC 27001, breadth service từ cold chain đến freight forwarding và warehousing
+  - tín hiệu sales sử dụng được: Ninja Van đang positioned như logistics stack rộng cho SEA; nếu outreach thì nên chọn đúng line of business thay vì pitch chung cho toàn account
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: broad logistics stack + SEA scale
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: enterprise logistics breadth, regional reliability, e-commerce logistics
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: solution stack mở rộng beyond last-mile
+  - Rủi ro hoặc khoảng trống thông tin: chưa thấy pricing và buying journey cụ thể cho nhiều solution
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.ninjavan.co/en-sg/`
+  - `https://www.ninjavan.co/en-sg/company/about-us`
+  - `https://www.ninjavan.co/en-sg/social-sellers`
+
+## Bản ghi website 07
+- Mã đối tượng website: `WEB-LI-SG-007`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-009`
+- Tên bản ghi gốc: Constantin Robertz
+- Công ty: Locad
+- Domain: `https://golocad.com`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu message omnichannel fulfillment và network
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng about us và omnichannel fulfillment page
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - logistics engine cho e-commerce brands với cloud supply chain
+  - giúp tự động store, pack, ship, track across APAC, GCC và USA
+  - sync inventory và orchestration network warehouse + carrier
+- Coverage trang:
+  - Homepage: Hạn chế
+  - About: Có
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Hạn chế
+  - Careers: Chưa thấy
+  - Blog / Newsroom: Có
+  - Contact / Locations: Có
+- Baseline website:
+  - Headline chính: `Locad is the logistics engine enabling e-commerce brands with a cloud supply chain`
+  - CTA chính: `Get started` / contact oriented
+  - Mô tả công ty ngắn: omnichannel logistics engine cho brands tăng trưởng
+  - Nhóm sản phẩm / giải pháp chính:
+    - cloud supply chain
+    - order fulfillment
+    - inventory sync
+    - distributed warehousing
+    - carrier network orchestration
+  - Dấu hiệu ICP nổi bật:
+    - e-commerce brands
+    - merchants bán omnichannel
+  - Dấu hiệu GTM nổi bật:
+    - hundreds of brands
+    - one integrated system
+    - faster shipping at lower cost
+  - Dấu hiệu tăng trưởng nổi bật:
+    - coverage APAC, GCC, USA
+    - network expansion
+- Tín hiệu từ website:
+  - message growth + expansion cho brands mạnh hơn tone thuần logistics
+  - omnichannel fulfillment là wedge nội dung chính
+  - định vị như infrastructure layer hơn là 3PL thuần túy
+  - trang đã khai thác sâu: about us, omnichannel fulfillment page, public resource pages trên official domain
+  - dấu hiệu buying journey: CTA `Get started` / contact-led; selling motion nhắm trực tiếp e-commerce brands cần scale multi-market
+  - proof points / social proof: hundreds of brands, integrated network of warehouses and carriers, APAC + GCC + USA coverage, faster shipping at lower cost
+  - tín hiệu sales sử dụng được: Locad phù hợp angle `brand growth through logistics infrastructure`, đặc biệt cho merchants cần distributed inventory và omnichannel fulfillment
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: cloud supply chain for omnichannel brands
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: brand growth, distributed fulfillment, integrated system
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: global coverage beyond SEA
+  - Rủi ro hoặc khoảng trống thông tin: chưa thấy pricing và deep case studies trên pages đã xem
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://golocad.com/about-us/`
+  - `https://golocad.com/fulfillment/omnichannel-fulfillment/`
+
+## Bản ghi website 08
+- Mã đối tượng website: `WEB-LI-SG-008`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-010`, `LEAD-LI-SG-011`, `LEAD-LI-SG-012`
+- Tên bản ghi gốc: Vaibhav Dabhade, Julien Juttet, Abhimanyu Kashikar
+- Công ty: Anchanto
+- Domain: `https://anchanto.com`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu solution map và ICP
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng homepage / solutions / leadership pages theo các locale
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - nền tảng e-commerce và supply chain software
+  - target cả brands lẫn logistics service providers
+  - website trình bày solution landscape rất bài bản theo use case
+- Coverage trang:
+  - Homepage: Có
+  - About: Hạn chế
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Hạn chế
+  - Careers: Chưa thấy
+  - Blog / Newsroom: Hạn chế
+  - Contact / Locations: Hạn chế
+- Baseline website:
+  - Headline chính: `The finest strategies are enabled by the strongest solutions`
+  - CTA chính: `Learn more`
+  - Mô tả công ty ngắn: SaaS suite cho e-commerce và supply chain operations
+  - Nhóm sản phẩm / giải pháp chính:
+    - enterprise integrations
+    - order lifecycle management
+    - inventory management
+    - catalogue / listing management
+    - pricing & promotions
+    - digital shelf analytics
+    - warehouse management efficiency
+    - fulfilment cost reduction
+    - delivery experience management
+    - omnichannel retailing
+    - onboarding and channel integration
+  - Dấu hiệu ICP nổi bật:
+    - enterprise operations
+    - brands
+    - logistics service providers
+    - omnichannel retailers
+  - Dấu hiệu GTM nổi bật:
+    - solution-oriented selling theo 11 use cases
+    - trusted by named brands và logistics companies
+  - Dấu hiệu tăng trưởng nổi bật:
+    - breadth solution suite lớn
+    - international footprint nhiều locale
+- Tín hiệu từ website:
+  - định vị rõ như enterprise suite hơn là single product
+  - nhiều tín hiệu hợp tác với brands lớn và 3PL / logistics names
+  - ngôn ngữ website hợp với buyer enterprise transformation
+  - trang đã khai thác sâu: homepage, solutions overview, delivery experience management page, leadership page, resource / case-study modules
+  - dấu hiệu buying journey: CTA `Learn more`, `Let's talk`, FAQ và case studies dày; rõ motion solution-selling hơn là product-led trial
+  - proof points / social proof: 13 years market presence, nhiều logo như DPD, Fossil, Bosch, Lazada, Rhenus Logistics, Ninja Van; DEM page nhấn giảm WISMO và tăng CLV
+  - tín hiệu sales sử dụng được: Anchanto bán như transformation suite cho commerce ops; approach tốt nhất là đi vào use case cụ thể như delivery experience, warehouse efficiency hoặc omnichannel
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: enterprise SaaS suite cho e-commerce + supply chain ops
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: integrations, omnichannel, warehouse / fulfilment efficiency
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: solution breadth và global localization
+  - Rủi ro hoặc khoảng trống thông tin: about page tổng quát chưa mạnh bằng solution pages
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://anchanto.com/`
+  - `https://anchanto.com/solutions/`
+  - `https://anchanto.com/en-id/our-leadership/`
+
+## Bản ghi website 09
+- Mã đối tượng website: `WEB-LI-SG-009`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-013`, `LEAD-LI-SG-014`
+- Tên bản ghi gốc: Arne Jeroschewski, Dana von der Heide
+- Công ty: Parcel Perform
+- Domain: `https://www.parcelperform.com`
+- Ngày xem: 2026-03-25
+- Mục tiêu nghiên cứu: hiểu message AI commerce và delivery experience
+- Sitemap đã dùng: Chưa truy cập trực tiếp
+- Ghi chú fallback nếu không có sitemap: dùng homepage, about us và product pages
+- Trạng thái đầu vào: Quét ngay
+- Trạng thái bàn giao từ Agent 1: Đủ để quét ngay
+- Trạng thái baseline: Tạo mới trong run này
+- Ngày tạo baseline: 2026-03-25
+- Ngày cập nhật baseline gần nhất: 2026-03-25
+- Tóm tắt doanh nghiệp:
+  - AI Delivery Experience Platform cho e-commerce
+  - đang reposition rất mạnh sang AI commerce
+  - phạm vi từ checkout, post-purchase, returns đến logistics intelligence
+- Coverage trang:
+  - Homepage: Có
+  - About: Có
+  - Product / Solution: Có
+  - Pricing: Chưa thấy
+  - Customer / Case study: Có
+  - Careers: Hạn chế
+  - Blog / Newsroom: Hạn chế
+  - Contact / Locations: Có
+- Baseline website:
+  - Headline chính: `The Delivery Experience Platform that gets you AI-Commerce ready`
+  - CTA chính: `Get a demo`
+  - Mô tả công ty ngắn: unified AI-first data platform để biến delivery performance thành AI commerce advantage
+  - Nhóm sản phẩm / giải pháp chính:
+    - AI Commerce Visibility
+    - AI Decision Intelligence
+    - Post-Purchase Experience
+    - Checkout Experience
+    - Returns Experience
+    - Logistics Experience
+  - Dấu hiệu ICP nổi bật:
+    - e-commerce brands
+    - marketplaces
+    - logistics solutions providers
+  - Dấu hiệu GTM nổi bật:
+    - 100bn parcel updates / year
+    - 1,100+ global carrier integrations
+    - 160+ countries covered
+    - 3,000+ customers
+    - 180 employees / 5 offices
+  - Dấu hiệu tăng trưởng nổi bật:
+    - AI-first repositioning rất rõ
+    - narrative mới gắn trực tiếp với ChatGPT / Perplexity / Gemini
+- Tín hiệu từ website:
+  - website đã chuyển rất mạnh sang narrative AI commerce, không còn chỉ là post-purchase software
+  - trust / recommendation / visibility trên AI shopping engine là message trung tâm
+  - product breadth sâu và data moat cực rõ
+  - trang đã khai thác sâu: homepage, about us, checkout experience, logistics experience, returns experience, product cross-links
+  - dấu hiệu buying journey: CTA `Book a Demo`, `Get Started`, `Learn More`; rất demo-led và solution-page-led, dùng success stories dày để đẩy conversion
+  - proof points / social proof: 3,000+ customers, 1,100+ carriers, 160+ countries, 700,000+ PUDO locations, 100bn parcel updates yearly, named references như Nespresso, TikTok, flaconi
+  - tín hiệu sales sử dụng được: Parcel Perform đang bán ở level strategic narrative `AI commerce`; outreach nên map vào một wedge cụ thể như checkout EDD, logistics cost audit hoặc returns automation thay vì pitch toàn platform
+- Tóm tắt cấp account:
+  - Tín hiệu website đáng chú ý nhất: AI-driven delivery experience cho AI commerce
+  - Mức ưu tiên account từ góc website: Cao
+  - Chủ đề đang được nhấn mạnh: AI visibility, decision intelligence, ROI, global growth
+  - Dấu hiệu tăng trưởng / thay đổi đáng chú ý: repositioning chiến lược sang AI commerce
+  - Rủi ro hoặc khoảng trống thông tin: chưa thấy pricing trực tiếp
+  - Có nên chuyển thêm cho Agent 2 theo dõi social không: Có
+- Refs:
+  - `https://www.parcelperform.com/`
+  - `https://www.parcelperform.com/company/about-us`
+  - `https://www.parcelperform.com/products/post-purchase-experience`
+  - `https://www.parcelperform.com/products/logistics-experience`

@@ -38,7 +38,7 @@ Agent 2 cần phân tầng nhịp theo dõi để follow sát profile quan trọ
 - yêu cầu cụ thể từ sales hoặc CS
 
 ## Quy tắc vận hành
-- `Watch tier` có thể khác giữa các profile trong cùng một `Mã bản ghi`.
+- `Watch tier` có thể khác giữa các profile trong cùng một đối tượng nghiên cứu social.
 - `Ngày quét tiếp theo` phải được giữ ở cấp profile.
 - `Ngày quét tiếp theo cấp account` là mốc sớm nhất trong các profile đang theo dõi của account đó.
 - Nếu một profile phát sinh tín hiệu mạnh mới, có thể nâng tier ngay.

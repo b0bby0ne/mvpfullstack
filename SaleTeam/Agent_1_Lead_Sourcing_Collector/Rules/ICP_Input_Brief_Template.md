@@ -30,3 +30,5 @@
 ## Quy tắc
 - Nếu người dùng chưa có brief ICP rõ ràng, Agent 1 có thể để `Chưa xác định` nhưng phải ghi lại.
 - `ICP_Input_Brief.md` là đầu vào tham chiếu cho `ICP_Fit_Scoring_Model.md`.
+- Không tự đề xuất ICP mới nếu người dùng chưa yêu cầu.
+- Nếu ICP là yếu tố quyết định chất lượng run nhưng người dùng chưa cung cấp, Agent 1 phải hỏi lại trước khi suy diễn.

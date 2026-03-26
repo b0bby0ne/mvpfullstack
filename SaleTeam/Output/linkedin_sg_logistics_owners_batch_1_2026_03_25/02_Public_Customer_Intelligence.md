@@ -1,0 +1,496 @@
+# 02_Public_Customer_Intelligence - linkedin_sg_logistics_owners_batch_1_2026_03_25
+
+## Bối cảnh
+- Danh sách đầu vào: `01_Lead_List.md`
+- Nguồn vào: LinkedIn public sourcing từ Agent 1
+- Nền tảng đã xem:
+  - LinkedIn
+  - Facebook
+  - X
+  - Instagram
+  - public web search để xác minh chéo
+- Ngày xem: 2026-03-25
+- Nguồn watchlist: lead founder / co-founder / CEO ngành logistics tại Singapore
+- Mục tiêu nghiên cứu: làm giàu social public cho 14 lead đã chọn
+- Chỉ định cụ thể của người dùng:
+  - thu thập thông tin từ toàn bộ social public có thể xác minh được của từng người
+  - mở rộng quét gồm LinkedIn, Facebook, X, Instagram
+- Mức output / độ sâu mong muốn: enrich vận hành được cho sales follow-up
+- Ghi chú coverage:
+  - batch này ưu tiên social public có thể xác minh chắc
+  - với nhiều lead, LinkedIn vẫn là nền tảng công khai chính
+  - Facebook, X và Instagram đã được rà ở mức public-search; đa số lead chưa có hồ sơ công khai đủ chắc để xác minh thêm ngoài LinkedIn
+
+## Bản ghi 01
+- Mã đối tượng social: `SOC-LI-SG-001`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-001`
+- Tên bản ghi gốc: Alvin Ea
+- Tên người / công ty: Alvin Ea / Haulio
+- Persona / vai trò: Co-Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder điều hành trực tiếp công ty logistics tại Singapore
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/alvinea`
+  - LinkedIn company page: `https://sg.linkedin.com/company/haulio`
+- Baseline social:
+  - Tên hiển thị: Alvin Ea
+  - Vai trò / công ty hiện tại: Co-Founder & CEO at Haulio
+  - Chủ đề nội dung chính: haulage, logistics ecosystem, công ty và vận hành ngành
+  - Giọng điệu quan sát được: xây dựng hệ sinh thái, vận hành, cộng đồng
+- Tín hiệu đáng chú ý:
+  - có dấu vết hoạt động trực tiếp trên LinkedIn gắn với Haulio
+  - từng đăng nội dung nhắc rõ vai trò đồng sáng lập của Sebastian Shen
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp mở đầu bằng chủ đề số hóa vận tải container đường bộ và điều phối mạng lưới nhà xe
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: mở bằng bài toán nền tảng hóa vận hành haulage, alliance nhà xe, visibility và orchestration
+- Refs:
+  - `https://sg.linkedin.com/in/alvinea`
+  - `https://www.linkedin.com/posts/alvinea_how-a-people-first-approach-helped-haulio-activity-6960030780479741952-0B5a`
+
+## Bản ghi 02
+- Mã đối tượng social: `SOC-LI-SG-002`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-002`
+- Tên bản ghi gốc: Sebastian Shen
+- Tên người / công ty: Sebastian Shen / Haulio
+- Persona / vai trò: Co-Founder
+- Trạng thái theo dõi: Theo dõi hạn chế
+- Mức độ đầy đủ coverage: Hạn chế
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: đồng sáng lập tại công ty nằm đúng ICP
+- Hồ sơ công khai đã xác minh:
+  - chưa thấy URL profile cá nhân công khai trong search index
+  - có dấu vết gián tiếp trên company page và post của Alvin Ea
+- Baseline social:
+  - Tên hiển thị: Sebastian Shen
+  - Vai trò / công ty hiện tại: Co-Founder at Haulio
+  - Chủ đề nội dung chính: chưa đủ dữ liệu để kết luận
+  - Giọng điệu quan sát được: chưa đủ dữ liệu
+- Tín hiệu đáng chú ý:
+  - vai trò đồng sáng lập được nhắc trực tiếp trong post công khai
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: cần enrich thêm ở bước sau nếu muốn cá nhân hóa sâu
+- Ưu tiên tín hiệu: Trung bình
+- Gợi ý hành động: ưu tiên tiếp cận ở cấp company trước, không nên cá nhân hóa quá sâu khi chưa có profile trực tiếp
+- Refs:
+  - `https://sg.linkedin.com/company/haulio`
+  - `https://www.linkedin.com/posts/alvinea_how-a-people-first-approach-helped-haulio-activity-6960030780479741952-0B5a`
+
+## Bản ghi 03
+- Mã đối tượng social: `SOC-LI-SG-003`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-003`
+- Tên bản ghi gốc: Kevin Zhang
+- Tên người / công ty: Kevin Zhang / Inteluck
+- Persona / vai trò: Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO của logistics platform đặt HQ tại Singapore
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/inteluckevin`
+  - LinkedIn company page: `https://sg.linkedin.com/company/inteluck`
+- Baseline social:
+  - Tên hiển thị: Kevin Zhang
+  - Vai trò / công ty hiện tại: Founder & CEO at Inteluck
+  - Chủ đề nội dung chính: data-driven logistics, SEA logistics operations
+  - Giọng điệu quan sát được: vận hành, tăng trưởng, data-driven
+- Tín hiệu đáng chú ý:
+  - gắn trực tiếp với narrative data-driven logistics
+  - company page cho thấy Inteluck thường đăng về supply chain resilience và peak season readiness
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: hợp với thông điệp tối ưu vận hành, visibility, analytics, control tower
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận bằng pain point data fragmentation và phản ứng chậm trước biến động thương mại
+- Refs:
+  - `https://sg.linkedin.com/in/inteluckevin`
+  - `https://sg.linkedin.com/company/inteluck`
+
+## Bản ghi 04
+- Mã đối tượng social: `SOC-LI-SG-004`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-004`
+- Tên bản ghi gốc: Nidhi Gupta
+- Tên người / công ty: Nidhi Gupta / Portcast
+- Persona / vai trò: Co-Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO của logistics visibility platform tại Singapore
+- Hồ sơ công khai đã xác minh:
+  - dấu vết cá nhân qua nội dung public trên company page của Portcast
+  - company page: `https://sg.linkedin.com/company/portcast`
+- Baseline social:
+  - Tên hiển thị: Nidhi Gupta
+  - Vai trò / công ty hiện tại: Co-Founder & CEO at Portcast
+  - Chủ đề nội dung chính: AI in maritime, predictive visibility, trade disruption, touchless supply chains
+  - Giọng điệu quan sát được: thought leadership, event-driven, AI logistics
+- Tín hiệu đáng chú ý:
+  - xuất hiện trong post công khai về AI trong maritime trên CNA
+  - xuất hiện trong roundtable về trade disruption và resilient supply chains
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với nội dung AI cho vận tải biển, risk management và proactive exception handling
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: mở bằng use case AI / predictive visibility / trade disruption thay vì generic logistics
+- Refs:
+  - `https://www.linkedin.com/posts/portcast_singapore-based-logistics-tech-startup-portcast-activity-7311362393542905856-JmpH`
+  - `https://www.linkedin.com/posts/portcast_supplychainleadership-tradedisruptions-activity-7360948389229838337-sPhr`
+  - `https://sg.linkedin.com/company/portcast`
+
+## Bản ghi 05
+- Mã đối tượng social: `SOC-LI-SG-005`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-005`
+- Tên bản ghi gốc: Wiebe Helder
+- Tên người / công ty: Wiebe Helder / Cargobase
+- Persona / vai trò: Founder
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder của logistics software company tại Singapore
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/wiebehelder`
+  - company page: `https://www.linkedin.com/company/cargobase`
+- Baseline social:
+  - Tên hiển thị: Wiebe Helder
+  - Vai trò / công ty hiện tại: Founder / CEO at Cargobase
+  - Chủ đề nội dung chính: freight procurement, TMS, logistics software
+  - Giọng điệu quan sát được: product / operations / enterprise logistics
+- Tín hiệu đáng chú ý:
+  - profile công khai gắn trực tiếp với Cargobase
+  - company messaging nhấn mạnh procurement, booking, tracking, audit và analytics
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp chủ đề process automation, procurement control, spot-buy freight
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận bằng pain point manual freight procurement và fragmented shipper workflow
+- Refs:
+  - `https://sg.linkedin.com/in/wiebehelder`
+  - `https://www.linkedin.com/company/cargobase`
+
+## Bản ghi 06
+- Mã đối tượng social: `SOC-LI-SG-006`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-006`
+- Tên bản ghi gốc: Glenn Lai
+- Tên người / công ty: Glenn Lai / FR8Labs
+- Persona / vai trò: Co-Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO tại freight software startup của Singapore
+- Hồ sơ công khai đã xác minh:
+  - chưa thấy URL profile trực tiếp qua search index
+  - có nhiều post công khai qua LinkedIn jobs / company repost
+- Baseline social:
+  - Tên hiển thị: Glenn Lai
+  - Vai trò / công ty hiện tại: Co-Founder & CEO at FR8Labs
+  - Chủ đề nội dung chính: digitizing freight forwarding, AI-driven freight systems, customer retention
+  - Giọng điệu quan sát được: operator-led, GTM và AI logistics
+- Tín hiệu đáng chú ý:
+  - công khai nói về AI-driven freight system và ROI của AI trong forwarding
+  - nhấn mạnh customer retention và CRM cho freight forwarders
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: hợp với góc AI for forwarders, workflow modernization, revenue-enabling ops
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: mở bằng freight operating system, AI rollout cho forwarders và human amplification
+- Refs:
+  - `https://www.linkedin.com/posts/glennlai_singapores-fr8labs-secures-15m-seed-funding-activity-7135965626270973952-W-v1`
+  - `https://my.linkedin.com/jobs/view/customer-success-product-operations-specialist-at-fr8labs-4325816287`
+  - `https://sg.linkedin.com/company/fr8labs`
+
+## Bản ghi 07
+- Mã đối tượng social: `SOC-LI-SG-007`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-007`
+- Tên bản ghi gốc: Lai Chang Wen
+- Tên người / công ty: Lai Chang Wen / Ninja Van
+- Persona / vai trò: Co-Founder & CEO
+- Trạng thái theo dõi: Theo dõi hạn chế
+- Mức độ đầy đủ coverage: Hạn chế
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO của logistics company lớn tại Singapore
+- Hồ sơ công khai đã xác minh:
+  - chưa thấy URL profile trực tiếp qua search index
+  - có dấu vết công khai trên about page công ty và LinkedIn public post
+- Baseline social:
+  - Tên hiển thị: Lai Chang Wen
+  - Vai trò / công ty hiện tại: Co-Founder + CEO at Ninja Van
+  - Chủ đề nội dung chính: company growth, regional logistics, e-commerce delivery
+  - Giọng điệu quan sát được: founder / regional growth
+- Tín hiệu đáng chú ý:
+  - được nhắc công khai trong post về định hướng phát triển ngoài e-commerce
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với thông điệp scale operations và regional logistics infrastructure
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận ở cấp công ty / chiến lược vận hành trước, tránh cá nhân hóa sâu
+- Refs:
+  - `https://www.ninjavan.co/en-sg/company/about-us`
+  - `https://www.linkedin.com/posts/tech-in-asia_ninja-van-eyes-path-beyond-ecommerce-as-price-activity-7191712631697645568-RKDD`
+
+## Bản ghi 08
+- Mã đối tượng social: `SOC-LI-SG-008`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-008`
+- Tên bản ghi gốc: Shaun Chong
+- Tên người / công ty: Shaun Chong / Ninja Van
+- Persona / vai trò: Co-Founder & CTO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: đồng sáng lập kỹ thuật tại logistics company lớn của Singapore
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/shaun-chong`
+  - công ty: `https://www.ninjavan.co/en-sg/company/about-us`
+- Baseline social:
+  - Tên hiển thị: Shaun Chong
+  - Vai trò / công ty hiện tại: Co-Founder & CTO at Ninja Van
+  - Chủ đề nội dung chính: technology in logistics, scale, platform
+  - Giọng điệu quan sát được: technical founder
+- Tín hiệu đáng chú ý:
+  - phù hợp nhóm founder technical trong logistics platform / last-mile
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: nên mở bằng architecture, systems scale, automation, reliability
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: dùng góc technical operations, automation, decision systems cho last-mile / network scale
+- Refs:
+  - `https://sg.linkedin.com/in/shaun-chong`
+  - `https://www.ninjavan.co/en-sg/company/about-us`
+
+## Bản ghi 09
+- Mã đối tượng social: `SOC-LI-SG-009`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-009`
+- Tên bản ghi gốc: Constantin Robertz
+- Tên người / công ty: Constantin Robertz / Locad
+- Persona / vai trò: Co-Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO của cloud supply chain company có HQ hoạt động Singapore
+- Hồ sơ công khai đã xác minh:
+  - có post công khai của chính Constantin trên LinkedIn
+  - company page: `https://www.linkedin.com/company/golocad`
+- Baseline social:
+  - Tên hiển thị: Constantin Robertz
+  - Vai trò / công ty hiện tại: Co-Founder & CEO at Locad
+  - Chủ đề nội dung chính: omnichannel logistics, cloud supply chain, expansion, funding
+  - Giọng điệu quan sát được: growth, expansion, operator-led
+- Tín hiệu đáng chú ý:
+  - đăng về funding round và mở rộng quốc tế
+  - nhấn mạnh cloud supply chain, unified commerce, logistics network
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với nội dung omnichannel fulfillment, network expansion, control tower
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: mở bằng growth / expansion / unified logistics infrastructure
+- Refs:
+  - `https://www.linkedin.com/posts/constantin-robertz-299a288_ecommerce-logistics-startup-locad-raises-activity-7264895803234689024-cl_c`
+  - `https://www.linkedin.com/company/golocad`
+
+## Bản ghi 10
+- Mã đối tượng social: `SOC-LI-SG-010`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-010`
+- Tên bản ghi gốc: Vaibhav Dabhade
+- Tên người / công ty: Vaibhav Dabhade / Anchanto
+- Persona / vai trò: Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO tại e-commerce supply chain SaaS có hiện diện Singapore
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/vaibhavdabhade`
+  - leadership page: `https://anchanto.com/en-id/our-leadership/`
+- Baseline social:
+  - Tên hiển thị: Vaibhav Dabhade
+  - Vai trò / công ty hiện tại: Founder & CEO at Anchanto
+  - Chủ đề nội dung chính: supply chain SaaS, e-commerce operations, regional growth
+  - Giọng điệu quan sát được: founder / enterprise SaaS
+- Tín hiệu đáng chú ý:
+  - company leadership page xác nhận rõ founder / CEO
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: hợp với góc enterprise workflow, e-commerce ops, omnichannel orchestration
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận bằng pain point multi-system orchestration và fulfillment / delivery experience
+- Refs:
+  - `https://sg.linkedin.com/in/vaibhavdabhade`
+  - `https://anchanto.com/en-id/our-leadership/`
+
+## Bản ghi 11
+- Mã đối tượng social: `SOC-LI-SG-011`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-011`
+- Tên bản ghi gốc: Julien Juttet
+- Tên người / công ty: Julien Juttet / Anchanto
+- Persona / vai trò: Co-Founder & CFO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Khá
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: đồng sáng lập cấp lãnh đạo tài chính tại SaaS logistics / supply chain
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile: `https://sg.linkedin.com/in/julienjuttet`
+  - public post: `https://www.linkedin.com/posts/julienjuttet_anchanto-has-been-recognised-by-the-straits-activity-7287665055226044416-hvmp`
+- Baseline social:
+  - Tên hiển thị: Julien Juttet
+  - Vai trò / công ty hiện tại: Co-Founder & CFO at Anchanto
+  - Chủ đề nội dung chính: company milestones, growth, business operations
+  - Giọng điệu quan sát được: operator / business-side founder
+- Tín hiệu đáng chú ý:
+  - từng đăng trực tiếp về company recognition và tăng trưởng của Anchanto
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với góc business outcomes, ROI, enterprise scale
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận bằng chi phí vận hành, working capital, process efficiency
+- Refs:
+  - `https://sg.linkedin.com/in/julienjuttet`
+  - `https://www.linkedin.com/posts/julienjuttet_anchanto-has-been-recognised-by-the-straits-activity-7287665055226044416-hvmp`
+
+## Bản ghi 12
+- Mã đối tượng social: `SOC-LI-SG-012`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-012`
+- Tên bản ghi gốc: Abhimanyu Kashikar
+- Tên người / công ty: Abhimanyu Kashikar / Anchanto
+- Persona / vai trò: Co-Founder
+- Trạng thái theo dõi: Theo dõi hạn chế
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: đồng sáng lập tại SaaS supply chain company
+- Hồ sơ công khai đã xác minh:
+  - chưa thấy URL profile trực tiếp qua search index
+  - có public post và leadership page xác nhận vai trò đồng sáng lập
+- Baseline social:
+  - Tên hiển thị: Abhimanyu Kashikar
+  - Vai trò / công ty hiện tại: Co-Founder at Anchanto
+  - Chủ đề nội dung chính: company growth, supply chain SaaS
+  - Giọng điệu quan sát được: operator / growth-side
+- Tín hiệu đáng chú ý:
+  - public post gắn với company recognition
+  - leadership pages của Anchanto thể hiện vai trò executive đang thiên về growth / EMEA trên một số phiên bản site
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với nội dung growth systems, go-to-market và operations
+- Ưu tiên tín hiệu: Trung bình
+- Gợi ý hành động: mở bằng scale motion và business expansion hơn là technical details
+- Refs:
+  - `https://www.linkedin.com/posts/abhimanyukashikar_anchanto-has-been-recognised-by-statista-activity-7288167249511608321-LSoz`
+  - `https://anchanto.com/en-id/our-leadership/`
+
+## Bản ghi 13
+- Mã đối tượng social: `SOC-LI-SG-013`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-013`
+- Tên bản ghi gốc: Arne Jeroschewski
+- Tên người / công ty: Arne Jeroschewski / Parcel Perform
+- Persona / vai trò: Founder & CEO
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder / CEO tại AI logistics SaaS company ở Singapore
+- Hồ sơ công khai đã xác minh:
+  - dấu vết cá nhân rõ qua nhiều public post và company content
+  - company page: `https://www.linkedin.com/company/parcel-perform`
+- Baseline social:
+  - Tên hiển thị: Dr. Arne Jeroschewski
+  - Vai trò / công ty hiện tại: Founder & CEO at Parcel Perform
+  - Chủ đề nội dung chính: AI commerce, delivery experience, AI in logistics
+  - Giọng điệu quan sát được: strong thought leadership, AI-first commerce
+- Tín hiệu đáng chú ý:
+  - liên tục public về AI commerce, AI recommendation, delivery trust signals
+  - company page nhấn rất mạnh narrative AI
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: nên dùng góc AI commerce, delivery intelligence, trust signals, recommendation economy
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: mở bằng AI-driven delivery experience, visibility, operational trust
+- Refs:
+  - `https://www.linkedin.com/posts/arnejero_parcel-performs-year-in-review-in-2023-activity-7025719721329123328-243v`
+  - `https://www.linkedin.com/posts/parcel-perform_theleadsummit-parcelperform-aiinlogistics-activity-7332682250922184705-4GeD`
+  - `https://www.linkedin.com/company/parcel-perform`
+
+## Bản ghi 14
+- Mã đối tượng social: `SOC-LI-SG-014`
+- Mã bản ghi từ Agent 1: `LEAD-LI-SG-014`
+- Tên bản ghi gốc: Dana von der Heide
+- Tên người / công ty: Dana von der Heide / Parcel Perform
+- Persona / vai trò: Founder & Chief Customer Officer
+- Trạng thái theo dõi: Theo dõi nền
+- Mức độ đầy đủ coverage: Trung bình
+- Nền tảng đã quét: LinkedIn, Facebook, X, Instagram
+- Nền tảng chưa tìm thấy hồ sơ công khai: Facebook, X, Instagram
+- Nền tảng có dấu vết nhưng chưa xác minh: Không có
+- Ngày quét gần nhất: 2026-03-25
+- Ngày quét tiếp theo cấp account: 2026-04-01
+- Mức ưu tiên account: Cao
+- Có cần follow-up không: Có
+- Lý do follow-up: founder phía customer / commercial tại AI logistics SaaS company
+- Hồ sơ công khai đã xác minh:
+  - LinkedIn profile reference: `https://www.linkedin.com/in/danavonderheide/`
+  - company content và about page của Parcel Perform
+- Baseline social:
+  - Tên hiển thị: Dana von der Heide
+  - Vai trò / công ty hiện tại: Founder & Chief Customer Officer at Parcel Perform
+  - Chủ đề nội dung chính: customer experience, AI commerce, delivery experience
+  - Giọng điệu quan sát được: commercial / customer-facing founder
+- Tín hiệu đáng chú ý:
+  - xuất hiện trong company messaging về AI visibility và customer experience
+- Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng: phù hợp với nội dung growth, customer outcomes, post-purchase experience
+- Ưu tiên tín hiệu: Cao
+- Gợi ý hành động: tiếp cận bằng CX, retention, AI commerce visibility, delivery trust
+- Refs:
+  - `https://www.linkedin.com/in/danavonderheide/`
+  - `https://www.parcelperform.com/company/about-us`
+  - `https://www.linkedin.com/posts/parcel-perform_aivisibility-aicommerce-ecommercelogistics-activity-7382314662249299968-oXAF`

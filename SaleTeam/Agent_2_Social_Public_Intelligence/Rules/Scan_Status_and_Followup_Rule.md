@@ -1,6 +1,6 @@
 # Quy tắc: Trạng thái quét và follow-up
 
-Agent 2 cần gắn trạng thái rõ ràng cho từng `Mã bản ghi` để chạy watchlist lặp mà không mất dấu.
+Agent 2 cần gắn trạng thái rõ ràng cho từng đối tượng nghiên cứu social để chạy watchlist lặp mà không mất dấu.
 
 ## Trạng thái chuẩn
 - `Chưa quét`

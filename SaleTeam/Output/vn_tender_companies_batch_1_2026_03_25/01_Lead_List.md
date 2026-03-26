@@ -1,0 +1,2709 @@
+﻿﻿# 01_Lead_List - vn_tender_companies_batch_1_2026_03_25
+
+## Bối cảnh
+- Gốc nguồn: Hệ thống mạng đấu thầu quốc gia - danh sách nhà thầu được phê duyệt
+- ICP mục tiêu: Doanh nghiệp trong nước, mọi ngành, xuất hiện trên nguồn đấu thầu Việt Nam
+- Ngày thu thập: 2026-03-25
+- Trạng thái run: Hoàn tất batch 1 với 100 doanh nghiệp
+- Ghi chú nguồn: Danh sách này lấy từ nguồn đấu thầu chính thức và đã lọc bỏ các bản ghi không phải pháp nhân doanh nghiệp
+
+## Lead 01
+- Mã bản ghi: LEAD-VN-BID-001
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ LHM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ LHM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300363799&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 6300363799; địa chỉ công khai: số 30 Nguyễn Công Trứ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300363799&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 02
+- Mã bản ghi: LEAD-VN-BID-002
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH VIỆT COOL
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH VIỆT COOL
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801136651&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0801136651; địa chỉ công khai: Thôn Phát Minh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801136651&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 03
+- Mã bản ghi: LEAD-VN-BID-003
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TRUNG TÂM GIÁO DỤC KỸ NĂNG VIỆT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TRUNG TÂM GIÁO DỤC KỸ NĂNG VIỆT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300363781&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 6300363781; địa chỉ công khai: Căn nhà số 9B, đường Trần Hưng Đạo, KDC 425, khu vực 3; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300363781&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 04
+- Mã bản ghi: LEAD-VN-BID-004
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI VÀ CÔNG NGHỆ MÔI TRƯỜNG   VINVENTOR
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI VÀ CÔNG NGHỆ MÔI TRƯỜNG   VINVENTOR
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110861298&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0110861298; địa chỉ công khai: Tầng 6, nhà 25T1-N05 KĐT Đông Nam Đường Trần Duy Hưng,   Phường Yên Hòa, Thành Phố Hà Nội, Việt Nam; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110861298&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 05
+- Mã bản ghi: LEAD-VN-BID-005
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN ĐẦU TƯ VINH QUANG SINH HỌC
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN ĐẦU TƯ VINH QUANG SINH HỌC
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0108672487&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0108672487; địa chỉ công khai: Số 5B ngõ 53 Vũ Xuân Thiều; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0108672487&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 06
+- Mã bản ghi: LEAD-VN-BID-006
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty Cổ phần sản xuất Ô cầm tay Tatsu
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty Cổ phần sản xuất Ô cầm tay Tatsu
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0108817550&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0108817559; địa chỉ công khai: Số nhà 50, ngõ 53 Phan Trọng Tuệ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0108817550&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 07
+- Mã bản ghi: LEAD-VN-BID-007
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN THIẾT KẾ VÀ XÂY DỰNG CTD
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN THIẾT KẾ VÀ XÂY DỰNG CTD
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109258198&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0109258198; địa chỉ công khai: Đội 1- Hòa Bình ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109258198&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 08
+- Mã bản ghi: LEAD-VN-BID-008
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN LYNKID
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN LYNKID
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109182710&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0109182710; địa chỉ công khai: Phòng 509, Tầng 5 Số 362 Phố Huế; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109182710&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 09
+- Mã bản ghi: LEAD-VN-BID-009
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ VINH QUANG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ DỊCH VỤ VINH QUANG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111404128&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0111404128; địa chỉ công khai: Số 5a, Ngõ 53 Phố Vũ Xuân Thiều; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111404128&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 10
+- Mã bản ghi: LEAD-VN-BID-010
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty cổ phần tư vấn & kiểm đinh xây dựng Anh Quốc
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty cổ phần tư vấn & kiểm đinh xây dựng Anh Quốc
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702219585&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5702219585; địa chỉ công khai: Tổ 48B2, khu 4A; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702219585&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 11
+- Mã bản ghi: LEAD-VN-BID-011
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN BLUEONE
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN BLUEONE
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3702740152&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3702740152; địa chỉ công khai: T15/2, Đường N10, Khu phố Bình Thuận 2; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3702740152&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 12
+- Mã bản ghi: LEAD-VN-BID-012
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH SẢN XUẤT - DỊCH VỤ - THƯƠNG MẠI - IN THÀNH PHÁT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH SẢN XUẤT - DỊCH VỤ - THƯƠNG MẠI - IN THÀNH PHÁT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110012946&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0110012946; địa chỉ công khai: Cụm 7 Thôn Vĩnh Ninh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110012946&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 13
+- Mã bản ghi: LEAD-VN-BID-013
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN TƯ VẤN VÀ XÂY DỰNG ĐÔ THỊ SÔNG HỒNG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN TƯ VẤN VÀ XÂY DỰNG ĐÔ THỊ SÔNG HỒNG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0105715291&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0105715291; địa chỉ công khai: Số 70, phố An Dương; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0105715291&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 14
+- Mã bản ghi: LEAD-VN-BID-014
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MỘT THÀNH VIÊN THƯƠNG MẠI DỊCH VỤ- XÂY DỰNG THUẬN THÀNH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MỘT THÀNH VIÊN THƯƠNG MẠI DỊCH VỤ- XÂY DỰNG THUẬN THÀNH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4300913801&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4300913801; địa chỉ công khai: Thôn Đại An Đông 1; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4300913801&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 15
+- Mã bản ghi: LEAD-VN-BID-015
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH đầu tư và phát triển Lê Khang
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH đầu tư và phát triển Lê Khang
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2902246527&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2902246527; địa chỉ công khai: Thôn Lâm Trường; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2902246527&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 16
+- Mã bản ghi: LEAD-VN-BID-016
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty Cổ phần đầu tư đô thị Hà Phú
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty Cổ phần đầu tư đô thị Hà Phú
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111111026&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0111111026; địa chỉ công khai: R2.218 tầng 2,Toà nhà Florence, số 28 Trần Hữu Dực; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111111026&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 17
+- Mã bản ghi: LEAD-VN-BID-017
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MỘT THÀNH VIÊN MÔI TRƯỜNG XANH THANH TÙNG HD
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MỘT THÀNH VIÊN MÔI TRƯỜNG XANH THANH TÙNG HD
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801169953&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0801169953; địa chỉ công khai: Thôn Châu Quan; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801169953&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 18
+- Mã bản ghi: LEAD-VN-BID-018
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH tư vấn Đức Minh
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH tư vấn Đức Minh
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5701897066&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5701897066; địa chỉ công khai: Số nhà 45, tổ 14 khu Hà Lầm 4; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5701897066&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 19
+- Mã bản ghi: LEAD-VN-BID-019
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MINT KOREA
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MINT KOREA
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316593003&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0316593003; địa chỉ công khai: 183 Gò Dầu, Phường Phú Thọ Hòa, Thành phố Hồ Chí Minh, Việt Nam; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316593003&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 20
+- Mã bản ghi: LEAD-VN-BID-020
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH thương mại tư vấn xây dựng Quyết Thắng
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH thương mại tư vấn xây dựng Quyết Thắng
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1801823374&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1801823374; địa chỉ công khai: A45, đường số 2, KTĐC TTSHLX loại 2, KV Thạnh Lợi; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1801823374&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 21
+- Mã bản ghi: LEAD-VN-BID-021
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH ĐT XD QUỐC TUÂN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH ĐT XD QUỐC TUÂN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1102049359&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1102049359; địa chỉ công khai: Số 77, ấp Kinh Mới; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1102049359&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 22
+- Mã bản ghi: LEAD-VN-BID-022
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TP-LINK TECHNOLOGIES VIỆT NAM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TP-LINK TECHNOLOGIES VIỆT NAM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0310685120&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0310685120; địa chỉ công khai: Lô 11.02-11.03, Tầng 11-Tháp A, Tòa nhà Viettel, Số 285 Đường Cách Mạng Tháng Tám, Phường Hòa Hưng, Thành phố Hồ Chí Minh, Việt Nam; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0310685120&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 23
+- Mã bản ghi: LEAD-VN-BID-023
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI NỘI THẤT MỘC PHƯƠNG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI NỘI THẤT MỘC PHƯƠNG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3301672635&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3301672635; địa chỉ công khai: Số 68 đường Võ Văn Kiệt; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3301672635&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 24
+- Mã bản ghi: LEAD-VN-BID-024
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH nông sản rau củ quả Tú Hoa
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH nông sản rau củ quả Tú Hoa
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2500733023&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2500733023; địa chỉ công khai: Tổ dân phố Nam Cường; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2500733023&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 25
+- Mã bản ghi: LEAD-VN-BID-025
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ MÔI TRƯỜNG XANH VĨNH HẢI
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ MÔI TRƯỜNG XANH VĨNH HẢI
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4500679683&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4500679683; địa chỉ công khai: Thôn Phước Khánh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4500679683&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 26
+- Mã bản ghi: LEAD-VN-BID-026
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TƯ VẤN XÂY DỰNG MỘC TIÊN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TƯ VẤN XÂY DỰNG MỘC TIÊN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300392951&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 6300392951; địa chỉ công khai: Ấp Nhơn Thuận; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300392951&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 27
+- Mã bản ghi: LEAD-VN-BID-027
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH thương mại đầu tư xây dựng Kiến Tường
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH thương mại đầu tư xây dựng Kiến Tường
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318018993&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0318018993; địa chỉ công khai: 72/26 Nhất Chi Mai; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318018993&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 28
+- Mã bản ghi: LEAD-VN-BID-028
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH ĐẦU TƯ XÂY DỰNG VÀ DỊCH VỤ THƯƠNG MẠI AN DƯƠNG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH ĐẦU TƯ XÂY DỰNG VÀ DỊCH VỤ THƯƠNG MẠI AN DƯƠNG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109475851&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0109475851; địa chỉ công khai: Số 473/15, tổ 9 mới, đường Hoàng Mai,; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109475851&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 29
+- Mã bản ghi: LEAD-VN-BID-029
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN KIỂM ĐỊNH VÀ THỬ NGHIỆM INSTI
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN KIỂM ĐỊNH VÀ THỬ NGHIỆM INSTI
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111319056&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0111319056; địa chỉ công khai: 145 Ngọc Hồi; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0111319056&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 30
+- Mã bản ghi: LEAD-VN-BID-030
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TÂM THIỆN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TÂM THIỆN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1201721606&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1201721606; địa chỉ công khai: 03 NGUYỄN TRÃI, KHU PHỐ 7; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1201721606&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 31
+- Mã bản ghi: LEAD-VN-BID-031
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH XÂY DỰNG CÔNG TRÌNH GIAO THÔNG TẤN PHÁT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH XÂY DỰNG CÔNG TRÌNH GIAO THÔNG TẤN PHÁT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1900710484&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1900710484; địa chỉ công khai: Thửa đất số 316, Tờ bản đồ số 33, Ấp Cái Dầy; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1900710484&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 32
+- Mã bản ghi: LEAD-VN-BID-032
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TÂN VĂN SỸ
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TÂN VĂN SỸ
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6001776396&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 6001776396; địa chỉ công khai: Số 74 Nguyễn Tất Thành; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6001776396&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 33
+- Mã bản ghi: LEAD-VN-BID-033
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN ĐẦU TƯ PHÁT TRIỂN DỊCH VỤ CÔNG NGHỆ XANH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN ĐẦU TƯ PHÁT TRIỂN DỊCH VỤ CÔNG NGHỆ XANH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109593407&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0109593407; địa chỉ công khai: Số nhà 245 xóm phong thịnh 3; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109593407&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 34
+- Mã bản ghi: LEAD-VN-BID-034
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty cổ phần xây dựng Đông Á VN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty cổ phần xây dựng Đông Á VN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801355572&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0801355572; địa chỉ công khai: Số 20, phố Nguyên Hồng, KĐT phía Tây Cầu Phú Lương; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801355572&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 35
+- Mã bản ghi: LEAD-VN-BID-035
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH NĂNG LƯỢNG XANH ANZ
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH NĂNG LƯỢNG XANH ANZ
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2500725128&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2500725128; địa chỉ công khai: L2-11 Vinaconex; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2500725128&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 36
+- Mã bản ghi: LEAD-VN-BID-036
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY ĐẤU GIÁ HỢP DANH ĐỈNH TÂN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY ĐẤU GIÁ HỢP DANH ĐỈNH TÂN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315780339&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0315780339; địa chỉ công khai: 585/8/28 Quốc lộ 13; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315780339&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 37
+- Mã bản ghi: LEAD-VN-BID-037
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH BẢO UYÊN SPORT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH BẢO UYÊN SPORT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314873809&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0314873809; địa chỉ công khai: 394 Mã Lò; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314873809&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 38
+- Mã bản ghi: LEAD-VN-BID-038
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH CƠ KHÍ MÁI CHE HUY HOÀNG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH CƠ KHÍ MÁI CHE HUY HOÀNG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316321049&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0316321049; địa chỉ công khai: 128 Trần Thủ Độ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316321049&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 39
+- Mã bản ghi: LEAD-VN-BID-039
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH KỸ THUẬT ĐIỆN TỬ VIỄN THÔNG Á CHÂU
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH KỸ THUẬT ĐIỆN TỬ VIỄN THÔNG Á CHÂU
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0317730421&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0317730421; địa chỉ công khai: 299/2/11 Lý thường Kiệt; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0317730421&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 40
+- Mã bản ghi: LEAD-VN-BID-040
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH XÂY DỰNG THƯƠNG MẠI TOÀN PHÚC
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH XÂY DỰNG THƯƠNG MẠI TOÀN PHÚC
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315031322&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0315031322; địa chỉ công khai: 3/6C Nguyễn Thị Sóc, Ấp Hưng Lân; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315031322&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 41
+- Mã bản ghi: LEAD-VN-BID-041
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI VÀ DU LỊC H &N
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI VÀ DU LỊC H &N
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0700527105&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0700527105; địa chỉ công khai: Số 3/201 Đường Đinh Tiên Hoàng; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0700527105&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 42
+- Mã bản ghi: LEAD-VN-BID-042
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH IMALL VIỆT NAM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH IMALL VIỆT NAM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316161476&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0316161476; địa chỉ công khai: 52/1A Huỳnh Văn Nghệ, khu phố 7; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0316161476&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 43
+- Mã bản ghi: LEAD-VN-BID-043
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TƯ VẤN VÀ CÔNG NGHỆ HÀNG HẢI
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TƯ VẤN VÀ CÔNG NGHỆ HÀNG HẢI
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0202310050&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0202310050; địa chỉ công khai: Số 1 + 2 B14 Tổ dân phố Đ2; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0202310050&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 44
+- Mã bản ghi: LEAD-VN-BID-044
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THIẾT BỊ XÂY DỰNG QUỐC HUY
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THIẾT BỊ XÂY DỰNG QUỐC HUY
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1702352011&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1702352011; địa chỉ công khai: số 829/4 Mạc Cửu; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1702352011&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 45
+- Mã bản ghi: LEAD-VN-BID-045
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH DỊCH VỤ VÀ SỰ KIỆN SKY
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH DỊCH VỤ VÀ SỰ KIỆN SKY
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0202203203&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0202203203; địa chỉ công khai: số 18 ngõ 50 đường Chùa Hàng; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0202203203&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 46
+- Mã bản ghi: LEAD-VN-BID-046
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH Phúc Thịnh Tuyên Quang
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH Phúc Thịnh Tuyên Quang
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5000915655&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5000915655; địa chỉ công khai: Thôn Tụ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5000915655&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 47
+- Mã bản ghi: LEAD-VN-BID-047
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TƯ VẤN XÂY DỰNG SAO KHUÊ HỘI AN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TƯ VẤN XÂY DỰNG SAO KHUÊ HỘI AN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001327196&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4001327196; địa chỉ công khai: 276 Hùng Vương, Tổ 35, Khối Thanh Chiếm; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001327196&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 48
+- Mã bản ghi: LEAD-VN-BID-048
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH Thương Mại và Dịch Vụ PCCC Trường Giang
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH Thương Mại và Dịch Vụ PCCC Trường Giang
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2401030397&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2401030397; địa chỉ công khai: Mai Thượng; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2401030397&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 49
+- Mã bản ghi: LEAD-VN-BID-049
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV DUY HOÀNG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV DUY HOÀNG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3603899946&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3603899946; địa chỉ công khai: Số 33, đường N3, khu phố Lập Thành; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3603899946&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 50
+- Mã bản ghi: LEAD-VN-BID-050
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ ĐẦU TƯ GIA NGÂN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ ĐẦU TƯ GIA NGÂN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318461669&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0318461669; địa chỉ công khai: 1560/27/1F Tỉnh Lộ 10; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318461669&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 51
+- Mã bản ghi: LEAD-VN-BID-051
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TƯ VẤN XÂY DỰNG VÀ THƯƠNG MẠI T2CCONS
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TƯ VẤN XÂY DỰNG VÀ THƯƠNG MẠI T2CCONS
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001318794&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4001318794; địa chỉ công khai: Thôn 05; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001318794&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 52
+- Mã bản ghi: LEAD-VN-BID-052
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH MTV Nhật Minh KCR
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH MTV Nhật Minh KCR
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5901210844&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5901210844; địa chỉ công khai: Làng Quel; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5901210844&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 53
+- Mã bản ghi: LEAD-VN-BID-053
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH DỊCH VỤ THƯƠNG MẠI VÀ XUẤT NHẬP KHẨU VIỆT NAM TRADE
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH DỊCH VỤ THƯƠNG MẠI VÀ XUẤT NHẬP KHẨU VIỆT NAM TRADE
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0319444338&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0319444338; địa chỉ công khai: 101 Lê Văn Thịnh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0319444338&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 54
+- Mã bản ghi: LEAD-VN-BID-054
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN PHÁT TRIỂN GIÁO DỤC TUỆ TÂM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN PHÁT TRIỂN GIÁO DỤC TUỆ TÂM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2601000103&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2601000103; địa chỉ công khai: KHU 4; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2601000103&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 55
+- Mã bản ghi: LEAD-VN-BID-055
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH Quảng Cáo Đức Tú
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH Quảng Cáo Đức Tú
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702215728&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5702215728; địa chỉ công khai: Số nhà 260, Tổ 7, Khu 6, Phường Hoành Bồ, tỉnh Quảng Ninh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702215728&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 56
+- Mã bản ghi: LEAD-VN-BID-056
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH DTXD VÀ TMDV MINH PHÁT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH DTXD VÀ TMDV MINH PHÁT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1179246879&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1179246879; địa chỉ công khai: số 112,ấp phước thạnh; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1179246879&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 57
+- Mã bản ghi: LEAD-VN-BID-057
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TM & DV MAY HỒNG NGỌC LUXURY
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TM & DV MAY HỒNG NGỌC LUXURY
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801373356&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0801373356; địa chỉ công khai: Số nhà 51A/20, Ngô Quyền; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801373356&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 58
+- Mã bản ghi: LEAD-VN-BID-058
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH CÔNG NGHỆ CHÁNH HẠNH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH CÔNG NGHỆ CHÁNH HẠNH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4201963858&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4201963858; địa chỉ công khai: Quốc Lộ 26, Tân Khánh 2; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4201963858&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 59
+- Mã bản ghi: LEAD-VN-BID-059
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH EXPORUM VIETNAM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH EXPORUM VIETNAM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315008644&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0315008644; địa chỉ công khai: Tầng 9, 57-59 Hồ Tùng Mậu; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0315008644&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 60
+- Mã bản ghi: LEAD-VN-BID-060
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH MTV xây dựng Hồng Nghi
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH MTV xây dựng Hồng Nghi
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1402226697&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1402226697; địa chỉ công khai: Ấp K11; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1402226697&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 61
+- Mã bản ghi: LEAD-VN-BID-061
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH SONG MINH TIẾN QT 86
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH SONG MINH TIẾN QT 86
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3200758036&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3200758036; địa chỉ công khai: Thôn Trí Tiến; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3200758036&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 62
+- Mã bản ghi: LEAD-VN-BID-062
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ HOAN NGUYỄN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ HOAN NGUYỄN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5701412360&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5701412360; địa chỉ công khai: Khu Bạch Đằng 2; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5701412360&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 63
+- Mã bản ghi: LEAD-VN-BID-063
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TM VÀ DV PHÚC VIỆT DECOR
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TM VÀ DV PHÚC VIỆT DECOR
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0311317384&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0311317384; địa chỉ công khai: 6C Phạm Văn Xảo; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0311317384&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 64
+- Mã bản ghi: LEAD-VN-BID-064
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN LÊ BÁCH HỢP
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN LÊ BÁCH HỢP
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0313931737&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0313931737; địa chỉ công khai: 654/6 Lạc Long Quân; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0313931737&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 65
+- Mã bản ghi: LEAD-VN-BID-065
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN XÂY LẮP ĐIỆN WINPHAT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN XÂY LẮP ĐIỆN WINPHAT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5600347549&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5600347549; địa chỉ công khai: đội 5; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5600347549&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 66
+- Mã bản ghi: LEAD-VN-BID-066
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH XÂY DỰNG CÔNG NGHIỆP NGỌC MINH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH XÂY DỰNG CÔNG NGHIỆP NGỌC MINH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2301036109&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2301036109; địa chỉ công khai: Tầng 7, tòa nhà VNPT số 33 đường Lý Thái Tổ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2301036109&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 67
+- Mã bản ghi: LEAD-VN-BID-067
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CƠ ĐIỆN LẠNH ĐẠI NAM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ CƠ ĐIỆN LẠNH ĐẠI NAM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001313524&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4001313524; địa chỉ công khai: 93 Huỳnh Thúc Kháng; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001313524&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 68
+- Mã bản ghi: LEAD-VN-BID-068
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH Q-LIGHT
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH Q-LIGHT
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0901213081&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0901213081; địa chỉ công khai: đông kim; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0901213081&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 69
+- Mã bản ghi: LEAD-VN-BID-069
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH HV HOÀN CẦU
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH HV HOÀN CẦU
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0319127113&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0319127113; địa chỉ công khai: 142 Hồ Bá Kiện; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0319127113&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 70
+- Mã bản ghi: LEAD-VN-BID-070
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN ĐẦU TƯ STEEL VINA
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN ĐẦU TƯ STEEL VINA
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314396320&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0314396320; địa chỉ công khai: 203/19/2D Huỳnh Văn Nghệ; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314396320&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 71
+- Mã bản ghi: LEAD-VN-BID-071
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH HƯNG DƯƠNG HD
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH HƯNG DƯƠNG HD
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801484063&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0801484063; địa chỉ công khai: Số 14/220 Yết Kiêu; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0801484063&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 72
+- Mã bản ghi: LEAD-VN-BID-072
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH Xây lắp Duy Tiến HB
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH Xây lắp Duy Tiến HB
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5400539331&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5400539331; địa chỉ công khai: Số nhà 17, Tổ 7; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5400539331&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 73
+- Mã bản ghi: LEAD-VN-BID-073
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TM-DV THIÊN KIM TV
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TM-DV THIÊN KIM TV
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2100711480&effRoleDate=25%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2100711480; địa chỉ công khai: 252 Nguyễn Thị Minh Khai, Khóm 8; ngày phê duyệt: 25/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2100711480&effRoleDate=25%2F03%2F2026&role=NT
+
+## Lead 74
+- Mã bản ghi: LEAD-VN-BID-074
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: công ty TNHH quảng cáo & nội thất HYQ
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: công ty TNHH quảng cáo & nội thất HYQ
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2902133717&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2902133717; địa chỉ công khai: Khối 1; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2902133717&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 75
+- Mã bản ghi: LEAD-VN-BID-075
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN STATEK
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN STATEK
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110585369&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0110585369; địa chỉ công khai: Tầng 5, Tòa nhà Century, Số 458 phố Minh Khai; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110585369&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 76
+- Mã bản ghi: LEAD-VN-BID-076
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN NB GIA LAI
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN NB GIA LAI
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5901246914&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5901246914; địa chỉ công khai: Thôn 4; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5901246914&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 77
+- Mã bản ghi: LEAD-VN-BID-077
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV EVENTX
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV EVENTX
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318562240&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0318562240; địa chỉ công khai: Tầng 3, Harbour View Tower, số 35 Nguyễn Huệ; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318562240&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 78
+- Mã bản ghi: LEAD-VN-BID-078
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty Cp Liên Danh Vật Tư và Thiết Bị Công Nghiệp
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty Cp Liên Danh Vật Tư và Thiết Bị Công Nghiệp
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110280663&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0110280663; địa chỉ công khai: OV12.9 khu chức năng đô thị Xuân Phương, ; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0110280663&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 79
+- Mã bản ghi: LEAD-VN-BID-079
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ DỊCH VỤ HÀNG HẢI CÔNG NGHIỆP PHILIPS
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ DỊCH VỤ HÀNG HẢI CÔNG NGHIỆP PHILIPS
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3502494968&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3502494968; địa chỉ công khai: 484/27 Đường 30 Tháng 4; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3502494968&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 80
+- Mã bản ghi: LEAD-VN-BID-080
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH DU LỊCH VẬN TẢI AN TÙNG ANH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH DU LỊCH VẬN TẢI AN TÙNG ANH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702158004&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5702158004; địa chỉ công khai: Thôn 1; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5702158004&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 81
+- Mã bản ghi: LEAD-VN-BID-081
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN SỮA QUỐC TẾ LOF
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN SỮA QUỐC TẾ LOF
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0500463609&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0500463609; địa chỉ công khai: Lô C-13A-CN, đường N16, khu công nghiệp Bàu Bàng mở rộng; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0500463609&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 82
+- Mã bản ghi: LEAD-VN-BID-082
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH XÂY DỰNG ĐÔ THỊ NGỌC HÂN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH XÂY DỰNG ĐÔ THỊ NGỌC HÂN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3401285485&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3401285485; địa chỉ công khai: 24 Ngô quyền; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3401285485&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 83
+- Mã bản ghi: LEAD-VN-BID-083
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH KỸ THUẬT TKV
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH KỸ THUẬT TKV
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314831502&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0314831502; địa chỉ công khai: P702A Tầng 7, Tòa nhà Centre Point, 106 Nguyễn Văn Trỗi; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0314831502&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 84
+- Mã bản ghi: LEAD-VN-BID-084
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH NGỌC TIẾN THANH
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH NGỌC TIẾN THANH
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1201690027&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1201690027; địa chỉ công khai: 868B KHU PHỐ PHONG THUẬN, PHƯỜNG MỸ PHONG, TỈNH ĐỒNG THÁP; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1201690027&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 85
+- Mã bản ghi: LEAD-VN-BID-085
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ TRAVICO VIỆT NAM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ TRAVICO VIỆT NAM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0317014731&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0317014731; địa chỉ công khai: 62/1D Ngô Chí Quốc; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0317014731&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 86
+- Mã bản ghi: LEAD-VN-BID-086
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH Tư vấn và Xây dựng công trình Minh Tiến
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH Tư vấn và Xây dựng công trình Minh Tiến
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001324702&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4001324702; địa chỉ công khai: Số nhà 444, đường Hai Bà Trưng; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4001324702&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 87
+- Mã bản ghi: LEAD-VN-BID-087
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH HƯỜNG LONG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH HƯỜNG LONG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2400976449&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2400976449; địa chỉ công khai: Số nhà 238, Đường Nguyễn Thái Học; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2400976449&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 88
+- Mã bản ghi: LEAD-VN-BID-088
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH CƠ ĐIỆN QUANG HÂN
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH CƠ ĐIỆN QUANG HÂN
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3401221354&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3401221354; địa chỉ công khai: D2-22 khu dân cư Bắc Xuân An, phường Hàm Thắng, tỉnh Lâm Đồng; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3401221354&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 89
+- Mã bản ghi: LEAD-VN-BID-089
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH TRANG PHỤC NGOÀI TRỜI CPPC (VIỆT NAM)
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH TRANG PHỤC NGOÀI TRỜI CPPC (VIỆT NAM)
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4101435974&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 4101435974; địa chỉ công khai: Lô C15A, KCN Phú Tài; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn4101435974&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 90
+- Mã bản ghi: LEAD-VN-BID-090
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TRÁCH NHIỆM HỮU HẠN THƯƠNG MẠI DỊCH VỤ GIA THÀNH PHÚ QUỐC
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TRÁCH NHIỆM HỮU HẠN THƯƠNG MẠI DỊCH VỤ GIA THÀNH PHÚ QUỐC
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1702263354&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 1702263354; địa chỉ công khai: Số 10A Mạc Thiên Tích, khu phố 5 Dương Đông; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn1702263354&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 91
+- Mã bản ghi: LEAD-VN-BID-091
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: công ty TNHH THIẾT KẾ QUẢNG CÁO VẼ LỘC
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: công ty TNHH THIẾT KẾ QUẢNG CÁO VẼ LỘC
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5801251759&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 5801251759; địa chỉ công khai: 40, Thống Nhất; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn5801251759&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 92
+- Mã bản ghi: LEAD-VN-BID-092
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN HƯNG YÊN RIVERSIDE
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN HƯNG YÊN RIVERSIDE
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0901120662&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0901120662; địa chỉ công khai: Thôn Yên Lịch; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0901120662&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 93
+- Mã bản ghi: LEAD-VN-BID-093
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV TƯ VẤN, XÂY DỰNG VÀ THƯƠNG MẠI DỊCH VỤ TẤN PHÚC
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV TƯ VẤN, XÂY DỰNG VÀ THƯƠNG MẠI DỊCH VỤ TẤN PHÚC
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300391122&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 6300391122; địa chỉ công khai: Ấp Trường Hoà,; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn6300391122&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 94
+- Mã bản ghi: LEAD-VN-BID-094
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH XÂY DỰNG DỊCH VỤ ĐAN LÂM
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH XÂY DỰNG DỊCH VỤ ĐAN LÂM
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318611000&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0318611000; địa chỉ công khai: 07 Đường 19, Khu phố 5; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318611000&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 95
+- Mã bản ghi: LEAD-VN-BID-095
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN ONE MOUNT DISTRIBUTION
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN ONE MOUNT DISTRIBUTION
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109153068&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0109153068; địa chỉ công khai: Tầng 3, Tòa văn phòng T26, khu đô thị Times City, 458 Minh Khai; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0109153068&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 96
+- Mã bản ghi: LEAD-VN-BID-096
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công Ty TNHH HTV Hoa Lộc Mai
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công Ty TNHH HTV Hoa Lộc Mai
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0310931351&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0310931351; địa chỉ công khai: 10 Hàn Thuyên; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0310931351&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 97
+- Mã bản ghi: LEAD-VN-BID-097
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: Công ty TNHH du lịch Ngọc Quân Q&D
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: Công ty TNHH du lịch Ngọc Quân Q&D
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2301123217&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 2301123217; địa chỉ công khai: Số 34 Lý Chiêu Hoàng; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn2301123217&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 98
+- Mã bản ghi: LEAD-VN-BID-098
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH MTV XÂY DỰNG VÀ THƯƠNG MẠI PHÚC MINH LONG
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH MTV XÂY DỰNG VÀ THƯƠNG MẠI PHÚC MINH LONG
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3301757494&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 3301757494; địa chỉ công khai: Số 14 kiệt 02, trần thanh mại, phường an cựu, thành phố huế; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn3301757494&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 99
+- Mã bản ghi: LEAD-VN-BID-099
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY TNHH QUẢNG CÁO THƯƠNG MẠI VÀ IN HOA THỌ
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY TNHH QUẢNG CÁO THƯƠNG MẠI VÀ IN HOA THỌ
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0107520097&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0107520097; địa chỉ công khai: số 38,ngõ 634 đường Kim Giang; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0107520097&effRoleDate=24%2F03%2F2026&role=NT
+
+## Lead 100
+- Mã bản ghi: LEAD-VN-BID-100
+- Batch / run nguồn: vn_tender_companies_batch_1_2026_03_25
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: Hệ thống mạng đấu thầu quốc gia - Nhà thầu được phê duyệt
+- Tên trong danh sách gốc: CÔNG TY CỔ PHẦN CARES ENVIRONMENTAL
+- Loại lead: Công ty
+- Tên người: Chưa có
+- Tên công ty: CÔNG TY CỔ PHẦN CARES ENVIRONMENTAL
+- Vai trò / chức năng: Chưa có
+- Khu vực: Việt Nam
+- Website công ty: Chưa có
+- URL hồ sơ nguồn: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318357072&effRoleDate=24%2F03%2F2026&role=NT
+- Nguồn: Hệ thống mạng đấu thầu quốc gia
+- Lý do đưa vào: xuất hiện trong danh sách nhà thầu được phê duyệt công khai; là pháp nhân doanh nghiệp trong nước.
+- Độ phù hợp ICP: Chưa xác định
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái làm giàu: Chưa làm giàu
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Không
+- Chuyển Agent 3: Không
+- Ghi chú: Mã số thuế 0318357072; địa chỉ công khai: Số 31, Đường A5, KDC Đông Tăng Long; ngày phê duyệt: 24/03/2026.
+- Nguồn tham chiếu:
+  - Nguồn danh sách: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list
+  - Hồ sơ chi tiết: https://muasamcong.mpi.gov.vn/web/guest/approved-contractors-list?p_p_id=egpportalcontractorsapproved_WAR_egpportalcontractorsapproved&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_egpportalcontractorsapproved_WAR_egpportalcontractorsapproved_render=detail&orgCode=vn0318357072&effRoleDate=24%2F03%2F2026&role=NT
+

@@ -1,0 +1,388 @@
+# 01_Lead_List - linkedin_sg_logistics_owners_batch_1_2026_03_25
+
+## Bối cảnh
+- Gói nguồn: LinkedIn public sourcing
+- ICP mục tiêu: Founder / Co-founder / CEO trong logistics tại Singapore
+- Ngày thu thập: 2026-03-25
+- Trạng thái run: Batch 1
+
+## Lead 01
+- Mã bản ghi: `LEAD-LI-SG-001`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Alvin Ea
+- Loại lead: Cá nhân
+- Tên người: Alvin Ea
+- Tên công ty: Haulio
+- Vai trò / chức năng: Co-Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://www.haulio.io`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/alvinea`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile công khai thể hiện rõ `Co-Founder & CEO of Haulio`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai và đối chiếu thêm với bài viết công ty Haulio.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/alvinea`
+  - Haulio company page: `https://sg.linkedin.com/company/haulio`
+
+## Lead 02
+- Mã bản ghi: `LEAD-LI-SG-002`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public post + LinkedIn company page
+- Tên trong danh sách gốc: Sebastian Shen
+- Loại lead: Cá nhân
+- Tên người: Sebastian Shen
+- Tên công ty: Haulio
+- Vai trò / chức năng: Co-Founder
+- Khu vực: Singapore
+- Website công ty: `https://www.haulio.io`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: xuất hiện trên company page của Haulio và được Alvin Ea gọi rõ là `co-founder`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua LinkedIn company page và post công khai của Alvin Ea.
+- Refs:
+  - Haulio company page: `https://sg.linkedin.com/company/haulio`
+  - LinkedIn post: `https://www.linkedin.com/posts/alvinea_how-a-people-first-approach-helped-haulio-activity-6960030780479741952-0B5a`
+
+## Lead 03
+- Mã bản ghi: `LEAD-LI-SG-003`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Kevin Zhang
+- Loại lead: Cá nhân
+- Tên người: Kevin Zhang
+- Tên công ty: Inteluck
+- Vai trò / chức năng: Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://www.inteluck.com`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/inteluckevin`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile công khai gắn với Inteluck; nguồn công ty xác nhận là `Founder & CEO`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai và đối chiếu thêm với profile công ty Inteluck.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/inteluckevin`
+  - Inteluck company profile: `https://east.vc/portfolio/inteluck/`
+
+## Lead 04
+- Mã bản ghi: `LEAD-LI-SG-004`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn company page + LinkedIn public company post
+- Tên trong danh sách gốc: Nidhi Gupta
+- Loại lead: Cá nhân
+- Tên người: Nidhi Gupta
+- Tên công ty: Portcast
+- Vai trò / chức năng: Co-Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://www.portcast.io`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: LinkedIn company page và company post của Portcast gọi rõ `CEO Nidhi Gupta`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua LinkedIn company page và company post; nguồn công ty ngoài LinkedIn xác nhận thêm là `Co-Founder & CEO`.
+- Refs:
+  - Portcast company page: `https://sg.linkedin.com/company/portcast`
+  - LinkedIn company post: `https://www.linkedin.com/posts/portcast_singapore-based-logistics-tech-startup-portcast-activity-7311362393542905856-JmpH`
+
+## Lead 05
+- Mã bản ghi: `LEAD-LI-SG-005`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Wiebe Helder
+- Loại lead: Cá nhân
+- Tên người: Wiebe Helder
+- Tên công ty: Cargobase
+- Vai trò / chức năng: Founder
+- Khu vực: Singapore
+- Website công ty: `https://www.cargobase.com`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/wiebehelder`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile LinkedIn công khai của leadership tại Cargobase; nguồn công ty ngoài LinkedIn xác nhận là founder
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai; vai trò founder được đối chiếu thêm với hồ sơ công ty.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/wiebehelder`
+  - Cargobase company page: `https://sg.linkedin.com/company/cargobase`
+
+## Lead 06
+- Mã bản ghi: `LEAD-LI-SG-006`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn company page + LinkedIn repost
+- Tên trong danh sách gốc: Glenn Lai
+- Loại lead: Cá nhân
+- Tên người: Glenn Lai
+- Tên công ty: FR8Labs
+- Vai trò / chức năng: Co-Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://fr8labs.co/`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: FR8Labs repost công khai của Glenn Lai; hồ sơ công ty ngoài LinkedIn xác nhận là `Co-Founder & CEO`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua LinkedIn company page và repost công khai.
+- Refs:
+  - FR8Labs company page: `https://sg.linkedin.com/company/fr8labs`
+  - LinkedIn repost featuring Glenn Lai: `https://my.linkedin.com/jobs/view/customer-success-product-operations-specialist-at-fr8labs-4325816287`
+
+## Lead 07
+- Mã bản ghi: `LEAD-LI-SG-007`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public post
+- Tên trong danh sách gốc: Lai Chang Wen
+- Loại lead: Cá nhân
+- Tên người: Lai Chang Wen
+- Tên công ty: Ninja Van
+- Vai trò / chức năng: Co-Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://www.ninjavan.co`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: LinkedIn public post của Tech in Asia gọi rõ `CEO Lai Chang Wen`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua public LinkedIn post; trang công ty Ninja Van xác nhận vai trò `Co-Founder + CEO`.
+- Refs:
+  - LinkedIn public post: `https://www.linkedin.com/posts/tech-in-asia_ninja-van-eyes-path-beyond-ecommerce-as-price-activity-7191712631697645568-RKDD`
+  - Ninja Van company about page: `https://www.ninjavan.co/en-sg/company/about-us`
+
+## Lead 08
+- Mã bản ghi: `LEAD-LI-SG-008`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Shaun Chong
+- Loại lead: Cá nhân
+- Tên người: Shaun Chong
+- Tên công ty: Ninja Van
+- Vai trò / chức năng: Co-Founder & CTO
+- Khu vực: Singapore
+- Website công ty: `https://www.ninjavan.co`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/shaun-chong`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile LinkedIn công khai gắn trực tiếp với Ninja Van
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai và trang giới thiệu công ty.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/shaun-chong`
+  - Ninja Van company about page: `https://www.ninjavan.co/en-sg/company/about-us`
+
+## Lead 09
+- Mã bản ghi: `LEAD-LI-SG-009`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn company page update
+- Tên trong danh sách gốc: Constantin Robertz
+- Loại lead: Cá nhân
+- Tên người: Constantin Robertz
+- Tên công ty: Locad
+- Vai trò / chức năng: Co-Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://golocad.com`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: company update trên LinkedIn gọi rõ `Constantin Robertz, CEO at Locad`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua LinkedIn company update; nguồn công ty ngoài LinkedIn xác nhận là `Co-Founder & CEO`.
+- Refs:
+  - LinkedIn company update: `https://th.linkedin.com/company/golocad`
+  - Locad about page: `https://golocad.com/about-us/`
+
+## Lead 10
+- Mã bản ghi: `LEAD-LI-SG-010`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Vaibhav Dabhade
+- Loại lead: Cá nhân
+- Tên người: Vaibhav Dabhade
+- Tên công ty: Anchanto
+- Vai trò / chức năng: Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://anchanto.com`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/vaibhavdabhade`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile công khai thể hiện đang điều hành Anchanto; nguồn công ty xác nhận là `Founder & CEO`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai và đối chiếu thêm với trang leadership của Anchanto.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/vaibhavdabhade`
+  - Anchanto leadership page: `https://anchanto.com/en-id/our-leadership/`
+
+## Lead 11
+- Mã bản ghi: `LEAD-LI-SG-011`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile
+- Tên trong danh sách gốc: Julien Juttet
+- Loại lead: Cá nhân
+- Tên người: Julien Juttet
+- Tên công ty: Anchanto
+- Vai trò / chức năng: Co-Founder & CFO
+- Khu vực: Singapore
+- Website công ty: `https://anchanto.com`
+- LinkedIn / hồ sơ: `https://sg.linkedin.com/in/julienjuttet`
+- Nguồn: LinkedIn
+- Lý do đưa vào: profile công khai gắn với Anchanto; public post và leadership page xác nhận là `Co-Founder`
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh trực tiếp qua profile LinkedIn công khai và post công khai của chính Julien Juttet.
+- Refs:
+  - LinkedIn profile: `https://sg.linkedin.com/in/julienjuttet`
+  - LinkedIn public post: `https://www.linkedin.com/posts/julienjuttet_anchanto-has-been-recognised-by-the-straits-activity-7287665055226044416-hvmp`
+  - Anchanto leadership page: `https://anchanto.com/en-id/our-leadership/`
+
+## Lead 12
+- Mã bản ghi: `LEAD-LI-SG-012`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public post + LinkedIn company page
+- Tên trong danh sách gốc: Abhimanyu Kashikar
+- Loại lead: Cá nhân
+- Tên người: Abhimanyu Kashikar
+- Tên công ty: Anchanto
+- Vai trò / chức năng: Co-Founder & COO
+- Khu vực: Singapore
+- Website công ty: `https://anchanto.com`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: post công khai của Abhimanyu xác nhận `Co-founder & COO`; nguồn công ty xác nhận thêm vai trò đồng sáng lập
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua post công khai trên LinkedIn và trang leadership của Anchanto.
+- Refs:
+  - LinkedIn public post: `https://www.linkedin.com/posts/abhimanyukashikar_anchanto-has-been-recognised-by-statista-activity-7288167249511608321-LSoz`
+  - Anchanto leadership page: `https://anchanto.com/en-id/our-leadership/`
+
+## Lead 13
+- Mã bản ghi: `LEAD-LI-SG-013`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn company page + LinkedIn public post
+- Tên trong danh sách gốc: Arne Jeroschewski
+- Loại lead: Cá nhân
+- Tên người: Arne Jeroschewski
+- Tên công ty: Parcel Perform
+- Vai trò / chức năng: Founder & CEO
+- Khu vực: Singapore
+- Website công ty: `https://www.parcelperform.com`
+- LinkedIn / hồ sơ: Chưa có URL profile công khai xác định trực tiếp
+- Nguồn: LinkedIn
+- Lý do đưa vào: Parcel Perform public posts gọi rõ Arne là `Founder & CEO`; company page hiển thị Arne trong danh sách nhân sự công khai
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh gián tiếp qua post công khai trên LinkedIn và company page của Parcel Perform.
+- Refs:
+  - LinkedIn public post: `https://www.linkedin.com/posts/arnejero_parcel-performs-year-in-review-in-2023-activity-7025719721329123328-243v`
+  - Parcel Perform company page: `https://www.linkedin.com/company/parcel-perform`
+  - Parcel Perform public post: `https://www.linkedin.com/posts/parcel-perform_theleadsummit-parcelperform-aiinlogistics-activity-7332682250922184705-4GeD`
+
+## Lead 14
+- Mã bản ghi: `LEAD-LI-SG-014`
+- Batch / run nguồn: `linkedin_sg_logistics_owners_batch_1_2026_03_25`
+- Ngày thêm vào run: 2026-03-25
+- Ngày cập nhật gần nhất: 2026-03-25
+- Nguồn scan gần nhất: LinkedIn public profile reference + LinkedIn company content
+- Tên trong danh sách gốc: Dana von der Heide
+- Loại lead: Cá nhân
+- Tên người: Dana von der Heide
+- Tên công ty: Parcel Perform
+- Vai trò / chức năng: Founder & Chief Commercial Officer
+- Khu vực: Singapore-based company
+- Website công ty: `https://www.parcelperform.com`
+- LinkedIn / hồ sơ: `https://www.linkedin.com/in/danavonderheide/`
+- Nguồn: LinkedIn
+- Lý do đưa vào: nguồn công ty xác nhận là founder; bài phỏng vấn công khai dẫn trực tiếp tới LinkedIn profile của Dana
+- Độ phù hợp ICP: Cao
+- Trạng thái xác minh: Đã xác minh
+- Trạng thái enrichment: Chưa enrich
+- Mã trùng đã gộp: Không có
+- Chuyển Agent 2: Có
+- Chuyển Agent 3: Có
+- Ghi chú: Đã xác minh qua leadership page của Parcel Perform và reference công khai tới LinkedIn profile.
+- Refs:
+  - LinkedIn profile reference: `https://www.linkedin.com/in/danavonderheide/`
+  - Parcel Perform about page: `https://www.parcelperform.com/company/about-us`
+  - LinkedIn company content mentioning Dana: `https://www.linkedin.com/posts/parcel-perform_aivisibility-aicommerce-ecommercelogistics-activity-7382314662249299968-oXAF`

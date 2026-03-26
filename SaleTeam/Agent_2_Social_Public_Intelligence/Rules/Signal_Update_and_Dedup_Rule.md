@@ -29,7 +29,7 @@ Agent 2 phải coi tín hiệu social là dữ liệu thay đổi theo thời gi
 - Đã bị phủ định bởi thông tin công khai mới hơn
 
 ## Quy tắc ghi log
-- Mỗi tín hiệu nên có `Mã tín hiệu` ổn định trong phạm vi từng `Mã bản ghi`.
+- Mỗi tín hiệu nên có `Mã tín hiệu` ổn định trong phạm vi từng `Mã đối tượng social`.
 - Nếu cập nhật tín hiệu cũ, không tạo thêm mục mới chỉ để lặp lại cùng một ý.
 - Nếu gộp tín hiệu, phải giữ lại:
   - nền tảng chính

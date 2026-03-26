@@ -7,17 +7,25 @@
 
 ## Bối cảnh
 - Danh sách đầu vào:
+- Nguồn vào:
 - Nền tảng đã xem:
 - Ngày xem:
 - Nguồn watchlist:
+- Mục tiêu nghiên cứu:
+- Chỉ định cụ thể của người dùng:
+- Mức output / độ sâu mong muốn:
 
 ## Bản ghi 01
-- Mã bản ghi:
+- Mã đối tượng social:
+- Mã bản ghi từ Agent 1:
 - Tên bản ghi gốc:
 - Tên người / công ty:
 - Persona / vai trò:
 - Trạng thái theo dõi:
 - Mức độ đầy đủ coverage:
+- Nền tảng đã quét:
+- Nền tảng chưa tìm thấy hồ sơ công khai:
+- Nền tảng có dấu vết nhưng chưa xác minh:
 - Ngày quét gần nhất:
 - Ngày quét tiếp theo cấp account:
 - Mức ưu tiên account:
@@ -103,9 +111,11 @@
 ```
 
 ## Quy tắc
-- `Mã bản ghi` là trường bắt buộc để nối lại với danh sách gốc.
-- `Profile ID` phải ổn định trong phạm vi từng `Mã bản ghi`.
-- `Mã tín hiệu` nên ổn định trong phạm vi từng `Mã bản ghi`.
+- `Mã đối tượng social` là trường bắt buộc trong mọi run của Agent 2.
+- `Mã bản ghi từ Agent 1` chỉ bắt buộc khi run nhận từ Agent 1.
+- `Nền tảng đã xem` nên liệt kê rõ `LinkedIn`, `Facebook`, `X`, `Instagram` và nền tảng khác nếu có.
+- `Profile ID` phải ổn định trong phạm vi từng `Mã đối tượng social`.
+- `Mã tín hiệu` nên ổn định trong phạm vi từng `Mã đối tượng social`.
 - `Quan sát được` chỉ ghi điều nhìn thấy trên profile công khai.
 - `Hàm ý có thể dùng cho chăm sóc / nuôi dưỡng` không được viết như dữ kiện.
 - `Độ mạnh tín hiệu` nên dùng:
@@ -115,3 +125,4 @@
 - `Ưu tiên tín hiệu` và `Mức ưu tiên account` nên bám theo `Social_Priority_Model.md`.
 - `Ngày quét tiếp theo cấp account` là mốc sớm nhất trong các profile đang theo dõi của account đó.
 - `Bối cảnh follow-up gần nhất` là bối cảnh nội bộ, không phải dữ kiện public.
+- Nếu không tìm thấy hồ sơ công khai trên `Facebook`, `X`, `Instagram`, phải ghi rõ ở cấp bản ghi thay vì bỏ qua im lặng.

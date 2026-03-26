@@ -22,6 +22,19 @@
 - dấu hiệu về mua hàng hoặc mở rộng
 - bài ghim, link nổi bật, CTA hoặc thay đổi bio
 
+## Nền tảng mặc định phải rà
+- LinkedIn
+- Facebook
+- X
+- Instagram
+
+## Khi rà nhiều nền tảng
+- Tách từng hồ sơ theo nền tảng, không gộp quan sát chéo nền tảng nếu chưa ghi rõ nguồn
+- Với Facebook và Instagram, ưu tiên bio, link in bio, pinned content và post công khai gần đây
+- Với X, ưu tiên bio, pinned tweet, thread, repost và chủ đề tương tác
+- Với LinkedIn, ưu tiên headline, featured content, experience hiện tại và post công khai
+- Nếu một nền tảng không có hồ sơ công khai đủ chắc, phải ghi rõ là `chưa tìm thấy hồ sơ công khai xác minh được`
+
 ## Khi follow chặt profile
 - tạo baseline hồ sơ ngay từ vòng đầu
 - so sánh mỗi lần quét với baseline gần nhất

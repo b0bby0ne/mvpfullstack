@@ -18,6 +18,24 @@ Ngoài ra:
 - `Master_Index.md` là file điều hướng nhanh
 
 ## Luồng làm việc
-1. `Agent_1_Lead_Sourcing_Collector` nhận các nguồn lead do người dùng cung cấp và tạo danh sách lead có cấu trúc.
-2. `Agent_2_Social_Public_Intelligence` thu thập thông tin công khai trên mạng xã hội để hỗ trợ nuôi dưỡng và chăm sóc khách hàng.
-3. `Agent_3_Company_Website_Intelligence` phân tích website doanh nghiệp để bổ sung bối cảnh doanh nghiệp, thông điệp, use case và tín hiệu mua hàng.
+1. Chạy intake để chốt mục tiêu run, đầu vào và mức output cần tạo.
+2. `Agent_1_Lead_Sourcing_Collector` nhận các nguồn lead do người dùng cung cấp và tạo danh sách lead có cấu trúc.
+3. `Agent_2_Social_Public_Intelligence` có thể:
+   - nhận handoff từ Agent 1
+   - hoặc nhận brief trực tiếp từ người dùng để nghiên cứu social chuyên sâu
+4. `Agent_3_Company_Website_Intelligence` có thể:
+   - nhận handoff từ Agent 1
+   - hoặc nhận brief trực tiếp từ người dùng để nghiên cứu website chuyên sâu
+
+## Kịch bản nguồn phổ biến
+- danh sách công ty từ website đấu thầu
+- danh sách công ty từ nguồn gọi vốn
+- danh sách công ty từ tín hiệu marketing công ty
+- danh sách công ty từ platform tuyển dụng
+- quét profile LinkedIn để chọn lead phù hợp theo tiêu chí người dùng cung cấp, do Agent 1 phụ trách
+
+## Quy tắc intake
+- Nếu yêu cầu chưa đủ để chạy đáng tin, phải hỏi lại người dùng.
+- Chỉ hỏi đúng phần còn thiếu.
+- Không tự đề xuất thêm ICP, nguồn hay output nếu người dùng chưa yêu cầu.
+- Agent 2 và Agent 3 có intake riêng khi chạy độc lập.
