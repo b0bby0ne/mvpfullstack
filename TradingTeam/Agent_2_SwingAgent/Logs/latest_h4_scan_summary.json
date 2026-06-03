@@ -1,0 +1,38 @@
+{
+  "timestamp_utc": "2026-04-01T09:56:57+00:00",
+  "workflow_name": "swing_h4_bob_volman_scan",
+  "timeframe": "H4",
+  "selected_markets": [
+    "crypto",
+    "cfd",
+    "vn_stock"
+  ],
+  "markets": {
+    "crypto": {
+      "market": "crypto",
+      "status": "ok",
+      "asset_universe": 42,
+      "batch_size": 5,
+      "batch_offset": 20,
+      "scanned_assets": 5,
+      "detected_assets": 3,
+      "logged_symbols": [
+        "AVAX",
+        "SUI",
+        "SHIB"
+      ],
+      "skipped_assets": 0,
+      "errors": []
+    },
+    "cfd": {
+      "market": "cfd",
+      "status": "skipped",
+      "reason": "missing OANDA_ACCOUNT_ID or OANDA_API_KEY",
+      "scanned_assets": 0,
+      "detected_assets": 0,
+      "logged_symbols": []
+    }
+  },
+  "completed_at_utc": "2026-04-01T09:57:02+00:00",
+  "detections_total": 3
+}

@@ -1,16 +1,32 @@
-# NovelTeam - Lord & Survival Theme
+# Dự án Novel: Lãnh Chúa: Hỏa Chủng
 
-Chào mừng bạn đến với dự án **NovelTeam**. Đây là không gian dành riêng để phát triển bộ truyện với chủ đề **Lãnh chúa (Lord)** và **Sinh tồn (Survival)**.
-
-Dự án được thiết lập theo mô hình **KWSR** để đảm bảo tính logic, chiều sâu và sự nhất quán trong quá trình sáng tác.
-
-## Cấu trúc Dự án (KWSR)
-
-1.  **Knowledge (K)**: Nơi lưu trữ các logic, tri thức, và quy tắc nền tảng của thế giới truyện.
-2.  **Workflow (W)**: Các quy trình làm việc để thiết lập nhân vật, thế giới, sức mạnh, v.v.
-3.  **Rules (R)**: Hệ thống quy tắc đối chiếu giữa quy trình và tri thức, đảm bảo diễn biến truyện tuân thủ logic tuyệt đối.
-4.  **Skill (S)**: Các kỹ năng viết truyện, xây dựng nhân vật và triển khai nội dung.
-5.  **Story**: Nơi triển khai nội dung thực tế, chia theo các dòng thời gian (Lifetime).
+Bộ truyện Lãnh chúa Sinh tồn - Hardcore Survival - Chiến thuật mưu lược.
 
 ---
-*Dự án khởi tạo vào ngày 11/05/2026.*
+
+## 📂 Cấu trúc Dự án
+
+### [0. Core Setting (Thiết lập Cốt lõi)](file:///d:/Trading%20Agent/NovelTeam/0_Core_Setting/)
+- [World_Setting.md](file:///d:/Trading%20Agent/NovelTeam/0_Core_Setting/World_Setting.md): Bối cảnh 1 tỷ người, Quy luật Hư Không.
+- [Plot_Overview.md](file:///d:/Trading%20Agent/NovelTeam/0_Core_Setting/Plot_Overview.md): Master Plot & Tuyến thời gian chính.
+- [Workflow_Rules.md](file:///d:/Trading%20Agent/NovelTeam/0_Core_Setting/Workflow_Rules.md): Quy tắc cập nhật dữ liệu và viết chương.
+- [World_Rules.md](file:///d:/Trading%20Agent/NovelTeam/0_Core_Setting/World_Rules.md): Các quy luật vật lý và ma pháp của thế giới.
+
+### [1. Knowledge Base (Wiki Tri thức)](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/)
+- **Systems (Hệ thống)**: [Power](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Systems/System_Power.md), [Weather](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Systems/System_Weather_Disasters.md), [Shelter](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Systems/System_Shelter_Evolution.md), [Resource](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Systems/System_Resource.md).
+- **Catalogs (Danh mục)**: [Equipment](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Catalogs/Catalog_Equipment.md), [Monsters](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Catalogs/Catalog_Monsters_Corrupted.md), [Materials](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Catalogs/Catalog_Materials.md), [Decorations](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Catalogs/Catalog_Decorations.md).
+- **Protagonist (Nhân vật chính)**: [MC_Profile](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Protagonist/MC_Profile.md), [MC_Item_Spark](file:///d:/Trading%20Agent/NovelTeam/1_Knowledge_Base/Protagonist/MC_Item_Spark.md).
+
+### [2. Story Outlines (Dàn ý)](file:///d:/Trading%20Agent/NovelTeam/2_Story_Outlines/)
+- [Outline_Arc_1.1_Origin](file:///d:/Trading%20Agent/NovelTeam/2_Story_Outlines/Phase_1/Outline_Arc_1.1_Origin.md): Chương 1 - 100.
+- [Outline_Arc_1.2_Expansion](file:///d:/Trading%20Agent/NovelTeam/2_Story_Outlines/Phase_1/Outline_Arc_1.2_Expansion.md): Chương 101 - 200.
+
+### [3. Chapters (Nội dung Truyện)](file:///d:/Trading%20Agent/NovelTeam/3_Chapters/)
+- [Chapter_001_Binh_Tinh](file:///d:/Trading%20Agent/NovelTeam/3_Chapters/Phase_1/Chapter_001_Binh_Tinh.md)
+- [Chapter_002_Quy_Luat](file:///d:/Trading%20Agent/NovelTeam/3_Chapters/Phase_1/Chapter_002_Quy_Luat.md)
+
+### [4. References (Tham khảo)](file:///d:/Trading%20Agent/NovelTeam/4_References/)
+- Các tài liệu tham khảo từ Vô Tận Vũ Trang, Lãnh Chúa Cầu Sinh, Binh Pháp Tôn Tử...
+
+---
+*Ghi chú: Mọi cập nhật mới về vật phẩm hoặc tình tiết đều phải được đồng bộ vào 1_Knowledge_Base theo đúng quy trình.*

@@ -1,0 +1,307 @@
+{
+  "generated_at_utc": "2026-04-01T05:08:13+00:00",
+  "source": "FireAnt",
+  "selection_method": "top_market_cap",
+  "symbols": [
+    {
+      "symbol": "VIC",
+      "name": "Tập đoàn Vingroup - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 1091173992998400.0
+    },
+    {
+      "symbol": "VCB",
+      "name": "Ngân hàng TMCP Ngoại thương Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 489642560508400.0
+    },
+    {
+      "symbol": "VHM",
+      "name": "CTCP Vinhomes",
+      "exchange": "HSX",
+      "market_cap_vnd": 452636802840800.0
+    },
+    {
+      "symbol": "BID",
+      "name": "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 290838605139500.0
+    },
+    {
+      "symbol": "VGI",
+      "name": "Tổng CTCP Đầu tư Quốc tế Viettel",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 288553301760000.0
+    },
+    {
+      "symbol": "CTG",
+      "name": "Ngân hàng TMCP Công Thương Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 269901326135750.0
+    },
+    {
+      "symbol": "TCB",
+      "name": "Ngân hàng TMCP Kỹ thương Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 218610516771900.0
+    },
+    {
+      "symbol": "MBB",
+      "name": "Ngân hàng TMCP Quân Đội",
+      "exchange": "HSX",
+      "market_cap_vnd": 215873997561200.0
+    },
+    {
+      "symbol": "VPB",
+      "name": "Ngân hàng TMCP Việt Nam Thịnh Vượng",
+      "exchange": "HSX",
+      "market_cap_vnd": 215009329587100.0
+    },
+    {
+      "symbol": "HPG",
+      "name": "CTCP Tập đoàn Hòa Phát",
+      "exchange": "HSX",
+      "market_cap_vnd": 209540217841500.0
+    },
+    {
+      "symbol": "GAS",
+      "name": "Tổng Công ty khí Việt Nam - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 194725045309200.0
+    },
+    {
+      "symbol": "MCH",
+      "name": "CTCP Hàng tiêu dùng MASAN",
+      "exchange": "HSX",
+      "market_cap_vnd": 186402378528000.0
+    },
+    {
+      "symbol": "ACV",
+      "name": "Tổng Công ty Cảng hàng không Việt Nam - CTCP",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 165145137460300.0
+    },
+    {
+      "symbol": "VPL",
+      "name": "CTCP Vinpearl",
+      "exchange": "HSX",
+      "market_cap_vnd": 150457901630300.0
+    },
+    {
+      "symbol": "BSR",
+      "name": "CTCP Lọc - Hóa dầu Bình Sơn",
+      "exchange": "HSX",
+      "market_cap_vnd": 135447456506300.0
+    },
+    {
+      "symbol": "GVR",
+      "name": "Tập đoàn Công nghiệp Cao su Việt Nam - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 131000000000000.0
+    },
+    {
+      "symbol": "VNM",
+      "name": "CTCP Sữa Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 128950250956500.0
+    },
+    {
+      "symbol": "HDB",
+      "name": "Ngân hàng TMCP Phát triển Thành phố Hồ Chí Minh",
+      "exchange": "HSX",
+      "market_cap_vnd": 128635601501100.0
+    },
+    {
+      "symbol": "FPT",
+      "name": "CTCP FPT",
+      "exchange": "HSX",
+      "market_cap_vnd": 128103735499200.0
+    },
+    {
+      "symbol": "LPB",
+      "name": "Ngân hàng TMCP Lộc Phát Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 126660761040000.0
+    },
+    {
+      "symbol": "ACB",
+      "name": "Ngân hàng TMCP Á Châu",
+      "exchange": "HSX",
+      "market_cap_vnd": 122509259886150.0
+    },
+    {
+      "symbol": "MWG",
+      "name": "CTCP Đầu tư Thế giới Di động",
+      "exchange": "HSX",
+      "market_cap_vnd": 120998098789600.0
+    },
+    {
+      "symbol": "TCX",
+      "name": "CTCP Chứng khoán Kỹ thương",
+      "exchange": "HSX",
+      "market_cap_vnd": 120202341792000.0
+    },
+    {
+      "symbol": "STB",
+      "name": "Ngân hàng TMCP Sài Gòn Thương Tín",
+      "exchange": "HSX",
+      "market_cap_vnd": 119334154822800.0
+    },
+    {
+      "symbol": "MSN",
+      "name": "CTCP Tập đoàn MaSan",
+      "exchange": "HSX",
+      "market_cap_vnd": 116013534030100.0
+    },
+    {
+      "symbol": "VJC",
+      "name": "CTCP Hàng không VIETJET",
+      "exchange": "HSX",
+      "market_cap_vnd": 94362007773000.0
+    },
+    {
+      "symbol": "VCK",
+      "name": "CTCP Chứng khoán VPS",
+      "exchange": "HSX",
+      "market_cap_vnd": 85100443654800.0
+    },
+    {
+      "symbol": "KSF",
+      "name": "CTCP Tập đoàn Sunshine",
+      "exchange": "HNX",
+      "market_cap_vnd": 75672112602800.0
+    },
+    {
+      "symbol": "SHB",
+      "name": "Ngân hàng TMCP Sài Gòn - Hà Nội",
+      "exchange": "HSX",
+      "market_cap_vnd": 71432094680900.0
+    },
+    {
+      "symbol": "GEE",
+      "name": "CTCP Điện lực Gelex",
+      "exchange": "HSX",
+      "market_cap_vnd": 70271991552000.0
+    },
+    {
+      "symbol": "SSI",
+      "name": "CTCP Chứng khoán SSI",
+      "exchange": "HSX",
+      "market_cap_vnd": 69875291943600.0
+    },
+    {
+      "symbol": "HVN",
+      "name": "Tổng Công ty Hàng không Việt Nam - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 68919685373650.0
+    },
+    {
+      "symbol": "FOX",
+      "name": "CTCP Viễn thông FPT",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 64272421281000.0
+    },
+    {
+      "symbol": "MVN",
+      "name": "Tổng Công ty Hàng hải Việt Nam - CTCP",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 62499372000000.0
+    },
+    {
+      "symbol": "BVH",
+      "name": "Tập đoàn Bảo Việt",
+      "exchange": "HSX",
+      "market_cap_vnd": 61241628030000.0
+    },
+    {
+      "symbol": "VRE",
+      "name": "CTCP Vincom Retail",
+      "exchange": "HSX",
+      "market_cap_vnd": 61011749308500.0
+    },
+    {
+      "symbol": "VIB",
+      "name": "Ngân hàng TMCP Quốc tế Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 58719098497500.0
+    },
+    {
+      "symbol": "SAB",
+      "name": "Tổng CTCP Bia - Rượu - Nước giải khát Sài Gòn",
+      "exchange": "HSX",
+      "market_cap_vnd": 57009897435400.0
+    },
+    {
+      "symbol": "BCM",
+      "name": "Tập đoàn Đầu tư và Phát triển Công nghiệp Becamex - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 56407500000000.0
+    },
+    {
+      "symbol": "MSR",
+      "name": "CTCP MaSan High - Tech Materials",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 56091305520000.0
+    },
+    {
+      "symbol": "VPX",
+      "name": "CTCP Chứng khoán VPBank",
+      "exchange": "HSX",
+      "market_cap_vnd": 55125000000000.0
+    },
+    {
+      "symbol": "PLX",
+      "name": "Tập đoàn Xăng dầu Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 52348400082000.0
+    },
+    {
+      "symbol": "SSB",
+      "name": "Ngân hàng TMCP Đông Nam Á",
+      "exchange": "HSX",
+      "market_cap_vnd": 48365000000000.0
+    },
+    {
+      "symbol": "TPB",
+      "name": "Ngân Hàng TMCP Tiên Phong",
+      "exchange": "HSX",
+      "market_cap_vnd": 45355666373550.0
+    },
+    {
+      "symbol": "VEA",
+      "name": "Tổng Công ty Máy động lực và Máy nông nghiệp Việt Nam - CTCP",
+      "exchange": "UPCOM",
+      "market_cap_vnd": 44514800000000.0
+    },
+    {
+      "symbol": "EIB",
+      "name": "Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam",
+      "exchange": "HSX",
+      "market_cap_vnd": 43867070294850.0
+    },
+    {
+      "symbol": "VIX",
+      "name": "CTCP Chứng khoán VIX",
+      "exchange": "HSX",
+      "market_cap_vnd": 42022435289800.0
+    },
+    {
+      "symbol": "POW",
+      "name": "Tổng Công ty Điện lực Dầu khí Việt Nam - CTCP",
+      "exchange": "HSX",
+      "market_cap_vnd": 40035386228400.0
+    },
+    {
+      "symbol": "REE",
+      "name": "CTCP Cơ điện lạnh",
+      "exchange": "HSX",
+      "market_cap_vnd": 37753572288300.0
+    },
+    {
+      "symbol": "PNJ",
+      "name": "CTCP Vàng bạc Đá quý Phú Nhuận",
+      "exchange": "HSX",
+      "market_cap_vnd": 37117022841600.0
+    }
+  ]
+}

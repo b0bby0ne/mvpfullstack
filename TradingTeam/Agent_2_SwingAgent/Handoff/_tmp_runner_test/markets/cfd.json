@@ -1,0 +1,13 @@
+{
+  "market": "cfd",
+  "producer_market_status": {
+    "status": "skipped",
+    "reason": "missing OANDA_ACCOUNT_ID or OANDA_API_KEY"
+  },
+  "asset_count": 0,
+  "normalized_read_ready_count": 0,
+  "structure_context_ready_count": 0,
+  "bob_volman_intraday_ready_count": 0,
+  "default_consumption_mode": "hold",
+  "assets": []
+}
