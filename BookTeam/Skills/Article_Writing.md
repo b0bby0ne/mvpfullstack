@@ -78,7 +78,7 @@ Tài liệu này là bộ khung viết trung tâm của BookTeam. Nó gom các k
 * Dạng bài: văn xuôi liền mạch, chia đoạn rõ.
 * Độ dài: trung bình đến dài.
 * Giọng văn: ấm, thật, rõ ý, không dạy đời.
-* Nên có: hook đầu bài, 2 đến 4 đoạn triển khai, 1 đoạn chốt và 1 CTA mềm.
+* Nên có: hook đầu bài, 2 đến 4 đoạn triển khai, 1 đoạn chốt, 1 CTA mềm và 3-5 hashtag liên quan (ở cuối bài).
 * Không nên: heading rườm rà, bullet quá nhiều, mở bài kiểu giới thiệu dài.
 
 #### Template Facebook chuẩn
@@ -94,6 +94,8 @@ Tài liệu này là bộ khung viết trung tâm của BookTeam. Nó gom các k
 [Đoạn 4: đưa ra cách nhìn hoặc bước làm cụ thể]
 
 [Đoạn kết: câu đọng lại, câu hỏi hoặc CTA mềm]
+
+[Hashtags liên quan ở cuối bài]
 ```
 
 #### Khung viết Facebook cá nhân

@@ -120,7 +120,18 @@ Tài liệu này lưu trữ các mốc thông số và sự kiện quan trọng 
 ## Chương 10: Tiền Dạ Thanh Trừng
 *   **Thời gian**: Mười hai giờ cuối Ngày thứ 8.
 *   **Sự kiện chính**:
-    - Hé lộ sự chuẩn bị của Lâm Phong (Tọa thiền) và Vương Hùng (Sức mạnh cơ bắp).
-    - Giới thiệu "Ngũ Ảnh Bí Ẩn" với các phương thức sinh tồn dị biệt (Bẫy cát, Độc, Cơ quan...).
-    - Thảm cảnh của nhóm người chơi hạ đẳng trên Sàn Giao Dịch.
-    - Kết giới bảo hộ tan vỡ lúc 23:59. Cuộc thanh lọc bắt đầu.
+    - Trần Dạ hoàn thành **Trường Giáo Thiết**, kiểm tra lại **Bì Giáp Thú**, lẫy đá và tuyến rút lui trong trú sở.
+    - Phân tích hành vi của các Top Player, xác lập hình tượng "Ngũ Ảnh" với những con đường sinh tồn khác nhau.
+    - Chứng kiến sự hoảng loạn lan khắp Kênh Thế Giới khi giá trị vật phẩm phòng thủ và chống lạnh tăng vọt.
+    - Kết giới tân thủ tan vỡ lúc 23:59, chính thức mở ra đợt dã thú thanh trừng đầu tiên.
+
+---
+
+## Chương 11: Huyết Lộ Khai Chiến
+*   **Thời gian**: 0 giờ Ngày thứ 9 đến rạng sáng Ngày thứ 10.
+*   **Trạng thái**: Trần Dạ bước vào chiến đấu với **Trường Giáo Thiết**, **Bì Giáp Thú** và trú sở đã được thiết đinh gia cố.
+*   **Sự kiện chính**:
+    - Đợt dã thú đầu tiên ập đến sau khi kết giới biến mất; Trần Dạ chặn giết **Nanh Trư** tại tọa độ #952.
+    - Thiên tai đầu tiên mang tên **Hàn Triều Khởi Nguyên** xuất hiện lúc 2 giờ sáng, kéo theo tuyết đen và nền nhiệt giảm sâu.
+    - Xác lập quy tắc "chu kỳ chồng chéo" giữa thú triều và thiên tai.
+    - Rạng sáng Ngày thứ 10, hệ thống công bố số tử vong toàn cầu: **420.512.000** người.
