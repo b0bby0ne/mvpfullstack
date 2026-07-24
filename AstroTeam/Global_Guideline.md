@@ -28,7 +28,16 @@ Mỗi advisory run phải làm rõ:
 
 Nếu thiếu phần ảnh hưởng kết luận, phải hỏi lại hoặc ghi giả định.
 
-## 4. Tách lớp thông tin
+Trước khi chạy pipeline, intake phải được gắn một trong bốn trạng thái: `Đủ để chạy`, `Đủ có giới hạn`, `Chờ dữ liệu` hoặc `Ngoài phạm vi`. Chỉ hai trạng thái đầu được tiếp tục; mọi giả định và giới hạn phải xuất hiện lại trong output.
+
+## 4. Quy ước tính toán và chọn sự kiện
+
+- Nếu người dùng không chỉ định cấu hình, áp dụng [Astro Calculation Defaults](./Agent_1_Astro_Event_Specialist/Rules/Astro_Calculation_Defaults.md) và công khai các mặc định đã dùng.
+- Nếu có nhiều event, áp dụng [Event Priority and Overlap Rule](./Agent_1_Astro_Event_Specialist/Rules/Event_Priority_and_Overlap_Rule.md).
+- Không chọn event chỉ vì nó khớp với biến động giá đã xảy ra.
+- Khi các event chồng lấn, trình bày thành cluster và hạ confidence nếu không tách được đóng góp của từng event.
+
+## 5. Tách lớp thông tin
 
 Mọi báo cáo phải phân biệt:
 
@@ -41,15 +50,29 @@ Mọi báo cáo phải phân biệt:
 
 Không dùng biến động giá làm bằng chứng ngược để xác nhận một diễn giải đã chọn sau sự kiện.
 
-## 5. Chuẩn nguồn
+## 6. Chuẩn nguồn
 
 - Event data phải có engine, version, exact time và timezone.
 - Market data phải có instrument/price type, timestamp và nguồn.
 - Tin tức phải có ngày công bố và trạng thái xác minh.
 - Dữ kiện nhạy thời gian phải ghi snapshot time.
 - Nguồn chưa xác minh không được nâng thành driver chính.
+- Nguồn phải được xếp hạng và trích dẫn gần dữ kiện theo [Source Hierarchy and Citation Rule](./Agent_2_Market_Context_Analyst/Rules/Source_Hierarchy_and_Citation_Rule.md).
+- Nguồn thiên văn và nguồn thị trường phải được tách riêng.
 
-## 6. Kịch bản tác động
+## 7. Độ mới và cập nhật
+
+Mọi market context và advisory cuối phải ghi:
+
+- `Snapshot time`;
+- `Published time`;
+- `Valid until`;
+- `Refresh triggers`;
+- `Freshness status`.
+
+Khi sắp hết hạn hoặc có thông tin mới chưa đánh giá, output phải được gắn `Review required`. Khi quá hạn hoặc driver chính thay đổi, gắn `Expired`; nếu đã có revision mới, gắn `Superseded`. Bản cập nhật phải có version và changelog. Không sửa âm thầm một advisory đã phát hành.
+
+## 8. Kịch bản tác động
 
 Mỗi kịch bản phải có:
 
@@ -63,7 +86,7 @@ Mỗi kịch bản phải có:
 
 Không dùng kịch bản như một dự báo chắc chắn.
 
-## 7. Confidence
+## 9. Confidence
 
 - `Cao`: event, bối cảnh và kênh ảnh hưởng cùng hội tụ.
 - `Trung bình`: mapping hợp lý nhưng có driver đối trọng.
@@ -71,7 +94,7 @@ Không dùng kịch bản như một dự báo chắc chắn.
 
 Confidence không phải xác suất tăng/giảm.
 
-## 8. Phạm vi bị loại trừ
+## 10. Phạm vi bị loại trừ
 
 Team không cung cấp:
 
@@ -84,7 +107,7 @@ Team không cung cấp:
 - kế hoạch hoặc chiến lược giao dịch;
 - cam kết lợi nhuận.
 
-## 9. Quyền phủ định của bối cảnh
+## 11. Quyền phủ định của bối cảnh
 
 Nếu market drivers thực tế mâu thuẫn với narrative chiêm tinh:
 
@@ -93,7 +116,7 @@ Nếu market drivers thực tế mâu thuẫn với narrative chiêm tinh:
 3. hạ confidence của impact;
 4. không ép kết luận theo narrative chiêm tinh.
 
-## 10. Quy ước output
+## 12. Quy ước output
 
 Mỗi run dùng `Output/<advisory_id>/`:
 

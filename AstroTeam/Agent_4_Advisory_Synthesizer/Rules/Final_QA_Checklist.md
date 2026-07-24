@@ -5,11 +5,17 @@
 - [ ] Event ID nhất quán.
 - [ ] Exact time, timezone và active window rõ ràng.
 - [ ] Engine và cấu hình được ghi.
+- [ ] Mọi mặc định tính toán đã dùng được công khai.
+- [ ] Tiêu chí ưu tiên event và các cluster chồng lấn được giải thích.
 
 ## Bối cảnh
 
+- [ ] Intake có trạng thái `Đủ để chạy` hoặc `Đủ có giới hạn`.
 - [ ] Snapshot time hiển thị.
+- [ ] Published time, valid until, refresh triggers và freshness status hiển thị.
 - [ ] Nguồn đủ mới và đáng tin.
+- [ ] Nguồn được xếp hạng; trích dẫn nằm gần dữ kiện.
+- [ ] Nguồn thiên văn và nguồn thị trường được tách riêng.
 - [ ] Tin chưa xác minh được gắn nhãn.
 - [ ] Market drivers và driver đối trọng đều có mặt.
 
@@ -33,3 +39,4 @@
 - [ ] Nguồn và giới hạn có mặt.
 - [ ] Disclaimer có mặt.
 - [ ] `Master_Index.md` của run đã cập nhật.
+- [ ] Nếu là revision, version và changelog đã cập nhật.

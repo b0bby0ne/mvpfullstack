@@ -12,6 +12,8 @@
 - [Workflow](./Agent_1_Astro_Event_Specialist/Workflows/Core_Astro_Event_Workflow.md)
 - [Quy tắc vận hành](./Agent_1_Astro_Event_Specialist/Rules/Core_Operating_Principles.md)
 - [Yêu cầu đầu vào](./Agent_1_Astro_Event_Specialist/Rules/Input_Requirements.md)
+- [Mặc định tính toán chiêm tinh](./Agent_1_Astro_Event_Specialist/Rules/Astro_Calculation_Defaults.md)
+- [Ưu tiên và chồng lấn sự kiện](./Agent_1_Astro_Event_Specialist/Rules/Event_Priority_and_Overlap_Rule.md)
 - [Event Brief Template](./Agent_1_Astro_Event_Specialist/Rules/Astro_Event_Brief_Template.md)
 - [Handoff](./Agent_1_Astro_Event_Specialist/Rules/Handoff_to_Analysts.md)
 
@@ -23,7 +25,10 @@
 - [Workflow](./Agent_2_Market_Context_Analyst/Workflows/Core_Market_Context_Workflow.md)
 - [Quy tắc vận hành](./Agent_2_Market_Context_Analyst/Rules/Core_Operating_Principles.md)
 - [Yêu cầu đầu vào](./Agent_2_Market_Context_Analyst/Rules/Input_Requirements.md)
+- [Phân cấp nguồn và trích dẫn](./Agent_2_Market_Context_Analyst/Rules/Source_Hierarchy_and_Citation_Rule.md)
+- [Độ mới của advisory](./Agent_2_Market_Context_Analyst/Rules/Advisory_Freshness_Rule.md)
 - [Market Context Template](./Agent_2_Market_Context_Analyst/Rules/Market_Context_Template.md)
+- [Workflow cập nhật bối cảnh](./Agent_2_Market_Context_Analyst/Workflows/Market_Context_Update_Workflow.md)
 - [Handoff](./Agent_2_Market_Context_Analyst/Rules/Handoff_to_Impact_Advisor.md)
 
 ## 4. Agent 3 — Cross-Asset Impact Advisor
@@ -57,6 +62,7 @@
 - [Asset-Specific Context](./Financial_Market/Knowledge/Asset_Specific_Data.md)
 - [Data Sources](./Financial_Market/Knowledge/Data_Source_Catalog.md)
 - [Advisory Intake](./Financial_Market/Rules/Financial_Advisory_Intake_Template.md)
+- [Kiểm tra độ đầy đủ đầu vào](./Financial_Market/Rules/Intake_Completeness_Rule.md)
 - [Scope Rule](./Financial_Market/Rules/Advisory_Scope_Rule.md)
 - [Confidence Rule](./Financial_Market/Rules/Evidence_and_Confidence_Rule.md)
 - [Anchor Rule](./Financial_Market/Rules/Anchor_Event_Confidence_Rule.md)
@@ -74,12 +80,25 @@
 - [Test Scenarios](./Test_Scenarios.md)
 - [Output](./Output)
 
-## 8. Thứ tự đọc
+## 8. Advisory mẫu
+
+- [Sample Index — Mercury Direct, Oil & Gold](./Output/_Sample_Mercury_Direct_Oil_Gold/Master_Index.md)
+- [01 — Astro Event Brief](./Output/_Sample_Mercury_Direct_Oil_Gold/01_Astro_Event_Brief.md)
+- [02 — Market Context](./Output/_Sample_Mercury_Direct_Oil_Gold/02_Market_Context.md)
+- [03 — Cross-Asset Impact](./Output/_Sample_Mercury_Direct_Oil_Gold/03_Cross_Asset_Impact.md)
+- [04 — Advisory Report](./Output/_Sample_Mercury_Direct_Oil_Gold/04_Advisory_Report.md)
+
+> Bộ mẫu đã hết hiệu lực và chỉ dùng để minh họa cấu trúc, không dùng như nhận định thị trường hiện tại.
+
+## 9. Thứ tự đọc
 
 1. [Global Guideline](./Global_Guideline.md)
 2. [Financial Advisory Intake](./Financial_Market/Rules/Financial_Advisory_Intake_Template.md)
-3. [Agent 1 Workflow](./Agent_1_Astro_Event_Specialist/Workflows/Core_Astro_Event_Workflow.md)
-4. [Agent 2 Workflow](./Agent_2_Market_Context_Analyst/Workflows/Core_Market_Context_Workflow.md)
-5. [Agent 3 Workflow](./Agent_3_Cross_Asset_Impact_Advisor/Workflows/Core_Cross_Asset_Impact_Workflow.md)
-6. [Agent 4 Workflow](./Agent_4_Advisory_Synthesizer/Workflows/Core_Advisory_Synthesis_Workflow.md)
-7. [Final QA](./Agent_4_Advisory_Synthesizer/Rules/Final_QA_Checklist.md)
+3. [Intake Completeness](./Financial_Market/Rules/Intake_Completeness_Rule.md)
+4. [Calculation Defaults](./Agent_1_Astro_Event_Specialist/Rules/Astro_Calculation_Defaults.md)
+5. [Agent 1 Workflow](./Agent_1_Astro_Event_Specialist/Workflows/Core_Astro_Event_Workflow.md)
+6. [Agent 2 Workflow](./Agent_2_Market_Context_Analyst/Workflows/Core_Market_Context_Workflow.md)
+7. [Agent 3 Workflow](./Agent_3_Cross_Asset_Impact_Advisor/Workflows/Core_Cross_Asset_Impact_Workflow.md)
+8. [Agent 4 Workflow](./Agent_4_Advisory_Synthesizer/Workflows/Core_Advisory_Synthesis_Workflow.md)
+9. [Final QA](./Agent_4_Advisory_Synthesizer/Rules/Final_QA_Checklist.md)
+10. [Advisory mẫu](./Output/_Sample_Mercury_Direct_Oil_Gold/Master_Index.md)

@@ -3,6 +3,10 @@
 ## 1. Snapshot
 
 - Snapshot time UTC:
+- Published time UTC:
+- Valid until:
+- Freshness status:
+- Refresh triggers:
 - Thị trường:
 - Instrument/benchmark:
 - Phạm vi:
@@ -44,3 +48,5 @@
 - Missing data:
 - Time sensitivity:
 - Source limitations:
+
+Mỗi dữ kiện nhạy thời gian phải có trích dẫn gần nội dung theo [Source Hierarchy and Citation Rule](./Source_Hierarchy_and_Citation_Rule.md).

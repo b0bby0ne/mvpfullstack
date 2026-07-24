@@ -8,5 +8,6 @@
 6. Chọn các tác động liên quan nhất.
 7. Giải thích driver hỗ trợ và đối trọng.
 8. Gắn confidence và giới hạn.
-9. Chạy Final QA.
-10. Tạo `04_Advisory_Report.md` và cập nhật `Master_Index.md`.
+9. Kiểm tra source tier, citation, freshness và refresh triggers.
+10. Chạy Final QA.
+11. Tạo `04_Advisory_Report.md` và cập nhật `Master_Index.md`.

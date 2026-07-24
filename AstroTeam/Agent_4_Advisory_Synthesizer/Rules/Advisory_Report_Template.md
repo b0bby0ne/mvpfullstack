@@ -7,6 +7,11 @@
 - Bối cảnh thị trường:
 - Tài sản nhạy cảm:
 - Confidence tổng:
+- Snapshot time:
+- Published time:
+- Valid until:
+- Freshness status:
+- Refresh triggers:
 
 ## 2. Dữ liệu thiên văn
 
@@ -52,5 +57,7 @@
 - Nguồn thị trường:
 - Time sensitivity:
 - Giới hạn phương pháp:
+
+Trích dẫn phải đặt gần dữ kiện được hỗ trợ; tách nguồn thiên văn khỏi nguồn thị trường.
 
 > Báo cáo dùng chiêm tinh như một lớp diễn giải bổ sung cho bối cảnh thị trường, không phải khuyến nghị đầu tư.

@@ -25,3 +25,9 @@ Phải ghi:
 - thứ tự đọc.
 
 Output không chứa kế hoạch, chiến lược hoặc chỉ dẫn thực thi giao dịch.
+
+## Advisory mẫu
+
+[Mercury Direct — Oil & Gold](./_Sample_Mercury_Direct_Oil_Gold/Master_Index.md) minh họa trọn vẹn năm file output, cách xử lý nguồn lệch exact time, bối cảnh dầu/vàng và các kịch bản có điều kiện.
+
+Bộ mẫu được gắn `Expired — sample only`; không được dùng như nhận định thị trường hiện tại.
