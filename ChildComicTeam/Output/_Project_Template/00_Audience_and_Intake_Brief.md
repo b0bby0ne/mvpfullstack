@@ -1,0 +1,21 @@
+# 00 — Audience and Intake Brief
+
+- Story ID:
+- Intake status:
+- Primary age band:
+- Reading mode:
+- Language/market:
+- Accessibility:
+- Comic pages:
+- Panels/page:
+- Prose word count:
+- Genre/tone:
+- Emotional promise:
+- Main theme:
+- Educational objective:
+- Tension ceiling:
+- Content exclusions:
+- Imitation risks:
+- Defaults used:
+- Assumptions:
+- Open questions:
