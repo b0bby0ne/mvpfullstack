@@ -15,6 +15,8 @@ Chọn các event liên quan nhất với câu hỏi mà không cherry-pick theo
 - exact major aspect giữa Jupiter, Saturn, Uranus, Neptune hoặc Pluto;
 - event được người dùng hỏi trực tiếp.
 
+`Eclipse` chỉ vào Tier 1 sau khi được catalog/geometry thiên văn xác nhận. New/Full Moon gần node nhưng chưa xác nhận giữ nhãn `eclipse_candidate`, không tự nâng tier.
+
 ### Tier 2 — Supporting event
 
 - exact major aspect của Sun, Mercury, Venus hoặc Mars;

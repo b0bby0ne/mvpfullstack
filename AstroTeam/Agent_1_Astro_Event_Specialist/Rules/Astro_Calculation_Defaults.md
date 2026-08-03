@@ -8,10 +8,17 @@ Các giá trị dưới đây được dùng khi người dùng không chỉ đ�
 - Zodiac: `Tropical`
 - Coordinates: apparent ecliptic longitude of date
 - Event timestamp chuẩn: `UTC`
+- Time input: UTC; timescale nội bộ theo engine và phải được ghi nếu exact-time precision phụ thuộc vào nó
 - Giờ hiển thị bổ sung: timezone của người dùng; nếu chưa biết, dùng `Asia/Bangkok (ICT)`
 - House system: `Không dùng` cho market event thông thường
 
 Nếu dùng anchor chart và cần houses, phải mở scope riêng, xác minh địa điểm/timestamp và ghi house system.
+
+Nếu người dùng yêu cầu sidereal nhưng không chỉ định ayanamsha, phải hỏi hoặc ghi `Đủ có giới hạn`; không tự trộn Lahiri, Fagan/Bradley hoặc hệ khác.
+
+Với yêu cầu `hiện tại`, dùng thời điểm snapshot thực tế. Với chỉ một ngày, dùng window `00:00–23:59` theo timezone đã chọn; không tạo snapshot giả ở 12:00 nếu người dùng không yêu cầu.
+
+JPL Horizons diễn giải `UT` là UT1 trước năm 1962 và UTC từ năm 1962; future UTC/EOP có thể dùng dự báo rồi giữ correction gần nhất. Vì script dùng thêm mẫu `t−12h`, reference time tối thiểu là `1962-01-20T12:00:00Z`; script ghi EOP file/coverage và từ chối local time DST mơ hồ/không tồn tại nếu không có explicit offset.
 
 ## 2. Đối tượng mặc định
 
@@ -27,6 +34,8 @@ Nếu dùng anchor chart và cần houses, phải mở scope riêng, xác minh �
 - Pluto
 
 Lunar nodes, Chiron, Lilith, asteroid và hypothetical points chỉ được thêm khi người dùng yêu cầu hoặc câu hỏi có lý do rõ.
+
+Fixed stars, Lots/Arabic Parts, midpoints và harmonics không nằm trong default body set. Chỉ bật sau khi khóa doctrine, catalog/formula, epoch/precession và orb; nếu không, ghi module `not_requested` (hoặc `not_evaluated` với output legacy).
 
 ## 3. Aspect mặc định
 

@@ -5,6 +5,7 @@
 ## Thiên văn
 
 - [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/manual.html)
+- [JPL Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html), được `Agent_1_Astro_Event_Specialist/scripts/build_astro_state.py` dùng tuần tự cho snapshot geocentric/tropical; client phải kiểm JSON signature/top-level error trước khi parse strict text result, và mỗi run phải giữ API version, target/center/site provenance, EOP file/coverage, schema cột và timestamp đã trả;
 - Ephemeris engine khác chỉ dùng khi cấu hình và version được ghi rõ.
 
 ## Vĩ mô và chính sách

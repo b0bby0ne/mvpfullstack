@@ -6,3 +6,5 @@
 **/.venv/
 **/venv/
 *.pyc
+AstroTeam/Astro_Data/*
+!AstroTeam/Astro_Data/README.md

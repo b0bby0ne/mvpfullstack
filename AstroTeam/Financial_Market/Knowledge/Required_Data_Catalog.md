@@ -3,13 +3,13 @@
 ## 1. Dữ liệu sự kiện chiêm tinh
 
 - Event ID;
-- exact time UTC và local time;
+- exact time UTC/local time khi đã giải, hoặc exact-time status/reason;
 - event type;
 - objects;
 - zodiac/degree;
 - motion;
 - aspect/orb;
-- active window;
+- active window hoặc coverage/module status nếu chưa giải;
 - calculation engine và version;
 - sai khác giữa các nguồn nếu có.
 

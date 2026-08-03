@@ -3,11 +3,14 @@
 ## Identity
 
 - Advisory ID: `SAMPLE-ASTRO-FM-2026-07-24`
+- Run type: `Market/Astro advisory — documentation sample`
+- Route: `A — Market/Astro`
 - Event ID: `ASTRO-2026-MERCURY-DIRECT-02`
 - Market snapshot: `2026-07-23 05:00 UTC`
 - Sample publication time: `2026-07-23 06:00 UTC`
 - Valid until: `2026-07-23 17:00 UTC`
 - Freshness status: `Expired — sample only`
+- Time sensitivity: `Historical static sample; all market and event assertions require a new run before reuse`
 - Asset coverage: Brent, WTI, spot gold, U.S. gold futures
 - Overall confidence: `Trung bình`
 

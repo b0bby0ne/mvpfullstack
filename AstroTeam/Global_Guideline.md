@@ -12,10 +12,11 @@ Team không trình bày chiêm tinh như nguyên nhân khoa học đã được 
 2. `Agent_2_Market_Context_Analyst`: xác minh bối cảnh thị trường.
 3. `Agent_3_Cross_Asset_Impact_Advisor`: đánh giá tác động theo tài sản.
 4. `Agent_4_Advisory_Synthesizer`: tổng hợp và QA.
+5. `Agent_5_Personal_Investment_Advisor`: lập kế hoạch đầu tư cá nhân sau suitability gate.
 
 ## 3. Intake
 
-Mỗi advisory run phải làm rõ:
+Mỗi market-advisory run phải làm rõ:
 
 - sự kiện hoặc khoảng thời gian;
 - câu hỏi cần trả lời;
@@ -29,6 +30,8 @@ Mỗi advisory run phải làm rõ:
 Nếu thiếu phần ảnh hưởng kết luận, phải hỏi lại hoặc ghi giả định.
 
 Trước khi chạy pipeline, intake phải được gắn một trong bốn trạng thái: `Đủ để chạy`, `Đủ có giới hạn`, `Chờ dữ liệu` hoặc `Ngoài phạm vi`. Chỉ hai trạng thái đầu được tiếp tục; mọi giả định và giới hạn phải xuất hiện lại trong output.
+
+Personal run dùng bốn trường tách biệt trong [Personal Advisory Intake](./Personal_Finance/Rules/Personal_Advisory_Intake_Template.md): intake completeness, planning suitability nội bộ, advice mode và jurisdiction-check status. Không ánh xạ chúng thành một trạng thái duy nhất.
 
 ## 4. Quy ước tính toán và chọn sự kiện
 
@@ -52,7 +55,8 @@ Không dùng biến động giá làm bằng chứng ngược để xác nhận 
 
 ## 6. Chuẩn nguồn
 
-- Event data phải có engine, version, exact time và timezone.
+- Event/state data phải có collection request/hash, engine, version/source lineage, reference time, timezone, frame/observer và raw hash/retention status. Nếu output gọi một event là `exact`, exact time, bracket/method/tolerance/residual là bắt buộc; nếu snapshot chưa giải nghiệm, phải ghi `not_solved` và hạ State completeness thay vì tạo exact time giả.
+- Eclipse candidate không được trình bày như eclipse đã xác nhận; houses/angles/doctrine modules không được tự chọn cấu hình còn thiếu.
 - Market data phải có instrument/price type, timestamp và nguồn.
 - Tin tức phải có ngày công bố và trạng thái xác minh.
 - Dữ kiện nhạy thời gian phải ghi snapshot time.
@@ -94,7 +98,7 @@ Không dùng kịch bản như một dự báo chắc chắn.
 
 Confidence không phải xác suất tăng/giảm.
 
-## 10. Phạm vi bị loại trừ
+## 10. Phạm vi bị loại trừ của Financial Market track
 
 Team không cung cấp:
 
@@ -107,6 +111,16 @@ Team không cung cấp:
 - kế hoạch hoặc chiến lược giao dịch;
 - cam kết lợi nhuận.
 
+Personal Finance track được phép tạo educational draft Investment Policy Statement, khoảng phân bổ asset class và rebalancing policy sau khi hoàn tất planning-suitability và authorization gate. Ngoại lệ này không cho phép exact transaction, product-specific personalization, leverage hoặc Agent 1–4 tạo tín hiệu giao dịch; astrology không được làm căn cứ toàn phần hay một phần cho recommendation. Áp dụng [Suitability and Astrology Gate](./Personal_Finance/Rules/Suitability_and_Astrology_Gate.md) và [Personalization Authorization Gate](./Personal_Finance/Rules/Personalization_Authorization_Gate.md).
+
+## 10A. Tư vấn cá nhân
+
+- Personal facts, goals, liquidity và risk capacity có quyền ưu tiên cao nhất.
+- Kế hoạch cơ sở phải độc lập với chiêm tinh.
+- Không tự nhận là cố vấn có giấy phép, không custody và không thực thi lệnh.
+- Tax/legal/product facts phải đúng jurisdiction và còn hiện hành.
+- Natal chart chỉ dùng cho reflection khi có consent; không suy ra suitability.
+
 ## 11. Quyền phủ định của bối cảnh
 
 Nếu market drivers thực tế mâu thuẫn với narrative chiêm tinh:
@@ -118,12 +132,14 @@ Nếu market drivers thực tế mâu thuẫn với narrative chiêm tinh:
 
 ## 12. Quy ước output
 
-Mỗi run dùng `Output/<advisory_id>/`:
+Mỗi run dùng `Output/<advisory_id>/`. Market route dùng:
 
 - `Master_Index.md`
 - `01_Astro_Event_Brief.md`
 - `02_Market_Context.md`
 - `03_Cross_Asset_Impact.md`
 - `04_Advisory_Report.md`
+
+Personal route luôn dùng `Master_Index.md` và `05_Personal_Investment_Plan.md`; nội dung file `05` có plan status `Present`, `Framework` hoặc `Escalation`. `01`–`04` chỉ xuất hiện khi route cần.
 
 Liên kết nội bộ dùng đường dẫn tương đối.

@@ -9,4 +9,4 @@ Bắt buộc:
 - asset coverage;
 - các giới hạn nguồn.
 
-Nếu thiếu Market Context, chỉ được tạo một mapping lý thuyết và phải gắn nhãn `Chưa áp dụng vào bối cảnh hiện tại`.
+Nếu thiếu Market Context, không được phát hành numbered output `03_Cross_Asset_Impact.md`. Chỉ được tạo exploratory mapping draft bên ngoài advisory run, gắn nhãn `Chưa áp dụng vào bối cảnh hiện tại`; muốn vào pipeline phải bổ sung `02_Market_Context.md`.

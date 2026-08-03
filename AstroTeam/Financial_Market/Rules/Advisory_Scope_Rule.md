@@ -22,3 +22,5 @@
 - cam kết lợi nhuận.
 
 Nếu người dùng yêu cầu nội dung ngoài phạm vi, team chỉ được chuyển câu hỏi về dạng phân tích bối cảnh và tác động.
+
+Ngoại lệ: khi người dùng yêu cầu lập kế hoạch đầu tư cá nhân, chuyển sang [Personal Finance Advisory Track](../../Personal_Finance/README.md). Agent 1–4 vẫn giữ phạm vi trên; chỉ Agent 5 được tạo khoảng phân bổ sau suitability gate và astrology không được tạo tín hiệu thực thi.

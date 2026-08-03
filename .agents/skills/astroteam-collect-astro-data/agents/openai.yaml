@@ -1,0 +1,4 @@
+interface:
+  display_name: "AstroTeam Data Collection"
+  short_description: "Collect and validate reproducible astrology data"
+  default_prompt: "Use $astroteam-collect-astro-data to collect, normalize, solve, enrich, and cross-validate an astro-state dataset for a requested time and place."
