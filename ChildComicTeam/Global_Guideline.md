@@ -2,7 +2,7 @@
 
 ## 1. Mục tiêu
 
-Team tạo câu chuyện hấp dẫn, dễ hiểu và phù hợp với trẻ em; không biến truyện thành bài giảng khô cứng. Mỗi dự án phải có cùng một canon cho kịch bản tranh, truyện chữ và hồ sơ minh họa.
+Team tạo comic portfolio hấp dẫn, dễ hiểu và phù hợp với trẻ em; không biến truyện thành bài giảng khô cứng. Mỗi dự án phải có cùng một canon cho kịch bản tranh, truyện chữ, hồ sơ minh họa, motion adaptation và tài sản phân phối.
 
 ## 2. Nguyên tắc ưu tiên
 
@@ -19,6 +19,9 @@ Khi có xung đột, ưu tiên theo thứ tự:
 
 - `Story Bible` giữ canon của dự án.
 - `Story Outline` giữ chuỗi beat và scene.
+- `Research Packet` giữ claim, nguồn, giới hạn và yêu cầu reviewer.
+- `Visual Production Pack` giữ asset, storyboard và version hình ảnh.
+- `Adaptation and Distribution Plan` giữ mapping từ canon sang từng kênh.
 - Kịch bản tranh và truyện chữ không được tự tạo canon mâu thuẫn.
 - Mọi thay đổi canon sau khi outline được duyệt phải có version và change log.
 
@@ -62,6 +65,11 @@ Mỗi dự án dùng `Output/<story_id>/`:
 - `04_Prose_Story.md`
 - `05_Illustration_Handoff.md`
 - `06_QA_Report.md`
+- `07_Research_Packet.md`
+- `08_Source_Note.md`
+- `09_Visual_Production_Pack.md`
+- `10_Adaptation_and_Distribution_Plan.md`
+- `11_Release_and_Metrics_Report.md`
 
 ## 9. Definition of Done
 
@@ -72,4 +80,17 @@ Một dự án hoàn tất khi:
 - comic script có đủ page/panel/balloon/SFX;
 - prose story tương ứng với beat chính;
 - illustration handoff đủ để dựng hình;
-- QA không còn lỗi an toàn hoặc continuity mức chặn phát hành.
+- Research Packet hoàn thành khi truyện có claim khoa học, sức khỏe, an toàn, văn hóa hoặc địa phương;
+- visual pack có asset/version/rights status và đã qua Art Gate;
+- adaptation không tạo canon mới và có moderation plan;
+- QA không còn lỗi an toàn, continuity hoặc rights mức chặn phát hành;
+- release report ghi baseline, giới hạn và correction nếu dự án đã công khai.
+
+## 10. Cổng portfolio
+
+- `Gate A — Canon Ready`: nền móng series, research/QA template và visual guide sẵn sàng.
+- `Gate B — Pilot Ready`: canon, script, prose, research, cards và prototype đã duyệt.
+- `Gate C — Release Validated`: release QA, moderation và baseline có bằng chứng.
+- `Gate D — Scale Decision`: retrospective và quyết định mở rộng được ghi lại.
+
+Agent 6 điều phối cổng; Agent 2 sở hữu canon; Agent 5 có quyền chặn vì safety, age-fit hoặc rights.

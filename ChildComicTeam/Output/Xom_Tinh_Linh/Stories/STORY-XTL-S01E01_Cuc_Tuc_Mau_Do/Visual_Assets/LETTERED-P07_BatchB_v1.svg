@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P07 Batch B lettered rough</title><image href="ROUGH-P07_BatchB_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g aria-label="Lệch không?"><ellipse cx="785" cy="75" rx="130" ry="54" fill="#fffdf6"/><text x="785" y="87" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Lệch không?</text></g>
+    <g aria-label="Không!"><ellipse cx="360" cy="90" rx="95" ry="51" fill="#fffdf6"/><text x="360" y="102" text-anchor="middle" stroke="none" font-size="30" font-weight="700">Không!</text></g>
+    <text x="665" y="760" stroke="#fffdf6" stroke-width="5" paint-order="stroke" fill="#5b5047" font-size="33" font-style="italic">CỘP</text>
+    <g aria-label="Tớ giữ cho."><rect x="660" y="850" width="250" height="88" rx="42" fill="#fffdf6"/><text x="785" y="906" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Tớ giữ cho.</text></g>
+    <g aria-label="Không cần. Tớ lo được."><rect x="90" y="1215" width="360" height="96" rx="46" fill="#fffdf6"/><text x="270" y="1275" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Không cần. Tớ lo được.</text></g>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P19 Batch D lettered rough v1</title>
+  <image href="ROUGH-P19_BatchD_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Tớ kéo quá mạnh. Tớ sẽ vá lại."><rect x="500" y="590" width="455" height="126" rx="50" fill="#fffdf6"/><text x="727" y="640" text-anchor="middle" font-size="28" font-weight="650"><tspan x="727">Tớ kéo quá mạnh.</tspan><tspan x="727" dy="37">Tớ sẽ vá lại.</tspan></text></g>
+    <g aria-label="Mình vá."><rect x="665" y="1060" width="205" height="92" rx="44" fill="#fffdf6"/><text x="767" y="1119" text-anchor="middle" font-size="30" font-weight="700">Mình vá.</text></g>
+  </g>
+</svg>

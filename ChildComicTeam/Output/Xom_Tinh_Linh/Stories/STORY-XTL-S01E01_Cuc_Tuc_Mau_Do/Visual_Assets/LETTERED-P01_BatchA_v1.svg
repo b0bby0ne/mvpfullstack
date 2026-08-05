@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P01 Batch A lettered rough</title>
+  <image href="ROUGH-P01_BatchA_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P01.1" aria-label="Nhớ chừa lối đi nhé các con!"><rect x="52" y="48" width="360" height="112" rx="50" fill="#fffdf6"/><path d="M150 151 L198 218 L184 156" fill="#fffdf6"/><text x="232" y="91" text-anchor="middle" stroke="none" font-size="27" font-weight="650"><tspan x="232">Nhớ chừa lối đi</tspan><tspan x="232" dy="35">nhé các con!</tspan></text></g>
+    <text x="690" y="175" stroke="none" fill="#5b5047" font-size="24" font-style="italic">SỘT SOẠT</text>
+    <text x="790" y="675" stroke="none" fill="#5b5047" font-size="22" font-style="italic">LÁCH CÁCH</text>
+    <g id="P01.2" aria-label="Để tớ lo phần giữa!"><rect x="70" y="824" width="330" height="96" rx="46" fill="#fffdf6"/><path d="M180 908 L220 980 L216 916" fill="#fffdf6"/><text x="235" y="883" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Để tớ lo phần giữa!</text></g>
+    <g id="P01.3" aria-label="Tớ thấy chỗ này hơi…"><rect x="575" y="820" width="354" height="96" rx="46" fill="#fffdf6"/><path d="M690 906 L650 982 L716 913" fill="#fffdf6"/><text x="752" y="879" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Tớ thấy chỗ này hơi…</text></g>
+  </g>
+</svg>

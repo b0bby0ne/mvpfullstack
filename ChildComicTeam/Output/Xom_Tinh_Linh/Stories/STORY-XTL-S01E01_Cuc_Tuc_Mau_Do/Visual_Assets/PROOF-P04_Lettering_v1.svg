@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P04 lettering proof — Cục Tức Màu Đỏ</title>
+  <image href="SAMPLE-P04_Visual_Trigger_v1.png" x="0" y="0" width="1024" height="1536"/>
+  <g id="lettering" font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P04.1" aria-label="Ơ… cậu đổi chỗ à?">
+      <rect x="430" y="42" width="360" height="118" rx="54" fill="#fffdf6"/>
+      <path d="M470 148 L344 194 L494 158" fill="#fffdf6" stroke-linejoin="round"/>
+      <text x="610" y="92" text-anchor="middle" stroke="none" font-size="31" font-weight="650">
+        <tspan x="610" dy="0">Ơ… cậu đổi</tspan><tspan x="610" dy="39">chỗ à?</tspan>
+      </text>
+    </g>
+    <g id="P04.2-Lam" aria-label="Ừ. Chỗ cũ chắn lối.">
+      <rect x="676" y="220" width="288" height="116" rx="50" fill="#fffdf6"/>
+      <path d="M782 327 L720 376 L812 332" fill="#fffdf6" stroke-linejoin="round"/>
+      <text x="820" y="268" text-anchor="middle" stroke="none" font-size="27" font-weight="650">
+        <tspan x="820" dy="0">Ừ. Chỗ cũ</tspan><tspan x="820" dy="35">chắn lối.</tspan>
+      </text>
+    </g>
+    <g id="P04.3">
+      <rect x="650" y="652" width="260" height="92" rx="46" fill="#fffdf6"/>
+      <path d="M668 718 L594 758 L692 731" fill="#fffdf6" stroke-linejoin="round"/>
+      <text x="780" y="710" text-anchor="middle" stroke="none" font-size="32" font-weight="650">Không sao.</text>
+    </g>
+  </g>
+</svg>

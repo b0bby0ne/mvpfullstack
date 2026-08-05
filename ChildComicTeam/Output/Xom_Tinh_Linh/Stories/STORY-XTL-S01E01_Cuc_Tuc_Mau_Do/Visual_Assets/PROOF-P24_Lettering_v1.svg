@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P24 lettering proof — Cục Tức Màu Đỏ</title>
+  <image href="SAMPLE-P24_Resolution_v1.png" x="0" y="0" width="1024" height="1536"/>
+  <g id="lettering" font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P24.1">
+      <rect x="648" y="42" width="296" height="104" rx="50" fill="#fffdf6"/>
+      <path d="M710 136 L652 190 L742 141" fill="#fffdf6" stroke-linejoin="round"/>
+      <text x="796" y="107" text-anchor="middle" stroke="none" font-size="31" font-weight="650">Mình cùng lo.</text>
+    </g>
+    <g id="P24.2-sign" stroke="none" fill="#734238" text-anchor="middle" font-weight="850" letter-spacing="1">
+      <text x="375" y="1126" font-size="33">NGÀY HỘI</text>
+      <text x="375" y="1171" font-size="33">XÓM MÌNH</text>
+    </g>
+    <text id="P24.2-SFX" x="115" y="1454" stroke="none" fill="#5d4a40" font-size="22" font-style="italic">ụp</text>
+  </g>
+</svg>

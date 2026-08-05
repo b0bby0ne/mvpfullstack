@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P04 Batch A lettered rough</title>
+  <image href="ROUGH-P04_BatchA_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P04.1" aria-label="Ơ… cậu đổi chỗ à?"><rect x="610" y="48" width="330" height="98" rx="47" fill="#fffdf6"/><path d="M650 133 L540 202 L675 143" fill="#fffdf6"/><text x="775" y="108" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Ơ… cậu đổi chỗ à?</text></g>
+    <g id="P04.2" aria-label="Ừ. Chỗ cũ chắn lối."><rect x="610" y="550" width="330" height="98" rx="47" fill="#fffdf6"/><path d="M650 637 L575 706 L682 646" fill="#fffdf6"/><text x="775" y="610" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Ừ. Chỗ cũ chắn lối.</text></g>
+    <g id="P04.3" aria-label="Không sao."><rect x="650" y="1080" width="240" height="90" rx="44" fill="#fffdf6"/><path d="M670 1158 L600 1210 L700 1165" fill="#fffdf6"/><text x="770" y="1137" text-anchor="middle" stroke="none" font-size="30" font-weight="650">Không sao.</text></g>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P06 Batch A lettered rough</title>
+  <image href="ROUGH-P06_BatchA_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P06.1" aria-label="Cậu chắc không?"><rect x="650" y="54" width="280" height="92" rx="44" fill="#fffdf6"/><path d="M700 134 L650 205 L730 143" fill="#fffdf6"/><text x="790" y="111" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Cậu chắc không?</text></g>
+    <g id="P06.2" aria-label="Chắc. Tớ làm được."><rect x="612" y="590" width="330" height="98" rx="47" fill="#fffdf6"/><path d="M650 676 L540 744 L680 686" fill="#fffdf6"/><text x="777" y="650" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Chắc. Tớ làm được.</text></g>
+    <text id="P06.3-SFX" x="185" y="1420" stroke="#fffdf6" stroke-width="5" paint-order="stroke" fill="#5b5047" font-size="34" font-style="italic">ỤP</text>
+  </g>
+</svg>

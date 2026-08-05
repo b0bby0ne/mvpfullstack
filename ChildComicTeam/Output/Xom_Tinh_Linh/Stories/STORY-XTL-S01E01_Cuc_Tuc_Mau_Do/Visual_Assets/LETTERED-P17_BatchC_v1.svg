@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P17 Batch C lettered rough v1</title>
+  <image href="ROUGH-P17_BatchC_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Tớ đang giận."><rect x="55" y="55" width="275" height="94" rx="44" fill="#fffdf6"/><text x="192" y="114" text-anchor="middle" font-size="30" font-weight="750">Tớ đang giận.</text></g>
+    <text x="470" y="690" fill="#5b5047" stroke="#fffdf6" stroke-width="5" paint-order="stroke" font-size="30" font-style="italic">ụp…</text>
+    <g aria-label="Tớ giận vì phần tớ làm bị đổi."><rect x="45" y="810" width="500" height="102" rx="48" fill="#fffdf6"/><text x="295" y="873" text-anchor="middle" font-size="28" font-weight="650">Tớ giận vì phần tớ làm bị đổi.</text></g>
+    <g aria-label="Mà không ai hỏi."><rect x="565" y="815" width="315" height="96" rx="45" fill="#fffdf6"/><text x="722" y="875" text-anchor="middle" font-size="29" font-weight="700">Mà không ai hỏi.</text></g>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P23 Batch D corrected lettered rough v2</title>
+  <image href="ROUGH-P23_BatchD_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Một, hai… nâng!"><rect x="45" y="50" width="315" height="94" rx="45" fill="#fffdf6"/><text x="202" y="109" text-anchor="middle" font-size="30" font-weight="750">Một, hai… nâng!</text></g>
+    <g aria-label="Đổi chỗ này một chút nhé?"><rect x="45" y="1060" width="410" height="98" rx="46" fill="#fffdf6"/><text x="250" y="1121" text-anchor="middle" font-size="28" font-weight="650">Đổi chỗ này một chút nhé?</text></g>
+  </g>
+</svg>

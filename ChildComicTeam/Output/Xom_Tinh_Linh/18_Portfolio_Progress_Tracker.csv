@@ -1,0 +1,36 @@
+ID,Giai_doan,Cong_viec,Chu_tri,Bat_dau,Deadline,Phu_thuoc,Tien_do,Trang_thai
+F01,Nen mong,Xac nhan pham vi portfolio va bon pilot,CL,2026-08-04,2026-08-05,,100%,Hoan thanh
+F02,Nen mong,Phan cong nhan su va lich check-in,PM,2026-08-04,2026-08-06,F01,100%,Hoan thanh
+F03,Nen mong,Khoa dan nhan vat chinh,CL,2026-08-05,2026-08-10,F01,100%,Hoan thanh
+F04,Nen mong,Hoan thien Series Bible v1,CL,2026-08-06,2026-08-14,F03,100%,Hoan thanh
+F05,Nen mong,Hoan thien visual guide,ART,2026-08-08,2026-08-17,F03,100%,Hoan thanh
+F06,Nen mong,Tao Research Packet va Source Note template,RS,2026-08-06,2026-08-12,F01,100%,Hoan thanh
+F07,Nen mong,Tao checklist bien tap va child-safety,QA,2026-08-08,2026-08-14,F06,100%,Hoan thanh
+F08,Nen mong,Chot Definition of Done cho mot tap,PM,2026-08-15,2026-08-18,F04-F07,100%,Hoan thanh
+F09,Nen mong,Thiet lap cau truc owned library va playlist,MD,2026-08-15,2026-08-21,F04,100%,Hoan thanh
+F10,Nen mong,Gate A - Canon Ready,CL,2026-08-22,2026-08-24,F02-F09,100%,Hoan thanh
+P01,Prototype,Research Packet pilot 1,RS,2026-08-04,2026-08-28,F10,85%,Dang thuc hien
+P02,Prototype,Story Bible va outline pilot 1,WR,2026-08-04,2026-08-31,F10-P01,100%,Hoan thanh
+P03,Prototype,Duyet outline va safety som,ED,2026-09-01,2026-09-03,P02,100%,Hoan thanh
+P04,Prototype,Viet comic script,WR,2026-09-04,2026-09-08,P03,100%,Hoan thanh
+P05,Prototype,Viet prose story,WR,2026-09-04,2026-09-09,P03,100%,Hoan thanh
+P06,Prototype,Thumbnail va storyboard,SB,2026-09-06,2026-09-11,P04,100%,Hoan thanh
+P07,Prototype,Art mau va lettering prototype,ART,2026-09-10,2026-09-16,P06,95%,Cho sua preflight
+P08,Prototype,Parent card activity card va source note,QA,2026-09-10,2026-09-16,P01-P04,0%,Chua bat dau
+P09,Prototype,Ba clip ngan prototype,MD,2026-09-12,2026-09-18,P06,0%,Chua bat dau
+P10,Prototype,Doc thu co kiem soat,QA,2026-09-17,2026-09-19,P05-P07-P08,15%,Dang thuc hien
+P11,Prototype,Sua pilot theo ket qua test,CL,2026-09-19,2026-09-21,P10,0%,Chua bat dau
+P12,Prototype,Gate B - Pilot Ready,CL,2026-09-21,2026-09-21,P01-P11,0%,Chua bat dau
+R01,Pilot cong khai,Dung motion comic video 4-8 phut,MD,2026-09-22,2026-09-28,P12,0%,Chua bat dau
+R02,Pilot cong khai,Hoan thien trang canon va metadata,MD,2026-09-22,2026-09-29,P12-F09,0%,Chua bat dau
+R03,Pilot cong khai,QA truoc phat hanh,QA,2026-09-29,2026-10-01,R01-R02,0%,Chua bat dau
+R04,Pilot cong khai,Phat hanh pilot 1,PM,2026-10-02,2026-10-02,R03,0%,Chua bat dau
+R05,Pilot cong khai,Theo doi moderation va loi phat hanh,MD,2026-10-02,2026-10-09,R04,0%,Chua bat dau
+R06,Pilot cong khai,Bao cao baseline pilot 1,PM,2026-10-10,2026-10-12,R05,0%,Chua bat dau
+R07,Pilot cong khai,Gate C - Release Validated,CL,2026-10-12,2026-10-12,R06,0%,Chua bat dau
+S01,Mo rong,Research Packet pilot 2,RS,2026-10-13,2026-10-18,R07,0%,Chua bat dau
+S02,Mo rong,Outline va storyboard tho pilot 2,WR,2026-10-17,2026-10-24,S01,0%,Chua bat dau
+S03,Mo rong,Retrospective quy trinh pilot 1,PM,2026-10-13,2026-10-19,R07,0%,Chua bat dau
+S04,Mo rong,Khoa format lap lai cho mua 1,CL,2026-10-20,2026-10-26,S03,0%,Chua bat dau
+S05,Mo rong,Xay lich san xuat bay tap con lai,PM,2026-10-24,2026-10-30,S02-S04,0%,Chua bat dau
+S06,Mo rong,Gate D - Go no-go mua 1,CL,2026-10-31,2026-11-02,S01-S05,0%,Chua bat dau

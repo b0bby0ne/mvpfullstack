@@ -6,6 +6,7 @@
 - [Global Guideline](./Global_Guideline.md)
 - [Test Scenarios](./Test_Scenarios.md)
 - [Output](./Output/README.md)
+- [Portfolio Agent Routing](./Portfolio_Agent_Routing.md)
 
 ## 2. Agent 1 — Child Audience Specialist
 
@@ -60,7 +61,41 @@
 - [Final QA Checklist](./Agent_5_Child_Safety_Editorial_QA/Rules/Final_QA_Checklist.md)
 - [Revision Report Template](./Agent_5_Child_Safety_Editorial_QA/Rules/Revision_Report_Template.md)
 
-## 7. Story Data
+## 7. Agent 6 — Portfolio Producer
+
+- [Vai trò](./Agent_6_Portfolio_Producer/Knowledge/Portfolio_Producer.md)
+- [Kỹ năng điều phối portfolio](./Agent_6_Portfolio_Producer/Skills/Portfolio_Orchestration.md)
+- [Workflow](./Agent_6_Portfolio_Producer/Workflows/Core_Portfolio_Production_Workflow.md)
+- [Nguyên tắc vận hành](./Agent_6_Portfolio_Producer/Rules/Core_Operating_Principles.md)
+- [Weekly Status Template](./Agent_6_Portfolio_Producer/Rules/Weekly_Portfolio_Status_Template.md)
+
+## 8. Agent 7 — Research & Cultural Validator
+
+- [Vai trò](./Agent_7_Research_Cultural_Validator/Knowledge/Research_and_Cultural_Validator.md)
+- [Kỹ năng kiểm chứng và bối cảnh Việt Nam](./Agent_7_Research_Cultural_Validator/Skills/Evidence_and_Vietnam_Context_Validation.md)
+- [Workflow](./Agent_7_Research_Cultural_Validator/Workflows/Core_Research_Validation_Workflow.md)
+- [Nguyên tắc vận hành](./Agent_7_Research_Cultural_Validator/Rules/Core_Operating_Principles.md)
+- [Research Packet Template](./Agent_7_Research_Cultural_Validator/Rules/Research_Packet_Template.md)
+- [Source Note Template](./Agent_7_Research_Cultural_Validator/Rules/Source_Note_Template.md)
+
+## 9. Agent 8 — Visual Development & Storyboard Producer
+
+- [Vai trò](./Agent_8_Visual_Storyboard_Producer/Knowledge/Visual_Storyboard_Producer.md)
+- [Kỹ năng sequential art và visual production](./Agent_8_Visual_Storyboard_Producer/Skills/Sequential_Art_and_Visual_Production.md)
+- [Workflow](./Agent_8_Visual_Storyboard_Producer/Workflows/Core_Visual_Production_Workflow.md)
+- [Nguyên tắc vận hành](./Agent_8_Visual_Storyboard_Producer/Rules/Core_Operating_Principles.md)
+- [Visual Production Pack Template](./Agent_8_Visual_Storyboard_Producer/Rules/Visual_Production_Pack_Template.md)
+
+## 10. Agent 9 — Motion & Distribution Producer
+
+- [Vai trò](./Agent_9_Motion_Distribution_Producer/Knowledge/Motion_Distribution_Producer.md)
+- [Kỹ năng chuyển canon sang kênh](./Agent_9_Motion_Distribution_Producer/Skills/Canon_to_Channel_Adaptation.md)
+- [Workflow](./Agent_9_Motion_Distribution_Producer/Workflows/Core_Motion_Distribution_Workflow.md)
+- [Nguyên tắc vận hành](./Agent_9_Motion_Distribution_Producer/Rules/Core_Operating_Principles.md)
+- [Adaptation Plan Template](./Agent_9_Motion_Distribution_Producer/Rules/Adaptation_and_Distribution_Plan_Template.md)
+- [Release Report Template](./Agent_9_Motion_Distribution_Producer/Rules/Release_and_Metrics_Report_Template.md)
+
+## 11. Story Data
 
 - [Required Data Catalog](./Story_Data/Knowledge/Required_Data_Catalog.md)
 - [Age Band Standards](./Story_Data/Knowledge/Age_Band_Standards.md)
@@ -81,11 +116,12 @@
 - [Rapid Workflow](./Story_Data/Workflows/Rapid_Short_Story_Workflow.md)
 - [Data Workspace](./Story_Data/Data/README.md)
 
-## 8. Thứ tự đọc
+## 12. Thứ tự đọc
 
 1. [Global Guideline](./Global_Guideline.md)
-2. [Story Intake](./Story_Data/Rules/Story_Intake_Template.md)
-3. [Required Data Catalog](./Story_Data/Knowledge/Required_Data_Catalog.md)
-4. [Full Production Workflow](./Story_Data/Workflows/Full_Story_Production_Workflow.md)
-5. [Project Template](./Output/_Project_Template/Master_Index.md)
-6. [Final QA](./Agent_5_Child_Safety_Editorial_QA/Rules/Final_QA_Checklist.md)
+2. [Portfolio Agent Routing](./Portfolio_Agent_Routing.md)
+3. [Story Intake](./Story_Data/Rules/Story_Intake_Template.md)
+4. [Required Data Catalog](./Story_Data/Knowledge/Required_Data_Catalog.md)
+5. [Full Production Workflow](./Story_Data/Workflows/Full_Story_Production_Workflow.md)
+6. [Project Template](./Output/_Project_Template/Master_Index.md)
+7. [Final QA](./Agent_5_Child_Safety_Editorial_QA/Rules/Final_QA_Checklist.md)

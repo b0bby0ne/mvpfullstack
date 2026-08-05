@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P22 Batch D corrected lettered rough v3</title>
+  <image href="ROUGH-P22_BatchD_v3.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Vẫn thấy vết rách."><rect x="655" y="55" width="315" height="94" rx="45" fill="#fffdf6"/><text x="812" y="114" text-anchor="middle" font-size="29" font-weight="650">Vẫn thấy vết rách.</text></g>
+    <g aria-label="Nhưng nó giữ được rồi."><rect x="570" y="520" width="385" height="96" rx="45" fill="#fffdf6"/><text x="762" y="580" text-anchor="middle" font-size="28" font-weight="650">Nhưng nó giữ được rồi.</text></g>
+    <text x="420" y="1370" fill="#5b5047" stroke="#fffdf6" stroke-width="5" paint-order="stroke" font-size="29" font-style="italic">ụp</text>
+  </g>
+</svg>

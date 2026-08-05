@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P08 Batch B lettered rough</title><image href="ROUGH-P08_BatchB_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#5b5047">
+    <text x="485" y="95" stroke="#fffdf6" stroke-width="5" paint-order="stroke" font-size="35" font-style="italic">PHỒNG</text>
+    <text x="365" y="630" stroke="#fffdf6" stroke-width="5" paint-order="stroke" font-size="34" font-style="italic">NHÉT… BỤP!</text>
+    <g aria-label="Nhanh lên nào." fill="#25201b" stroke="#25201b" stroke-width="3"><rect x="610" y="1020" width="300" height="92" rx="44" fill="#fffdf6"/><text x="760" y="1078" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Nhanh lên nào.</text></g>
+  </g>
+</svg>

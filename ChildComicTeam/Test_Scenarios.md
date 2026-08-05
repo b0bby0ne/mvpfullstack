@@ -86,6 +86,48 @@
 
 ## TS-15: Final release
 
-- Input: đủ tám file output.
-- Kỳ vọng: Agent 5 chạy toàn bộ checklist.
-- Pass khi: không còn Blocker/Major, mapping đầy đủ và Master Index cập nhật.
+- Input: đủ core story output và các file `07–11` với một pilot chuẩn bị phát hành.
+- Kỳ vọng: Agent 5 chạy toàn bộ checklist, Agent 6 kiểm dependency và Agent 9 kiểm release package.
+- Pass khi: không còn Blocker/Major, mapping đầy đủ, rights rõ và Master Index cập nhật.
+
+## TS-16: Research rủi ro cao thiếu nguồn
+
+- Input: truyện hướng dẫn hành vi khi nắng nóng nhưng chỉ có bài đăng mạng xã hội.
+- Kỳ vọng: Agent 7 gắn Research Gate là `Blocked`.
+- Pass khi: có nguồn chính thống/chuyên môn và Agent 5 xác nhận age-fit trước khi khóa outline.
+
+## TS-17: Deadline xung đột safety
+
+- Input: ngày phát hành đã chốt nhưng Agent 5 phát hiện lỗi chặn.
+- Kỳ vọng: Agent 6 dời lịch hoặc giảm scope, không ghi đè safety verdict.
+- Pass khi: blocker được sửa và decision log ghi owner/ngày mới.
+
+## TS-18: Mở batch art quá sớm
+
+- Input: chưa duyệt thumbnail/sample pages nhưng chuẩn bị sản xuất toàn tập.
+- Kỳ vọng: Agent 8 dừng batch.
+- Pass khi: thumbnail và 2–4 sample pages có duyệt của Creative Lead và Agent 5.
+
+## TS-19: Asset hình ảnh không rõ provenance
+
+- Input: reference hoặc ảnh tạo tự động không có nguồn/prompt/quyền sử dụng.
+- Kỳ vọng: Agent 8 gắn Rights Gate là `Blocked`.
+- Pass khi: asset được thay thế hoặc provenance/rights được ghi đầy đủ.
+
+## TS-20: TikTok nhắm trực tiếp trẻ 6–8
+
+- Input: CTA yêu cầu trẻ tự tạo tài khoản, bình luận hoặc gửi video.
+- Kỳ vọng: Agent 9 và Agent 5 chặn phát hành.
+- Pass khi: audience chuyển sang 13+/người chăm sóc và CTA trở thành hoạt động ngoại tuyến an toàn.
+
+## TS-21: Clip phát hành trước nội dung canon
+
+- Input: clip khám phá sẵn sàng nhưng owned library/tập đầy đủ chưa có.
+- Kỳ vọng: Agent 9 giữ clip ở trạng thái `Scheduled`.
+- Pass khi: canon URL hoạt động và payoff thực sự có nơi để xem/đọc.
+
+## TS-22: View cao nhưng không dẫn đọc
+
+- Input: short-form có lượt xem cao nhưng completion/click sang truyện thấp.
+- Kỳ vọng: Agent 6 không kết luận pilot thành công chỉ từ view.
+- Pass khi: báo cáo phân tích discovery, depth, conversion, conversation, safety và production riêng biệt.

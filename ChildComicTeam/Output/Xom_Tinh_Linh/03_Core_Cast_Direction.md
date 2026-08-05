@@ -76,3 +76,14 @@ Mỗi cặp nhân vật nên có:
 - relationship map;
 - arc mùa 1;
 - canon locks.
+
+## Casting đã khóa cho pilot S01E01
+
+| Character ID | Tên làm việc | Vai trò ensemble | Trạng thái | Tài liệu chi tiết |
+|---|---|---|---|---|
+| `CHAR-XTL-003` | Bắp | Người hành động/protagonist tập 1 | Locked v1.0 | [Story Bible S01E01](./Stories/STORY-XTL-S01E01_Cuc_Tuc_Mau_Do/01_Story_Bible.md) |
+| `CHAR-XTL-002` | Lam | Người quan sát/supporting | Locked v1.0 | [Story Bible S01E01](./Stories/STORY-XTL-S01E01_Cuc_Tuc_Mau_Do/01_Story_Bible.md) |
+| `ADULT-XTL-001` | Cô Sen | Người lớn điểm tựa | Locked v1.0 | [Story Bible S01E01](./Stories/STORY-XTL-S01E01_Cuc_Tuc_Mau_Do/01_Story_Bible.md) |
+| `SPR-XTL-E01-01` | Cục Tức | Tinh linh vọng cảm/visual metaphor | Locked for S01E01 | [Story Bible S01E01](./Stories/STORY-XTL-S01E01_Cuc_Tuc_Mau_Do/01_Story_Bible.md) |
+
+Các tên và vai trò trên được khóa bởi [Series Bible v1](./19_Series_Bible_v1.md). Cục Tức là story-specific và không tái xuất trước một canon change được ghi nhận.

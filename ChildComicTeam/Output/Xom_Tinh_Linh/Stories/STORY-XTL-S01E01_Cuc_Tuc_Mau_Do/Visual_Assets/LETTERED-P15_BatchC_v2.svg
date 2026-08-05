@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P15 Batch C corrected lettered rough v2</title>
+  <image href="ROUGH-P15_BatchC_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Tay con đau vì con siết."><rect x="55" y="535" width="390" height="98" rx="46" fill="#fffdf6"/><text x="250" y="596" text-anchor="middle" font-size="28" font-weight="650">Tay con đau vì con siết.</text></g>
+    <g aria-label="Khi sẵn sàng, con có thể nói con cần gì."><rect x="475" y="1055" width="500" height="126" rx="50" fill="#fffdf6"/><text x="725" y="1105" text-anchor="middle" font-size="27" font-weight="650"><tspan x="725">Khi sẵn sàng, con có thể</tspan><tspan x="725" dy="36">nói con cần gì.</tspan></text></g>
+  </g>
+</svg>

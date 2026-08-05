@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P02 Batch A corrected lettered rough v2</title>
+  <image href="ROUGH-P02_BatchA_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P02.1" aria-label="Mặt trời ba lớp! Tớ cắt cả buổi đấy."><rect x="585" y="44" width="376" height="126" rx="52" fill="#fffdf6"/><path d="M614 154 L520 216 L640 165" fill="#fffdf6"/><text x="773" y="87" text-anchor="middle" stroke="none" font-size="27" font-weight="650"><tspan x="773">Mặt trời ba lớp!</tspan><tspan x="773" dy="36">Tớ cắt cả buổi đấy.</tspan></text></g>
+    <g id="P02.2" aria-label="Đẹp. Nhưng lối này—"><rect x="584" y="548" width="352" height="96" rx="46" fill="#fffdf6"/><path d="M614 632 L530 706 L646 642" fill="#fffdf6"/><text x="760" y="607" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Đẹp. Nhưng lối này—</text></g>
+    <g id="P02.3-friend" aria-label="Bắp, buộc giúp tớ nhé?"><rect x="60" y="1008" width="335" height="98" rx="47" fill="#fffdf6"/><path d="M210 1095 L178 1170 L238 1103" fill="#fffdf6"/><text x="228" y="1067" text-anchor="middle" stroke="none" font-size="27" font-weight="650">Bắp, buộc giúp tớ nhé?</text></g>
+    <g id="P02.3-Bap" aria-label="Được!"><ellipse cx="515" cy="1085" rx="92" ry="52" fill="#fffdf6"/><path d="M494 1125 L485 1184 L531 1130" fill="#fffdf6"/><text x="515" y="1096" text-anchor="middle" stroke="none" font-size="30" font-weight="700">Được!</text></g>
+    <text x="210" y="1420" stroke="none" fill="#5b5047" font-size="25" font-style="italic">XUỘT</text>
+  </g>
+</svg>

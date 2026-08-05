@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P11 Batch B corrected lettered rough v3</title><image href="ROUGH-P11_BatchB_v3.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g aria-label="Dừng một chút, Bắp."><rect x="610" y="55" width="330" height="94" rx="45" fill="#fffdf6"/><text x="775" y="114" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Dừng một chút, Bắp.</text></g>
+    <g aria-label="Tớ tự làm được!"><rect x="80" y="1060" width="300" height="92" rx="44" fill="#fffdf6"/><text x="230" y="1118" text-anchor="middle" stroke="none" font-size="29" font-weight="700">Tớ tự làm được!</text></g>
+    <text x="455" y="1450" stroke="#fffdf6" stroke-width="5" paint-order="stroke" fill="#5b5047" font-size="35" font-style="italic">CĂNG—</text>
+  </g>
+</svg>

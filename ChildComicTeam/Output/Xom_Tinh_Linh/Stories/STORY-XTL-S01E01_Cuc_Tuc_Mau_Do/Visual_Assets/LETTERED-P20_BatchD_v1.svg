@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P20 Batch D lettered rough v1</title>
+  <image href="ROUGH-P20_BatchD_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Hay bỏ phần giữa?"><rect x="640" y="55" width="315" height="94" rx="45" fill="#fffdf6"/><text x="797" y="114" text-anchor="middle" font-size="29" font-weight="650">Hay bỏ phần giữa?</text></g>
+    <g aria-label="Tớ không muốn bỏ."><rect x="50" y="500" width="335" height="94" rx="45" fill="#fffdf6"/><text x="217" y="559" text-anchor="middle" font-size="29" font-weight="700">Tớ không muốn bỏ.</text></g>
+    <g aria-label="Vá ở đây… rồi nối với tia của cậu?"><rect x="45" y="835" width="475" height="126" rx="50" fill="#fffdf6"/><text x="282" y="885" text-anchor="middle" font-size="27" font-weight="650"><tspan x="282">Vá ở đây… rồi nối</tspan><tspan x="282" dy="36">với tia của cậu?</tspan></text></g>
+    <g aria-label="Được. Lối đi vẫn rộng."><rect x="565" y="1190" width="390" height="98" rx="46" fill="#fffdf6"/><text x="760" y="1251" text-anchor="middle" font-size="28" font-weight="650">Được. Lối đi vẫn rộng.</text></g>
+  </g>
+</svg>

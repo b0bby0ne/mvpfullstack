@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P03 Batch A normalized lettered rough v3</title>
+  <image href="ROUGH-P03_BatchA_v3.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <g id="P03.1" aria-label="Nút này chắc lắm."><rect x="620" y="42" width="300" height="92" rx="44" fill="#fffdf6"/><path d="M654 122 L560 185 L680 132" fill="#fffdf6"/><text x="770" y="100" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Nút này chắc lắm.</text></g>
+    <g id="P03.2-friend" aria-label="Keo đâu?"><ellipse cx="800" cy="482" rx="108" ry="54" fill="#fffdf6"/><path d="M752 524 L698 574 L778 531" fill="#fffdf6"/><text x="800" y="494" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Keo đâu?</text></g>
+    <g id="P03.2-Bap" aria-label="Trong túi!"><ellipse cx="410" cy="520" rx="112" ry="55" fill="#fffdf6"/><path d="M396 563 L360 620 L430 568" fill="#fffdf6"/><text x="410" y="531" text-anchor="middle" stroke="none" font-size="28" font-weight="700">Trong túi!</text></g>
+    <text id="P03.4-SFX" x="760" y="1410" stroke="#fffdf6" stroke-width="4" paint-order="stroke" fill="#5b5047" font-size="32" font-style="italic">SẠT</text>
+  </g>
+</svg>

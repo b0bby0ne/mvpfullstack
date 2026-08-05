@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P05 Batch A corrected lettered rough v2</title>
+  <image href="ROUGH-P05_BatchA_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <text id="P05.1-SFX" x="280" y="500" stroke="#fffdf6" stroke-width="5" paint-order="stroke" font-size="31" font-style="italic">PHỤP</text>
+    <g id="P05.3-friend" aria-label="Tớ mượn dây nhé!" stroke="#25201b" stroke-width="3"><rect x="630" y="700" width="300" height="94" rx="45" fill="#fffdf6"/><path d="M700 781 L650 850 L730 790" fill="#fffdf6"/><text x="780" y="758" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Tớ mượn dây nhé!</text></g>
+    <g id="P05.3-Bap" aria-label="Ừ… cứ lấy." stroke="#25201b" stroke-width="3"><rect x="70" y="790" width="250" height="90" rx="43" fill="#fffdf6"/><path d="M260 866 L330 920 L284 854" fill="#fffdf6"/><text x="195" y="847" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Ừ… cứ lấy.</text></g>
+  </g>
+</svg>

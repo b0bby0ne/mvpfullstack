@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P10 Batch B lettered rough</title><image href="ROUGH-P10_BatchB_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b" stroke="#25201b" stroke-width="3">
+    <text x="185" y="455" stroke="#fffdf6" stroke-width="5" paint-order="stroke" fill="#5b5047" font-size="32" font-style="italic">CỰC</text>
+    <g aria-label="Nó chỉ hơi chặt thôi."><rect x="75" y="55" width="330" height="94" rx="45" fill="#fffdf6"/><text x="240" y="114" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Nó chỉ hơi chặt thôi.</text></g>
+    <g aria-label="Nới nút trước đã."><rect x="645" y="585" width="290" height="92" rx="44" fill="#fffdf6"/><text x="790" y="643" text-anchor="middle" stroke="none" font-size="28" font-weight="650">Nới nút trước đã.</text></g>
+    <g aria-label="Tớ thấy rồi."><rect x="95" y="1070" width="250" height="90" rx="43" fill="#fffdf6"/><text x="220" y="1128" text-anchor="middle" stroke="none" font-size="29" font-weight="650">Tớ thấy rồi.</text></g>
+  </g>
+</svg>

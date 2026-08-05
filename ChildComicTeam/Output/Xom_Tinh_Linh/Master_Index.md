@@ -8,8 +8,8 @@
 - Secondary age band: `9–10 tuổi khi có hướng dẫn đọc`
 - Ngôn ngữ chính: `Tiếng Việt`
 - Format: `Comic series + truyện chữ tương ứng`
-- Canon version: `v0.1 — Content Strategy`
-- Trạng thái: `Series Development`
+- Canon version: `v0.1 — Content Strategy / pilot v0.1-draft`
+- Trạng thái: `Pilot 1 rough complete — desk preflight done; mobile/print/font blockers and human read pending`
 
 ## Định vị
 
@@ -37,11 +37,22 @@
 16. [Backlog cơ hội từ TikTok Japan](./15_TikTok_Japan_Opportunity_Backlog.md)
 17. [TikTok Japan Source Records](./16_TikTok_Japan_Source_Records.md)
 18. [Báo cáo tổng hợp 4 nguồn và chiến lược tích hợp cho Việt Nam](./17_Integrated_Research_Strategy_Vietnam.md)
+19. [Bảng quản lý tiến độ Comic Portfolio](./18_Portfolio_Progress_Tracker.md)
+20. [Task tracker dạng CSV](./18_Portfolio_Progress_Tracker.csv)
+21. [Series Bible v1](./19_Series_Bible_v1.md)
+22. [Visual Guide v1](./20_Visual_Guide_v1.md)
+23. [Owned Library và Playlist Architecture](./21_Owned_Library_and_Playlist_Architecture.md)
+
+## Story production
+
+| Story ID | Tập | Trạng thái | Hồ sơ |
+|---|---:|---|---|
+| `STORY-XTL-S01E01` | 1 — Cục Tức Màu Đỏ | Rough approved; desk preflight conditional fail for release; human read kit ready | [Master Index](./Stories/STORY-XTL-S01E01_Cuc_Tuc_Mau_Do/Master_Index.md) |
 
 ## Bước tiếp theo
 
-1. Chốt dàn nhân vật chính.
-2. Tạo Series Bible `v1`.
-3. Bổ sung template Research Packet, source note và review checklist.
-4. Tạo Story Intake, Story Bible và Story Outline cho pilot `Cục Tức Màu Đỏ`.
-5. Viết comic script và prose story trước khi chuyển thể sang video ngắn.
+1. Chạy human read-aloud bằng session sheet; hoàn thiện P08/consent trước phiên trẻ.
+2. Chọn mobile panel reader hoặc mobile lettering variant để đóng `PF-MAJ-01`.
+3. Khóa font/license và trim/bleed/300-ppi master để đóng `PF-MAJ-02/03`.
+4. Gom 11 Minor visual vào final-line pass; không thay canon/ending đã khóa.
+5. Chỉ chuyển thể video sau khi comic canon qua full-art QA.

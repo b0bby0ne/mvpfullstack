@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P14 Batch C corrected lettered rough v2</title>
+  <image href="ROUGH-P14_BatchC_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <text x="120" y="475" fill="#7d251f" stroke="#fff7df" stroke-width="7" paint-order="stroke" font-size="58" font-weight="900" transform="rotate(-7 120 475)">BỤP</text>
+    <g aria-label="Con muốn ngồi một mình, hay cô ngồi gần?"><rect x="55" y="575" width="570" height="124" rx="50" fill="#fffdf6"/><text x="340" y="625" text-anchor="middle" font-size="27" font-weight="650"><tspan x="340">Con muốn ngồi một mình,</tspan><tspan x="340" dy="36">hay cô ngồi gần?</tspan></text></g>
+    <g aria-label="Cô… ngồi ở kia thôi ạ."><rect x="60" y="1060" width="405" height="100" rx="48" fill="#fffdf6"/><text x="262" y="1121" text-anchor="middle" font-size="28" font-weight="650">Cô… ngồi ở kia thôi ạ.</text></g>
+  </g>
+</svg>

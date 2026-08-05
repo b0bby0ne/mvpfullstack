@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P24 Batch D corrected final-page lettering v2</title>
+  <image href="ROUGH-P24_BatchD_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Mình cùng lo."><rect x="690" y="45" width="250" height="92" rx="44" fill="#fffdf6"/><text x="815" y="104" text-anchor="middle" font-size="30" font-weight="700">Mình cùng lo.</text></g>
+    <g aria-label="NGÀY HỘI XÓM MÌNH"><text x="220" y="878" text-anchor="middle" font-size="17" font-weight="900" letter-spacing="0.5">NGÀY HỘI XÓM MÌNH</text></g>
+    <text x="335" y="1465" fill="#5b5047" stroke="#fffdf6" stroke-width="4" paint-order="stroke" font-size="24" font-style="italic">ụp</text>
+  </g>
+</svg>

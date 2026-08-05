@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P13 Batch C lettered rough v1</title>
+  <image href="ROUGH-P13_BatchC_v1.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif" fill="#25201b">
+    <g aria-label="Tại… nó phồng lên."><rect x="600" y="60" width="350" height="96" rx="45" fill="#fffdf6"/><text x="775" y="119" text-anchor="middle" font-size="29" font-weight="650">Tại… nó phồng lên.</text></g>
+    <g aria-label="Tớ thấy tay cậu kéo."><rect x="70" y="650" width="370" height="96" rx="45" fill="#fffdf6"/><text x="255" y="709" text-anchor="middle" font-size="29" font-weight="650">Tớ thấy tay cậu kéo.</text></g>
+    <g aria-label="Tớ không làm nữa."><rect x="355" y="1060" width="345" height="96" rx="45" fill="#fffdf6"/><text x="527" y="1119" text-anchor="middle" font-size="29" font-weight="700">Tớ không làm nữa.</text></g>
+  </g>
+</svg>

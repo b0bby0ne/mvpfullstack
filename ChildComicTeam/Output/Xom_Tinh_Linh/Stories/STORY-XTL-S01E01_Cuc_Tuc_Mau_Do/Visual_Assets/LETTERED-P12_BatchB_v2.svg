@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1536" viewBox="0 0 1024 1536">
+  <title>P12 Batch B corrected lettered rough v2</title><image href="ROUGH-P12_BatchB_v2.png" width="1024" height="1536"/>
+  <g font-family="Noto Sans, Arial, sans-serif">
+    <text x="580" y="185" transform="rotate(-8 580 185)" fill="#fff7df" stroke="#7d251f" stroke-width="9" paint-order="stroke" font-size="76" font-weight="900" letter-spacing="3">RẸẸẸT!</text>
+    <text x="565" y="1400" fill="#403a35" stroke="#fffdf6" stroke-width="4" paint-order="stroke" font-size="25" font-style="italic">xào</text>
+  </g>
+</svg>
