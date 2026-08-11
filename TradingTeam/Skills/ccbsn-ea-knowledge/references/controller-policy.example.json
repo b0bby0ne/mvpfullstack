@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "ccbsn-only-buy-regime-gate",
+  "policy_version": "0.1.0-research",
+  "scope": {
+    "symbol": "XAUUSD",
+    "ccbsn_magic": 9196,
+    "controller_magic": 99196,
+    "direction": "BUY_ONLY",
+    "account_mode_required": "HEDGING"
+  },
+  "control_mode": "VISUAL_ONLY",
+  "commands": {
+    "allow": { "order_type": "SELL_LIMIT", "price": 888888 },
+    "block": { "order_type": "BUY_STOP", "price": 888888 },
+    "hard_stop_enabled": false
+  },
+  "decision": {
+    "timeframe": "H1",
+    "use_closed_bar": true,
+    "enable_confirmation_bars": 2,
+    "disable_confirmation_bars": 1,
+    "minimum_on_minutes": 60,
+    "minimum_off_minutes": 120,
+    "cooldown_after_emergency_minutes": 240
+  },
+  "trend_gate_research_defaults": {
+    "fast_ema": 34,
+    "slow_ema": 89,
+    "require_fast_above_slow": true,
+    "require_close_above_slow": true,
+    "minimum_slow_ema_slope_atr": 0.0
+  },
+  "momentum_gate_research_defaults": {
+    "rsi_period": 14,
+    "rsi_enable_min": 50,
+    "rsi_enable_max": 70
+  },
+  "volatility_gate_research_defaults": {
+    "atr_period": 14,
+    "maximum_atr_percentile": 85,
+    "bearish_shock_range_atr": 2.5
+  },
+  "operational_gates": {
+    "maximum_spread_pips": 5.0,
+    "reject_stale_ticks_seconds": 30,
+    "require_account_trade_allowed": true,
+    "require_expert_trade_allowed": true
+  },
+  "strategy_risk_gates": {
+    "block_new_cycle_when_chain_exists": false,
+    "maximum_existing_buy_orders": null,
+    "maximum_existing_buy_lots": null,
+    "minimum_margin_level_percent": null,
+    "maximum_floating_drawdown_percent": null
+  },
+  "trading_zone": {
+    "candidate_clock": "CLOSED_BAR_TIME",
+    "live_start_event": "NEW_CYCLE_ON_CONFIRMED",
+    "live_end_event": "NEW_CYCLE_OFF_CONFIRMED",
+    "on_reject_state": "OUTSIDE",
+    "off_reject_state": "FAILED_SAFE",
+    "render": {
+      "zones": true,
+      "candidates": true,
+      "events": true,
+      "maximum_closed_zones_on_chart": 100,
+      "active_zone_price_padding_atr": 0.25
+    }
+  },
+  "audit": {
+    "schema_version": "1.0",
+    "persist_decisions": true,
+    "persist_events": true,
+    "persist_zones": true,
+    "deduplicate_by_decision_id": true
+  },
+  "failure_policy": "BLOCK_NEW_CYCLE",
+  "notice": "Research template only. Thresholds require symbol-specific backtest, walk-forward validation and demo forward testing."
+}

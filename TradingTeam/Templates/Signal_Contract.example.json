@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "signal_id": "strategy-x:EURUSD:M5:BUY:2026-08-11T08:35:00Z",
+  "source": "strategy-x",
+  "strategy_version": "1.0.0",
+  "symbol": "EURUSD",
+  "timeframe": "M5",
+  "action": "BUY",
+  "created_at": "2026-08-11T08:35:00Z",
+  "expires_at": "2026-08-11T08:40:00Z",
+  "entry": {
+    "type": "MARKET",
+    "price": null
+  },
+  "volume": {
+    "mode": "FIXED_LOT",
+    "value": 0.01
+  },
+  "stop_loss": {
+    "mode": "PRICE",
+    "value": 1.15000
+  },
+  "take_profit": {
+    "mode": "PRICE",
+    "value": 1.15500
+  },
+  "metadata": {
+    "bar_closed": true,
+    "confidence": 0.8
+  }
+}

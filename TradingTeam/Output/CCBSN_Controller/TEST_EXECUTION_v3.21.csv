@@ -1,0 +1,8 @@
+test_id;severity;status;run_time;account_type;symbol;quote_digits;ccbsn_magic;controller_magic;expected;actual;order_ticket;experts_log_ref;history_ref;csv_ref;screenshot_ref;tester;notes
+MG-01;BLOCKER;NOT_RUN;;;;;9196;99196;;;;;;;;;;default CCBSN magic
+MG-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;custom CCBSN magic matches Bot1
+MG-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;custom magic state isolation
+MG-04;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;two target magics use separate mutex and state
+MG-05;HIGH;NOT_RUN;;;;;;;;;;;;;;;equal magics rejected
+MG-06;HIGH;NOT_RUN;;;;;;;;;;;;;;;zero CCBSN magic rejected
+MG-07;HIGH;NOT_RUN;;;;;;;;;;;;;;;panel and CSV show selected CCBSN magic

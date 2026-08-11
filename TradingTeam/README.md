@@ -1,51 +1,52 @@
-# TradingTeam
+# TradingTeam - EA MT5 Development Support
 
-Workspace nay duoc to chuc thanh 3 sub-agent phuc vu trading workflow:
+`TradingTeam` hiện là đội hỗ trợ phân tích, lập trình, tích hợp, kiểm thử và phát hành Expert Advisor cho MetaTrader 5.
 
-- `Agent_1_PriceAgent/`
-- `Agent_2_SwingAgent/`
-- `Agent_3_ScalpingAgent/`
+## Mô hình vận hành mặc định
 
-Moi sub-agent giu cau truc KWSR rieng:
+1. `Agent_1_EA_Requirements`: chuyển ý tưởng giao dịch thành đặc tả tín hiệu và máy trạng thái có thể lập trình.
+2. `Agent_2_MQL5_Developer`: xây kiến trúc EA, lập trình MQL5, indicator adapter và bảng điều khiển trên chart.
+3. `Agent_3_Signal_Integration`: nhận tín hiệu, chống lặp, kiểm tra rủi ro và thực thi lệnh an toàn.
+4. `Agent_4_EA_QA_Release`: review mã nguồn, backtest, forward test và đóng gói bản phát hành.
 
-- `Knowledge/`
-- `Workflows/`
-- `Skills/`
-- `Rules/`
+Các thư mục `Agent_1_PriceAgent`, `Agent_2_SwingAgent`, `Agent_3_ScalpingAgent` cùng các script quét thị trường được giữ lại làm tài sản legacy. Chúng không còn là pipeline mặc định, nhưng có thể cung cấp tín hiệu hoặc logic tham khảo cho dự án EA.
 
-Ngoai ra:
+## Tri thức EA đã nạp
 
-- `Output/` chua cac lan phan tich
-- `Global_Guideline.md` la huong dan chung cua team
-- `Master_Index.md` la file dieu huong nhanh
+- [CCBSN EA Knowledge](./Skills/ccbsn-ea-knowledge/SKILL.md): manual CCBSN v3.0.3 được chuẩn hóa và overlay thay đổi đến v3.0.5 từ kênh tác giả/dữ liệu người dùng.
 
-## Luong lam viec
-1. Chay intake de chot market, timeframe, session context va muc tieu quan sat.
-2. `Agent_1_PriceAgent` thu thap du lieu gia tu cac nguon da chot.
-3. `Agent_1_PriceAgent` chuan hoa record theo schema chung va ghi log vao `Agent_1_PriceAgent/Logs/`.
-4. `run_price_agent.py` sinh handoff package cho `Agent_2_SwingAgent`.
-5. `Agent_2_SwingAgent` doc handoff, loc tai san theo readiness, roi moi phan tich Bob Volman tren nhom du dieu kien.
-6. `Agent_3_ScalpingAgent` bien logic scalping da chot thanh quy tac thuc thi va EA `mq5`.
-7. Ket qua duoc ghi vao `Output/` theo tung run.
+## Hai nhóm bot ưu tiên
 
-## Nguon du lieu hien tai
-- `FireAnt` cho co phieu Viet Nam
-- `OANDA` cho CFD
-- `CoinGecko` hoac `CoinMarketCap` cho crypto
+### Bot điều khiển bật/tắt
 
-## Workflow mac dinh hien tai
-- `crypto`: top 50 theo von hoa, chu ky `5 phut`
-- `cfd`: 9 cap chi dinh, chu ky `5 phut`
-- `vn_stock`: top 50 theo von hoa, chu ky `5 phut`
+- bật hoặc tắt quyền vào lệnh tự động;
+- bật riêng chiều Buy/Sell;
+- tạm dừng theo symbol, phiên hoặc điều kiện rủi ro;
+- nút đóng lệnh, hủy pending hoặc chuyển sang chế độ chỉ quản lý lệnh;
+- lưu và khôi phục trạng thái an toàn sau khi EA/terminal khởi động lại.
 
-## Workflow scalping moi
-- `scalping`: `RSI failure swing` theo Wilder
-- trigger chinh: `RSI(14)` voi nguong `30/70`
-- filter mac dinh: `EMA10` va `EMA50`
-- output thuc thi: EA `mq5` cho `MT5`
+### Bot vào lệnh theo tín hiệu
 
-## Runner va handoff
-- Runner chung: `TradingTeam/scripts/run_price_agent.py`
-- Handoff tong hop: `TradingTeam/Agent_2_SwingAgent/Handoff/latest_price_handoff.json`
-- Handoff summary: `TradingTeam/Agent_2_SwingAgent/Handoff/latest_price_handoff_summary.json`
-- Handoff theo market: `TradingTeam/Agent_2_SwingAgent/Handoff/markets/*.json`
+- tín hiệu từ indicator qua `iCustom` và `CopyBuffer`;
+- tín hiệu từ nến/giá trực tiếp trong EA;
+- tín hiệu thủ công qua nút chart;
+- tín hiệu ngoài qua file, `WebRequest` hoặc cầu nối đã được phê duyệt;
+- chống vào lệnh trùng bằng `signal_id`, thời gian bar và trạng thái đã xử lý.
+
+## Chuẩn đầu ra mỗi dự án
+
+- brief và signal contract;
+- mã nguồn `.mq5`/`.mqh`, không chỉ có `.ex5`;
+- cấu hình input và giả định broker;
+- test matrix, báo cáo compile/backtest và known limitations;
+- hướng dẫn cài đặt, rollback và version.
+
+## Bắt đầu nhanh
+
+1. Điền [EA Development Brief](./Templates/EA_Development_Brief.md) và chốt [Signal Contract mẫu](./Templates/Signal_Contract.example.json).
+2. Agent 1 chuẩn hóa tín hiệu và acceptance criteria.
+3. Agent 2 thiết kế module rồi viết MQL5.
+4. Agent 3 nối nguồn tín hiệu với execution engine và risk guards.
+5. Agent 4 compile, kiểm thử và chỉ phát hành khi đạt Definition of Done.
+
+Xem [Global Guideline](./Global_Guideline.md) và [Master Index](./Master_Index.md) để điều hướng đầy đủ.

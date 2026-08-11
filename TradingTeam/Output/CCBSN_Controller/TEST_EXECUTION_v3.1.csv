@@ -1,0 +1,45 @@
+test_id;severity;status;run_time;account_type;account_login;server;symbol;ccbsn_magic;controller_magic;expected;actual;order_ticket;experts_log_ref;history_ref;csv_ref;screenshot_ref;tester;notes
+PL-01;HIGH;NOT_RUN;;;;;;;;;;;;;;;ATR below threshold
+PL-02;HIGH;NOT_RUN;;;;;;;;;;;;;;;ATR equal threshold and D zero
+PL-03;HIGH;NOT_RUN;;;;;;;;;;;;;;;D equals plus 20
+PL-04;HIGH;NOT_RUN;;;;;;;;;;;;;;;D above plus 20
+PL-05;HIGH;NOT_RUN;;;;;;;;;;;;;;;D equals minus 20
+PL-06;HIGH;NOT_RUN;;;;;;;;;;;;;;;D below minus 20
+PL-07;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;one pass bar arms only
+PL-08;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;two pass bars activate
+PL-09;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;arming cancellation
+PL-10;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;active immediate off
+PL-11;HIGH;NOT_RUN;;;;;;;;;;;;;;;data error fail safe
+PL-12;BLOCKER;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;exactly two missed M15 bars
+CT-01;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;ON command shape
+CT-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;OFF command shape
+CT-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;ON consumed confirmation
+CT-04;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;OFF consumed confirmation
+CT-05;HIGH;NOT_RUN;;;;;;;;;;;;;;;timeout self cancellation
+CT-06;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;policy supersedes pending
+CT-07;HIGH;NOT_RUN;;;;;;;;;;;;;;;manual delete negative test
+CT-08;BLOCKER;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;restart after self cancellation
+CT-09;HIGH;NOT_RUN;;;;;;;;;;;;;;;algo trading disabled
+CT-10;HIGH;NOT_RUN;;;;;;;;;;;;;;;disconnected terminal
+CT-11;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;filled command critical path
+OW-01;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;single controller ownership
+OW-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;second enabled controller blocked
+OW-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;normal manual handover
+OW-04;BLOCKER;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;second manual instance must not interfere
+OW-05;HIGH;NOT_RUN;;;;;;;;;;;;;;;Bot1 manual after ready
+OW-06;HIGH;NOT_RUN;;;;;;;;;;;;;;;timeframe reinit
+OW-07;HIGH;NOT_RUN;;;;;;;;;;;;;;;recompile recovery
+OW-08;BLOCKER;NOT_RUN;;;;;;;;;;;;;;;force sync after Bot1 reset
+OW-09;BLOCKER;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;change CCBSN magic state isolation
+OW-10;BLOCKER;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;same login cross server isolation
+OW-11;HIGH;NOT_RUN;;;;;;;;;;;;;;;explicit remove cleanup
+OW-12;HIGH;NOT_RUN;;;;;;;;;;;;;;;terminal close recovery
+UI-01;MEDIUM;NOT_RUN;;;;;;;;;;;;;;;default theme
+UI-02;MEDIUM;NOT_RUN;;;;;;;;;;;;;;;EMA line
+UI-03;MEDIUM;NOT_RUN;;;;;;;;;;;;;;;zone colors opacity
+UI-04;MEDIUM;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;draw history off semantics
+UI-05;MEDIUM;NOT_RUN;;;;;;;;;;;;;;;bounded objects
+AU-01;HIGH;BLOCKED_BY_AUDIT;;;;;;;;;;;;;;;complete audit identity
+AU-02;HIGH;NOT_RUN;;;;;;;;;;;;;;;two account concurrent audit
+AU-03;HIGH;NOT_RUN;;;;;;;;;;;;;;;handover audit trail
+AU-04;HIGH;NOT_RUN;;;;;;;;;;;;;;;restart recovery trail

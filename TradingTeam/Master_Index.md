@@ -1,87 +1,82 @@
-# Master_Index - TradingTeam
+# Master Index - TradingTeam EA MT5
 
-## 1. Tong quan workspace
-`TradingTeam` la workspace danh cho team thu thap va loc du lieu gia theo cau truc Bob Volman va chuyen logic scalping thanh EA `mq5`.
+## Tài liệu chung
 
-3 sub-agent chinh:
-1. `Agent_1_PriceAgent`
-2. `Agent_2_SwingAgent`
-3. `Agent_3_ScalpingAgent`
+- [README](./README.md)
+- [Global Guideline](./Global_Guideline.md)
+- [EA Development Brief](./Templates/EA_Development_Brief.md)
+- [Signal Contract mẫu](./Templates/Signal_Contract.example.json)
+- [Test Scenarios](./Test_Scenarios.md)
 
-## 2. Danh muc agent
+## Product Knowledge Skills
 
-### Agent 1
-- [Agent_1_PriceAgent](./Agent_1_PriceAgent)
-- Tri thuc
-  - [PriceAgent.md](./Agent_1_PriceAgent/Knowledge/PriceAgent.md)
-  - [Market_Data_Source_Map.md](./Agent_1_PriceAgent/Knowledge/Market_Data_Source_Map.md)
-  - [Unified_Price_Record_Schema.md](./Agent_1_PriceAgent/Knowledge/Unified_Price_Record_Schema.md)
-- Ky nang
-  - [Price_Data_Collection.md](./Agent_1_PriceAgent/Skills/Price_Data_Collection.md)
-- Quy trinh
-  - [Core_Price_Collection_Workflow.md](./Agent_1_PriceAgent/Workflows/Core_Price_Collection_Workflow.md)
-  - [Crypto_5m_Top50_Workflow.md](./Agent_1_PriceAgent/Workflows/Crypto_5m_Top50_Workflow.md)
-  - [CFD_5m_Fixed_Watchlist_Workflow.md](./Agent_1_PriceAgent/Workflows/CFD_5m_Fixed_Watchlist_Workflow.md)
-  - [VN_Stock_5m_Top50_Workflow.md](./Agent_1_PriceAgent/Workflows/VN_Stock_5m_Top50_Workflow.md)
-- Quy tac
-  - [Core_Operating_Principles.md](./Agent_1_PriceAgent/Rules/Core_Operating_Principles.md)
-  - [Crypto_5m_Runbook.md](./Agent_1_PriceAgent/Rules/Crypto_5m_Runbook.md)
-  - [CFD_5m_Runbook.md](./Agent_1_PriceAgent/Rules/CFD_5m_Runbook.md)
-  - [PriceAgent_Runner_Runbook.md](./Agent_1_PriceAgent/Rules/PriceAgent_Runner_Runbook.md)
-  - [VN_Stock_5m_Runbook.md](./Agent_1_PriceAgent/Rules/VN_Stock_5m_Runbook.md)
+- [CCBSN EA Knowledge](./Skills/ccbsn-ea-knowledge/SKILL.md)
+  - [Tổng quan và nguồn](./Skills/ccbsn-ea-knowledge/references/overview-and-provenance.md)
+  - [Input catalog v3.0.5](./Skills/ccbsn-ea-knowledge/references/input-catalog-v3.0.5.md)
+  - [Signals và filters](./Skills/ccbsn-ea-knowledge/references/signals-and-filters.md)
+  - [Operation flow](./Skills/ccbsn-ea-knowledge/references/operation-flow.md)
+  - [Controls và state](./Skills/ccbsn-ea-knowledge/references/controls-and-state.md)
+  - [Risk và engineering notes](./Skills/ccbsn-ea-knowledge/references/risk-and-engineering-notes.md)
+  - [Structured knowledge JSON](./Skills/ccbsn-ea-knowledge/references/structured-knowledge-v3.0.5.json)
+  - [CCBSN Only Buy + Controller](./Skills/ccbsn-ea-knowledge/references/only-buy-controller-strategy.md)
+  - [Market regime gates](./Skills/ccbsn-ea-knowledge/references/market-regime-gates.md)
+  - [Controller integration contract](./Skills/ccbsn-ea-knowledge/references/controller-integration-contract.md)
+  - [Trading Zone state và events](./Skills/ccbsn-ea-knowledge/references/trading-zone-state-and-events.md)
+  - [Bot 2 implementation blueprint](./Skills/ccbsn-ea-knowledge/references/bot2-implementation-blueprint.md)
+  - [Policy Bot 2 M15 ATR20 + EMA23](./Skills/ccbsn-ea-knowledge/references/bot2-m15-atr20-ema23-policy.md)
+  - [Policy JSON M15 ATR20 + EMA23 - G2 ready](./Skills/ccbsn-ea-knowledge/references/controller-policy.m15-atr20-ema23.v0.3.json)
+  - [Only Buy controller test plan](./Skills/ccbsn-ea-knowledge/references/only-buy-controller-test-plan.md)
+  - [Controller policy JSON mẫu](./Skills/ccbsn-ea-knowledge/references/controller-policy.example.json)
+  - [Controller brief](./Templates/CCBSN_Only_Buy_Controller_Brief.md)
+  - [Trading Zone Strategy Spec](./Templates/Trading_Zone_Strategy_Spec.md)
+  - [Bot 1 Frozen Set Manifest](./Templates/Bot1_Frozen_Set_Manifest.md)
 
-### Agent 2
-- [Agent_2_SwingAgent](./Agent_2_SwingAgent)
-- Tri thuc
-  - [SwingAgent.md](./Agent_2_SwingAgent/Knowledge/SwingAgent.md)
-  - [PriceAgent_Handoff_Contract.md](./Agent_2_SwingAgent/Knowledge/PriceAgent_Handoff_Contract.md)
-  - [Bob_Volman_Canon.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Canon.md)
-  - [Bob_Volman_Principles.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Principles.md)
-  - [Bob_Volman_Advanced_Concepts.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Advanced_Concepts.md)
-  - [Bob_Volman_Setup_Catalog.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Setup_Catalog.md)
-  - [Bob_Volman_Execution_Management.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Execution_Management.md)
-  - [Bob_Volman_Training_Risk.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Training_Risk.md)
-  - [Bob_Volman_Source_Notes.md](./Agent_2_SwingAgent/Knowledge/Bob_Volman_Source_Notes.md)
-- Ky nang
-  - [Bob_Volman_Structure_Filtering.md](./Agent_2_SwingAgent/Skills/Bob_Volman_Structure_Filtering.md)
-- Quy trinh
-  - [Core_Swing_Filter_Workflow.md](./Agent_2_SwingAgent/Workflows/Core_Swing_Filter_Workflow.md)
-  - [H4_Swing_Scan_Workflow.md](./Agent_2_SwingAgent/Workflows/H4_Swing_Scan_Workflow.md)
-- Quy tac
-  - [Core_Operating_Principles.md](./Agent_2_SwingAgent/Rules/Core_Operating_Principles.md)
-  - [H4_Swing_Log_Runbook.md](./Agent_2_SwingAgent/Rules/H4_Swing_Log_Runbook.md)
-  - [VN_Stock_1D_Swing_Runbook.md](./Agent_2_SwingAgent/Rules/VN_Stock_1D_Swing_Runbook.md)
-  - [Telegram_Alert_Runbook.md](./Agent_2_SwingAgent/Rules/Telegram_Alert_Runbook.md)
+## Agent 1 - EA Requirements
 
-### Agent 3
-- [Agent_3_ScalpingAgent](./Agent_3_ScalpingAgent)
-- Tri thuc
-  - [ScalpingAgent.md](./Agent_3_ScalpingAgent/Knowledge/ScalpingAgent.md)
-  - [RSI_Failure_Swing_Playbook.md](./Agent_3_ScalpingAgent/Knowledge/RSI_Failure_Swing_Playbook.md)
-  - [FireAnt_FPT_Page_Footprint.md](./Agent_3_ScalpingAgent/Knowledge/FireAnt_FPT_Page_Footprint.md)
-- Ky nang
-  - [RSI_Failure_Swing_Execution.md](./Agent_3_ScalpingAgent/Skills/RSI_Failure_Swing_Execution.md)
-- Quy trinh
-  - [Core_Scalping_Execution_Workflow.md](./Agent_3_ScalpingAgent/Workflows/Core_Scalping_Execution_Workflow.md)
-  - [M5_RSI_Failure_Swing_Workflow.md](./Agent_3_ScalpingAgent/Workflows/M5_RSI_Failure_Swing_Workflow.md)
-- Quy tac
-  - [Core_Operating_Principles.md](./Agent_3_ScalpingAgent/Rules/Core_Operating_Principles.md)
-  - [MQ5_Output_Runbook.md](./Agent_3_ScalpingAgent/Rules/MQ5_Output_Runbook.md)
+- [Vai trò](./Agent_1_EA_Requirements/Knowledge/EA_Requirements_Analyst.md)
+- [Signal và state-machine specification](./Agent_1_EA_Requirements/Skills/Signal_Specification_and_State_Machine.md)
+- [Workflow đặc tả EA](./Agent_1_EA_Requirements/Workflows/EA_Requirement_Workflow.md)
+- [Input completeness](./Agent_1_EA_Requirements/Rules/Input_Completeness_and_Handoff.md)
 
-### Script moi nhat
-- `run_automated_scans.py`: Chay toan bo quy trinh va gui canh bao Telegram.
-- `process_telegram_alerts.py`: Xu ly tin hieu va thong bao.
-- `scan_vn_1d_swing_setups.py`: Bo quet 1D co phieu VN.
-- Handoff
-  - [README.md](./Agent_2_SwingAgent/Handoff/README.md)
-- Logs
-  - [README.md](./Agent_2_SwingAgent/Logs/README.md)
+## Agent 2 - MQL5 Developer
 
-## 3. File dung chung
-- [README.md](./README.md)
-- [Global_Guideline.md](./Global_Guideline.md)
-- [Thu muc Output](./Output)
-- [Thu muc Logs cua Agent 1](./Agent_1_PriceAgent/Logs)
-- [Thu muc Runtime cua Agent 1](./Agent_1_PriceAgent/Runtime)
-- [Thu muc Handoff cua Agent 2](./Agent_2_SwingAgent/Handoff)
-- [EA output cua Agent 3](./Output/Agent_3_ScalpingAgent)
+- [Vai trò](./Agent_2_MQL5_Developer/Knowledge/MQL5_Developer.md)
+- [Kiến trúc và lifecycle MQL5](./Agent_2_MQL5_Developer/Skills/MQL5_EA_Architecture_and_Lifecycle.md)
+- [Indicator và buffer](./Agent_2_MQL5_Developer/Skills/MQL5_Indicator_and_Buffer_Programming.md)
+- [Chart UI và toggle control](./Agent_2_MQL5_Developer/Skills/MQL5_UI_Control_Panel_Programming.md)
+- [Workflow triển khai](./Agent_2_MQL5_Developer/Workflows/Core_EA_Implementation_Workflow.md)
+- [Workflow CCBSN Only Buy Controller](./Agent_2_MQL5_Developer/Workflows/CCBSN_Only_Buy_Controller_Delivery_Workflow.md)
+- [Coding standard](./Agent_2_MQL5_Developer/Rules/MQL5_Coding_Standard.md)
+
+## Agent 3 - Signal Integration
+
+- [Vai trò](./Agent_3_Signal_Integration/Knowledge/Signal_Integration_Engineer.md)
+- [Signal adapter và idempotency](./Agent_3_Signal_Integration/Skills/Signal_Adapter_and_Idempotency.md)
+- [Order execution và risk guards](./Agent_3_Signal_Integration/Skills/MT5_Order_Execution_and_Risk_Guards.md)
+- [Tích hợp tín hiệu ngoài](./Agent_3_Signal_Integration/Skills/External_Signal_Integration.md)
+- [Workflow tích hợp](./Agent_3_Signal_Integration/Workflows/Signal_to_Execution_Workflow.md)
+- [Execution safety](./Agent_3_Signal_Integration/Rules/Execution_Safety_Rules.md)
+
+## Agent 4 - EA QA & Release
+
+- [Vai trò](./Agent_4_EA_QA_Release/Knowledge/EA_QA_Release_Engineer.md)
+- [Strategy Tester và debugging](./Agent_4_EA_QA_Release/Skills/Strategy_Tester_and_Debugging.md)
+- [Code review và release](./Agent_4_EA_QA_Release/Skills/MQL5_Code_Review_and_Release.md)
+- [Workflow QA](./Agent_4_EA_QA_Release/Workflows/EA_QA_and_Release_Workflow.md)
+- [Release gate](./Agent_4_EA_QA_Release/Rules/Release_Gate.md)
+
+## Tài sản trading legacy
+
+- [PriceAgent](./Agent_1_PriceAgent)
+- [SwingAgent](./Agent_2_SwingAgent)
+- [ScalpingAgent](./Agent_3_ScalpingAgent)
+- [Scripts legacy](./scripts)
+- [Output lịch sử](./Output)
+
+Các mục legacy không còn là tuyến xử lý mặc định của team EA.
+
+## CCBSN Bot 2 - Output đang kiểm thử
+
+- [CCBSN Trading Zone Visualizer](./Output/CCBSN_Controller/CCBSN_Trading_Zone_Visualizer.mq5)
+- [CCBSN Trading Zone Visualizer binary](./Output/CCBSN_Controller/CCBSN_Trading_Zone_Visualizer.ex5)
+- [Hướng dẫn test Visual Zone trên MT5](./Output/CCBSN_Controller/MT5_VISUAL_TEST_GUIDE.md)

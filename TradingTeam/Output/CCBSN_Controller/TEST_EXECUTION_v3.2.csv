@@ -1,0 +1,33 @@
+test_id;severity;status;run_time;account_type;symbol;quote_digits;controller_magic;expected;actual;order_ticket;experts_log_ref;history_ref;csv_ref;screenshot_ref;tester;notes
+RG-01;BLOCKER;NOT_RUN;;;;;;;;;;;;;;cancel timeout survives restart
+RG-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;superseded cancel survives restart
+RG-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;second manual instance blocked by mutex
+RG-04;BLOCKER;NOT_RUN;;;;;;;;;;;;;;same owner enabled to manual
+RG-05;HIGH;NOT_RUN;;;;;;;;;;;;;;no account allowlist fixed CCBSN magic 9196
+RG-06;BLOCKER;NOT_RUN;;;;;;;;;;;;;;exact two M15 gap rebuild
+RG-07;HIGH;STATIC_PASS;;;;;;;;;;;;;;ticket split high low source verified
+RG-08;HIGH;NOT_RUN;;;;;;;;;;;;;;two digit XAU
+RG-09;HIGH;NOT_RUN;;;;;;;;;;;;;;three digit XAU
+RG-09B;HIGH;NOT_RUN;;;;;;;;;;;;;;digit mismatch blocks init
+RG-10;HIGH;NOT_RUN;;;;;;;;;;;;;;audit control context
+RG-11;MEDIUM;NOT_RUN;;;;;;;;;;;;;;draw history off
+PL-01;HIGH;NOT_RUN;;;;;;;;;;;;;;ATR below threshold
+PL-02;HIGH;NOT_RUN;;;;;;;;;;;;;;ATR equal threshold
+PL-03;HIGH;NOT_RUN;;;;;;;;;;;;;;D plus 20
+PL-04;HIGH;NOT_RUN;;;;;;;;;;;;;;D above plus 20
+PL-05;HIGH;NOT_RUN;;;;;;;;;;;;;;D minus 20
+PL-06;HIGH;NOT_RUN;;;;;;;;;;;;;;D below minus 20
+PL-07;BLOCKER;NOT_RUN;;;;;;;;;;;;;;one bar arms
+PL-08;BLOCKER;NOT_RUN;;;;;;;;;;;;;;two bars active
+PL-09;BLOCKER;NOT_RUN;;;;;;;;;;;;;;arming cancellation
+PL-10;BLOCKER;NOT_RUN;;;;;;;;;;;;;;active off
+PL-11;HIGH;NOT_RUN;;;;;;;;;;;;;;data error fail safe
+CT-01;BLOCKER;NOT_RUN;;;;;;;;;;;;;;ON command
+CT-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;OFF command
+CT-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;CCBSN consumption
+CT-04;BLOCKER;NOT_RUN;;;;;;;;;;;;;;filled command critical
+CT-05;HIGH;NOT_RUN;;;;;;;;;;;;;;trade disabled disconnected
+OW-01;HIGH;NOT_RUN;;;;;;;;;;;;;;timeframe recompile
+OW-02;BLOCKER;NOT_RUN;;;;;;;;;;;;;;force sync
+OW-03;BLOCKER;NOT_RUN;;;;;;;;;;;;;;manual after ready
+OW-04;HIGH;NOT_RUN;;;;;;;;;;;;;;remove after ready

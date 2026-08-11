@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "ccbsn-m15-atr20-ema23-gate",
+  "policy_version": "0.3.0-research",
+  "control_mode": "VISUAL_ONLY",
+  "scope": {
+    "symbol_baseline": "XAUUSD",
+    "symbol_source": "CHART_SYMBOL",
+    "allow_broker_suffix": true,
+    "direction": "BUY_ONLY",
+    "ccbsn_magic": 9196,
+    "controller_magic": 99196
+  },
+  "decision": {
+    "timeframe": "M15",
+    "trigger": "NEW_CLOSED_BAR",
+    "bar_shift": 1,
+    "enable_confirmation_bars": 2,
+    "disable_confirmation_bars": 1,
+    "minimum_on_minutes": 0,
+    "minimum_off_minutes": 0,
+    "effective_reenable_delay_minutes": 30
+  },
+  "features": {
+    "atr": {
+      "implementation": "IATR",
+      "period": 20,
+      "bar_shift": 1,
+      "minimum_price": 3.0,
+      "minimum_price_input_name": "InpMinATRPrice",
+      "minimum_price_required": true,
+      "comparison": "GREATER_THAN_OR_EQUAL"
+    },
+    "ema": {
+      "implementation": "IMA",
+      "period": 23,
+      "method": "MODE_EMA",
+      "applied_price": "PRICE_CLOSE",
+      "bar_shift": 1
+    },
+    "ema_distance": {
+      "formula": "CLOSE_1_MINUS_EMA23_1",
+      "unit": "RAW_SYMBOL_PRICE",
+      "allowed_intervals": [
+        { "minimum": null, "minimum_inclusive": false, "maximum": -20.0, "maximum_inclusive": false },
+        { "minimum": 0.0, "minimum_inclusive": true, "maximum": 20.0, "maximum_inclusive": true }
+      ]
+    }
+  },
+  "conditions": {
+    "checklist_pass": "DATA_READY AND ATR_OK AND EMA_DISTANCE_OK",
+    "allow": "CHECKLIST_PASS FOR 2 CONSECUTIVE CLOSED M15 BARS",
+    "block": "ACTIVE AND NOT CHECKLIST_PASS FOR 1 CLOSED M15 BAR",
+    "failure_policy": "BLOCK_NEW_CYCLE"
+  },
+  "commands": {
+    "allow": { "order_type": "SELL_LIMIT", "price": 888888 },
+    "block": { "order_type": "BUY_STOP", "price": 888888 },
+    "send_only_on_state_change": true,
+    "hard_stop_enabled": false
+  },
+  "trading_zone": {
+    "simulated_start_event": "ALLOW_DECISION",
+    "simulated_end_event": "BLOCK_DECISION",
+    "live_start_event": "NEW_CYCLE_ON_CONFIRMED",
+    "live_end_event": "NEW_CYCLE_OFF_CONFIRMED",
+    "render_feature_tooltip": true
+  },
+  "validation": {
+    "status": "READY_FOR_VISUAL_ONLY_IMPLEMENTATION",
+    "blocking_fields": [],
+    "notice": "MinATRPrice=3.0 is a research default for XAUUSD and remains an EA input. Recalibrate with broker-specific M15 history before demo/live."
+  }
+}

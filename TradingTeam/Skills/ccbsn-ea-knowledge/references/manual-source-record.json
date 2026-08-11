@@ -1,0 +1,16 @@
+{
+  "source_url": "https://ccbsn-manual.netlify.app/",
+  "title": "Giới thiệu bot Can Cu Bu Sieng Nang - CCBSN",
+  "language": "vi",
+  "manual_claimed_version": "3.0.3",
+  "retrieved_at": "2026-08-11",
+  "http_status": 200,
+  "bytes": 664766,
+  "sha256": "B84B703509642A19BCD8014F8DF8A56E4D52B8DC02DF4888C217D78FB1191521",
+  "storage_policy": "Normalized knowledge and provenance are stored; full HTML is not duplicated.",
+  "version_overlay": {
+    "target_version": "3.0.5",
+    "primary_update_source": "https://t.me/BoBotfx_channel",
+    "reason": "The public manual covers v3.0.3; author posts and user-provided data cover v3.0.4-v3.0.5."
+  }
+}

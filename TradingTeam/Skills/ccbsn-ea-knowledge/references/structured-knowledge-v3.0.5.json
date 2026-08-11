@@ -1,0 +1,282 @@
+{
+  "product": {
+    "name": "Can Cu Bu Sieng Nang",
+    "short_name": "CCBSN",
+    "platform": "MetaTrader 5",
+    "target_version": "3.0.5",
+    "manual_base_version": "3.0.3",
+    "author": "Bo.Botfx",
+    "official_manual": "https://ccbsn-manual.netlify.app/",
+    "official_channel": "https://t.me/BoBotfx_channel",
+    "distribution": "free"
+  },
+  "source_layers": [
+    "official manual v3.0.3",
+    "official channel release notes v3.0-v3.0.5",
+    "user-provided v3.0.5 defaults and behavior"
+  ],
+  "pip_rules_user_provided": {
+    "XAUUSD": {
+      "price_1_0_to_pips": 10,
+      "price_0_1_to_pips": 1
+    },
+    "BTCUSD": {
+      "price_1_0_to_pips": 10,
+      "price_0_1_to_pips": 1,
+      "xau_set_pip_multiplier": 100
+    },
+    "requires_broker_verification": true
+  },
+  "modules": {
+    "general": {
+      "combine_ea_magic": false,
+      "allow_manual_orders_in_dca": false,
+      "magic_number": 9196,
+      "first_lot": 0.01,
+      "first_tp_pips": 10.0,
+      "first_sl_pips": 0.0,
+      "show_tp": false,
+      "post_clear_delay_minutes": 0
+    },
+    "limits": {
+      "max_buy_orders": 100,
+      "max_sell_orders": 100,
+      "max_spread_pips": 5.0,
+      "max_order_lot": 2.3,
+      "new_cycle_at_max_lot": false,
+      "entry_delay_seconds": 2,
+      "new_cycle_at_max_lot_semantics_requires_test": true
+    },
+    "lottery": {
+      "enabled": false,
+      "sl_multiplier": 2.0,
+      "post_sl_tp_delay_minutes": 60,
+      "floating_loss_close_reset": 0.0
+    },
+    "dca": {
+      "enabled": true,
+      "trend_filter_enabled": false,
+      "trend_filter_activation_orders": 25,
+      "modes": [
+        "STEP",
+        "STEP_TF",
+        "STEP_MULTIPLIER",
+        "SIGNAL",
+        "POSITIVE",
+        "BIDIRECTIONAL",
+        "BIDIRECTIONAL_SIGNAL",
+        "STEP_CLOSED_BAR"
+      ],
+      "new_mode_activation_orders": 0,
+      "lot_modes": [
+        "MULTIPLIER",
+        "PLUS",
+        "MANUAL_SEQUENCE"
+      ],
+      "initial_lot_multiplier": 1.3,
+      "lot_multiplier_schedule": [
+        { "orders": 10, "multiplier": 1.2 },
+        { "orders": 20, "multiplier": 1.1 },
+        { "orders": 30, "multiplier": 1.05 },
+        { "orders": 40, "multiplier": 1.06 },
+        { "orders": 50, "multiplier": 1.03 }
+      ],
+      "lot_plus": 0.01,
+      "manual_sequences_example": [
+        [0.02, 0.03, 0.03, 0.04, 0.05],
+        [0.18, 0.19, 0.2, 0.23, 0.25]
+      ],
+      "manual_lot_not_below_previous": true,
+      "lot_round_decimals": 2,
+      "initial_distance_multiplier": 1.2,
+      "initial_distance_pips": 10,
+      "single_order_tp_pips": 0.0,
+      "chain_tp_pips": 20,
+      "distance_schedule": [
+        { "orders": 5, "distance_pips": 15 },
+        { "orders": 10, "distance_pips": 20 },
+        { "orders": 15, "distance_pips": 25 },
+        { "orders": 20, "distance_pips": 30 }
+      ]
+    },
+    "negative_chain_tp_adjustment": {
+      "enabled": false,
+      "drawdown_percent": -20,
+      "drawdown_money": -12000,
+      "adjusted_chain_tp_pips": 10
+    },
+    "opposite_order": {
+      "enabled": false,
+      "activation_orders": 12,
+      "opposite_lot_percent": 15,
+      "fixed_lot_when_percent_zero": 0.01,
+      "requires_opposite_signal": true
+    },
+    "same_chain_trim": {
+      "enabled": true,
+      "ignore_magic": false,
+      "first_activation_orders": 20,
+      "later_activation_orders": 15,
+      "losing_head_orders": 2,
+      "max_profitable_tail_orders": 0,
+      "profit_percent": 10,
+      "profit_money_when_percent_zero": 10,
+      "post_trim_chain_tp_pips": 5,
+      "post_trim_multiplier": 1.15,
+      "partial": {
+        "enabled": false,
+        "drawdown_percent": -30,
+        "activation_orders": 20,
+        "head_order_lot_percent": 30
+      }
+    },
+    "cross_chain_trim": {
+      "enabled": false,
+      "magic_pair_filter": false,
+      "total_order_trigger": 25,
+      "losing_head_orders": 1,
+      "profitable_tail_orders": 5,
+      "profit_money": 10,
+      "use_today_realized_profit": false,
+      "same_side_partial_enabled": false,
+      "same_side_partial_min_lot": 0.1,
+      "same_side_partial_lot_percent": 35.0
+    },
+    "realized_profit_trim_v305": {
+      "enabled": false,
+      "profit_scopes": [
+        "MAGIC_SYMBOL",
+        "SYMBOL",
+        "ACCOUNT"
+      ],
+      "lookback_days": 0,
+      "activation_orders": 15,
+      "partial_min_lot": 0.1,
+      "trim_lot_percent": 35.0,
+      "profit_budget_percent": 50.0,
+      "requires_new_realized_profit_high_water_mark": true
+    },
+    "lot_balance": {
+      "enabled": false,
+      "modes": [
+        "INDEPENDENT_MAGIC_ZERO",
+        "ADD_TO_CURRENT_CHAIN"
+      ],
+      "difference_trigger_lots": 6.0,
+      "difference_stop_lots": 2.0,
+      "add_lots": 0.1,
+      "delay_seconds": 120
+    },
+    "hedging_zone": {
+      "enabled": false,
+      "activation_orders": 20,
+      "total_lot_multiplier": 2.0,
+      "zone_pips": 35,
+      "aggregate_profit_money": 1000,
+      "aggregate_profit_pips_when_money_zero": null,
+      "new_target_activation_orders": 26,
+      "new_target_money": 100,
+      "max_lot": 20.0
+    },
+    "hedging": {
+      "enabled": false,
+      "activation_orders": 15,
+      "activation_drawdown_percent": -25,
+      "use_dca_lot": true,
+      "hedge_lot_percent": 20.0,
+      "hedge_tp_pips": 0.0,
+      "aggregate_tp_money": 150,
+      "pause_trim_while_hedging": true
+    },
+    "manual_lot_reset": {
+      "reset_lot": 0.1,
+      "new_multiplier": 1.2,
+      "new_chain_tp_pips": 5.0
+    },
+    "close_targets": {
+      "buy_sell_difference_percent": 0.0,
+      "money_tp_all_account": 0.0,
+      "money_sl_all_account": 0.0,
+      "money_tp_magic": 0.0,
+      "money_sl_magic": 0.0,
+      "money_tp_buy": 0.0,
+      "money_sl_buy": 0.0,
+      "money_tp_sell": 0.0,
+      "money_sl_sell": 0.0,
+      "money_tp_bidirectional_signal_dca": 0.0
+    },
+    "daily_target": {
+      "profit_money": 0.0,
+      "loss_money": 0.0,
+      "profit_percent": 0.0,
+      "loss_percent": 0.0,
+      "new_day_delay_minutes": 120
+    },
+    "ladder_target": {
+      "enabled": false,
+      "target_money_per_step": 2000,
+      "magic_pair_filter": true,
+      "post_close_delay_minutes": 5
+    },
+    "trailing": {
+      "enabled": false,
+      "start_pips": 15,
+      "step_pips": 5,
+      "initial_stop_pips": 2,
+      "show_start_line": false,
+      "virtual_from_v304": true
+    },
+    "time_filter": {
+      "enabled": false,
+      "clock": "PC_LOCAL",
+      "windows": [
+        "08:30-12:30",
+        "14:30-18:30",
+        "20:30-23:30",
+        "02:30-05:30"
+      ],
+      "dca_outside_windows": true
+    }
+  },
+  "entry_signals": [
+    "CCI",
+    "CCI_REVERSE",
+    "STOCHASTIC",
+    "STOCHASTIC_REVERSE",
+    "MOMENTUM",
+    "TWO_CANDLES",
+    "NO_CONDITION",
+    "SUPERTREND",
+    "UTBOT",
+    "RANDOM",
+    "EXTERNAL_INDICATOR",
+    "RSI",
+    "RSI_REVERSAL",
+    "ICHIMOKU_BREAK_KUMO",
+    "SMC_ALL_WITH",
+    "SMC_ALL_REVERSE",
+    "SMC_INTERNAL_WITH",
+    "SMC_INTERNAL_REVERSE",
+    "SMC_SWING_WITH",
+    "SMC_SWING_REVERSE",
+    "BOLLINGER_BANDS",
+    "PINBAR",
+    "ENGULFING",
+    "PINBAR_OR_ENGULFING"
+  ],
+  "trend_filters": {
+    "RSI": { "up_level": 50, "down_level": 50 },
+    "EMA": { "ema_1": 34, "ema_2": 89 },
+    "MACD": { "up": "histogram > 0", "down": "histogram < 0" },
+    "ZONE_CYCLE": { "outside_zone_expected_new_cycle": false, "requires_binary_test": true }
+  },
+  "remote_commands": [
+    { "order_type": "BUY_STOP", "price": 999999, "action": "STOP_ALL" },
+    { "order_type": "BUY_STOP", "price": 666666, "action": "RESUME" },
+    { "order_type": "BUY_STOP", "price": 888888, "action": "NEW_CYCLE_OFF" },
+    { "order_type": "SELL_LIMIT", "price": 888888, "action": "NEW_CYCLE_ON" },
+    { "order_type": "BUY_STOP", "price": 555555, "action": "STOP_BUY" },
+    { "order_type": "SELL_LIMIT", "price": 555555, "action": "STOP_SELL" }
+  ],
+  "risk_notice": "Technical knowledge for testing only; DCA, martingale and hedging carry substantial tail risk and this is not investment advice."
+}

@@ -1,78 +1,97 @@
 # TradingTeam: Global Guideline
 
-## 1. Muc tieu
-Team `TradingTeam` chuyen thu thap va loc du lieu gia de phuc vu:
+## 1. Mục tiêu
 
-- quan sat hanh vi gia
-- phat hien swing theo cau truc Bob Volman
-- tao watchlist setup de theo doi thu cong hoac tu dong
-- bien logic scalping thanh EA `mq5` co the chay tren `MT5`
+Phát triển EA MT5 có thể kiểm tra, truy vết và vận hành an toàn, ưu tiên:
 
-## 2. Cau truc team
-Team duoc to chuc thanh 3 sub-agent:
+- bot điều khiển bật/tắt;
+- bot nhận tín hiệu rồi vào, sửa hoặc đóng lệnh;
+- lớp quản trị lệnh và risk guard dùng lại được;
+- bàn giao đầy đủ mã nguồn, test evidence và hướng dẫn vận hành.
 
-1. `Agent_1_PriceAgent`
-2. `Agent_2_SwingAgent`
-3. `Agent_3_ScalpingAgent`
+Team cung cấp năng lực kỹ thuật, không cam kết lợi nhuận và không đưa chiến lược lên tài khoản thật khi chưa có phê duyệt rõ ràng.
 
-Moi sub-agent co cau truc:
+## 2. Vai trò
 
-- `Knowledge/`
-- `Workflows/`
-- `Skills/`
-- `Rules/`
+### Agent 1 - EA Requirements
 
-## 3. Cau truc workspace
-- `Agent_1_PriceAgent/`
-- `Agent_2_SwingAgent/`
-- `Agent_3_ScalpingAgent/`
-- `Output/`
-- `Global_Guideline.md`
-- `README.md`
-- `Master_Index.md`
+- làm rõ nguồn tín hiệu, thời điểm xác nhận và điều kiện vô hiệu;
+- mô tả trạng thái `OFF`, `ARMED`, `ACTIVE`, `MANAGE_ONLY`, `HALTED`;
+- chốt contract đầu vào/đầu ra, acceptance criteria và edge cases;
+- không để developer tự suy đoán quy tắc giao dịch còn thiếu.
 
-## 4. Nguyen tac van hanh
-- Moi lien ket noi bo trong `TradingTeam` phai dung duong dan tuong doi.
-- Moi ket luan phai gan voi du lieu gia, timeframe va thoi diem quan sat.
-- Lich su lay du lieu phai duoc luu trong `Agent_1_PriceAgent/Logs`.
-- Log moi cua `PriceAgent` phai tuan theo schema chung de `SwingAgent` doc duoc.
-- Moi market la mot thu muc rieng.
-- Moi cap hoac symbol la mot file log rieng.
-- Chu ky mac dinh cua workflow chung la `5 phut`.
-- Sau moi cycle cua runner, `PriceAgent` phai sinh handoff package vao `Agent_2_SwingAgent/Handoff`.
-- `SwingAgent` phai doc summary va readiness flag truoc khi phan tich.
-- `SwingAgent` chi duoc chay day du Bob Volman neu `bob_volman_intraday_ready == true`.
-- `ScalpingAgent` khong duoc dung HTML snapshot hoac daily bar lam feed vao lenh; EA phai doc du lieu truc tiep tu terminal `MT5`.
-- `ScalpingAgent` phai xac dinh `SL` va `TP` truoc khi gui lenh.
+### Agent 2 - MQL5 Developer
 
-## 5. Universe mac dinh hien tai
-- `crypto`: `top 50` theo von hoa
-- `cfd`: `9` cap chi dinh tu workflow OANDA
-- `vn_stock`: `top 50` theo von hoa
+- thiết kế EA theo module, event lifecycle và trách nhiệm rõ ràng;
+- lập trình `OnInit`, `OnDeinit`, `OnTick`, `OnTimer`, `OnChartEvent`, `OnTradeTransaction` khi phù hợp;
+- quản lý indicator handle, buffer, tài nguyên và trạng thái;
+- xây panel/nút chart, logging và cấu hình input.
 
-## 6. Vai tro tung agent
+### Agent 3 - Signal Integration
 
-### Agent 1: PriceAgent
-- thu thap du lieu gia tu nguon nguoi dung chi dinh
-- chuan hoa timestamp, OHLC, volume, bid/ask/mid neu co
-- tao log gia va package handoff cho Agent 2
-- quan ly universe top market-cap cho cac workflow mac dinh
+- chuẩn hóa mọi nguồn tín hiệu về một contract nội bộ;
+- chống tín hiệu trùng, cũ, sai symbol/timeframe hoặc sai phiên;
+- kiểm tra spread, volume, stops/freeze level, margin và quyền giao dịch;
+- thực thi qua `CTrade`, xác minh `retcode`, position/order và trạng thái sau giao dịch.
 
-### Agent 2: SwingAgent
-- doc handoff package da chuan hoa
-- loc tai san theo readiness mode: `hold`, `context_only`, `full_bob_volman`
-- xac dinh swing sach, swing loi, break gia, range va diem theo doi
+### Agent 4 - EA QA & Release
 
-### Agent 3: ScalpingAgent
-- bien logic indicator va execution rule thanh playbook co the ma hoa
-- uu tien setup `RSI failure swing` tren `M1` hoac `M5`
-- dung `EMA10/EMA50` nhu bo loc huong neu brief khong yeu cau khac
-- xuat `mq5` EA va ghi ro gia dinh van hanh
+- compile với warning policy nghiêm ngặt;
+- test logic, backtest, forward test demo và các tình huống restart/mất kết nối;
+- review khác biệt netting/hedging và đặc tính broker;
+- quản lý version, release notes, checksum và rollback.
 
-## 7. Handoff logic
-1. `Agent_1_PriceAgent` intake va chuan hoa du lieu gia.
-2. `run_price_agent.py` ghi `price_agent_status.json` va sinh handoff package.
-3. `Agent_2_SwingAgent` doc `latest_price_handoff_summary.json` de chon market va symbol du dieu kien.
-4. `Agent_2_SwingAgent` chi mo rong phan tich khi asset-level readiness phu hop voi workflow.
-5. `Agent_3_ScalpingAgent` co the dung handoff cua `Agent_1` va `Agent_2` lam boi canh, nhung feed vao lenh van phai la du lieu `MT5` tai terminal.
-6. Output cuoi phai truy vet duoc ve log gia goc hoac logic indicator goc.
+## 3. Nguyên tắc lập trình bắt buộc
+
+- Tách `signal`, `permission`, `risk`, `execution`, `position management` và `UI` thành các lớp/hàm độc lập.
+- Không gửi lệnh chỉ vì `CTrade` trả về `true`; luôn đọc `ResultRetcode()` và xác minh trạng thái terminal.
+- Không dùng chỉ số bar đang chạy nếu đặc tả yêu cầu tín hiệu nến đóng.
+- Mọi order/position của EA phải nhận diện bằng `magic number`, symbol và comment có version.
+- Chuẩn hóa price, volume theo `digits`, `tick size`, `volume min/max/step`.
+- Kiểm tra `stops level`, `freeze level`, spread, market state và quyền algo trading trước lệnh.
+- Không hardcode symbol suffix, digits, lot step, timezone hoặc chế độ tài khoản.
+- Mỗi tín hiệu phải có khóa chống lặp; restart không được làm EA vào lại cùng một tín hiệu.
+- Tất cả thao tác đóng hàng loạt hoặc thay đổi quyền giao dịch phải có confirmation/cooldown phù hợp.
+- Secret, token và URL riêng không được commit vào mã nguồn hay log.
+
+## 4. Chế độ bot chuẩn
+
+| Chế độ | Được mở lệnh mới | Được quản lý lệnh cũ | Ý nghĩa |
+|---|---:|---:|---|
+| `OFF` | Không | Không, trừ emergency policy | EA không can thiệp |
+| `ARMED` | Có điều kiện | Có | Chờ tín hiệu hợp lệ |
+| `ACTIVE` | Có | Có | Giao dịch tự động bình thường |
+| `MANAGE_ONLY` | Không | Có | Không mở mới, vẫn bảo vệ lệnh |
+| `HALTED` | Không | Theo fail-safe | Dừng vì lỗi hoặc risk limit |
+
+Chuyển trạng thái phải được log với thời gian, lý do và nguồn tác động (input, chart event, signal hay risk guard).
+
+## 5. Signal contract tối thiểu
+
+Mỗi tín hiệu cần có:
+
+- `signal_id` duy nhất;
+- `source`, `symbol`, `timeframe`;
+- `action`: `BUY`, `SELL`, `CLOSE`, `MODIFY`, `ENABLE`, `DISABLE`;
+- `created_at`, `expires_at`;
+- giá/SL/TP hoặc quy tắc tính chúng;
+- confidence/metadata nếu chiến lược sử dụng;
+- version của schema.
+
+Tín hiệu thiếu trường bắt buộc phải bị từ chối có lý do, không được tự điền bằng phỏng đoán.
+
+## 6. Definition of Done
+
+Một EA chỉ hoàn tất khi:
+
+1. brief và signal contract đã được chốt;
+2. mã nguồn compile không lỗi và không còn warning chưa được giải thích;
+3. test cases chính, edge cases và restart recovery đạt;
+4. lệnh trùng, tín hiệu cũ và dữ liệu thiếu đều bị chặn đúng;
+5. backtest/forward-test evidence được lưu cùng cấu hình;
+6. có hướng dẫn cài đặt, cấu hình, giám sát và rollback;
+7. chưa kết nối tài khoản thật nếu chưa có phê duyệt riêng.
+
+## 7. Tài sản legacy
+
+Pipeline thu thập giá/swing/scalping cũ vẫn được giữ nguyên để tham khảo hoặc làm signal provider. Mọi logic cũ khi đưa vào EA mới phải đi qua signal contract, code review và test workflow của mô hình mới.

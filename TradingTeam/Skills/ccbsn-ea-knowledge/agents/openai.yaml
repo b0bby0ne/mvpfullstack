@@ -1,0 +1,4 @@
+interface:
+  display_name: "CCBSN EA Knowledge"
+  short_description: "CCBSN, DCA và bot điều khiển thị trường"
+  default_prompt: "Use $ccbsn-ea-knowledge to design or review a CCBSN-only-Buy strategy and its market controller safely."
