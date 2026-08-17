@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
-//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.4     |
-//|          Pine v3.1.3 parity + market/event checklist panel       |
+//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.0     |
+//|      Pine v3.1.3 parity + performance-scheduled NC control       |
 //+------------------------------------------------------------------+
 #property strict
 #property copyright "TradingTeam"
-#property version   "3.240"
+#property version   "3.200"
 #property description "CCBSN Controller v3 - MT5 port of TradingView policy v3.1.3"
 #property description "Dual Policy, BearTwo, ATR streak, Downside EMA OFF and New Cycle control."
 
@@ -165,7 +165,6 @@ input bool   InpForceSyncOnInit        = false;    // Explicit troubleshooting o
 input group "10. Display - Chart & Dashboard"
 input bool   InpApplyChartTheme       = true;
 input bool   InpShowDashboard         = false;
-input bool   InpShowEventDashboard    = false; // Complete checklist at bottom-left
 input color  InpDashboardBackgroundColor = clrWhite;
 input color  InpDashboardTextColor       = C'45,55,70';
 
@@ -208,13 +207,18 @@ input bool   InpShowControlAckEvents     = false;
 input bool   InpShowDriftEvents          = false;
 
 input group "15. Text - Dashboard"
-input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.4";
-input string InpTextCycleStatus     = "CYCLE STATUS";
+input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.0";
+input string InpTextMode            = "NEW CYCLE CONTROL";
+input string InpTextOwner           = "Owner";
+input string InpTextState           = "Policy";
+input string InpTextConfirm         = "Confirm";
+input string InpTextZone            = "Policy Zone";
+input string InpTextControl         = "NC Command ACK";
+input string InpTextDesired         = "Desired NC";
+input string InpTextCommand         = "Ticket";
 input string InpTextChecklist       = "Checklist";
-input string InpTextEvent           = "Last Event";
-input string InpTextSession         = "SESSION";
-input string InpTextPerformance     = "PERFORMANCE";
-input string InpTextEventDashboard  = "EVENT CHECKLIST";
+input string InpTextReason          = "Reason";
+input string InpTextDecision        = "Decision";
 
 input group "16. Chart Event Names - Editable"
 input string InpEventNameArm            = "ARM";             // ARM name; count N/Total is added
@@ -286,14 +290,13 @@ const int VISUAL_REFRESH_MILLISECONDS = 500;
 const int DASHBOARD_REFRESH_MILLISECONDS = 1000;
 const int CONTROL_IDLE_MILLISECONDS = 1000;
 const int LOCK_REFRESH_MILLISECONDS = 1000;
-const int PERFORMANCE_REPORT_MILLISECONDS = 60000;
-const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_4.csv";
+const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_0.csv";
 const bool InpKeepObjectsOnRemove   = false;
 const ulong TICKET_STORAGE_BASE     = 1000000000;
 
 const ENUM_TIMEFRAMES DECISION_TIMEFRAME = PERIOD_M15;
 const string POLICY_ID      = "ccbsn-m15-pine-v3-controller";
-const string POLICY_VERSION = "3.2.4-mt5-market-event-checklist";
+const string POLICY_VERSION = "3.2.0-mt5-performance-scheduler";
 
 CTrade g_trade;
 
@@ -340,7 +343,6 @@ double g_lastEMA = 0.0;
 double g_lastDistance = 0.0;
 bool g_lastChecklistPass = false;
 string g_lastReason = "WAITING_FOR_DATA";
-string g_lastDashboardEvent = "WAITING";
 double g_lastPeakDistance = 0.0;
 double g_lastRelativeDrop = 0.0;
 double g_lastPeakClose = 0.0;
@@ -445,27 +447,6 @@ ulong g_nextVisualRefreshTick = 0;
 ulong g_nextDashboardRefreshTick = 0;
 ulong g_nextControlPollTick = 0;
 ulong g_nextLockRefreshTick = 0;
-
-ulong g_perfStartTick = 0;
-ulong g_perfLastReportTick = 0;
-ulong g_perfTickEvents = 0;
-ulong g_perfTimerEvents = 0;
-ulong g_perfPolicyPolls = 0;
-ulong g_perfPolicyUpdates = 0;
-ulong g_perfControlFastRuns = 0;
-ulong g_perfControlIdleRuns = 0;
-ulong g_perfVisualRuns = 0;
-ulong g_perfDashboardRuns = 0;
-ulong g_perfLiveSnapshots = 0;
-ulong g_perfChartRedraws = 0;
-ulong g_perfEMARebuilds = 0;
-ulong g_perfEMAAppends = 0;
-ulong g_perfPolicyTotalMicros = 0;
-ulong g_perfPolicyMaxMicros = 0;
-ulong g_perfControlTotalMicros = 0;
-ulong g_perfControlMaxMicros = 0;
-ulong g_perfVisualTotalMicros = 0;
-ulong g_perfVisualMaxMicros = 0;
 
 //+------------------------------------------------------------------+
 //| String helpers                                                   |
@@ -1266,62 +1247,11 @@ void MarkChartDirty()
    g_chartDirty = true;
   }
 
-void RecordPerformanceDuration(const ulong startedMicros,
-                               ulong &totalMicros,
-                               ulong &maximumMicros)
-  {
-   ulong elapsedMicros = GetMicrosecondCount() - startedMicros;
-   totalMicros += elapsedMicros;
-   if(elapsedMicros > maximumMicros)
-      maximumMicros = elapsedMicros;
-  }
-
-double PerformanceAverage(const ulong totalMicros,
-                          const ulong sampleCount)
-  {
-   if(sampleCount == 0)
-      return 0.0;
-   return (double)totalMicros / (double)sampleCount;
-  }
-
-void ReportPerformanceMetrics(const string context,
-                              const bool forceReport)
-  {
-   ulong nowTick = GetTickCount64();
-   if(!forceReport &&
-      nowTick < g_perfLastReportTick +
-                (ulong)PERFORMANCE_REPORT_MILLISECONDS)
-      return;
-
-   g_perfLastReportTick = nowTick;
-   double elapsedSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
-   PrintFormat("PERF V3.2.4 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u",
-               context, elapsedSeconds,
-               g_perfTickEvents, g_perfTimerEvents,
-               g_perfPolicyUpdates, g_perfPolicyPolls,
-               g_perfControlFastRuns, g_perfControlIdleRuns,
-               g_perfVisualRuns, g_perfDashboardRuns,
-               g_perfLiveSnapshots, g_perfChartRedraws,
-               g_perfEMARebuilds, g_perfEMAAppends);
-   PrintFormat("PERF LATENCY V3.2.4 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
-               PerformanceAverage(g_perfPolicyTotalMicros,
-                                  g_perfPolicyPolls),
-               g_perfPolicyMaxMicros,
-               PerformanceAverage(g_perfControlTotalMicros,
-                                  g_perfControlFastRuns +
-                                  g_perfControlIdleRuns),
-               g_perfControlMaxMicros,
-               PerformanceAverage(g_perfVisualTotalMicros,
-                                  g_perfVisualRuns),
-               g_perfVisualMaxMicros);
-  }
-
 void FlushChartIfDirty()
   {
    if(!g_chartDirty)
       return;
    ChartRedraw(0);
-   g_perfChartRedraws++;
    g_chartDirty = false;
   }
 
@@ -1345,7 +1275,6 @@ bool ApplyChartTheme()
    if(!ChartSetInteger(0, CHART_COLOR_LAST, (long)InpChartLastColor)) success = false;
    if(!ChartSetInteger(0, CHART_COLOR_STOP_LEVEL, (long)InpChartStopLevelColor)) success = false;
    ChartRedraw(0);
-   g_perfChartRedraws++;
    g_chartDirty = false;
    if(!success)
      {
@@ -1627,192 +1556,6 @@ void SetWrappedPanelLabel(const string suffix,
    SetPanelLabel(suffix + ".2", y + 20, secondLine, textColor);
   }
 
-void SetEventChecklistLabel(const string suffix,
-                            const bool rightColumn,
-                            const int row,
-                            const string value,
-                            const bool triggered,
-                            const color activeColor)
-  {
-   string name = g_objectPrefix + "EVENT_PANEL." + suffix;
-   bool created = false;
-   if(ObjectFind(0, name) < 0)
-     {
-      if(!ObjectCreate(0, name, OBJ_LABEL, 0, 0, 0))
-         return;
-      created = true;
-     }
-   if(created)
-     {
-      ObjectSetInteger(0, name, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-      ObjectSetInteger(0, name, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
-      ObjectSetInteger(0, name, OBJPROP_XDISTANCE,
-                       rightColumn ? 340 : 20);
-      ObjectSetInteger(0, name, OBJPROP_YDISTANCE, 205 - row * 20);
-      ObjectSetInteger(0, name, OBJPROP_FONTSIZE, 9);
-      ObjectSetString(0, name, OBJPROP_FONT, "Consolas");
-      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
-      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
-     }
-   color mutedColor = C'125,135,148';
-   ObjectSetInteger(0, name, OBJPROP_COLOR,
-                    triggered ? activeColor : mutedColor);
-   ObjectSetString(0, name, OBJPROP_TEXT, FitPanelText(value, 41));
-   MarkChartDirty();
-  }
-
-void CreateEventChecklistPanel()
-  {
-   if(!InpShowEventDashboard)
-      return;
-   string background = g_objectPrefix + "EVENT_PANEL.BG";
-   bool created = false;
-   if(ObjectFind(0, background) < 0)
-     {
-      if(!ObjectCreate(0, background, OBJ_RECTANGLE_LABEL, 0, 0, 0))
-         return;
-      created = true;
-     }
-   if(!created)
-      return;
-   ObjectSetInteger(0, background, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-   ObjectSetInteger(0, background, OBJPROP_XDISTANCE, 10);
-   ObjectSetInteger(0, background, OBJPROP_YDISTANCE, 15);
-   ObjectSetInteger(0, background, OBJPROP_XSIZE, 650);
-   ObjectSetInteger(0, background, OBJPROP_YSIZE, 235);
-   ObjectSetInteger(0, background, OBJPROP_BGCOLOR,
-                    (long)InpDashboardBackgroundColor);
-   ObjectSetInteger(0, background, OBJPROP_BORDER_COLOR,
-                    InpPanelBorderColor);
-   ObjectSetInteger(0, background, OBJPROP_BACK, false);
-   ObjectSetInteger(0, background, OBJPROP_SELECTABLE, false);
-   ObjectSetInteger(0, background, OBJPROP_HIDDEN, false);
-   MarkChartDirty();
-  }
-
-void UpdateEventChecklistPanel()
-  {
-   if(!InpShowEventDashboard)
-      return;
-   CreateEventChecklistPanel();
-
-   string titleName = g_objectPrefix + "EVENT_PANEL.TITLE";
-   bool titleCreated = false;
-   if(ObjectFind(0, titleName) < 0)
-     {
-      if(!ObjectCreate(0, titleName, OBJ_LABEL, 0, 0, 0))
-         return;
-      titleCreated = true;
-     }
-   if(titleCreated)
-     {
-      ObjectSetInteger(0, titleName, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-      ObjectSetInteger(0, titleName, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
-      ObjectSetInteger(0, titleName, OBJPROP_XDISTANCE, 20);
-      ObjectSetInteger(0, titleName, OBJPROP_YDISTANCE, 225);
-      ObjectSetInteger(0, titleName, OBJPROP_FONTSIZE, 9);
-      ObjectSetString(0, titleName, OBJPROP_FONT, "Consolas");
-      ObjectSetInteger(0, titleName, OBJPROP_SELECTABLE, false);
-      ObjectSetInteger(0, titleName, OBJPROP_HIDDEN, false);
-     }
-   ObjectSetInteger(0, titleName, OBJPROP_COLOR, C'45,90,190');
-   ObjectSetString(0, titleName, OBJPROP_TEXT,
-                   FitPanelText(InpTextEventDashboard, 82));
-   MarkChartDirty();
-
-   bool decisionKnown = g_lastDecisionTime > 0;
-   ENUM_POLICY_FAMILY metricPolicy = g_activePolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_armingPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_riskPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_lastDistance < 0.0
-                     ? POLICY_FAMILY_DOWNSIDE : POLICY_FAMILY_UPSIDE;
-   double atrMinimum = metricPolicy == POLICY_FAMILY_DOWNSIDE
-                       ? MathMax(InpMinATRPrice,
-                                 InpDownsideMinATRPrice)
-                       : InpMinATRPrice;
-   bool atrPass = decisionKnown && g_lastATR >= atrMinimum;
-   bool riskLock = g_state == VISUAL_STATE_RISK_LOCK;
-   bool recovered = g_lastRecoveryCandidate ||
-                    g_lastDashboardEvent == "POLICY_RECOVERED_ARMING";
-
-   SetEventChecklistLabel("ATR", false, 0,
-                          StringFormat("ATR%d: %s / %s %s",
-                                       InpATRPeriod,
-                                       FormatPrice(g_lastATR),
-                                       FormatPrice(atrMinimum),
-                                       atrPass ? "PASS" : "BLOCK"),
-                          decisionKnown,
-                          atrPass ? C'0,120,80' : C'190,50,60');
-   SetEventChecklistLabel("EMA", false, 1,
-                          StringFormat("EMA%d: %s", InpEMAPeriod,
-                                       FormatPrice(g_lastEMA)),
-                          decisionKnown, C'45,90,190');
-   SetEventChecklistLabel("DISTANCE", false, 2,
-                          "D(C-EMA): " + FormatPrice(g_lastDistance),
-                          decisionKnown,
-                          g_lastDistance >= 0.0
-                          ? C'0,120,80' : C'45,90,190');
-   SetEventChecklistLabel("BEAR_DROP", false, 3,
-                          InpEventNameBearDrop + ": " +
-                          (g_lastBearDropVeto ? "BLOCK" : "--"),
-                          g_lastBearDropVeto, C'190,50,60');
-   SetEventChecklistLabel("RISK_LOCK", false, 4,
-                          InpEventNameRiskLock + ": " +
-                          (riskLock ? StringFormat("ACTIVE (%d)",
-                                                   g_riskLockRemaining) : "--"),
-                          riskLock, C'215,90,120');
-   SetEventChecklistLabel("CONSECUTIVE_RED", false, 5,
-                          InpEventNameConsecutiveRed + ": " +
-                          StringFormat("%d/%d", g_lastConsecutiveRedCount,
-                                       InpConsecutiveRedBars),
-                          g_lastConsecutiveRedBlock, C'190,50,60');
-   SetEventChecklistLabel("BEAR_TWO", false, 6,
-                          InpEventNameBearTwo + ": " +
-                          StringFormat("%d/2", g_lastBearTwoCount),
-                          g_lastBearTwoBlock, C'190,50,60');
-   SetEventChecklistLabel("DOWNSIDE_EMA", false, 7,
-                          InpEventNameDownsideEMA + ": " +
-                          (g_lastDownsideEMAApproachBlock ? "BLOCK" : "--"),
-                          g_lastDownsideEMAApproachBlock, C'190,50,60');
-   SetEventChecklistLabel("ACTIVE_LOW_ATR", false, 8,
-                          InpEventNameActiveLowATR + ": " +
-                          StringFormat("%d/%d", g_lastActiveLowATRCount,
-                                       InpActiveLowATRBars),
-                          g_lastActiveLowATRBlock, C'190,50,60');
-
-   SetEventChecklistLabel("BEARISH_ENGULFING", true, 0,
-                          InpEventNameBearishEngulfing + ": " +
-                          (g_lastBearishEngulfing ? "HIT" : "--"),
-                          g_lastBearishEngulfing, C'190,50,60');
-   SetEventChecklistLabel("BEARISH_PIN", true, 1,
-                          InpEventNameBearishPinBar + ": " +
-                          (g_lastBearishPinBar ? "HIT" : "--"),
-                          g_lastBearishPinBar, C'190,50,60');
-   SetEventChecklistLabel("DENY", true, 2,
-                          InpEventNameDeny + ": " +
-                          (g_lastDenyBlock ? "BLOCK" : "--"),
-                          g_lastDenyBlock, C'190,50,60');
-   SetEventChecklistLabel("REVERSE", true, 3,
-                          InpEventNameReverse + ": " +
-                          (g_lastReverseBlock ? "BLOCK" : "--"),
-                          g_lastReverseBlock, C'190,50,60');
-   SetEventChecklistLabel("FALL", true, 4,
-                          InpEventNameFall + ": " +
-                          (g_lastFallBlock ? "BLOCK" : "--"),
-                          g_lastFallBlock, C'190,50,60');
-   SetEventChecklistLabel("RECOVERED", true, 5,
-                          InpEventNameRecovered + ": " +
-                          (recovered ? "READY" : "--"),
-                          recovered, C'0,120,80');
-   SetEventChecklistLabel("NC_DRIFT", true, 6,
-                          InpEventNameNCDrift + ": " +
-                          (g_driftDetectedCurrentChain ? "DRIFT" : "--"),
-                          g_driftDetectedCurrentChain, C'190,50,60');
-  }
-
 void CreatePanel()
   {
    if(!InpShowDashboard)
@@ -1831,7 +1574,7 @@ void CreatePanel()
    ObjectSetInteger(0, background, OBJPROP_XDISTANCE, 10);
    ObjectSetInteger(0, background, OBJPROP_YDISTANCE, 15);
    ObjectSetInteger(0, background, OBJPROP_XSIZE, 650);
-   ObjectSetInteger(0, background, OBJPROP_YSIZE, 295);
+   ObjectSetInteger(0, background, OBJPROP_YSIZE, 460);
    ObjectSetInteger(0, background, OBJPROP_BGCOLOR,
                     (long)InpDashboardBackgroundColor);
    ObjectSetInteger(0, background, OBJPROP_BORDER_COLOR, InpPanelBorderColor);
@@ -1843,118 +1586,158 @@ void CreatePanel()
 
 void UpdatePanel()
   {
-   if(!InpShowDashboard && !InpShowEventDashboard)
-      return;
-   g_perfDashboardRuns++;
-   UpdateEventChecklistPanel();
    if(!InpShowDashboard)
       return;
    CreatePanel();
-
    color stateColor = InpDashboardTextColor;
    if(g_state == VISUAL_STATE_ACTIVE) stateColor = PolicyFamilyColor(g_activeZoneBranch);
    if(g_state == VISUAL_STATE_ARMING) stateColor = C'160,110,0';
    if(g_state == VISUAL_STATE_RISK_LOCK) stateColor = C'215,90,35';
    if(g_state == VISUAL_STATE_DATA_ERROR) stateColor = C'190,50,60';
-
    ENUM_POLICY_FAMILY panelPolicy = g_activePolicy;
    if(panelPolicy == POLICY_FAMILY_NONE)
       panelPolicy = g_armingPolicy;
    if(panelPolicy == POLICY_FAMILY_NONE)
       panelPolicy = g_riskPolicy;
+   int panelConfirmBars = ConfirmBarsForPolicy(panelPolicy);
 
-   ENUM_CCBSN_COMMAND desired = DesiredCommand();
-   string cycleStatus = desired == CCBSN_COMMAND_NEW_CYCLE_ON ? "ON" : "OFF";
-   color cycleColor = desired == CCBSN_COMMAND_NEW_CYCLE_ON
-                      ? C'0,120,80' : C'190,50,60';
-   color ackColor = InpDashboardTextColor;
-   if(g_controlState == CCBSN_CONTROL_ON_CONFIRMED ||
-      g_controlState == CCBSN_CONTROL_OFF_CONFIRMED)
-      ackColor = C'0,120,80';
-   else if(g_controlState == CCBSN_CONTROL_ERROR)
-      ackColor = C'190,50,60';
-   else if(g_controlState == CCBSN_CONTROL_ON_PENDING ||
-           g_controlState == CCBSN_CONTROL_OFF_PENDING ||
-           g_controlState == CCBSN_CONTROL_UNKNOWN)
-      ackColor = C'180,110,0';
-
-   ulong nowTick = GetTickCount64();
-   double uptimeSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
-   double policyAverage = PerformanceAverage(g_perfPolicyTotalMicros,
-                                              g_perfPolicyPolls);
-   ulong controlSamples = g_perfControlFastRuns + g_perfControlIdleRuns;
-   double controlAverage = PerformanceAverage(g_perfControlTotalMicros,
-                                               controlSamples);
-   double visualAverage = PerformanceAverage(g_perfVisualTotalMicros,
-                                              g_perfVisualRuns);
-
-   SetPanelLabel("TITLE", 22, InpTextPanelTitle,
+   SetPanelLabel("TITLE", 22,
+                 InpTextPanelTitle + " | " + ControlModeToString(InpControlMode),
                  InpDashboardTextColor);
-   SetPanelLabel("CYCLE_HEADER", 48, InpTextCycleStatus,
-                 C'45,90,190');
-   SetPanelColumnLabel("CYCLE", false, 70,
-                       "Cycle: " + cycleStatus,
-                       cycleColor);
-   SetPanelColumnLabel("ACK", true, 70,
-                       "ACK: " + ControlStateToString(g_controlState),
-                       ackColor);
-   SetPanelColumnLabel("POLICY", false, 90,
-                       "Policy: " + StateToString(g_state) + " | " +
-                       PolicyFamilyToString(panelPolicy),
+   SetPanelLabel("MODE", 42,
+                 InpTextMode + " | Decision timeframe: M15",
+                 InpDashboardTextColor);
+   SetPanelColumnLabel("STATE", false, 62,
+                       StringFormat("%s: %s | %s: %d/%d",
+                                     InpTextState,
+                                     StateToString(g_state),
+                                     InpTextConfirm, g_consecutivePassCount,
+                                     panelConfirmBars),
                        stateColor);
-   SetPanelColumnLabel("CHECKLIST", true, 90,
-                       InpTextChecklist + ": " +
-                       (g_lastChecklistPass ? "PASS" : "FAIL"),
+   SetPanelColumnLabel("ZONE", true, 62,
+                       StringFormat("%s: %s | %s: %s",
+                                     InpTextZone, PolicyFamilyToString(panelPolicy),
+                                    InpTextChecklist,
+                                    g_lastChecklistPass ? "PASS" : "FAIL"),
                        g_lastChecklistPass ? C'0,120,80' : C'190,50,60');
-   SetWrappedPanelLabel("EVENT", 110,
-                        InpTextEvent + ": " + g_lastDashboardEvent +
-                        " | " + g_lastReason,
+   SetPanelColumnLabel("ATR", false, 82,
+                       StringFormat("Close: %s | ATR%d: %s",
+                                    FormatPrice(g_lastClose), InpATRPeriod,
+                                    FormatPrice(g_lastATR)),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("ATR_MIN", true, 82,
+                        StringFormat("ATR Min: Up=%s Down=%s",
+                                     FormatPrice(InpMinATRPrice),
+                                     FormatPrice(InpDownsideMinATRPrice)),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("EMA", false, 102,
+                       StringFormat("EMA%d: %s | D: %s",
+                                    InpEMAPeriod, FormatPrice(g_lastEMA),
+                                    FormatPrice(g_lastDistance)),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("GATE", true, 102,
+                        StringFormat("Gate: Up[0,+%s] | Down D<0",
+                                     FormatPrice(InpUpsideMaxAboveEMAPrice)),
+                       InpDashboardTextColor);
+   SetWrappedPanelLabel("REASON", 122,
+                        InpTextReason + ": " + g_lastReason,
                         InpDashboardTextColor);
-
-   SetPanelLabel("SESSION_HEADER", 155, InpTextSession,
-                 C'45,90,190');
-   SetPanelColumnLabel("SESSION_DECISION", false, 177,
+   SetPanelColumnLabel("BEAR_LEGACY", false, 162,
+                       StringFormat("Legacy: DPeak=%s Drop=%s",
+                                    FormatPrice(g_lastPeakDistance),
+                                    FormatPrice(g_lastRelativeDrop)),
+                       g_lastLegacyBearDrop ? C'215,90,35' : InpDashboardTextColor);
+   SetPanelColumnLabel("BEAR_LEGACY_FILTER", true, 162,
+                       StringFormat("Red=%d/%d | Dfall=%s",
+                                    g_lastBearishBarCount, InpBearishWindow,
+                                    g_lastDistanceFalling ? "YES" : "NO"),
+                       g_lastLegacyBearDrop ? C'215,90,35' : InpDashboardTextColor);
+   SetPanelColumnLabel("BEAR_2BAR", false, 182,
+                       StringFormat("2-Bar: H1=%s L0=%s",
+                                    FormatPrice(g_lastPreviousHigh),
+                                    FormatPrice(g_lastCurrentLow)),
+                       g_lastTwoBarBearDrop ? C'215,90,35' : InpDashboardTextColor);
+   SetPanelColumnLabel("BEAR_2BAR_DROP", true, 182,
+                       StringFormat("Drop=%s / Min=%s",
+                                    FormatPrice(g_lastTwoBarDrop),
+                                    FormatPrice(InpMinTwoBarDropPrice)),
+                       g_lastTwoBarBearDrop ? C'215,90,35' : InpDashboardTextColor);
+   SetPanelColumnLabel("PROTECTION", false, 202,
+                       "Bear Drop: " + g_lastBearDropSource,
+                       g_lastBearDropVeto ? C'215,90,35' : InpDashboardTextColor);
+   SetPanelColumnLabel("RED_LOCK", true, 202,
+                        StringFormat("RED=%d/%d B2=%d/2 ATR=%d/%d | Lock=%d",
+                                     g_lastConsecutiveRedCount,
+                                     InpConsecutiveRedBars,
+                                     g_lastBearTwoCount,
+                                     g_lastActiveLowATRCount,
+                                     InpActiveLowATRBars,
+                                     g_riskLockRemaining),
+                        (g_lastConsecutiveRedBlock || g_lastBearTwoBlock ||
+                         g_lastActiveLowATRBlock) ? C'190,50,60' :
+                       (g_state == VISUAL_STATE_RISK_LOCK ? C'215,90,35' :
+                        InpDashboardTextColor));
+   SetPanelColumnLabel("SESSION", false, 222,
                        "Decision: " + SessionToString(g_lastDecisionSession),
                        g_lastDecisionSession == POLICY_SESSION_OUTSIDE
                        ? C'190,50,60' : C'0,120,80');
-   SetPanelColumnLabel("SESSION_ACTIVE", true, 177,
+   SetPanelColumnLabel("ACTIVE_SESSION", true, 222,
                        "Active: " + SessionToString(g_activeSession) +
-                       StringFormat(" | Shift=%dm", InpSessionTimeShiftMinutes),
+                       StringFormat(" | Shift=%d min", InpSessionTimeShiftMinutes),
                        InpDashboardTextColor);
-
-   SetPanelLabel("PERFORMANCE_HEADER", 203, InpTextPerformance,
-                 C'45,90,190');
-   SetPanelColumnLabel("PERF_UPTIME", false, 225,
-                       StringFormat("Uptime: %.0fs | Tick: %I64u",
-                                    uptimeSeconds, g_perfTickEvents),
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   color ownerColor = InpDashboardTextColor;
+   if(InpControlMode == CCBSN_CONTROL_MANUAL_HANDOVER)
+      ownerColor = g_manualHandoverComplete ? C'0,120,80' : C'180,110,0';
+   SetPanelColumnLabel("OWNER", false, 242,
+                       InpTextOwner + ": " + ControlOwnerToString(),
+                       ownerColor);
+   SetPanelColumnLabel("LOCK", true, 242,
+                       "Lock: " + (g_controllerLockHeld ? "HELD" : "NONE"),
+                       ownerColor);
+   SetPanelColumnLabel("CCBSN_MAGIC", false, 262,
+                       StringFormat("CCBSN Magic: %I64u", InpCCBSNMagic),
                        InpDashboardTextColor);
-   SetPanelColumnLabel("PERF_TIMER", true, 225,
-                       StringFormat("Timer: %I64u | Redraw: %I64u",
-                                    g_perfTimerEvents,
-                                    g_perfChartRedraws),
+   SetPanelColumnLabel("CONTROLLER_MAGIC", true, 262,
+                       StringFormat("Controller Magic: %I64u", InpControllerMagic),
                        InpDashboardTextColor);
-   SetPanelColumnLabel("PERF_POLICY", false, 245,
-                       StringFormat("Policy: %I64u/%I64u | %.0f/%I64uus",
-                                    g_perfPolicyUpdates, g_perfPolicyPolls,
-                                    policyAverage, g_perfPolicyMaxMicros),
+   SetWrappedPanelLabel("CONTROL", 282,
+                        InpTextControl + ": " + ControlStateToString(g_controlState),
+                        g_controlState == CCBSN_CONTROL_ERROR ? C'190,50,60' :
+                        InpDashboardTextColor);
+   SetWrappedPanelLabel("DESIRED", 322,
+                        InpTextDesired + ": " + CommandToString(desired),
+                        InpDashboardTextColor);
+   color syncColor = InpDashboardTextColor;
+   if(g_driftDetectedCurrentChain)
+      syncColor = C'190,50,60';
+   else if(g_offFlatGuardArmed && !g_offReassertRequested)
+      syncColor = C'0,120,80';
+   else if(g_offReassertRequested)
+      syncColor = C'180,110,0';
+   SetPanelColumnLabel("POSITIONS", false, 362,
+                       StringFormat("CCBSN Pos: %d | Lots: %.2f",
+                                    g_ccbsnPositionCount,
+                                    g_ccbsnPositionVolume),
+                       g_ccbsnPositionCount > 0 ? C'180,110,0' :
                        InpDashboardTextColor);
-   SetPanelColumnLabel("PERF_CONTROL", true, 245,
-                       StringFormat("Control F/I: %I64u/%I64u | %.0f/%I64uus",
-                                    g_perfControlFastRuns,
-                                    g_perfControlIdleRuns,
-                                    controlAverage,
-                                    g_perfControlMaxMicros),
+   SetPanelColumnLabel("SYNC", true, 362,
+                       "Sync: " + g_syncState,
+                       syncColor);
+   SetPanelColumnLabel("TICKET", false, 382,
+                       StringFormat("%s: #%I64u", InpTextCommand, g_commandTicket),
                        InpDashboardTextColor);
-   SetPanelColumnLabel("PERF_VISUAL", false, 265,
-                       StringFormat("Visual: %I64u | %.0f/%I64uus",
-                                    g_perfVisualRuns, visualAverage,
-                                    g_perfVisualMaxMicros),
+   SetPanelColumnLabel("TIME", true, 382,
+                       InpTextDecision + ": " +
+                                    (g_lastDecisionTime > 0
+                                       ? TimeToString(g_lastDecisionTime,
+                                                      TIME_DATE | TIME_MINUTES)
+                                       : "waiting"),
                        InpDashboardTextColor);
-   SetPanelColumnLabel("PERF_OBJECTS", true, 265,
-                       StringFormat("Snap/EMA: %I64u | %I64u/%I64u",
-                                    g_perfLiveSnapshots,
-                                    g_perfEMARebuilds,
-                                    g_perfEMAAppends),
+   SetWrappedPanelLabel("CONTROL_ERROR", 402,
+                        "Control info: " + g_lastControlError +
+                        " | Sync info: " + g_lastSyncReason,
+                        g_controlState == CCBSN_CONTROL_ERROR ? C'190,50,60' :
                         InpDashboardTextColor);
   }
 
@@ -2033,7 +1816,6 @@ void UpdateLiveEMAVisualization(const MqlRates &previousBar,
 
 void RebuildEMAVisualization()
   {
-   g_perfEMARebuilds++;
    DeleteEMAVisualization();
    if(!InpShowEMAOnChart || g_emaHandle == INVALID_HANDLE)
       return;
@@ -2078,12 +1860,9 @@ bool AppendLatestClosedEMASegment()
       return false;
 
    string name = g_objectPrefix + "EMA." + TimeKey(rates[1].time);
-   bool appended = CreateOrMoveEMASegment(name,
-                                          rates[0].time, emaValues[0],
-                                          rates[1].time, emaValues[1], true);
-   if(appended)
-      g_perfEMAAppends++;
-   return appended;
+   return CreateOrMoveEMASegment(name,
+                                 rates[0].time, emaValues[0],
+                                 rates[1].time, emaValues[1], true);
   }
 
 //+------------------------------------------------------------------+
@@ -2094,8 +1873,6 @@ void AuditEvent(const string eventType,
                 const string reason,
                 const bool historical)
   {
-   if(!historical)
-      g_lastDashboardEvent = eventType;
    if(!historical)
        PrintFormat("CCBSN_V3 | %s | %s | state=%s session=%s | close=%s atr=%s ema=%s d=%s | bear=%s source=%s red=%d/%d pattern=%s body=%s/%s deny=%s sweep=%s overlap=%.1f%% fall=%s range=%s/%s reverse=%s body=%s/%s lock=%d recover=%s scob=%s | %s",
                    TimeToString(eventTime, TIME_DATE | TIME_MINUTES), eventType,
@@ -3500,7 +3277,6 @@ void RefreshLiveVisualization()
    MqlRates rates[2];
    if(CopyRates(_Symbol, DECISION_TIMEFRAME, 0, 2, rates) != 2)
       return;
-   g_perfLiveSnapshots++;
 
    datetime liveEnd = TimeCurrent();
    if(liveEnd <= 0)
@@ -3519,7 +3295,6 @@ void RefreshLiveVisualization()
 
 bool ProcessPolicyRuntime()
   {
-   g_perfPolicyPolls++;
    datetime currentM15Bar = iTime(_Symbol, DECISION_TIMEFRAME, 0);
    if(currentM15Bar <= 0)
      {
@@ -4428,18 +4203,9 @@ bool RunControlLane(const ulong nowTick,
    if(!forceRun && nowTick < g_nextControlPollTick)
       return false;
 
-   bool fastRun = forceRun || ControlNeedsFastPolling();
    g_positionSyncRequested = false;
    g_controlReconcileRequested = false;
-   ulong startedMicros = GetMicrosecondCount();
    ProcessCCBSNControl();
-   RecordPerformanceDuration(startedMicros,
-                             g_perfControlTotalMicros,
-                             g_perfControlMaxMicros);
-   if(fastRun)
-      g_perfControlFastRuns++;
-   else
-      g_perfControlIdleRuns++;
    int delay = ControlNeedsFastPolling()
                ? InpTimerMilliseconds : CONTROL_IDLE_MILLISECONDS;
    g_nextControlPollTick = nowTick + (ulong)delay;
@@ -4448,8 +4214,6 @@ bool RunControlLane(const ulong nowTick,
 
 int OnInit()
   {
-   g_perfStartTick = GetTickCount64();
-   g_perfLastReportTick = g_perfStartTick;
    g_configurationValid = ValidateInputs();
    if(!g_configurationValid)
      {
@@ -4561,12 +4325,10 @@ void OnDeinit(const int reason)
    Comment("");
    MarkChartDirty();
    FlushChartIfDirty();
-   ReportPerformanceMetrics("DEINIT_" + DeinitReasonToString(reason), true);
   }
 
 void OnTick()
   {
-   g_perfTickEvents++;
    if(!g_configurationValid)
       return;
    if((g_positionSyncRequested || g_controlReconcileRequested) &&
@@ -4601,7 +4363,6 @@ void OnTradeTransaction(const MqlTradeTransaction &transaction,
 
 void OnTimer()
   {
-   g_perfTimerEvents++;
    if(!g_configurationValid)
       return;
 
@@ -4617,25 +4378,14 @@ void OnTimer()
                               (ulong)LOCK_REFRESH_MILLISECONDS;
      }
 
-   ulong policyStartedMicros = GetMicrosecondCount();
    bool policyUpdated = ProcessPolicyRuntime();
-   RecordPerformanceDuration(policyStartedMicros,
-                             g_perfPolicyTotalMicros,
-                             g_perfPolicyMaxMicros);
-   if(policyUpdated)
-      g_perfPolicyUpdates++;
    bool forceControl = policyUpdated || g_positionSyncRequested ||
                        g_controlReconcileRequested;
    bool controlUpdated = RunControlLane(nowTick, forceControl);
 
    if(nowTick >= g_nextVisualRefreshTick)
      {
-      ulong visualStartedMicros = GetMicrosecondCount();
       RefreshLiveVisualization();
-      RecordPerformanceDuration(visualStartedMicros,
-                                g_perfVisualTotalMicros,
-                                g_perfVisualMaxMicros);
-      g_perfVisualRuns++;
       g_nextVisualRefreshTick = nowTick +
                                 (ulong)VISUAL_REFRESH_MILLISECONDS;
      }
@@ -4648,7 +4398,6 @@ void OnTimer()
                                    (ulong)DASHBOARD_REFRESH_MILLISECONDS;
      }
    FlushChartIfDirty();
-   ReportPerformanceMetrics("PERIODIC", false);
   }
 
 //+------------------------------------------------------------------+

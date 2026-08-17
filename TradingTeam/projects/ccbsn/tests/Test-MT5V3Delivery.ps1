@@ -3,7 +3,7 @@ param(
     [string]$PinePath = (Join-Path $PSScriptRoot '..\src\pine\v3\CCBSN_Trading_Zone_Visual_v3.pine'),
     [string]$V2ReferencePath = (Join-Path $PSScriptRoot '..\src\mt5\v2\CCBSN_Trading_Zone_Controller_v2.mq5'),
     [string]$MetaEditorPath = 'D:\Test Bot 1\MetaEditor64.exe',
-    [string]$CompileLogPath = (Join-Path $PSScriptRoot '..\build\logs\compile-controller-v3.1.4-final.log'),
+    [string]$CompileLogPath = (Join-Path $PSScriptRoot '..\build\logs\compile-controller-v3.2.4-final.log'),
     [string]$BinaryOutputPath = (Join-Path $PSScriptRoot '..\build\bin\CCBSN_Trading_Zone_Controller_v3.ex5'),
     [switch]$SkipCompile
 )
@@ -112,8 +112,8 @@ elseif ((Get-Item -LiteralPath $ex5Path).Length -lt 100000) {
 }
 
 Assert-SourcePattern 'MQL5 strict mode' '(?m)^#property strict\s*$'
-Assert-SourcePattern 'Version 3.140' '#property version\s+"3\.140"'
-Assert-SourcePattern 'MT5 v3.1.4 identity' 'POLICY_VERSION\s*=\s*"3\.1\.4-mt5-fast-ack-handshake"'
+Assert-SourcePattern 'Version 3.240' '#property version\s+"3\.240"'
+Assert-SourcePattern 'MT5 v3.2.4 identity' 'POLICY_VERSION\s*=\s*"3\.2\.4-mt5-market-event-checklist"'
 Assert-SourcePattern 'M15 decision timeframe' 'DECISION_TIMEFRAME\s*=\s*PERIOD_M15'
 Assert-SourcePattern 'CCBSN magic default 9696' 'InpCCBSNMagic\s*=\s*9696;'
 Assert-SourcePattern 'Controller magic differs by default' 'InpControllerMagic\s*=\s*99196;'
@@ -240,7 +240,129 @@ if ($eventVisibilityInputs -ne 16) {
     $errors.Add("Expected 16 event visibility defaults OFF, found $eventVisibilityInputs.")
 }
 Assert-SourcePattern 'Dashboard default OFF' 'InpShowDashboard\s*=\s*false;'
-Assert-SourcePattern 'CSV versioned filename' 'CCBSN_Trading_Zone_Events_v3_1_4\.csv'
+Assert-SourcePattern 'Event dashboard default OFF' 'InpShowEventDashboard\s*=\s*false;'
+Assert-SourcePattern 'CSV versioned filename' 'CCBSN_Trading_Zone_Events_v3_2_4\.csv'
+
+$dashboardTextInputs = [regex]::Matches(
+    $source,
+    'input string\s+InpText(?:PanelTitle|CycleStatus|Checklist|Event|Session|Performance)\s*='
+).Count
+if ($dashboardTextInputs -ne 6) {
+    $errors.Add("Expected six compact dashboard text inputs, found $dashboardTextInputs.")
+}
+if ($source -match 'InpText(?:Mode|Owner|State|Confirm|Zone|Control|Desired|Command|Reason|Decision)') {
+    $errors.Add('Legacy dashboard text inputs are still present.')
+}
+Assert-SourcePattern 'Compact dashboard height' 'OBJPROP_YSIZE,\s*295'
+Assert-SourcePattern 'Cycle dashboard section' 'SetPanelLabel\("CYCLE_HEADER",\s*48,\s*InpTextCycleStatus'
+Assert-SourcePattern 'Session dashboard section' 'SetPanelLabel\("SESSION_HEADER",\s*155,\s*InpTextSession'
+Assert-SourcePattern 'Performance dashboard section' 'SetPanelLabel\("PERFORMANCE_HEADER",\s*203,\s*InpTextPerformance'
+Assert-SourcePattern 'Latest runtime event snapshot' 'if\(!historical\)\s*g_lastDashboardEvent\s*=\s*eventType;'
+Assert-SourcePattern 'Event checklist bottom-left anchor' 'EVENT_PANEL\.BG[\s\S]*?OBJPROP_CORNER,\s*CORNER_LEFT_LOWER'
+Assert-SourcePattern 'Event checklist dimensions' 'EVENT_PANEL\.BG[\s\S]*?OBJPROP_XSIZE,\s*650[\s\S]*?OBJPROP_YSIZE,\s*235'
+Assert-SourcePattern 'Editable event checklist title' 'InpTextEventDashboard\s*=\s*"EVENT CHECKLIST";'
+
+$eventPanelStart = $source.IndexOf('void UpdateEventChecklistPanel()')
+$eventPanelEnd = $source.IndexOf('void CreatePanel()', $eventPanelStart)
+if ($eventPanelStart -lt 0 -or $eventPanelEnd -lt 0) {
+    $errors.Add('Cannot locate complete event checklist panel.')
+}
+else {
+    $eventPanelBody = $source.Substring($eventPanelStart, $eventPanelEnd - $eventPanelStart)
+    $eventChecklistItems = [regex]::Matches(
+        $eventPanelBody,
+        'SetEventChecklistLabel\("'
+    ).Count
+    if ($eventChecklistItems -ne 16) {
+        $errors.Add("Expected 3 market metrics and 13 event items, found $eventChecklistItems.")
+    }
+    $eventNames = @(
+        'InpEventNameBearDrop', 'InpEventNameRiskLock',
+        'InpEventNameConsecutiveRed', 'InpEventNameBearTwo',
+        'InpEventNameDownsideEMA', 'InpEventNameActiveLowATR',
+        'InpEventNameBearishEngulfing', 'InpEventNameBearishPinBar',
+        'InpEventNameDeny', 'InpEventNameReverse', 'InpEventNameFall',
+        'InpEventNameRecovered', 'InpEventNameNCDrift'
+    )
+    foreach ($eventName in $eventNames) {
+        if (-not $eventPanelBody.Contains($eventName)) {
+            $errors.Add("Event checklist item missing: $eventName")
+        }
+    }
+    foreach ($metric in @('"ATR"', '"EMA"', '"DISTANCE"')) {
+        if (-not $eventPanelBody.Contains("SetEventChecklistLabel($metric")) {
+            $errors.Add("Market checklist metric missing: $metric")
+        }
+    }
+    $duplicateEvents = @(
+        'InpEventNameArm', 'InpEventNamePolicyAllow', 'InpEventNamePolicyBlock',
+        'InpEventNameSessionEnd', 'InpEventNameNCEnabled', 'InpEventNameNCDisabled'
+    )
+    foreach ($duplicateEvent in $duplicateEvents) {
+        if ($eventPanelBody.Contains($duplicateEvent)) {
+            $errors.Add("Upper-dashboard duplicate remains below: $duplicateEvent")
+        }
+    }
+}
+
+$panelStart = $source.IndexOf('void UpdatePanel()')
+$panelEnd = $source.IndexOf('//| EMA23 M15 line visualization', $panelStart)
+if ($panelStart -lt 0 -or $panelEnd -lt 0) {
+    $errors.Add('Cannot locate compact dashboard implementation.')
+}
+else {
+    $panelBody = $source.Substring($panelStart, $panelEnd - $panelStart)
+    $removedPanelDetails = @(
+        'ControlModeToString', 'ControlOwnerToString', 'CCBSN_MAGIC',
+        'CONTROLLER_MAGIC', 'TICKET', 'POSITION', 'VOLUME', 'SYNC',
+        'BEAR_LEGACY', 'BEAR_TWO_BAR', 'DENY', 'REVERSE', 'FALL',
+        'ATR_MIN', 'EMA_PERIOD', 'GATE'
+    )
+    foreach ($detail in $removedPanelDetails) {
+        if ($panelBody.Contains($detail)) {
+            $errors.Add("Unnecessary dashboard detail remains: $detail")
+        }
+    }
+    foreach ($metric in @('g_perfPolicyUpdates', 'g_perfControlFastRuns', 'g_perfVisualRuns')) {
+        if (-not $panelBody.Contains($metric)) {
+            $errors.Add("Dashboard performance metric missing: $metric")
+        }
+    }
+}
+
+Assert-SourcePattern 'Policy scheduler isolated from tick lane' 'void OnTick\(\)[\s\S]*?RunControlLane\(nowTick, true\);'
+Assert-SourcePattern 'M15 policy scheduler' 'bool ProcessPolicyRuntime\(\)'
+Assert-SourcePattern 'Shared live visual snapshot' 'void RefreshLiveVisualization\(\)[\s\S]*?CopyRates\(_Symbol, DECISION_TIMEFRAME, 0, 2, rates\)'
+Assert-SourcePattern 'Incremental EMA append' 'bool AppendLatestClosedEMASegment\(\)'
+Assert-SourcePattern 'Dirty chart redraw' 'void FlushChartIfDirty\(\)[\s\S]*?if\(!g_chartDirty\)[\s\S]*?ChartRedraw\(0\);'
+Assert-SourcePattern 'Adaptive control polling' 'ControlNeedsFastPolling\(\)[\s\S]*?CONTROL_IDLE_MILLISECONDS'
+
+$onTickStart = $source.IndexOf('void OnTick()')
+$onTickEnd = $source.IndexOf('void OnTradeTransaction', $onTickStart)
+if ($onTickStart -lt 0 -or $onTickEnd -lt 0) {
+    $errors.Add('Cannot locate OnTick performance lane.')
+}
+else {
+    $onTickBody = $source.Substring($onTickStart, $onTickEnd - $onTickStart)
+    if ($onTickBody -match 'ProcessPolicyRuntime|RefreshLiveVisualization|CopyRates|CopyBuffer|ChartRedraw') {
+        $errors.Add('OnTick contains policy, series, or rendering work.')
+    }
+}
+
+$rebuildEmaCalls = [regex]::Matches($source, 'RebuildEMAVisualization\(\)').Count
+if ($rebuildEmaCalls -ne 2) {
+    $errors.Add("EMA history rebuild must be init/reconcile-only; found $rebuildEmaCalls definition/call sites.")
+}
+$chartRedrawCalls = [regex]::Matches($source, 'ChartRedraw\(0\);').Count
+if ($chartRedrawCalls -ne 2) {
+    $errors.Add("Expected redraw only in dirty flush and chart-theme init, found $chartRedrawCalls calls.")
+}
+Assert-SourcePattern 'Fixed latest-bar buffer ordering' 'MqlRates rates\[2\];[\s\S]*?closedBar\s*=\s*rates\[0\];[\s\S]*?decisionTime\s*=\s*rates\[1\]\.time;'
+Assert-SourcePattern 'Periodic performance report' 'ReportPerformanceMetrics\("PERIODIC", false\);'
+Assert-SourcePattern 'Deinit performance report' 'ReportPerformanceMetrics\("DEINIT_"\s*\+\s*DeinitReasonToString\(reason\), true\);'
+Assert-SourcePattern 'Policy lane timing' 'RecordPerformanceDuration\(policyStartedMicros,[\s\S]*?g_perfPolicyTotalMicros,[\s\S]*?g_perfPolicyMaxMicros\);'
+Assert-SourcePattern 'Control fast and idle counters' 'g_perfControlFastRuns\+\+;[\s\S]*?g_perfControlIdleRuns\+\+;'
+Assert-SourcePattern 'Visual lane timing' 'g_perfVisualRuns\+\+;'
 Assert-SourcePattern 'Trading history maximum 100000' 'InpTradingZoneHistoryBars[^\r\n]*[\s\S]*?InpTradingZoneHistoryBars\s*>\s*100000'
 Assert-SourcePattern 'Manual handover mode retained' 'CCBSN_CONTROL_MANUAL_HANDOVER'
 Assert-SourcePattern 'Force sync remains opt-in' 'InpForceSyncOnInit\s*=\s*false;'
@@ -359,5 +481,8 @@ Write-Host '  v2.19 control transport regression: PASS'
 Write-Host "  CSV header/data schema: PASS ($headerArgs columns)"
 Write-Host '  Event visibility defaults: PASS (16 OFF)'
 Write-Host '  Account/server restrictions: NONE'
+Write-Host '  Compact dashboard contract: PASS (3 sections, 6 text inputs)'
+Write-Host '  Market/event checklist: PASS (3 metrics, 13 unique events)'
+Write-Host '  Performance scheduler/render/telemetry contracts: PASS'
 Write-Host "  MQ5 SHA256: $sourceHash"
 Write-Host "  EX5 SHA256: $binaryHash"

@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
-//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.4     |
-//|          Pine v3.1.3 parity + market/event checklist panel       |
+//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.2     |
+//|        Pine v3.1.3 parity + compact performance dashboard        |
 //+------------------------------------------------------------------+
 #property strict
 #property copyright "TradingTeam"
-#property version   "3.240"
+#property version   "3.220"
 #property description "CCBSN Controller v3 - MT5 port of TradingView policy v3.1.3"
 #property description "Dual Policy, BearTwo, ATR streak, Downside EMA OFF and New Cycle control."
 
@@ -165,7 +165,6 @@ input bool   InpForceSyncOnInit        = false;    // Explicit troubleshooting o
 input group "10. Display - Chart & Dashboard"
 input bool   InpApplyChartTheme       = true;
 input bool   InpShowDashboard         = false;
-input bool   InpShowEventDashboard    = false; // Complete checklist at bottom-left
 input color  InpDashboardBackgroundColor = clrWhite;
 input color  InpDashboardTextColor       = C'45,55,70';
 
@@ -208,13 +207,12 @@ input bool   InpShowControlAckEvents     = false;
 input bool   InpShowDriftEvents          = false;
 
 input group "15. Text - Dashboard"
-input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.4";
+input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.2";
 input string InpTextCycleStatus     = "CYCLE STATUS";
 input string InpTextChecklist       = "Checklist";
 input string InpTextEvent           = "Last Event";
 input string InpTextSession         = "SESSION";
 input string InpTextPerformance     = "PERFORMANCE";
-input string InpTextEventDashboard  = "EVENT CHECKLIST";
 
 input group "16. Chart Event Names - Editable"
 input string InpEventNameArm            = "ARM";             // ARM name; count N/Total is added
@@ -287,13 +285,13 @@ const int DASHBOARD_REFRESH_MILLISECONDS = 1000;
 const int CONTROL_IDLE_MILLISECONDS = 1000;
 const int LOCK_REFRESH_MILLISECONDS = 1000;
 const int PERFORMANCE_REPORT_MILLISECONDS = 60000;
-const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_4.csv";
+const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_2.csv";
 const bool InpKeepObjectsOnRemove   = false;
 const ulong TICKET_STORAGE_BASE     = 1000000000;
 
 const ENUM_TIMEFRAMES DECISION_TIMEFRAME = PERIOD_M15;
 const string POLICY_ID      = "ccbsn-m15-pine-v3-controller";
-const string POLICY_VERSION = "3.2.4-mt5-market-event-checklist";
+const string POLICY_VERSION = "3.2.2-mt5-compact-dashboard";
 
 CTrade g_trade;
 
@@ -1295,7 +1293,7 @@ void ReportPerformanceMetrics(const string context,
 
    g_perfLastReportTick = nowTick;
    double elapsedSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
-   PrintFormat("PERF V3.2.4 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u",
+   PrintFormat("PERF V3.2.2 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u",
                context, elapsedSeconds,
                g_perfTickEvents, g_perfTimerEvents,
                g_perfPolicyUpdates, g_perfPolicyPolls,
@@ -1303,7 +1301,7 @@ void ReportPerformanceMetrics(const string context,
                g_perfVisualRuns, g_perfDashboardRuns,
                g_perfLiveSnapshots, g_perfChartRedraws,
                g_perfEMARebuilds, g_perfEMAAppends);
-   PrintFormat("PERF LATENCY V3.2.4 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
+   PrintFormat("PERF LATENCY V3.2.2 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
                PerformanceAverage(g_perfPolicyTotalMicros,
                                   g_perfPolicyPolls),
                g_perfPolicyMaxMicros,
@@ -1627,192 +1625,6 @@ void SetWrappedPanelLabel(const string suffix,
    SetPanelLabel(suffix + ".2", y + 20, secondLine, textColor);
   }
 
-void SetEventChecklistLabel(const string suffix,
-                            const bool rightColumn,
-                            const int row,
-                            const string value,
-                            const bool triggered,
-                            const color activeColor)
-  {
-   string name = g_objectPrefix + "EVENT_PANEL." + suffix;
-   bool created = false;
-   if(ObjectFind(0, name) < 0)
-     {
-      if(!ObjectCreate(0, name, OBJ_LABEL, 0, 0, 0))
-         return;
-      created = true;
-     }
-   if(created)
-     {
-      ObjectSetInteger(0, name, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-      ObjectSetInteger(0, name, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
-      ObjectSetInteger(0, name, OBJPROP_XDISTANCE,
-                       rightColumn ? 340 : 20);
-      ObjectSetInteger(0, name, OBJPROP_YDISTANCE, 205 - row * 20);
-      ObjectSetInteger(0, name, OBJPROP_FONTSIZE, 9);
-      ObjectSetString(0, name, OBJPROP_FONT, "Consolas");
-      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
-      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
-     }
-   color mutedColor = C'125,135,148';
-   ObjectSetInteger(0, name, OBJPROP_COLOR,
-                    triggered ? activeColor : mutedColor);
-   ObjectSetString(0, name, OBJPROP_TEXT, FitPanelText(value, 41));
-   MarkChartDirty();
-  }
-
-void CreateEventChecklistPanel()
-  {
-   if(!InpShowEventDashboard)
-      return;
-   string background = g_objectPrefix + "EVENT_PANEL.BG";
-   bool created = false;
-   if(ObjectFind(0, background) < 0)
-     {
-      if(!ObjectCreate(0, background, OBJ_RECTANGLE_LABEL, 0, 0, 0))
-         return;
-      created = true;
-     }
-   if(!created)
-      return;
-   ObjectSetInteger(0, background, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-   ObjectSetInteger(0, background, OBJPROP_XDISTANCE, 10);
-   ObjectSetInteger(0, background, OBJPROP_YDISTANCE, 15);
-   ObjectSetInteger(0, background, OBJPROP_XSIZE, 650);
-   ObjectSetInteger(0, background, OBJPROP_YSIZE, 235);
-   ObjectSetInteger(0, background, OBJPROP_BGCOLOR,
-                    (long)InpDashboardBackgroundColor);
-   ObjectSetInteger(0, background, OBJPROP_BORDER_COLOR,
-                    InpPanelBorderColor);
-   ObjectSetInteger(0, background, OBJPROP_BACK, false);
-   ObjectSetInteger(0, background, OBJPROP_SELECTABLE, false);
-   ObjectSetInteger(0, background, OBJPROP_HIDDEN, false);
-   MarkChartDirty();
-  }
-
-void UpdateEventChecklistPanel()
-  {
-   if(!InpShowEventDashboard)
-      return;
-   CreateEventChecklistPanel();
-
-   string titleName = g_objectPrefix + "EVENT_PANEL.TITLE";
-   bool titleCreated = false;
-   if(ObjectFind(0, titleName) < 0)
-     {
-      if(!ObjectCreate(0, titleName, OBJ_LABEL, 0, 0, 0))
-         return;
-      titleCreated = true;
-     }
-   if(titleCreated)
-     {
-      ObjectSetInteger(0, titleName, OBJPROP_CORNER, CORNER_LEFT_LOWER);
-      ObjectSetInteger(0, titleName, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
-      ObjectSetInteger(0, titleName, OBJPROP_XDISTANCE, 20);
-      ObjectSetInteger(0, titleName, OBJPROP_YDISTANCE, 225);
-      ObjectSetInteger(0, titleName, OBJPROP_FONTSIZE, 9);
-      ObjectSetString(0, titleName, OBJPROP_FONT, "Consolas");
-      ObjectSetInteger(0, titleName, OBJPROP_SELECTABLE, false);
-      ObjectSetInteger(0, titleName, OBJPROP_HIDDEN, false);
-     }
-   ObjectSetInteger(0, titleName, OBJPROP_COLOR, C'45,90,190');
-   ObjectSetString(0, titleName, OBJPROP_TEXT,
-                   FitPanelText(InpTextEventDashboard, 82));
-   MarkChartDirty();
-
-   bool decisionKnown = g_lastDecisionTime > 0;
-   ENUM_POLICY_FAMILY metricPolicy = g_activePolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_armingPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_riskPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_lastDistance < 0.0
-                     ? POLICY_FAMILY_DOWNSIDE : POLICY_FAMILY_UPSIDE;
-   double atrMinimum = metricPolicy == POLICY_FAMILY_DOWNSIDE
-                       ? MathMax(InpMinATRPrice,
-                                 InpDownsideMinATRPrice)
-                       : InpMinATRPrice;
-   bool atrPass = decisionKnown && g_lastATR >= atrMinimum;
-   bool riskLock = g_state == VISUAL_STATE_RISK_LOCK;
-   bool recovered = g_lastRecoveryCandidate ||
-                    g_lastDashboardEvent == "POLICY_RECOVERED_ARMING";
-
-   SetEventChecklistLabel("ATR", false, 0,
-                          StringFormat("ATR%d: %s / %s %s",
-                                       InpATRPeriod,
-                                       FormatPrice(g_lastATR),
-                                       FormatPrice(atrMinimum),
-                                       atrPass ? "PASS" : "BLOCK"),
-                          decisionKnown,
-                          atrPass ? C'0,120,80' : C'190,50,60');
-   SetEventChecklistLabel("EMA", false, 1,
-                          StringFormat("EMA%d: %s", InpEMAPeriod,
-                                       FormatPrice(g_lastEMA)),
-                          decisionKnown, C'45,90,190');
-   SetEventChecklistLabel("DISTANCE", false, 2,
-                          "D(C-EMA): " + FormatPrice(g_lastDistance),
-                          decisionKnown,
-                          g_lastDistance >= 0.0
-                          ? C'0,120,80' : C'45,90,190');
-   SetEventChecklistLabel("BEAR_DROP", false, 3,
-                          InpEventNameBearDrop + ": " +
-                          (g_lastBearDropVeto ? "BLOCK" : "--"),
-                          g_lastBearDropVeto, C'190,50,60');
-   SetEventChecklistLabel("RISK_LOCK", false, 4,
-                          InpEventNameRiskLock + ": " +
-                          (riskLock ? StringFormat("ACTIVE (%d)",
-                                                   g_riskLockRemaining) : "--"),
-                          riskLock, C'215,90,120');
-   SetEventChecklistLabel("CONSECUTIVE_RED", false, 5,
-                          InpEventNameConsecutiveRed + ": " +
-                          StringFormat("%d/%d", g_lastConsecutiveRedCount,
-                                       InpConsecutiveRedBars),
-                          g_lastConsecutiveRedBlock, C'190,50,60');
-   SetEventChecklistLabel("BEAR_TWO", false, 6,
-                          InpEventNameBearTwo + ": " +
-                          StringFormat("%d/2", g_lastBearTwoCount),
-                          g_lastBearTwoBlock, C'190,50,60');
-   SetEventChecklistLabel("DOWNSIDE_EMA", false, 7,
-                          InpEventNameDownsideEMA + ": " +
-                          (g_lastDownsideEMAApproachBlock ? "BLOCK" : "--"),
-                          g_lastDownsideEMAApproachBlock, C'190,50,60');
-   SetEventChecklistLabel("ACTIVE_LOW_ATR", false, 8,
-                          InpEventNameActiveLowATR + ": " +
-                          StringFormat("%d/%d", g_lastActiveLowATRCount,
-                                       InpActiveLowATRBars),
-                          g_lastActiveLowATRBlock, C'190,50,60');
-
-   SetEventChecklistLabel("BEARISH_ENGULFING", true, 0,
-                          InpEventNameBearishEngulfing + ": " +
-                          (g_lastBearishEngulfing ? "HIT" : "--"),
-                          g_lastBearishEngulfing, C'190,50,60');
-   SetEventChecklistLabel("BEARISH_PIN", true, 1,
-                          InpEventNameBearishPinBar + ": " +
-                          (g_lastBearishPinBar ? "HIT" : "--"),
-                          g_lastBearishPinBar, C'190,50,60');
-   SetEventChecklistLabel("DENY", true, 2,
-                          InpEventNameDeny + ": " +
-                          (g_lastDenyBlock ? "BLOCK" : "--"),
-                          g_lastDenyBlock, C'190,50,60');
-   SetEventChecklistLabel("REVERSE", true, 3,
-                          InpEventNameReverse + ": " +
-                          (g_lastReverseBlock ? "BLOCK" : "--"),
-                          g_lastReverseBlock, C'190,50,60');
-   SetEventChecklistLabel("FALL", true, 4,
-                          InpEventNameFall + ": " +
-                          (g_lastFallBlock ? "BLOCK" : "--"),
-                          g_lastFallBlock, C'190,50,60');
-   SetEventChecklistLabel("RECOVERED", true, 5,
-                          InpEventNameRecovered + ": " +
-                          (recovered ? "READY" : "--"),
-                          recovered, C'0,120,80');
-   SetEventChecklistLabel("NC_DRIFT", true, 6,
-                          InpEventNameNCDrift + ": " +
-                          (g_driftDetectedCurrentChain ? "DRIFT" : "--"),
-                          g_driftDetectedCurrentChain, C'190,50,60');
-  }
-
 void CreatePanel()
   {
    if(!InpShowDashboard)
@@ -1843,12 +1655,9 @@ void CreatePanel()
 
 void UpdatePanel()
   {
-   if(!InpShowDashboard && !InpShowEventDashboard)
-      return;
-   g_perfDashboardRuns++;
-   UpdateEventChecklistPanel();
    if(!InpShowDashboard)
       return;
+   g_perfDashboardRuns++;
    CreatePanel();
 
    color stateColor = InpDashboardTextColor;

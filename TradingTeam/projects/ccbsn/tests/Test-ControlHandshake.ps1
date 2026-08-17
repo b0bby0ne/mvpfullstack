@@ -16,13 +16,13 @@ $targets = @(
         Csv = 'CCBSN_Trading_Zone_Events_v2_19\.csv'
     },
     @{
-        Name = 'v3.1.4'
+        Name = 'v3.2.4'
         Source = Join-Path $projectRoot 'src\mt5\v3\CCBSN_Trading_Zone_Controller_v3.mq5'
-        Log = Join-Path $projectRoot 'build\logs\compile-controller-v3.1.4-final.log'
+        Log = Join-Path $projectRoot 'build\logs\compile-controller-v3.2.4-final.log'
         Binary = Join-Path $projectRoot 'build\bin\CCBSN_Trading_Zone_Controller_v3.ex5'
-        Version = '#property version\s+"3\.140"'
-        Policy = '3\.1\.4-mt5-fast-ack-handshake'
-        Csv = 'CCBSN_Trading_Zone_Events_v3_1_4\.csv'
+        Version = '#property version\s+"3\.240"'
+        Policy = '3\.2\.4-mt5-market-event-checklist'
+        Csv = 'CCBSN_Trading_Zone_Events_v3_2_4\.csv'
     }
 )
 
@@ -114,7 +114,7 @@ foreach ($target in $targets) {
 $transportMarker = '//| CCBSN New Cycle command transport'
 $lifecycleMarker = '//| EA lifecycle'
 $v2 = $sources['v2.19']
-$v3 = $sources['v3.1.4']
+$v3 = $sources['v3.2.4']
 $v2Start = $v2.IndexOf($transportMarker)
 $v2End = $v2.IndexOf($lifecycleMarker)
 $v3Start = $v3.IndexOf($transportMarker)
@@ -127,7 +127,7 @@ else {
     $v3Transport = $v3.Substring($v3Start, $v3End - $v3Start).
         Replace('PolicyFamilyColor', 'BranchColor') -replace '\s+', ''
     if ($v2Transport -ne $v3Transport) {
-        $errors.Add('v2.19 and v3.1.4 control transports differ functionally.')
+        $errors.Add('v2.19 and v3.2.4 control transports differ functionally.')
     }
 }
 
@@ -167,7 +167,7 @@ if ($errors.Count -gt 0) {
 
 Write-Host 'PASS: CCBSN control handshake' -ForegroundColor Green
 Write-Host '  v2.19 compile: 0 errors, 0 warnings'
-Write-Host '  v3.1.4 compile: 0 errors, 0 warnings'
+Write-Host '  v3.2.4 compile: 0 errors, 0 warnings'
 Write-Host '  Fast ACK/ticket authority: PASS'
 Write-Host '  Startup/shutdown sync checks: PASS'
 Write-Host '  Transaction-triggered reconciliation: PASS'

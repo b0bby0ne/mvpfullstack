@@ -1,10 +1,10 @@
 //+------------------------------------------------------------------+
-//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.4     |
-//|          Pine v3.1.3 parity + market/event checklist panel       |
+//|                  CCBSN_Trading_Zone_Controller_v3.mq5 v3.2.3     |
+//|         Pine v3.1.3 parity + complete event checklist panel      |
 //+------------------------------------------------------------------+
 #property strict
 #property copyright "TradingTeam"
-#property version   "3.240"
+#property version   "3.230"
 #property description "CCBSN Controller v3 - MT5 port of TradingView policy v3.1.3"
 #property description "Dual Policy, BearTwo, ATR streak, Downside EMA OFF and New Cycle control."
 
@@ -208,7 +208,7 @@ input bool   InpShowControlAckEvents     = false;
 input bool   InpShowDriftEvents          = false;
 
 input group "15. Text - Dashboard"
-input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.4";
+input string InpTextPanelTitle      = "CCBSN CONTROLLER v3.2.3";
 input string InpTextCycleStatus     = "CYCLE STATUS";
 input string InpTextChecklist       = "Checklist";
 input string InpTextEvent           = "Last Event";
@@ -287,13 +287,13 @@ const int DASHBOARD_REFRESH_MILLISECONDS = 1000;
 const int CONTROL_IDLE_MILLISECONDS = 1000;
 const int LOCK_REFRESH_MILLISECONDS = 1000;
 const int PERFORMANCE_REPORT_MILLISECONDS = 60000;
-const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_4.csv";
+const string InpCsvFileName         = "CCBSN_Trading_Zone_Events_v3_2_3.csv";
 const bool InpKeepObjectsOnRemove   = false;
 const ulong TICKET_STORAGE_BASE     = 1000000000;
 
 const ENUM_TIMEFRAMES DECISION_TIMEFRAME = PERIOD_M15;
 const string POLICY_ID      = "ccbsn-m15-pine-v3-controller";
-const string POLICY_VERSION = "3.2.4-mt5-market-event-checklist";
+const string POLICY_VERSION = "3.2.3-mt5-event-checklist-dashboard";
 
 CTrade g_trade;
 
@@ -1295,7 +1295,7 @@ void ReportPerformanceMetrics(const string context,
 
    g_perfLastReportTick = nowTick;
    double elapsedSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
-   PrintFormat("PERF V3.2.4 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u",
+   PrintFormat("PERF V3.2.3 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u",
                context, elapsedSeconds,
                g_perfTickEvents, g_perfTimerEvents,
                g_perfPolicyUpdates, g_perfPolicyPolls,
@@ -1303,7 +1303,7 @@ void ReportPerformanceMetrics(const string context,
                g_perfVisualRuns, g_perfDashboardRuns,
                g_perfLiveSnapshots, g_perfChartRedraws,
                g_perfEMARebuilds, g_perfEMAAppends);
-   PrintFormat("PERF LATENCY V3.2.4 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
+   PrintFormat("PERF LATENCY V3.2.3 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
                PerformanceAverage(g_perfPolicyTotalMicros,
                                   g_perfPolicyPolls),
                g_perfPolicyMaxMicros,
@@ -1721,40 +1721,31 @@ void UpdateEventChecklistPanel()
    MarkChartDirty();
 
    bool decisionKnown = g_lastDecisionTime > 0;
-   ENUM_POLICY_FAMILY metricPolicy = g_activePolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_armingPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_riskPolicy;
-   if(metricPolicy == POLICY_FAMILY_NONE)
-      metricPolicy = g_lastDistance < 0.0
-                     ? POLICY_FAMILY_DOWNSIDE : POLICY_FAMILY_UPSIDE;
-   double atrMinimum = metricPolicy == POLICY_FAMILY_DOWNSIDE
-                       ? MathMax(InpMinATRPrice,
-                                 InpDownsideMinATRPrice)
-                       : InpMinATRPrice;
-   bool atrPass = decisionKnown && g_lastATR >= atrMinimum;
+   bool arming = g_state == VISUAL_STATE_ARMING;
+   int armTarget = ConfirmBarsForPolicy(g_armingPolicy);
+   bool policyAllow = decisionKnown && g_lastChecklistPass;
+   bool policyBlock = decisionKnown && !g_lastChecklistPass;
    bool riskLock = g_state == VISUAL_STATE_RISK_LOCK;
+   bool sessionEnd = StringFind(g_lastReason, "SESSION_ENDED") >= 0;
    bool recovered = g_lastRecoveryCandidate ||
                     g_lastDashboardEvent == "POLICY_RECOVERED_ARMING";
+   bool ncEnabled = g_controlState == CCBSN_CONTROL_ON_CONFIRMED;
+   bool ncDisabled = g_controlState == CCBSN_CONTROL_OFF_CONFIRMED;
 
-   SetEventChecklistLabel("ATR", false, 0,
-                          StringFormat("ATR%d: %s / %s %s",
-                                       InpATRPeriod,
-                                       FormatPrice(g_lastATR),
-                                       FormatPrice(atrMinimum),
-                                       atrPass ? "PASS" : "BLOCK"),
-                          decisionKnown,
-                          atrPass ? C'0,120,80' : C'190,50,60');
-   SetEventChecklistLabel("EMA", false, 1,
-                          StringFormat("EMA%d: %s", InpEMAPeriod,
-                                       FormatPrice(g_lastEMA)),
-                          decisionKnown, C'45,90,190');
-   SetEventChecklistLabel("DISTANCE", false, 2,
-                          "D(C-EMA): " + FormatPrice(g_lastDistance),
-                          decisionKnown,
-                          g_lastDistance >= 0.0
-                          ? C'0,120,80' : C'45,90,190');
+   SetEventChecklistLabel("ARM", false, 0,
+                          InpEventNameArm + ": " +
+                          (arming ? StringFormat("%d/%d",
+                                                g_consecutivePassCount,
+                                                armTarget) : "--"),
+                          arming, C'180,110,0');
+   SetEventChecklistLabel("POLICY_ALLOW", false, 1,
+                          InpEventNamePolicyAllow + ": " +
+                          (policyAllow ? "PASS" : "--"),
+                          policyAllow, C'0,120,80');
+   SetEventChecklistLabel("POLICY_BLOCK", false, 2,
+                          InpEventNamePolicyBlock + ": " +
+                          (policyBlock ? "BLOCK" : "--"),
+                          policyBlock, C'190,50,60');
    SetEventChecklistLabel("BEAR_DROP", false, 3,
                           InpEventNameBearDrop + ": " +
                           (g_lastBearDropVeto ? "BLOCK" : "--"),
@@ -1782,6 +1773,10 @@ void UpdateEventChecklistPanel()
                           StringFormat("%d/%d", g_lastActiveLowATRCount,
                                        InpActiveLowATRBars),
                           g_lastActiveLowATRBlock, C'190,50,60');
+   SetEventChecklistLabel("SESSION_END", false, 9,
+                          InpEventNameSessionEnd + ": " +
+                          (sessionEnd ? "BLOCK" : "--"),
+                          sessionEnd, C'190,50,60');
 
    SetEventChecklistLabel("BEARISH_ENGULFING", true, 0,
                           InpEventNameBearishEngulfing + ": " +
@@ -1807,7 +1802,15 @@ void UpdateEventChecklistPanel()
                           InpEventNameRecovered + ": " +
                           (recovered ? "READY" : "--"),
                           recovered, C'0,120,80');
-   SetEventChecklistLabel("NC_DRIFT", true, 6,
+   SetEventChecklistLabel("NC_ENABLED", true, 6,
+                          InpEventNameNCEnabled + ": " +
+                          (ncEnabled ? "ACK" : "--"),
+                          ncEnabled, C'0,120,80');
+   SetEventChecklistLabel("NC_DISABLED", true, 7,
+                          InpEventNameNCDisabled + ": " +
+                          (ncDisabled ? "ACK" : "--"),
+                          ncDisabled, C'45,90,190');
+   SetEventChecklistLabel("NC_DRIFT", true, 8,
                           InpEventNameNCDrift + ": " +
                           (g_driftDetectedCurrentChain ? "DRIFT" : "--"),
                           g_driftDetectedCurrentChain, C'190,50,60');

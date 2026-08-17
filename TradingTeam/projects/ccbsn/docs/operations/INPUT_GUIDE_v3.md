@@ -1,4 +1,4 @@
-# CCBSN Controller MT5 Ver3.1.3 — Hướng dẫn input
+# CCBSN Controller MT5 v3.2.4 — Hướng dẫn input
 
 ## 01. Symbol & Quote
 
@@ -111,8 +111,20 @@ Policy family được đóng dấu khi ACTIVE và không tự đổi giữa Ups
 ## Display và audit
 
 - Dashboard và toàn bộ event marker mặc định OFF.
+- Dashboard chỉ gồm ba khối: Cycle Status/Checklist/Last Event, Session và Performance.
+- Dashboard chính chỉ còn sáu input text cho title và tên các mục chính; các chi tiết magic, owner, ticket, position, sync và candle pattern không còn hiển thị trên dashboard chính.
+- Last Event chỉ nhận event runtime mới, không bị dữ liệu history ghi đè khi dựng lại chart.
+- `InpShowEventDashboard = false`: bật bảng Event Checklist riêng ở góc dưới bên trái.
+- Event Checklist gồm ba chỉ số thị trường và 13 event riêng biệt, chia hai cột; màu nổi bật nghĩa là event/check đang active, `--` nghĩa là chưa kích hoạt.
+- Ba chỉ số thị trường gồm ATR hiện tại/ngưỡng/PASS-BLOCK, EMA hiện tại và `D = Close - EMA`.
+- cRed, BearTwo và atr3 hiển thị bộ đếm hiện tại/ngưỡng; ncDrift hiển thị drift đang tồn tại.
+- ARM, pAllow/pBlock, sEnd và ncEnabled/ncDisabled không lặp lại ở bảng dưới vì đã có Policy, Checklist, Session, Cycle và ACK trên dashboard chính.
+- `InpTextEventDashboard = "EVENT CHECKLIST"`: thay đổi tiêu đề bảng event.
 - Trading Zone: Linen cho Upside, Lavender cho Downside.
 - Risk Lock: LightPink.
-- CSV: `MQL5/Files/CCBSN_Trading_Zone_Events_v3_1_4.csv`.
-- v3.1.4 kiểm tra đồng bộ New Cycle khi khởi động, tắt/khởi tạo lại EA và khi CCBSN tiêu thụ command quá nhanh.
+- CSV: `MQL5/Files/CCBSN_Trading_Zone_Events_v3_2_4.csv`.
+- v3.2.4 kiểm tra đồng bộ New Cycle khi khởi động, tắt/khởi tạo lại EA và khi CCBSN tiêu thụ command quá nhanh.
+- Policy chỉ quyết định khi xuất hiện nến M15 mới; visual refresh 500 ms và dashboard refresh 1 giây không thay đổi kết quả policy.
+- Control giữ polling 250 ms khi pending/unknown và chuyển sang watchdog 1 giây khi trạng thái đã ổn định.
+- Journal ghi performance telemetry mỗi 60 giây và khi tháo EA; các dòng bắt đầu bằng `PERF V3.2.4` và `PERF LATENCY V3.2.4`.
 - CSV ghi state, policy snapshot, counters, candle patterns, control ACK, ticket, position snapshot, drift và reason.
