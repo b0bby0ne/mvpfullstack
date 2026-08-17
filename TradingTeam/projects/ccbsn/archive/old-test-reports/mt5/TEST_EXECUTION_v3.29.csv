@@ -1,0 +1,10 @@
+test_id;level;method;expected;result;status
+SYNC-01;BLOCKER;Source audit;Stable OFF plus zero position plus disabled ACK sends no command;Initial snapshot restores guard without setting reassert;PASS
+SYNC-02;BLOCKER;Source audit;No periodic OFF path remains;No timer or elapsed-time branch requests OFF;PASS
+SYNC-03;BLOCKER;Source audit;Policy transition to OFF sends one command;Transition sets reassert once and pending gate blocks duplicate;PASS
+SYNC-04;BLOCKER;Source audit;Existing chain becoming flat sends one command;Position count transition arms guard and reasserts once;PASS
+SYNC-05;BLOCKER;Source audit;Position after flat guard sends one drift reassert;Drift flag prevents repeat for later DCA positions in same chain;PASS
+SYNC-06;HIGH;Source audit;Recovered pending OFF does not trigger a second OFF;OFF confirmation clears reassert flag;PASS
+SYNC-07;HIGH;Source audit;Force Sync still forces init reconciliation;Deleted ACK produces INITIAL_OFF_ACK_MISSING;PASS
+BUILD-01;BLOCKER;MetaEditor compile;0 errors and 0 warnings;0 errors and 0 warnings;PASS
+LIVE-01;BLOCKER;MT5 observation;No new OFF command for at least two minutes in stable OFF state;Requires reload and log observation;NOT_RUN

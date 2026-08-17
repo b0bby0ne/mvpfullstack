@@ -1,0 +1,1166 @@
+//@version=6
+indicator("CCBSN Bot 2 - M15 Dual Policy Visual v3.1.3", "CCBSN TZ v3.1.3", overlay = true,
+     max_boxes_count = 500, max_labels_count = 500)
+
+// Visual-only TradingView policy prototype for CCBSN Bot 2 Ver3.
+// It never places orders and never controls the MT5 CCBSN EA.
+// Policy family is frozen when POLICY ALLOW starts:
+//   D >= 0 at activation -> UpsidePolicy
+//   D <  0 at activation -> DownsidePolicy
+
+string GROUP_COMMON = "01. Common M15 Gate"
+int atrPeriod = input.int(20, "ATR period", minval = 1, group = GROUP_COMMON)
+float minAtrPrice = input.float(3.0, "Minimum ATR (raw price)", minval = 0.000001,
+     step = 0.1, group = GROUP_COMMON)
+int emaPeriod = input.int(23, "EMA period", minval = 1, group = GROUP_COMMON)
+bool enableActiveLowAtrBlock = input.bool(true, "OFF after low-ATR sequence",
+     group = GROUP_COMMON)
+float activeLowAtrThreshold = input.float(7.0, "Low ATR threshold (strictly below)",
+     minval = 0.000001, step = 0.1, group = GROUP_COMMON)
+int activeLowAtrBars = input.int(3, "Consecutive low-ATR bars while ACTIVE",
+     minval = 1, maxval = 20, group = GROUP_COMMON)
+
+string GROUP_UPSIDE = "02. UpsidePolicy"
+bool enableUpsidePolicy = input.bool(true, "Enable UpsidePolicy", group = GROUP_UPSIDE)
+float upsideMaxAboveEma = input.float(20.0, "Entry/hold maximum above EMA",
+     minval = 0.0, step = 0.1, group = GROUP_UPSIDE)
+int upsideConfirmBars = input.int(2, "Consecutive PASS bars", minval = 1,
+     maxval = 20, group = GROUP_UPSIDE)
+int upsideRiskLockBars = input.int(2, "Bear Drop RISK LOCK bars", minval = 1,
+     maxval = 96, group = GROUP_UPSIDE)
+
+string GROUP_DOWNSIDE = "03. DownsidePolicy"
+bool enableDownsidePolicy = input.bool(true, "Enable DownsidePolicy", group = GROUP_DOWNSIDE)
+float downsideMinAtrPrice = input.float(7.0, "Entry minimum ATR (raw price)",
+     minval = 0.000001, step = 0.1, group = GROUP_DOWNSIDE)
+float downsideBandBoundary = input.float(20.0, "Near/deep boundary below EMA",
+     minval = 0.0, step = 0.1, group = GROUP_DOWNSIDE)
+bool enableDownsideNearEntry = input.bool(true, "Allow near-below entry (-Boundary < D < 0)",
+     group = GROUP_DOWNSIDE)
+bool enableDownsideDeepEntry = input.bool(true, "Allow deep-below entry (D <= -Boundary)",
+     group = GROUP_DOWNSIDE)
+float downsideHoldMaxAboveEma = input.float(5.0, "Hold until this distance above EMA",
+     minval = 0.0, step = 0.1, group = GROUP_DOWNSIDE)
+int downsideConfirmBars = input.int(2, "Consecutive PASS bars", minval = 1,
+     maxval = 20, group = GROUP_DOWNSIDE)
+bool downsideRequireDRising = input.bool(true, "Entry requires D rising",
+     group = GROUP_DOWNSIDE)
+bool downsideRequireEmaNonDown = input.bool(false, "Entry requires EMA non-down",
+     group = GROUP_DOWNSIDE)
+int downsideEmaSlopeBars = input.int(3, "EMA non-down lookback", minval = 1,
+     maxval = 20, group = GROUP_DOWNSIDE)
+float downsideBearDropMultiplier = input.float(1.25, "Bear Drop threshold multiplier",
+     minval = 1.0, maxval = 5.0, step = 0.05, group = GROUP_DOWNSIDE)
+int downsideRiskLockBars = input.int(1, "Bear Drop RISK LOCK bars", minval = 1,
+     maxval = 96, group = GROUP_DOWNSIDE)
+bool enableDownsideEmaApproachBlock = input.bool(true, "OFF when candle approaches EMA",
+     group = GROUP_DOWNSIDE)
+float downsideEmaApproachTolerance = input.float(0.2, "EMA approach tolerance (raw price)",
+     minval = 0.0, step = 0.1, group = GROUP_DOWNSIDE)
+
+string GROUP_BEAR_DROP = "04. Bear Drop & Recovery"
+bool enableBearDropVeto = input.bool(true, "Enable BEAR DROP veto",
+     group = GROUP_BEAR_DROP)
+bool enableLegacyBearDrop = input.bool(true, "Enable legacy PeakD method",
+     group = GROUP_BEAR_DROP)
+int bearDropLookback = input.int(8, "Peak D lookback", minval = 3,
+     maxval = 100, group = GROUP_BEAR_DROP)
+float minRelativeDropPrice = input.float(30.0, "Minimum PeakD - CurrentD",
+     minval = 0.1, step = 0.1, group = GROUP_BEAR_DROP)
+int bearishWindow = input.int(3, "Bearish candle window", minval = 2,
+     maxval = 10, group = GROUP_BEAR_DROP)
+int minBearishBars = input.int(2, "Minimum bearish candles", minval = 1,
+     maxval = 10, group = GROUP_BEAR_DROP)
+bool requireDistanceFalling = input.bool(true, "Require D falling for 3 bars",
+     group = GROUP_BEAR_DROP)
+bool enableTwoBarBearDrop = input.bool(true, "Enable 2-bar High[1] - Low method",
+     group = GROUP_BEAR_DROP)
+float minTwoBarDropPrice = input.float(30.0, "Minimum 2-bar High[1] - Low",
+     minval = 0.1, step = 0.1, group = GROUP_BEAR_DROP)
+int recoveryBars = input.int(1, "Consecutive recovery bars", minval = 1,
+     maxval = 20, group = GROUP_BEAR_DROP)
+float recoveryBufferAtr = input.float(0.0, "Upside recovery above EMA (ATR multiplier)",
+     minval = 0.0, step = 0.05, group = GROUP_BEAR_DROP)
+bool requireRecoveryDRising = input.bool(true, "Recovery requires D rising",
+     group = GROUP_BEAR_DROP)
+bool requireRecoveryEmaNonDown = input.bool(false, "Recovery requires EMA non-down",
+     group = GROUP_BEAR_DROP)
+int recoveryEmaSlopeBars = input.int(3, "Recovery EMA lookback", minval = 1,
+     maxval = 20, group = GROUP_BEAR_DROP)
+bool enableBullishScobRecovery = input.bool(true, "Enable bullish SCOB recovery OR path",
+     group = GROUP_BEAR_DROP)
+
+string GROUP_BEARISH_EVENTS = "05. ACTIVE Bearish Events"
+bool enableConsecutiveRedBlock = input.bool(true, "Enable consecutive RED block",
+     group = GROUP_BEARISH_EVENTS)
+int consecutiveRedBars = input.int(3, "Consecutive RED bars while ACTIVE",
+     minval = 2, maxval = 10, group = GROUP_BEARISH_EVENTS)
+bool enableBearTwoBlock = input.bool(true, "Enable BearTwo",
+     group = GROUP_BEARISH_EVENTS)
+float bearTwoAtrThreshold = input.float(10.0, "BearTwo ATR threshold (strictly above)",
+     minval = 0.000001, step = 0.1, group = GROUP_BEARISH_EVENTS)
+bool enableBearishPatternBlock = input.bool(true, "Enable bearish engulfing/pin block",
+     group = GROUP_BEARISH_EVENTS)
+float bearishBodyMultiplier = input.float(2.0, "Bearish body / previous body",
+     minval = 1.0, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+bool enableDenyBlock = input.bool(true, "Enable bDeny", group = GROUP_BEARISH_EVENTS)
+int denyLookback = input.int(8, "bDeny prior-high lookback", minval = 3,
+     maxval = 100, group = GROUP_BEARISH_EVENTS)
+float denySweepBufferAtr = input.float(0.05, "bDeny sweep buffer ATR",
+     minval = 0.0, maxval = 10.0, step = 0.01, group = GROUP_BEARISH_EVENTS)
+float denyMinUpperWickBody = input.float(0.50, "bDeny upthrust upper wick/body",
+     minval = 0.0, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+float denyBodyMultiplier = input.float(1.0, "bDeny body / upthrust body",
+     minval = 0.01, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+float denyMinBodyOverlapPercent = input.float(60.0, "bDeny body overlap percent",
+     minval = 0.0, maxval = 100.0, step = 1.0, group = GROUP_BEARISH_EVENTS)
+bool denyRequireCloseBelowHigh = input.bool(true, "bDeny closes below prior high",
+     group = GROUP_BEARISH_EVENTS)
+bool enableReverseBlock = input.bool(true, "Enable bReverse", group = GROUP_BEARISH_EVENTS)
+float reversePinMinUpperWickBody = input.float(2.0, "bReverse pin upper wick/body",
+     minval = 0.01, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+float reversePinMaxLowerWickBody = input.float(1.0, "bReverse pin maximum lower wick/body",
+     minval = 0.0, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+float reverseBodyMultiplier = input.float(1.0, "bReverse red body / pin body",
+     minval = 0.01, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+bool enableFallBlock = input.bool(true, "Enable bFall", group = GROUP_BEARISH_EVENTS)
+float fallRangeMultiplier = input.float(1.0, "bFall range / prior 3-bar cluster",
+     minval = 0.01, maxval = 20.0, step = 0.05, group = GROUP_BEARISH_EVENTS)
+
+string GROUP_SESSIONS = "06. New Cycle Sessions"
+string sessionTimezone = input.string("Asia/Ho_Chi_Minh", "Session timezone (match MT5 effective time)",
+     group = GROUP_SESSIONS)
+bool enableSession1 = input.bool(true, "Enable session 1", inline = "S1",
+     group = GROUP_SESSIONS)
+string session1 = input.session("0600-1200", "Session 1", inline = "S1",
+     group = GROUP_SESSIONS)
+bool enableSession2 = input.bool(true, "Enable session 2", inline = "S2",
+     group = GROUP_SESSIONS)
+string session2 = input.session("1200-1800", "Session 2", inline = "S2",
+     group = GROUP_SESSIONS)
+bool enableSession3 = input.bool(true, "Enable session 3", inline = "S3",
+     group = GROUP_SESSIONS)
+string session3 = input.session("1800-0300", "Session 3", inline = "S3",
+     group = GROUP_SESSIONS)
+
+string GROUP_ZONE = "07. Zone History"
+bool showTradingZones = input.bool(true, "Show Trading Zones", group = GROUP_ZONE)
+int tradingZoneHistoryBars = input.int(1500, "Trading Zone history bars",
+     minval = 1, maxval = 100000, group = GROUP_ZONE)
+int maxStoredTradingZones = input.int(100, "Maximum stored Trading Zones",
+     minval = 1, maxval = 500, group = GROUP_ZONE)
+float zonePaddingAtr = input.float(0.25, "Trading Zone padding ATR", minval = 0.0,
+     step = 0.05, group = GROUP_ZONE)
+color upsideZoneColor = input.color(color.rgb(250, 240, 230), "UpsidePolicy color",
+     group = GROUP_ZONE)
+color downsideZoneColor = input.color(color.rgb(230, 230, 250), "DownsidePolicy color",
+     group = GROUP_ZONE)
+int zoneTransparency = input.int(50, "Trading Zone transparency", minval = 0,
+     maxval = 100, group = GROUP_ZONE)
+bool showRiskLockZones = input.bool(true, "Show RISK LOCK Zones", group = GROUP_ZONE)
+int riskLockHistoryBars = input.int(1500, "RISK LOCK history bars",
+     minval = 1, maxval = 5000, group = GROUP_ZONE)
+int maxStoredRiskLockZones = input.int(100, "Maximum stored RISK LOCK Zones",
+     minval = 1, maxval = 500, group = GROUP_ZONE)
+color riskLockColor = input.color(color.rgb(255, 182, 193), "RISK LOCK color",
+     group = GROUP_ZONE)
+int riskLockTransparency = input.int(78, "RISK LOCK transparency", minval = 0,
+     maxval = 100, group = GROUP_ZONE)
+
+string GROUP_EVENT_DISPLAY = "08. Event Display"
+bool showArmEvents = input.bool(false, "Show ARM", group = GROUP_EVENT_DISPLAY)
+bool showPolicyEvents = input.bool(false, "Show pAllow/pBlock", group = GROUP_EVENT_DISPLAY)
+bool showBearDropEvents = input.bool(false, "Show BearD/rLock", group = GROUP_EVENT_DISPLAY)
+bool showConsecutiveRedEvents = input.bool(false, "Show cRed", group = GROUP_EVENT_DISPLAY)
+bool showBearTwoEvents = input.bool(false, "Show BearTwo", group = GROUP_EVENT_DISPLAY)
+bool showDownsideEmaEvents = input.bool(false, "Show Downside EMA approach OFF",
+     group = GROUP_EVENT_DISPLAY)
+bool showActiveLowAtrEvents = input.bool(false, "Show low-ATR OFF",
+     group = GROUP_EVENT_DISPLAY)
+bool showBearishPatternEvents = input.bool(false, "Show bearish engulfing/pin",
+     group = GROUP_EVENT_DISPLAY)
+bool showDenyEvents = input.bool(false, "Show bDeny", group = GROUP_EVENT_DISPLAY)
+bool showReverseEvents = input.bool(false, "Show bReverse", group = GROUP_EVENT_DISPLAY)
+bool showFallEvents = input.bool(false, "Show bFall", group = GROUP_EVENT_DISPLAY)
+bool showRecoveryEvents = input.bool(false, "Show pRecovered", group = GROUP_EVENT_DISPLAY)
+bool showSessionEndEvents = input.bool(false, "Show sEnd", group = GROUP_EVENT_DISPLAY)
+bool drawEventHistory = input.bool(true, "Draw event history", group = GROUP_EVENT_DISPLAY)
+int eventHistoryBars = input.int(1500, "Event history bars", minval = 1,
+     maxval = 5000, group = GROUP_EVENT_DISPLAY)
+int maxStoredEvents = input.int(250, "Maximum stored events", minval = 10,
+     maxval = 480, group = GROUP_EVENT_DISPLAY)
+
+string GROUP_EVENT_NAMES = "09. Event Names"
+string nameArm = input.string("ARM", "Arm", group = GROUP_EVENT_NAMES)
+string namePolicyAllow = input.string("pAllow", "Policy allow", group = GROUP_EVENT_NAMES)
+string namePolicyBlock = input.string("pBlock", "Policy block", group = GROUP_EVENT_NAMES)
+string nameBearDrop = input.string("BearD", "Bear Drop", group = GROUP_EVENT_NAMES)
+string nameConsecutiveRed = input.string("cRed", "Consecutive red", group = GROUP_EVENT_NAMES)
+string nameBearTwo = input.string("BearTwo", "Two bearish high-ATR bars",
+     group = GROUP_EVENT_NAMES)
+string nameDownsideEmaApproach = input.string("dEma", "Downside EMA approach",
+     group = GROUP_EVENT_NAMES)
+string nameActiveLowAtr = input.string("atr3", "Active low ATR",
+     group = GROUP_EVENT_NAMES)
+string nameRiskLock = input.string("rLock", "Risk lock", group = GROUP_EVENT_NAMES)
+string nameRecovered = input.string("pRecovered", "Policy recovered", group = GROUP_EVENT_NAMES)
+string nameBearishEngulfing = input.string("bEngulf", "Bearish engulfing",
+     group = GROUP_EVENT_NAMES)
+string nameBearishPin = input.string("bPin", "Bearish pin", group = GROUP_EVENT_NAMES)
+string nameDeny = input.string("bDeny", "Deny", group = GROUP_EVENT_NAMES)
+string nameReverse = input.string("bReverse", "Reverse", group = GROUP_EVENT_NAMES)
+string nameFall = input.string("bFall", "Fall", group = GROUP_EVENT_NAMES)
+string nameSessionEnd = input.string("sEnd", "Session end", group = GROUP_EVENT_NAMES)
+
+string GROUP_DISPLAY = "10. Display"
+bool showEma = input.bool(true, "Show EMA23", group = GROUP_DISPLAY)
+int emaHistoryBars = input.int(400, "EMA history bars", minval = 1,
+     maxval = 5000, group = GROUP_DISPLAY)
+color emaColor = input.color(color.rgb(205, 90, 45), "EMA color", group = GROUP_DISPLAY)
+bool showDashboard = input.bool(false, "Show dashboard", group = GROUP_DISPLAY)
+color dashboardBackground = input.color(color.white, "Dashboard background",
+     group = GROUP_DISPLAY)
+color dashboardText = input.color(color.rgb(45, 55, 70), "Dashboard text",
+     group = GROUP_DISPLAY)
+
+int STATE_OFF = 0
+int STATE_ARMING = 1
+int STATE_ACTIVE = 2
+int STATE_RISK_LOCK = 3
+int POLICY_NONE = 0
+int POLICY_UPSIDE = 1
+int POLICY_DOWNSIDE = 2
+int MAX_ZONE_BOX_OBJECTS = 500
+
+f_stateText(int state) =>
+    string result = "OFF"
+    if state == STATE_ACTIVE
+        result := "ACTIVE"
+    else if state == STATE_ARMING
+        result := "ARMING"
+    else if state == STATE_RISK_LOCK
+        result := "RISK LOCK"
+    result
+
+f_policyText(int policy) =>
+    string result = "NONE"
+    if policy == POLICY_UPSIDE
+        result := "UpsidePolicy"
+    else if policy == POLICY_DOWNSIDE
+        result := "DownsidePolicy"
+    result
+
+f_number(float value) => na(value) ? "n/a" : str.tostring(value, format.mintick)
+
+f_bearDropSource(bool legacyVeto, bool twoBarVeto) =>
+    string result = "NONE"
+    if legacyVeto and twoBarVeto
+        result := "BOTH"
+    else if legacyVeto
+        result := "LEGACY"
+    else if twoBarVeto
+        result := "2-BAR"
+    result
+
+var array<box> tradingZoneBoxes = array.new<box>()
+var array<box> riskLockBoxes = array.new<box>()
+var array<label> eventLabels = array.new<label>()
+
+f_deleteOldestZoneBox() =>
+    bool hasTrading = array.size(tradingZoneBoxes) > 0
+    bool hasRisk = array.size(riskLockBoxes) > 0
+    if hasTrading and hasRisk
+        box oldestTrading = array.get(tradingZoneBoxes, 0)
+        box oldestRisk = array.get(riskLockBoxes, 0)
+        if box.get_left(oldestTrading) <= box.get_left(oldestRisk)
+            box.delete(array.shift(tradingZoneBoxes))
+        else
+            box.delete(array.shift(riskLockBoxes))
+    else if hasTrading
+        box.delete(array.shift(tradingZoneBoxes))
+    else if hasRisk
+        box.delete(array.shift(riskLockBoxes))
+
+f_prepareTradingBox() =>
+    while array.size(tradingZoneBoxes) >= maxStoredTradingZones
+        box.delete(array.shift(tradingZoneBoxes))
+    while array.size(tradingZoneBoxes) + array.size(riskLockBoxes) >= MAX_ZONE_BOX_OBJECTS
+        f_deleteOldestZoneBox()
+
+f_prepareRiskBox() =>
+    while array.size(riskLockBoxes) >= maxStoredRiskLockZones
+        box.delete(array.shift(riskLockBoxes))
+    while array.size(tradingZoneBoxes) + array.size(riskLockBoxes) >= MAX_ZONE_BOX_OBJECTS
+        f_deleteOldestZoneBox()
+
+f_storeTradingBox(box value) =>
+    array.push(tradingZoneBoxes, value)
+
+f_storeRiskBox(box value) =>
+    array.push(riskLockBoxes, value)
+
+f_storeLabel(label value) =>
+    array.push(eventLabels, value)
+    if array.size(eventLabels) > maxStoredEvents
+        label.delete(array.shift(eventLabels))
+
+f_emitEvent(bool enabled, string eventText, float price, color eventColor, string tooltip, bool below) =>
+    bool withinHistory = bar_index >= last_bar_index - eventHistoryBars
+    if enabled and (barstate.isrealtime or (drawEventHistory and withinHistory))
+        // MT5 evaluates a closed M15 bar at the opening time of the next bar.
+        // `time_close` is that same decision timestamp on a standard M15 chart.
+        label value = label.new(x = time_close, y = price, text = eventText,
+             xloc = xloc.bar_time, yloc = yloc.price,
+             style = below ? label.style_label_up : label.style_label_down,
+             color = color.new(eventColor, 15), textcolor = color.black,
+             size = size.tiny, tooltip = tooltip)
+        f_storeLabel(value)
+
+bool isM15Chart = timeframe.isminutes and timeframe.multiplier == 15
+bool barInSession1 = enableSession1 and
+     not na(time(timeframe.period, session1, sessionTimezone))
+bool barInSession2 = enableSession2 and
+     not na(time(timeframe.period, session2, sessionTimezone))
+bool barInSession3 = enableSession3 and
+     not na(time(timeframe.period, session3, sessionTimezone))
+string currentBarSession = "OUTSIDE"
+if barInSession1
+    currentBarSession := "SESSION 1"
+else if barInSession2
+    currentBarSession := "SESSION 2"
+else if barInSession3
+    currentBarSession := "SESSION 3"
+bool nextInSession1 = enableSession1 and
+     not na(time(timeframe.period, session1, sessionTimezone, bars_back = -1))
+bool nextInSession2 = enableSession2 and
+     not na(time(timeframe.period, session2, sessionTimezone, bars_back = -1))
+bool nextInSession3 = enableSession3 and
+     not na(time(timeframe.period, session3, sessionTimezone, bars_back = -1))
+bool newCycleSessionOpen = nextInSession1 or nextInSession2 or nextInSession3
+string nextCycleSession = "OUTSIDE"
+if nextInSession1
+    nextCycleSession := "SESSION 1"
+else if nextInSession2
+    nextCycleSession := "SESSION 2"
+else if nextInSession3
+    nextCycleSession := "SESSION 3"
+int nextBarCloseTime = time_close(timeframe.period, bars_back = -1)
+
+float atrValue = ta.atr(atrPeriod)
+float emaValue = ta.ema(close, emaPeriod)
+float currentD = close - emaValue
+bool dataReady = not na(atrValue) and not na(emaValue)
+bool atrOk = dataReady and atrValue >= minAtrPrice
+bool downsideEntryAtrOk = atrOk and atrValue >= downsideMinAtrPrice
+bool dRising = not na(currentD[1]) and currentD > currentD[1]
+bool downsideEmaNonDown = not na(emaValue[downsideEmaSlopeBars]) and
+     emaValue >= emaValue[downsideEmaSlopeBars]
+bool recoveryEmaNonDown = not na(emaValue[recoveryEmaSlopeBars]) and
+     emaValue >= emaValue[recoveryEmaSlopeBars]
+
+// Entry gates are independent. Confirmation bars can never mix policies.
+bool upsideEntryPass = enableUpsidePolicy and atrOk and currentD >= 0.0 and
+     currentD <= upsideMaxAboveEma
+bool downsideNearEntry = enableDownsideNearEntry and currentD < 0.0 and
+     currentD > -downsideBandBoundary
+bool downsideDeepEntry = enableDownsideDeepEntry and
+     currentD <= -downsideBandBoundary
+bool downsideEntryPass = enableDownsidePolicy and downsideEntryAtrOk and
+     (downsideNearEntry or downsideDeepEntry) and
+     (not downsideRequireDRising or dRising) and
+     (not downsideRequireEmaNonDown or downsideEmaNonDown)
+int candidatePolicy = POLICY_NONE
+if upsideEntryPass
+    candidatePolicy := POLICY_UPSIDE
+else if downsideEntryPass
+    candidatePolicy := POLICY_DOWNSIDE
+bool candidatePass = newCycleSessionOpen and candidatePolicy != POLICY_NONE
+
+// Upside keeps the Ver2 gate. Downside is frozen at activation and can remain
+// active during a recovery from deep below EMA up to the configured +D limit.
+bool upsideHoldPass = enableUpsidePolicy and atrOk and currentD >= 0.0 and
+     currentD <= upsideMaxAboveEma
+bool downsideHoldPass = enableDownsidePolicy and dataReady and
+     currentD <= downsideHoldMaxAboveEma
+
+var int policyState = STATE_OFF
+var int armingPolicy = POLICY_NONE
+var int activePolicy = POLICY_NONE
+var int riskPolicy = POLICY_NONE
+var int consecutivePasses = 0
+var string armingSession = "OUTSIDE"
+var string activeSession = "OUTSIDE"
+var int activeConsecutiveRedCount = 0
+var int activeBearTwoCount = 0
+var int activeLowAtrCount = 0
+var int riskLockRemaining = 0
+var int consecutiveRecoveryBars = 0
+var bool previousBearDropVeto = false
+
+var float activeZoneHigh = na
+var float activeZoneLow = na
+var float activeZoneAtr = na
+var box activeZoneBox = na
+var float riskZoneHigh = na
+var float riskZoneLow = na
+var float riskZoneAtr = na
+var box activeRiskBox = na
+
+var string lastReason = "WAITING_FOR_M15_CLOSE"
+var int lastDecisionPolicy = POLICY_NONE
+var float lastDecisionClose = na
+var float lastDecisionAtr = na
+var float lastDecisionEma = na
+var float lastDecisionD = na
+var float lastRelativeDrop = na
+var float lastTwoBarDrop = na
+var string lastBearDropSource = "NONE"
+var int lastRedCount = 0
+var int lastBearTwoCount = 0
+var int lastActiveLowAtrCount = 0
+var bool lastScob = false
+
+bool armEvent = false
+bool onEvent = false
+bool offEvent = false
+bool bearDropEvent = false
+bool consecutiveRedEvent = false
+bool bearTwoEvent = false
+bool downsideEmaApproachEvent = false
+bool activeLowAtrEvent = false
+bool bearishPatternEvent = false
+bool denyEvent = false
+bool reverseEvent = false
+bool fallEvent = false
+bool recoveryEvent = false
+bool sessionEndEvent = false
+
+// Legacy and two-bar Bear Drop features. DownsidePolicy uses relaxed thresholds.
+float peakDistance = ta.highest(currentD, bearDropLookback)
+float relativeDrop = peakDistance - currentD
+float bearishBarSum = math.sum(close < open ? 1.0 : 0.0, bearishWindow)
+int bearishBarCount = int(bearishBarSum)
+int requiredBearishBars = math.min(minBearishBars, bearishWindow)
+bool distanceFalling3 = currentD < currentD[1] and currentD[1] < currentD[2]
+float twoBarDrop = high[1] - low
+
+// ACTIVE-only bearish pattern snapshots retained from Ver2.
+float pointFloor = syminfo.mintick
+float currentBody = math.abs(close - open)
+float previousBody = math.abs(close[1] - open[1])
+bool currentBearish = close < open
+bool previousBullish = close[1] > open[1]
+bool bearishBodyRatioPass = currentBody >= math.max(previousBody * bearishBodyMultiplier,
+     pointFloor)
+bool bearishEngulfing = enableBearishPatternBlock and currentBearish and
+     previousBullish and open >= close[1] and close <= open[1] and bearishBodyRatioPass
+float currentUpperWick = high - math.max(open, close)
+float currentLowerWick = math.min(open, close) - low
+bool bearishPin = enableBearishPatternBlock and currentBearish and currentBody > 0.0 and
+     currentUpperWick >= currentBody * 2.0 and currentLowerWick <= currentBody and
+     bearishBodyRatioPass
+
+float denyPriorHigh = ta.highest(high[2], denyLookback)
+float upthrustBody = math.abs(close[1] - open[1])
+float upthrustBodyFloor = math.max(upthrustBody, pointFloor)
+float upthrustUpperWick = high[1] - math.max(open[1], close[1])
+float denyUpperWickBody = upthrustUpperWick / upthrustBodyFloor
+float denySweepSize = high[1] - denyPriorHigh
+bool upthrustSweep = denySweepSize >= atrValue * denySweepBufferAtr and
+     denyUpperWickBody >= denyMinUpperWickBody
+float denyBodyLow = math.min(open, close)
+float denyBodyHigh = math.max(open, close)
+float upthrustBodyLow = math.min(open[1], close[1])
+float upthrustBodyHigh = math.max(open[1], close[1])
+float denyOverlap = math.max(0.0, math.min(upthrustBodyHigh, denyBodyHigh) -
+     math.max(upthrustBodyLow, denyBodyLow))
+float denyOverlapPercent = 0.0
+if upthrustBody > pointFloor
+    denyOverlapPercent := denyOverlap / upthrustBody * 100.0
+bool denyBlockRaw = enableDenyBlock and dataReady and currentBearish and upthrustSweep and
+     currentBody >= math.max(upthrustBody * denyBodyMultiplier, pointFloor) and
+     denyOverlapPercent >= denyMinBodyOverlapPercent and
+     (not denyRequireCloseBelowHigh or close < denyPriorHigh)
+
+float reversePinBody = math.abs(close[1] - open[1])
+float reversePinFloor = math.max(reversePinBody, pointFloor)
+float reverseUpperWickBody = (high[1] - math.max(open[1], close[1])) / reversePinFloor
+float reverseLowerWickBody = (math.min(open[1], close[1]) - low[1]) / reversePinFloor
+bool reversePriorPin = reversePinBody > 0.0 and
+     reverseUpperWickBody >= reversePinMinUpperWickBody and
+     reverseLowerWickBody <= reversePinMaxLowerWickBody
+bool reverseBlockRaw = enableReverseBlock and reversePriorPin and currentBearish and
+     currentBody > math.max(reversePinBody * reverseBodyMultiplier, pointFloor)
+
+float fallPriorHigh = math.max(high[1], math.max(high[2], high[3]))
+float fallPriorLow = math.min(low[1], math.min(low[2], low[3]))
+float fallPriorRange = fallPriorHigh - fallPriorLow
+float fallCurrentRange = high - low
+bool fallOpenInside = open >= fallPriorLow and open <= fallPriorHigh
+bool fallCloseBreak = close < fallPriorLow
+bool fallBlockRaw = enableFallBlock and currentBearish and fallOpenInside and
+     fallPriorRange > 0.0 and fallCurrentRange >= fallPriorRange * fallRangeMultiplier and
+     fallCloseBreak
+
+// Bullish Single Candle Order Block recovery OR path, evaluated only in RISK LOCK.
+bool bullishScob = enableBullishScobRecovery and open[2] > close[2] and
+     close[1] > open[1] and close > open and low[1] < low[2] and close > high[1]
+
+if isM15Chart and barstate.isconfirmed
+    bool wasActive = policyState == STATE_ACTIVE
+    bool wasRiskLock = policyState == STATE_RISK_LOCK
+    bool tradingHistoryVisible = barstate.isrealtime or
+         bar_index >= last_bar_index - tradingZoneHistoryBars
+    bool riskHistoryVisible = barstate.isrealtime or
+         bar_index >= last_bar_index - riskLockHistoryBars
+
+    if wasActive
+        activeZoneHigh := math.max(activeZoneHigh, high)
+        activeZoneLow := math.min(activeZoneLow, low)
+        activeZoneAtr := atrValue
+        if showTradingZones and tradingHistoryVisible
+            float padding = math.max(activeZoneAtr * zonePaddingAtr, syminfo.mintick * 10.0)
+            if na(activeZoneBox)
+                color clippedZoneColor = activePolicy == POLICY_DOWNSIDE ?
+                     downsideZoneColor : upsideZoneColor
+                f_prepareTradingBox()
+                activeZoneBox := box.new(left = time,
+                     top = activeZoneHigh + padding, right = time_close,
+                     bottom = activeZoneLow - padding, xloc = xloc.bar_time,
+                     border_color = color.new(clippedZoneColor, 100), border_width = 0,
+                     bgcolor = color.new(clippedZoneColor, zoneTransparency))
+                f_storeTradingBox(activeZoneBox)
+            else
+                box.set_right(activeZoneBox, time_close)
+                box.set_top(activeZoneBox, activeZoneHigh + padding)
+                box.set_bottom(activeZoneBox, activeZoneLow - padding)
+
+    if wasRiskLock
+        riskZoneHigh := math.max(riskZoneHigh, high)
+        riskZoneLow := math.min(riskZoneLow, low)
+        riskZoneAtr := atrValue
+        if showRiskLockZones and riskHistoryVisible
+            float riskPadding = math.max(riskZoneAtr * zonePaddingAtr,
+                 syminfo.mintick * 10.0)
+            if na(activeRiskBox)
+                f_prepareRiskBox()
+                activeRiskBox := box.new(left = time,
+                     top = riskZoneHigh + riskPadding, right = time_close,
+                     bottom = riskZoneLow - riskPadding, xloc = xloc.bar_time,
+                     border_color = color.new(riskLockColor, 40), border_width = 1,
+                     bgcolor = color.new(riskLockColor, riskLockTransparency))
+                f_storeRiskBox(activeRiskBox)
+            else
+                box.set_right(activeRiskBox, time_close)
+                box.set_top(activeRiskBox, riskZoneHigh + riskPadding)
+                box.set_bottom(activeRiskBox, riskZoneLow - riskPadding)
+
+    int decisionPolicy = POLICY_UPSIDE
+    if wasActive
+        decisionPolicy := activePolicy
+    else if wasRiskLock
+        decisionPolicy := riskPolicy
+    else if armingPolicy != POLICY_NONE
+        decisionPolicy := armingPolicy
+    else if candidatePolicy != POLICY_NONE
+        decisionPolicy := candidatePolicy
+    else if currentD < 0.0
+        decisionPolicy := POLICY_DOWNSIDE
+    float bearDropMultiplier = 1.0
+    if decisionPolicy == POLICY_DOWNSIDE
+        bearDropMultiplier := downsideBearDropMultiplier
+    float relativeDropMinimum = minRelativeDropPrice * bearDropMultiplier
+    float twoBarDropMinimum = minTwoBarDropPrice * bearDropMultiplier
+    bool legacyBearDrop = enableLegacyBearDrop and dataReady and
+         not na(currentD[bearDropLookback - 1]) and
+         relativeDrop >= relativeDropMinimum and bearishBarCount >= requiredBearishBars and
+         (not requireDistanceFalling or distanceFalling3)
+    bool twoBarBearDrop = enableTwoBarBearDrop and dataReady and
+         not na(high[1]) and twoBarDrop >= twoBarDropMinimum
+    bool bearDropVeto = enableBearDropVeto and (legacyBearDrop or twoBarBearDrop)
+    string bearDropSource = f_bearDropSource(legacyBearDrop, twoBarBearDrop)
+
+    bool activePolicyBar = wasActive and currentBarSession == activeSession
+    // Any bearish candle morphology counts: only Close < Open is required.
+    if activePolicyBar
+        activeConsecutiveRedCount := currentBearish ? activeConsecutiveRedCount + 1 : 0
+    else
+        activeConsecutiveRedCount := 0
+    bool downsideActiveBar = activePolicyBar and activePolicy == POLICY_DOWNSIDE
+    if activePolicyBar
+        activeBearTwoCount := currentBearish and atrValue > bearTwoAtrThreshold ?
+             activeBearTwoCount + 1 : 0
+    else
+        activeBearTwoCount := 0
+    if activePolicyBar
+        activeLowAtrCount := atrValue < activeLowAtrThreshold ?
+             activeLowAtrCount + 1 : 0
+    else
+        activeLowAtrCount := 0
+    bool consecutiveRedBlock = enableConsecutiveRedBlock and activePolicyBar and
+         activeConsecutiveRedCount >= consecutiveRedBars
+    bool bearTwoBlock = enableBearTwoBlock and activePolicyBar and
+         activeBearTwoCount >= 2
+    bool bearishPatternBlock = wasActive and currentBarSession == activeSession and
+         (bearishEngulfing or bearishPin)
+    bool denyBlock = wasActive and currentBarSession == activeSession and denyBlockRaw
+    bool reverseBlock = wasActive and currentBarSession == activeSession and reverseBlockRaw
+    bool fallBlock = wasActive and currentBarSession == activeSession and fallBlockRaw
+    // Downside Soft-OFF guards. EMA approach means the full candle range touches
+    // or intersects the EMA band [EMA-tolerance, EMA+tolerance].
+    bool downsideEmaApproachBlock = enableDownsideEmaApproachBlock and
+         downsideActiveBar and dataReady and high >= emaValue - downsideEmaApproachTolerance and
+         low <= emaValue + downsideEmaApproachTolerance
+    bool activeLowAtrBlock = enableActiveLowAtrBlock and activePolicyBar and
+         activeLowAtrCount >= activeLowAtrBars
+    bool sessionExit = wasActive and
+         (not newCycleSessionOpen or nextCycleSession != activeSession)
+    bool activeHoldPass = false
+    if activePolicy == POLICY_UPSIDE
+        activeHoldPass := upsideHoldPass
+    else if activePolicy == POLICY_DOWNSIDE
+        activeHoldPass := downsideHoldPass
+
+    lastDecisionClose := close
+    lastDecisionAtr := atrValue
+    lastDecisionEma := emaValue
+    lastDecisionD := currentD
+    lastDecisionPolicy := decisionPolicy
+    lastRelativeDrop := relativeDrop
+    lastTwoBarDrop := twoBarDrop
+    lastBearDropSource := bearDropSource
+    lastRedCount := activeConsecutiveRedCount
+    lastBearTwoCount := activeBearTwoCount
+    lastActiveLowAtrCount := activeLowAtrCount
+    lastScob := false
+
+    bool newBearDropEpisode = bearDropVeto and not previousBearDropVeto
+    previousBearDropVeto := bearDropVeto
+
+    if sessionExit
+        sessionEndEvent := true
+        offEvent := true
+        lastReason := "M15_NEW_CYCLE_SESSION_ENDED"
+        f_emitEvent(showSessionEndEvents, nameSessionEnd + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70),
+             f_policyText(activePolicy) + "\n" + lastReason, false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        riskPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if bearDropVeto
+        bearDropEvent := newBearDropEpisode or not wasRiskLock
+        offEvent := wasActive
+        riskPolicy := decisionPolicy
+        riskLockRemaining := upsideRiskLockBars
+        if decisionPolicy == POLICY_DOWNSIDE
+            riskLockRemaining := downsideRiskLockBars
+        consecutiveRecoveryBars := 0
+        lastReason := "M15_BEAR_DROP_" + bearDropSource + "_" +
+             f_policyText(decisionPolicy)
+        if not wasRiskLock
+            riskZoneHigh := high
+            riskZoneLow := low
+            riskZoneAtr := atrValue
+            if showRiskLockZones and not na(nextBarCloseTime) and
+                 (barstate.isrealtime or bar_index + 1 >=
+                 last_bar_index - riskLockHistoryBars)
+                float riskStartPadding = math.max(atrValue * zonePaddingAtr,
+                     syminfo.mintick * 10.0)
+                // MT5 starts RISK LOCK at the next bar open (decisionTime).
+                f_prepareRiskBox()
+                activeRiskBox := box.new(left = time_close,
+                     top = high + riskStartPadding,
+                     right = nextBarCloseTime,
+                     bottom = low - riskStartPadding, xloc = xloc.bar_time,
+                     border_color = color.new(riskLockColor, 40), border_width = 1,
+                     bgcolor = color.new(riskLockColor, riskLockTransparency))
+                f_storeRiskBox(activeRiskBox)
+        string bearDropStateName = wasActive ? namePolicyBlock : nameRiskLock
+        f_emitEvent(showBearDropEvents and bearDropEvent,
+             nameBearDrop + "\n" + bearDropStateName,
+             high + atrValue * 0.35, riskLockColor,
+             lastReason + "\nRelativeDrop=" + f_number(relativeDrop) + "/" +
+             f_number(relativeDropMinimum) + "\nTwoBarDrop=" + f_number(twoBarDrop) +
+             "/" + f_number(twoBarDropMinimum), false)
+        // MT5 preserves Fall as a secondary classification under Bear Drop.
+        fallEvent := fallBlock
+        f_emitEvent(showFallEvents and fallBlock, nameFall + " + " + nameBearDrop,
+             low - atrValue * 0.35, color.rgb(190, 55, 70), "FALL_OVERLAP_BEAR_DROP", true)
+        policyState := STATE_RISK_LOCK
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if bearTwoBlock
+        offEvent := true
+        bearTwoEvent := true
+        lastReason := "M15_BEAR_TWO_HIGH_ATR_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showBearTwoEvents,
+             nameBearTwo + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70),
+             lastReason + "\n2 bearish bars; ATR=" + f_number(atrValue) +
+             " > " + f_number(bearTwoAtrThreshold), false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        riskPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeBearTwoCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if downsideEmaApproachBlock
+        offEvent := true
+        downsideEmaApproachEvent := true
+        lastReason := "M15_DOWNSIDE_EMA_APPROACH_POLICY_BLOCK"
+        f_emitEvent(showDownsideEmaEvents,
+             nameDownsideEmaApproach + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70),
+             lastReason + "\nEMA=" + f_number(emaValue) +
+             " Tol=" + f_number(downsideEmaApproachTolerance), false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        riskPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if activeLowAtrBlock
+        offEvent := true
+        activeLowAtrEvent := true
+        lastReason := "M15_LOW_ATR_SEQUENCE_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showActiveLowAtrEvents,
+             nameActiveLowAtr + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70),
+             lastReason + "\nATR=" + f_number(atrValue) + " < " +
+             f_number(activeLowAtrThreshold) + " x " +
+             str.tostring(activeLowAtrCount), false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        riskPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if denyBlock
+        offEvent := true
+        denyEvent := true
+        fallEvent := fallBlock
+        lastReason := "M15_DENY_UPTHRUST_REJECTION_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showDenyEvents, nameDeny + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70), lastReason, false)
+        f_emitEvent(showFallEvents and fallBlock, nameFall + " + " + nameDeny,
+             low - atrValue * 0.35, color.rgb(190, 55, 70),
+             "FALL_OVERLAP_DENY", true)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if fallBlock
+        offEvent := true
+        fallEvent := true
+        lastReason := "M15_FALL_3_BAR_CLUSTER_DOWNSIDE_BREAK_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showFallEvents, nameFall + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70), lastReason, false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if reverseBlock
+        offEvent := true
+        reverseEvent := true
+        lastReason := "M15_REVERSE_PIN_THEN_LARGER_BEARISH_BODY_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showReverseEvents, nameReverse + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(190, 55, 70), lastReason, false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if bearishPatternBlock
+        offEvent := true
+        bearishPatternEvent := true
+        string patternName = nameBearishPin
+        if bearishEngulfing and bearishPin
+            patternName := nameBearishEngulfing + "+" + nameBearishPin
+        else if bearishEngulfing
+            patternName := nameBearishEngulfing
+        lastReason := "M15_BEARISH_PATTERN_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showBearishPatternEvents,
+             patternName + "\n" + namePolicyBlock, close + atrValue * 0.35,
+             color.rgb(190, 55, 70), lastReason, false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if consecutiveRedBlock
+        offEvent := true
+        consecutiveRedEvent := true
+        lastReason := "M15_CONSECUTIVE_RED_POLICY_BLOCK_" +
+             f_policyText(activePolicy)
+        f_emitEvent(showConsecutiveRedEvents,
+             nameConsecutiveRed + "\n" + namePolicyBlock,
+             close + atrValue * 0.35, color.rgb(210, 70, 70), lastReason, false)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingPolicy := POLICY_NONE
+        activePolicy := POLICY_NONE
+        activeSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if wasRiskLock
+        if riskLockRemaining > 0
+            riskLockRemaining -= 1
+        bool commonRecovery = (not requireRecoveryDRising or dRising) and
+             (not requireRecoveryEmaNonDown or recoveryEmaNonDown)
+        bool upsideRecovery = riskPolicy == POLICY_UPSIDE and upsideEntryPass and
+             currentD >= atrValue * recoveryBufferAtr and commonRecovery
+        bool downsideRecovery = riskPolicy == POLICY_DOWNSIDE and downsideEntryPass and
+             commonRecovery
+        bool recoveryCandidate = newCycleSessionOpen and
+             (upsideRecovery or downsideRecovery or bullishScob)
+        lastScob := bullishScob
+        if riskLockRemaining == 0
+            if recoveryCandidate
+                consecutiveRecoveryBars += 1
+            else
+                consecutiveRecoveryBars := 0
+            if consecutiveRecoveryBars >= recoveryBars
+                recoveryEvent := true
+                armEvent := true
+                int recoveryConfirmBars = upsideConfirmBars
+                if riskPolicy == POLICY_DOWNSIDE
+                    recoveryConfirmBars := downsideConfirmBars
+                policyState := STATE_ARMING
+                armingPolicy := riskPolicy
+                armingSession := nextCycleSession
+                consecutivePasses := recoveryConfirmBars > 1 ? 1 : 0
+                consecutiveRecoveryBars := 0
+                lastReason := "M15_POLICY_RECOVERED_ARMING_" +
+                     (bullishScob ? "SCOB_" : "") + f_policyText(armingPolicy)
+                f_emitEvent(showRecoveryEvents,
+                     nameRecovered + "\n" + nameArm + " " +
+                     str.tostring(consecutivePasses) + "/" +
+                     str.tostring(recoveryConfirmBars), low - atrValue * 0.35,
+                     armingPolicy == POLICY_DOWNSIDE ? downsideZoneColor : upsideZoneColor,
+                     lastReason + "\nNew Cycle remains OFF until confirmation.", true)
+                riskZoneHigh := na
+                riskZoneLow := na
+                riskZoneAtr := na
+                activeRiskBox := na
+                riskPolicy := POLICY_NONE
+
+    else if wasActive
+        if not activeHoldPass
+            offEvent := true
+            lastReason := "DOWNSIDE_HOLD_GATE_FAILED"
+            if activePolicy == POLICY_UPSIDE
+                lastReason := "UPSIDE_GATE_FAILED"
+            f_emitEvent(showPolicyEvents, namePolicyBlock,
+                 close + atrValue * 0.35, color.rgb(190, 55, 70),
+                 f_policyText(activePolicy) + "\n" + lastReason +
+                 "\nD=" + f_number(currentD), false)
+            policyState := STATE_OFF
+            riskLockRemaining := 0
+            consecutiveRecoveryBars := 0
+            consecutivePasses := 0
+            armingPolicy := POLICY_NONE
+            riskPolicy := POLICY_NONE
+            activePolicy := POLICY_NONE
+            activeSession := "OUTSIDE"
+            activeConsecutiveRedCount := 0
+            activeZoneHigh := na
+            activeZoneLow := na
+            activeZoneAtr := na
+            activeZoneBox := na
+        else
+            lastReason := f_policyText(activePolicy) + "_ACTIVE_HOLD"
+
+    else
+        if candidatePass
+            if policyState != STATE_ARMING or armingPolicy != candidatePolicy or armingSession != nextCycleSession
+                consecutivePasses := 0
+                armingPolicy := candidatePolicy
+                armingSession := nextCycleSession
+            consecutivePasses += 1
+            policyState := STATE_ARMING
+            int requiredConfirmBars = upsideConfirmBars
+            if armingPolicy == POLICY_DOWNSIDE
+                requiredConfirmBars := downsideConfirmBars
+            if consecutivePasses >= requiredConfirmBars
+                onEvent := true
+                policyState := STATE_ACTIVE
+                activePolicy := armingPolicy
+                riskPolicy := POLICY_NONE
+                activeSession := nextCycleSession
+                consecutivePasses := 0
+                armingPolicy := POLICY_NONE
+                armingSession := "OUTSIDE"
+                activeConsecutiveRedCount := 0
+                // MT5 activates New Cycle at the next M15 open. Until that bar
+                // develops, the known price extent is the signal bar close.
+                activeZoneHigh := close
+                activeZoneLow := close
+                activeZoneAtr := atrValue
+                color activeColor = upsideZoneColor
+                if activePolicy == POLICY_DOWNSIDE
+                    activeColor := downsideZoneColor
+                if showTradingZones and not na(nextBarCloseTime) and
+                     (barstate.isrealtime or bar_index + 1 >=
+                     last_bar_index - tradingZoneHistoryBars)
+                    float startPadding = math.max(atrValue * zonePaddingAtr,
+                         syminfo.mintick * 10.0)
+                    f_prepareTradingBox()
+                    activeZoneBox := box.new(left = time_close,
+                         top = activeZoneHigh + startPadding,
+                         right = nextBarCloseTime,
+                         bottom = activeZoneLow - startPadding, xloc = xloc.bar_time,
+                         border_color = color.new(activeColor, 100), border_width = 0,
+                         bgcolor = color.new(activeColor, zoneTransparency))
+                    f_storeTradingBox(activeZoneBox)
+                lastReason := f_policyText(activePolicy) + "_CONFIRMED"
+                f_emitEvent(showPolicyEvents, namePolicyAllow + "\n" +
+                     f_policyText(activePolicy), close - atrValue * 0.35,
+                     activeColor, lastReason + "\nD=" + f_number(currentD), true)
+            else
+                armEvent := true
+                lastReason := f_policyText(armingPolicy) + "_ARMING"
+                f_emitEvent(showArmEvents, nameArm + " " +
+                     str.tostring(consecutivePasses) + "/" +
+                     str.tostring(requiredConfirmBars) + "\n" +
+                     f_policyText(armingPolicy), low - atrValue * 0.20,
+                     armingPolicy == POLICY_DOWNSIDE ? downsideZoneColor : upsideZoneColor,
+                     lastReason + "\nD=" + f_number(currentD), true)
+        else
+            policyState := STATE_OFF
+            consecutivePasses := 0
+            armingPolicy := POLICY_NONE
+            armingSession := "OUTSIDE"
+            lastReason := "NO_POLICY_ENTRY"
+            if not dataReady
+                lastReason := "M15_DATA_NOT_READY"
+            else if not newCycleSessionOpen
+                lastReason := "M15_OUTSIDE_NEW_CYCLE_SESSION"
+            else if not atrOk
+                lastReason := "M15_ATR_BELOW_MIN"
+            else if currentD > upsideMaxAboveEma
+                lastReason := "UPSIDE_ABOVE_MAX"
+            else if currentD < 0.0 and not downsideNearEntry and not downsideDeepEntry
+                lastReason := "DOWNSIDE_ENTRY_PATH_DISABLED"
+            else if currentD < 0.0 and downsideRequireDRising and not dRising
+                lastReason := "DOWNSIDE_WAIT_D_RISING"
+
+// Live extension changes visuals only; decisions remain confirmed-M15 only.
+if isM15Chart and policyState == STATE_ACTIVE and not barstate.isconfirmed and showTradingZones and not na(activeZoneBox)
+    float liveHigh = math.max(activeZoneHigh, high)
+    float liveLow = math.min(activeZoneLow, low)
+    float liveAtr = na(atrValue) ? activeZoneAtr : atrValue
+    float livePadding = math.max(liveAtr * zonePaddingAtr, syminfo.mintick * 10.0)
+    box.set_right(activeZoneBox, time_close)
+    box.set_top(activeZoneBox, liveHigh + livePadding)
+    box.set_bottom(activeZoneBox, liveLow - livePadding)
+
+if isM15Chart and policyState == STATE_RISK_LOCK and not barstate.isconfirmed and showRiskLockZones and not na(activeRiskBox)
+    float liveRiskHigh = math.max(riskZoneHigh, high)
+    float liveRiskLow = math.min(riskZoneLow, low)
+    float liveRiskAtr = na(atrValue) ? riskZoneAtr : atrValue
+    float liveRiskPadding = math.max(liveRiskAtr * zonePaddingAtr,
+         syminfo.mintick * 10.0)
+    box.set_right(activeRiskBox, time_close)
+    box.set_top(activeRiskBox, liveRiskHigh + liveRiskPadding)
+    box.set_bottom(activeRiskBox, liveRiskLow - liveRiskPadding)
+
+bool emaHistoryVisible = bar_index >= last_bar_index - emaHistoryBars
+plot(showEma and isM15Chart and emaHistoryVisible ? emaValue : na, "EMA", color = emaColor,
+     linewidth = 1, style = plot.style_line)
+
+var table dashboard = table.new(position.top_left, 2, 14,
+     bgcolor = dashboardBackground, frame_color = color.rgb(205, 210, 218), frame_width = 1)
+
+if barstate.islast
+    if showDashboard
+        int displayedPolicy = candidatePolicy
+        if activePolicy != POLICY_NONE
+            displayedPolicy := activePolicy
+        else if armingPolicy != POLICY_NONE
+            displayedPolicy := armingPolicy
+        else if riskPolicy != POLICY_NONE
+            displayedPolicy := riskPolicy
+        color stateColor = color.rgb(190, 50, 60)
+        if policyState == STATE_ACTIVE
+            stateColor := color.rgb(0, 120, 80)
+        else if policyState == STATE_ARMING
+            stateColor := color.rgb(180, 110, 0)
+        else if policyState == STATE_RISK_LOCK
+            stateColor := color.rgb(215, 90, 35)
+        table.cell(dashboard, 0, 0, "CCBSN BOT 2 TV v3.1.3",
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 0, "VISUAL ONLY",
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 1, "State", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 1, f_stateText(policyState), text_color = stateColor,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 2, "Policy family", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 2, f_policyText(displayedPolicy),
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 3, "Close / ATR", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 3, f_number(lastDecisionClose) + " / " +
+             f_number(lastDecisionAtr), text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 4, "EMA / D", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 4, f_number(lastDecisionEma) + " / " +
+             f_number(lastDecisionD), text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 5, "Upside entry/hold", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 5, "[0,+" + f_number(upsideMaxAboveEma) + "]",
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 6, "Down entry / hold", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 6, "D<0 @ -" + f_number(downsideBandBoundary) +
+             " / ATR>=" + f_number(downsideMinAtrPrice) +
+             " / hold<=+" + f_number(downsideHoldMaxAboveEma),
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 7, "D rising / EMA non-down",
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 7, (dRising ? "YES" : "NO") + " / " +
+             (downsideEmaNonDown ? "YES" : "NO"), text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 8, "BearD / Source", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 8, lastBearDropSource + " / Rel=" +
+             f_number(lastRelativeDrop), text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 9, "2-bar drop", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 9, f_number(lastTwoBarDrop),
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 10, "cRed / BearTwo / ATR", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 10, str.tostring(lastRedCount) + " / " +
+             str.tostring(lastBearTwoCount) + " / " +
+             str.tostring(lastActiveLowAtrCount),
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 11, "Lock / Recovery / SCOB",
+             text_color = dashboardText, bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 11, str.tostring(riskLockRemaining) + " / " +
+             str.tostring(consecutiveRecoveryBars) + " / " +
+             (lastScob ? "YES" : "NO"), text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 12, "Reason", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 12, lastReason, text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 0, 13, "Chart", text_color = dashboardText,
+             bgcolor = dashboardBackground)
+        table.cell(dashboard, 1, 13, isM15Chart ? "M15 OK" : "USE STANDARD M15",
+             text_color = isM15Chart ? color.rgb(0, 120, 80) : color.rgb(190, 50, 60),
+             bgcolor = dashboardBackground)
+    else
+        table.clear(dashboard, 0, 0, 1, 13)
+
+alertcondition(armEvent, "CCBSN v3 ARM", "CCBSN v3 policy started ARMING.")
+alertcondition(onEvent, "CCBSN v3 POLICY ALLOW", "CCBSN v3 Trading Zone started.")
+alertcondition(offEvent, "CCBSN v3 POLICY BLOCK", "CCBSN v3 Trading Zone ended.")
+alertcondition(bearDropEvent, "CCBSN v3 BEAR DROP", "CCBSN v3 entered RISK LOCK.")
+alertcondition(consecutiveRedEvent, "CCBSN v3 CONSECUTIVE RED", "CCBSN v3 cRed block.")
+alertcondition(bearTwoEvent, "CCBSN v3 BEAR TWO",
+     "CCBSN v3 two consecutive bearish high-ATR bars; Trading Zone ended.")
+alertcondition(downsideEmaApproachEvent, "CCBSN v3 DOWNSIDE EMA APPROACH",
+     "CCBSN v3 Downside candle approached EMA; Trading Zone ended.")
+alertcondition(activeLowAtrEvent, "CCBSN v3 ACTIVE LOW ATR",
+     "CCBSN v3 active low-ATR sequence; Trading Zone ended.")
+alertcondition(bearishPatternEvent, "CCBSN v3 BEARISH PATTERN", "CCBSN v3 engulfing/pin block.")
+alertcondition(denyEvent, "CCBSN v3 DENY", "CCBSN v3 bDeny block.")
+alertcondition(reverseEvent, "CCBSN v3 REVERSE", "CCBSN v3 bReverse block.")
+alertcondition(fallEvent, "CCBSN v3 FALL", "CCBSN v3 bFall block.")
+alertcondition(recoveryEvent, "CCBSN v3 POLICY RECOVERED", "CCBSN v3 recovered to ARMING.")
+alertcondition(sessionEndEvent, "CCBSN v3 SESSION END", "CCBSN v3 session ended.")

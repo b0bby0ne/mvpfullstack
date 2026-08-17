@@ -1,0 +1,12 @@
+test_id;severity;status;atr_period;min_atr;ema_period;max_above_ema;min_below_ema;expected;actual;experts_log_ref;csv_ref;screenshot_ref;tester;notes
+FI-01;BLOCKER;NOT_RUN;20;3.0;23;20.0;20.0;;;;;;;defaults match v3.21 policy
+FI-02;HIGH;NOT_RUN;;;;;;;;;;;;;custom ATR period updates indicator panel and CSV
+FI-03;HIGH;NOT_RUN;;;;;;;;;;;;;custom EMA period rebuilds EMA line
+FI-04;BLOCKER;NOT_RUN;;;;;;;;;;;;;distance equals max above passes
+FI-05;BLOCKER;NOT_RUN;;;;;;;;;;;;;distance above max above fails
+FI-06;BLOCKER;NOT_RUN;;;;;;;;;;;;;distance equals minus min below fails
+FI-07;BLOCKER;NOT_RUN;;;;;;;;;;;;;distance below minus min below passes
+FI-08;HIGH;NOT_RUN;;;;;;;;;;;;;period below 1 rejected
+FI-09;HIGH;NOT_RUN;;;;;;;;;;;;;period above 1000 rejected
+FI-10;HIGH;NOT_RUN;;;;;;;;;;;;;insufficient history bars rejected
+FI-11;BLOCKER;NOT_RUN;;;;;;;;;;;;;input change supersedes stale pending command

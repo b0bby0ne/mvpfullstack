@@ -1,11 +1,11 @@
 # Output Guide
 
-Moi trading run nen co mot thu muc rieng trong `Output/`.
+Mỗi trading run nên có một thư mục riêng trong `output/runs/`.
 
 Vi du:
-- `Output/btcusdt_m5_london_open_2026_04_01/`
-- `Output/xauusd_m1_ny_session_2026_04_01/`
-- `Output/Agent_3_ScalpingAgent/`
+- `output/runs/btcusdt_m5_london_open_2026_04_01/`
+- `output/runs/xauusd_m1_ny_session_2026_04_01/`
+- `output/runs/Agent_3_ScalpingAgent/`
 
 Ben trong nen co `Master_Index.md` va cac file output duoc prefix theo `Recommended Reading Order`.
 

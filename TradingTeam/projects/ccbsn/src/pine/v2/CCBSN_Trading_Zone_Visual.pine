@@ -1,0 +1,730 @@
+//@version=6
+indicator("CCBSN Bot 2 - M15 Trading Zone Visual v1.11", "CCBSN TZ Visual", overlay = true,
+     max_boxes_count = 500, max_labels_count = 500)
+
+// Visual-only TradingView port of the CCBSN Bot 2 market policy.
+// It never places orders and never controls the MT5 CCBSN EA.
+
+string GROUP_POLICY = "01. M15 Policy"
+int atrPeriod = input.int(20, "ATR period", minval = 1, group = GROUP_POLICY)
+float minAtrPrice = input.float(3.0, "Minimum ATR (raw price)", minval = 0.000001,
+     step = 0.1, group = GROUP_POLICY)
+int emaPeriod = input.int(23, "EMA period", minval = 1, group = GROUP_POLICY)
+float maxAboveEma = input.float(20.0, "Maximum price above EMA", minval = 0.0,
+     step = 0.1, group = GROUP_POLICY)
+float minBelowEma = input.float(20.0, "Minimum price below EMA", minval = 0.0,
+     step = 0.1, group = GROUP_POLICY)
+int confirmBars = input.int(2, "Consecutive PASS bars to enable", minval = 1,
+     maxval = 20, group = GROUP_POLICY)
+
+string GROUP_BEAR_DROP = "02. Bearish Protection"
+bool enableBearDropVeto = input.bool(true, "Enable BEAR DROP veto",
+     group = GROUP_BEAR_DROP)
+bool enableLegacyBearDrop = input.bool(true, "Enable legacy PeakD method",
+     group = GROUP_BEAR_DROP)
+int bearDropLookback = input.int(8, "Peak D lookback (M15 bars)", minval = 3,
+     maxval = 100, group = GROUP_BEAR_DROP)
+float minRelativeDropPrice = input.float(30.0, "Minimum PeakD - CurrentD (raw price)",
+     minval = 0.1, step = 0.1, group = GROUP_BEAR_DROP)
+int bearishWindow = input.int(3, "Bearish candle window", minval = 2,
+     maxval = 10, group = GROUP_BEAR_DROP)
+int minBearishBars = input.int(2, "Minimum bearish candles", minval = 1,
+     maxval = 10, group = GROUP_BEAR_DROP)
+bool requireDistanceFalling = input.bool(true, "Require D falling for 3 bars",
+     group = GROUP_BEAR_DROP)
+bool enableTwoBarBearDrop = input.bool(true, "Enable 2-bar High[1] - Low method",
+     group = GROUP_BEAR_DROP)
+float minTwoBarDropPrice = input.float(30.0, "Minimum 2-bar High[1] - Low (raw price)",
+     minval = 0.1, step = 0.1, group = GROUP_BEAR_DROP)
+bool enableConsecutiveRedBlock = input.bool(true, "Enable consecutive RED policy OFF",
+     group = GROUP_BEAR_DROP)
+int consecutiveRedBars = input.int(3, "Consecutive RED bars while ACTIVE", minval = 2,
+     maxval = 10, group = GROUP_BEAR_DROP)
+int riskLockBars = input.int(2, "Minimum RISK LOCK bars", minval = 1,
+     maxval = 96, group = GROUP_BEAR_DROP)
+int recoveryBars = input.int(1, "Consecutive recovery bars", minval = 1,
+     maxval = 20, group = GROUP_BEAR_DROP)
+float recoveryBufferAtr = input.float(0.0, "Recovery above EMA (ATR multiplier)",
+     minval = 0.0, step = 0.05, group = GROUP_BEAR_DROP)
+bool requireRecoveryDRising = input.bool(true, "Require CurrentD > previous D",
+     group = GROUP_BEAR_DROP)
+bool requireRecoveryEmaNonDown = input.bool(false, "Require EMA non-down",
+     group = GROUP_BEAR_DROP)
+int recoveryEmaSlopeBars = input.int(3, "EMA non-down lookback", minval = 1,
+     maxval = 20, group = GROUP_BEAR_DROP)
+
+string GROUP_SESSIONS = "03. New Cycle Sessions"
+string sessionTimezone = input.string("Asia/Ho_Chi_Minh", "Session timezone (IANA)",
+     group = GROUP_SESSIONS)
+bool enableSession1 = input.bool(true, "Enable session 1", inline = "NC_S1",
+     group = GROUP_SESSIONS)
+string session1 = input.session("0600-1200", "Session 1", inline = "NC_S1",
+     group = GROUP_SESSIONS)
+bool enableSession2 = input.bool(true, "Enable session 2", inline = "NC_S2",
+     group = GROUP_SESSIONS)
+string session2 = input.session("1200-1800", "Session 2", inline = "NC_S2",
+     group = GROUP_SESSIONS)
+bool enableSession3 = input.bool(true, "Enable session 3", inline = "NC_S3",
+     group = GROUP_SESSIONS)
+string session3 = input.session("1800-0300", "Session 3", inline = "NC_S3",
+     group = GROUP_SESSIONS)
+
+string GROUP_ZONE = "04. Trading Zone"
+bool showZones = input.bool(true, "Show trading zones", group = GROUP_ZONE)
+float zonePaddingAtr = input.float(0.25, "Zone padding (ATR multiplier)", minval = 0.0,
+     step = 0.05, group = GROUP_ZONE)
+color aboveZoneColor = input.color(color.rgb(250, 240, 230), "Above EMA zone (Linen)",
+     group = GROUP_ZONE)
+color deepBelowZoneColor = input.color(color.rgb(230, 230, 250),
+     "Deep below EMA zone (Lavender)", group = GROUP_ZONE)
+int zoneTransparency = input.int(50, "Zone transparency", minval = 0, maxval = 100,
+     group = GROUP_ZONE)
+int maxStoredZones = input.int(100, "Maximum stored zones", minval = 1, maxval = 500,
+     group = GROUP_ZONE)
+bool showRiskLockBackground = input.bool(true, "Show RISK LOCK background",
+     group = GROUP_ZONE)
+color riskLockColor = input.color(color.rgb(255, 205, 210), "RISK LOCK color",
+     group = GROUP_ZONE)
+int riskLockTransparency = input.int(78, "RISK LOCK transparency", minval = 0,
+     maxval = 100, group = GROUP_ZONE)
+
+string GROUP_EVENTS = "05. Events"
+bool showArmEvents = input.bool(true, "Show ARM events", group = GROUP_EVENTS)
+bool showOnEvents = input.bool(true, "Show POLICY ALLOW events", group = GROUP_EVENTS)
+bool showOffEvents = input.bool(true, "Show POLICY BLOCK events", group = GROUP_EVENTS)
+color offEventColor = input.color(color.rgb(190, 55, 70), "OFF event color",
+     group = GROUP_EVENTS)
+bool showBearDropEvents = input.bool(true, "Show BEAR DROP events", group = GROUP_EVENTS)
+color bearDropEventColor = input.color(color.rgb(225, 125, 65), "BEAR DROP event color",
+     group = GROUP_EVENTS)
+bool showConsecutiveRedEvents = input.bool(true, "Show consecutive RED events",
+     group = GROUP_EVENTS)
+color consecutiveRedEventColor = input.color(color.rgb(210, 70, 70),
+     "Consecutive RED event color", group = GROUP_EVENTS)
+int maxStoredEvents = input.int(250, "Maximum stored events", minval = 10, maxval = 480,
+     group = GROUP_EVENTS)
+
+string GROUP_DISPLAY = "06. Display"
+bool showEma = input.bool(true, "Show EMA", group = GROUP_DISPLAY)
+color emaColor = input.color(color.rgb(45, 90, 190), "EMA color", group = GROUP_DISPLAY)
+bool showDashboard = input.bool(true, "Show dashboard", group = GROUP_DISPLAY)
+color dashboardBackground = input.color(color.white, "Dashboard background",
+     group = GROUP_DISPLAY)
+color dashboardText = input.color(color.rgb(45, 55, 70), "Dashboard text",
+     group = GROUP_DISPLAY)
+
+int STATE_OFF = 0
+int STATE_ARMING = 1
+int STATE_ACTIVE = 2
+int STATE_RISK_LOCK = 3
+int BRANCH_NONE = 0
+int BRANCH_ABOVE = 1
+int BRANCH_DEEP_BELOW = 2
+int DECISION_MILLISECONDS = 15 * 60 * 1000
+
+f_stateText(int state) =>
+    state == STATE_ACTIVE ? "ACTIVE" : state == STATE_ARMING ? "ARMING" :
+     state == STATE_RISK_LOCK ? "RISK LOCK" : "OFF"
+
+f_branchText(int branch) =>
+    branch == BRANCH_ABOVE ? "ABOVE_EMA" :
+     branch == BRANCH_DEEP_BELOW ? "DEEP_BELOW_EMA" : "NONE"
+
+f_bearDropSource(bool legacyVeto, bool twoBarVeto) =>
+    legacyVeto and twoBarVeto ? "BOTH" : legacyVeto ? "LEGACY" :
+     twoBarVeto ? "2-BAR" : "NONE"
+
+f_number(float value) =>
+    na(value) ? "n/a" : str.tostring(value, format.mintick)
+
+var array<box> zoneBoxes = array.new<box>()
+var array<label> eventLabels = array.new<label>()
+
+f_storeBox(box newBox) =>
+    array.push(zoneBoxes, newBox)
+    if array.size(zoneBoxes) > maxStoredZones
+        box.delete(array.shift(zoneBoxes))
+
+f_storeLabel(label newLabel) =>
+    array.push(eventLabels, newLabel)
+    if array.size(eventLabels) > maxStoredEvents
+        label.delete(array.shift(eventLabels))
+
+bool isM15Chart = timeframe.isminutes and timeframe.multiplier == 15
+bool barInSession1 = enableSession1 and
+     not na(time(timeframe.period, session1, sessionTimezone))
+bool barInSession2 = enableSession2 and
+     not na(time(timeframe.period, session2, sessionTimezone))
+bool barInSession3 = enableSession3 and
+     not na(time(timeframe.period, session3, sessionTimezone))
+bool inSelectedBarSession = barInSession1 or barInSession2 or barInSession3
+string currentBarSession = barInSession1 ? "SESSION 1" :
+     barInSession2 ? "SESSION 2" : barInSession3 ? "SESSION 3" : "OUTSIDE"
+
+// The decision takes effect at this bar's close, which is the next M15 bar's open.
+bool nextInSession1 = enableSession1 and
+     not na(time(timeframe.period, session1, sessionTimezone, bars_back = -1))
+bool nextInSession2 = enableSession2 and
+     not na(time(timeframe.period, session2, sessionTimezone, bars_back = -1))
+bool nextInSession3 = enableSession3 and
+     not na(time(timeframe.period, session3, sessionTimezone, bars_back = -1))
+bool newCycleSessionOpen = nextInSession1 or nextInSession2 or nextInSession3
+string nextCycleSession = nextInSession1 ? "SESSION 1" :
+     nextInSession2 ? "SESSION 2" : nextInSession3 ? "SESSION 3" : "OUTSIDE"
+float atrValue = ta.atr(atrPeriod)
+float emaValue = ta.ema(close, emaPeriod)
+float distance = close - emaValue
+bool dataReady = not na(atrValue) and not na(emaValue)
+bool atrOk = dataReady and atrValue >= minAtrPrice
+bool abovePass = dataReady and distance >= 0.0 and distance <= maxAboveEma
+bool deepBelowPass = dataReady and distance < -minBelowEma
+bool checklistPass = atrOk and (abovePass or deepBelowPass)
+int candidateBranch = abovePass ? BRANCH_ABOVE : deepBelowPass ? BRANCH_DEEP_BELOW : BRANCH_NONE
+
+// Legacy BEAR DROP: rolling PeakD-to-CurrentD decline plus candle/D filters.
+float currentD = distance
+float peakDistance = ta.highest(distance, bearDropLookback)
+float peakClose = ta.highest(close, bearDropLookback)
+float relativeDrop = peakDistance - currentD
+float priceDrop = peakClose - close
+float bearishBarSum = math.sum(close < open ? 1.0 : 0.0, bearishWindow)
+int bearishBarCount = int(bearishBarSum)
+int requiredBearishBars = math.min(minBearishBars, bearishWindow)
+bool distanceFalling3 = distance < distance[1] and distance[1] < distance[2]
+bool legacyBearDropDataReady = dataReady and
+     not na(distance[bearDropLookback - 1]) and not na(close[bearishWindow - 1])
+bool legacyBearDropVeto = enableLegacyBearDrop and legacyBearDropDataReady and
+     relativeDrop >= minRelativeDropPrice and bearishBarCount >= requiredBearishBars and
+     (not requireDistanceFalling or distanceFalling3)
+
+// Two-bar BEAR DROP: previous M15 high to the current confirmed M15 low.
+float bearDropPreviousHigh = high[1]
+float bearDropCurrentLow = low
+float twoBarDrop = bearDropPreviousHigh - bearDropCurrentLow
+bool twoBarBearDropDataReady = dataReady and not na(bearDropPreviousHigh) and
+     not na(bearDropCurrentLow)
+bool twoBarBearDropVeto = enableTwoBarBearDrop and twoBarBearDropDataReady and
+     twoBarDrop >= minTwoBarDropPrice
+bool bearDropVeto = enableBearDropVeto and
+     (legacyBearDropVeto or twoBarBearDropVeto)
+string bearDropSource = f_bearDropSource(legacyBearDropVeto, twoBarBearDropVeto)
+string bearDropReason = "M15_BEAR_DROP_" + bearDropSource + "_VETO"
+bool sessionChecklistPass = checklistPass and newCycleSessionOpen
+bool effectiveChecklistPass = sessionChecklistPass and not bearDropVeto
+
+string currentReason = not dataReady ? "M15_DATA_NOT_READY" :
+     bearDropVeto ? bearDropReason :
+     not newCycleSessionOpen ? "M15_OUTSIDE_NEW_CYCLE_SESSION" :
+     not atrOk ? "M15_ATR_BELOW_MIN" :
+     abovePass ? "M15_EMA_ABOVE_WITHIN_MAX" :
+     deepBelowPass ? "M15_EMA_BELOW_MORE_THAN_MIN" :
+     distance < 0.0 ? "M15_EMA_BELOW_WITHIN_MIN" : "M15_EMA_ABOVE_MORE_THAN_MAX"
+
+var int policyState = STATE_OFF
+var int consecutivePasses = 0
+var string armingSession = "OUTSIDE"
+var int activeConsecutiveRedCount = 0
+var int riskLockRemaining = 0
+var int consecutiveRecoveryBars = 0
+var bool previousBearDropVeto = false
+var int activeBranch = BRANCH_NONE
+var string activeSession = "OUTSIDE"
+var float activeZoneHigh = na
+var float activeZoneLow = na
+var float activeZoneAtr = na
+var box activeZoneBox = na
+
+var float lastDecisionClose = na
+var float lastDecisionAtr = na
+var float lastDecisionEma = na
+var float lastDecisionDistance = na
+var float lastDecisionPeakDistance = na
+var float lastDecisionRelativeDrop = na
+var float lastDecisionPeakClose = na
+var float lastDecisionPriceDrop = na
+var int lastDecisionBearishBars = 0
+var bool lastDecisionDistanceFalling = false
+var float lastDecisionBearDropPreviousHigh = na
+var float lastDecisionBearDropCurrentLow = na
+var float lastDecisionTwoBarDrop = na
+var bool lastDecisionLegacyBearDropVeto = false
+var bool lastDecisionTwoBarBearDropVeto = false
+var string lastDecisionBearDropSource = "NONE"
+var bool lastDecisionBearDropVeto = false
+var int lastDecisionConsecutiveRedCount = 0
+var bool lastDecisionConsecutiveRedBlock = false
+var bool lastDecisionNewCycleSessionOpen = false
+var string lastDecisionNewCycleSession = "OUTSIDE"
+var string lastDecisionActiveSession = "OUTSIDE"
+var string lastDecisionReason = "WAITING_FOR_M15_CLOSE"
+var bool lastDecisionPass = false
+var int lastDecisionTime = na
+
+bool armEvent = false
+bool onEvent = false
+bool offEvent = false
+bool bearDropEvent = false
+bool consecutiveRedEvent = false
+bool recoveryEvent = false
+bool sessionEndEvent = false
+
+bool emaSlopeNonDown = not na(emaValue[recoveryEmaSlopeBars]) and
+     emaValue >= emaValue[recoveryEmaSlopeBars]
+bool recoveryDRising = not na(distance[1]) and currentD > distance[1]
+bool recoveryCandidate = effectiveChecklistPass and
+     currentD >= atrValue * recoveryBufferAtr and
+     (not requireRecoveryDRising or recoveryDRising) and
+     (not requireRecoveryEmaNonDown or emaSlopeNonDown)
+
+// The state machine runs once at each confirmed standard M15 bar close.
+if isM15Chart and barstate.isconfirmed
+    // Consecutive RED is stateful and only samples candles while New Cycle is ON.
+    // OFF, ARMING and RISK LOCK do not inspect historical candle colors.
+    bool wasActive = policyState == STATE_ACTIVE
+    if wasActive and inSelectedBarSession
+        activeConsecutiveRedCount := close < open ? activeConsecutiveRedCount + 1 : 0
+    else
+        activeConsecutiveRedCount := 0
+
+    bool consecutiveRedBlock = enableConsecutiveRedBlock and wasActive and
+         inSelectedBarSession and
+         activeConsecutiveRedCount >= consecutiveRedBars
+    bool decisionPolicyBlock = bearDropVeto or consecutiveRedBlock
+    bool sessionExit = wasActive and
+         (not newCycleSessionOpen or nextCycleSession != activeSession)
+    bool decisionChecklistPass = sessionChecklistPass and not decisionPolicyBlock and
+         not sessionExit
+    string decisionReason = not dataReady ? "M15_DATA_NOT_READY" :
+         sessionExit ? "M15_NEW_CYCLE_SESSION_ENDED" :
+         bearDropVeto and consecutiveRedBlock ?
+         bearDropReason + "_AND_CONSECUTIVE_RED" :
+         bearDropVeto ? bearDropReason :
+         consecutiveRedBlock ? "M15_CONSECUTIVE_RED_POLICY_BLOCK" : currentReason
+
+    bool newBearDropEpisode = bearDropVeto and not previousBearDropVeto
+    previousBearDropVeto := bearDropVeto
+    lastDecisionClose := close
+    lastDecisionAtr := atrValue
+    lastDecisionEma := emaValue
+    lastDecisionDistance := currentD
+    lastDecisionPeakDistance := peakDistance
+    lastDecisionRelativeDrop := relativeDrop
+    lastDecisionPeakClose := peakClose
+    lastDecisionPriceDrop := priceDrop
+    lastDecisionBearishBars := bearishBarCount
+    lastDecisionDistanceFalling := distanceFalling3
+    lastDecisionBearDropPreviousHigh := bearDropPreviousHigh
+    lastDecisionBearDropCurrentLow := bearDropCurrentLow
+    lastDecisionTwoBarDrop := twoBarDrop
+    lastDecisionLegacyBearDropVeto := legacyBearDropVeto
+    lastDecisionTwoBarBearDropVeto := twoBarBearDropVeto
+    lastDecisionBearDropSource := bearDropSource
+    lastDecisionBearDropVeto := bearDropVeto
+    lastDecisionConsecutiveRedCount := activeConsecutiveRedCount
+    lastDecisionConsecutiveRedBlock := consecutiveRedBlock
+    lastDecisionNewCycleSessionOpen := newCycleSessionOpen
+    lastDecisionNewCycleSession := nextCycleSession
+    lastDecisionActiveSession := activeSession
+    lastDecisionReason := decisionReason
+    lastDecisionPass := decisionChecklistPass
+    lastDecisionTime := time_close
+
+    // Include the decision bar in the active zone before evaluating its exit.
+    if policyState == STATE_ACTIVE
+        activeZoneHigh := math.max(activeZoneHigh, high)
+        activeZoneLow := math.min(activeZoneLow, low)
+        activeZoneAtr := atrValue
+        float activePadding = math.max(activeZoneAtr * zonePaddingAtr, syminfo.mintick * 10.0)
+        if showZones and not na(activeZoneBox)
+            box.set_right(activeZoneBox, time_close)
+            box.set_top(activeZoneBox, activeZoneHigh + activePadding)
+            box.set_bottom(activeZoneBox, activeZoneLow - activePadding)
+
+    // Session end closes an ACTIVE zone at the decision time without starting RISK LOCK.
+    if sessionExit
+        sessionEndEvent := true
+        offEvent := true
+        if showOffEvents
+            string sessionTooltip = "NEW CYCLE SESSION ENDED" +
+                 "\nDecisionTime=" + str.format_time(time_close, "yyyy-MM-dd HH:mm",
+                 sessionTimezone) + " Timezone=" + sessionTimezone +
+                 "\nCurrentBarSession=" + currentBarSession +
+                 " NextSession=" + nextCycleSession +
+                 "\nClose=" + f_number(close) + " EMA=" + f_number(emaValue) +
+                 " D=" + f_number(currentD) + " ATR=" + f_number(atrValue)
+            label sessionLabel = label.new(x = time_close,
+                 y = close + activeZoneAtr * 0.35, text = "SESSION END\nPOLICY BLOCK",
+                 xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_down,
+                 color = color.new(offEventColor, 15), textcolor = color.black,
+                 size = size.tiny, tooltip = sessionTooltip)
+            f_storeLabel(sessionLabel)
+        policyState := STATE_OFF
+        consecutivePasses := 0
+        armingSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeBranch := BRANCH_NONE
+        activeSession := "OUTSIDE"
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    // Only BEAR DROP enters RISK LOCK. If BEAR DROP and consecutive RED occur
+    // together, the state locks because BEAR DROP is present.
+    else if bearDropVeto
+        bool enteringRiskLock = policyState != STATE_RISK_LOCK
+        bool blockingActiveZone = policyState == STATE_ACTIVE
+        bearDropEvent := bearDropVeto and (enteringRiskLock or newBearDropEpisode)
+        consecutiveRedEvent := consecutiveRedBlock
+        bool riskVetoEvent = bearDropEvent or consecutiveRedEvent
+        offEvent := blockingActiveZone
+
+        bool showRiskEvent = (bearDropEvent and showBearDropEvents) or
+             (consecutiveRedEvent and showConsecutiveRedEvents)
+        if riskVetoEvent and showRiskEvent
+            string riskName = bearDropVeto and consecutiveRedBlock ?
+                 "BEAR DROP + CONSECUTIVE RED" :
+                 bearDropVeto ? "BEAR DROP" : "CONSECUTIVE RED"
+            color riskEventColor = consecutiveRedBlock ? consecutiveRedEventColor :
+                 bearDropEventColor
+            string bearTooltip = riskName + " / RISK LOCK" +
+                 "\nBearDropSource=" + bearDropSource +
+                 " Legacy=" + (enableLegacyBearDrop ? "ON" : "OFF") +
+                 " 2-Bar=" + (enableTwoBarBearDrop ? "ON" : "OFF") +
+                 "\nLegacy: PeakD=" + f_number(peakDistance) +
+                 " CurrentD=" + f_number(currentD) +
+                 " RelativeDrop=" + f_number(relativeDrop) +
+                 " Min=" + f_number(minRelativeDropPrice) +
+                 "\nPeakClose=" + f_number(peakClose) +
+                 " Close=" + f_number(close) +
+                 " PriceDrop=" + f_number(priceDrop) +
+                 "\nBearish=" + str.tostring(bearishBarCount) + "/" +
+                 str.tostring(bearishWindow) + " D-falling3=" +
+                 (distanceFalling3 ? "YES" : "NO") +
+                 "\n2-Bar: PreviousHigh=" + f_number(bearDropPreviousHigh) +
+                 " CurrentLow=" + f_number(bearDropCurrentLow) +
+                 " Drop=" + f_number(twoBarDrop) +
+                 " Min=" + f_number(minTwoBarDropPrice) +
+                 "\nConsecutiveRED(active)=" +
+                 str.tostring(activeConsecutiveRedCount) + "/" +
+                 str.tostring(consecutiveRedBars) +
+                 "\nDetectSession=" + currentBarSession +
+                 " Timezone=" + sessionTimezone
+            label bearLabel = label.new(x = time_close,
+                 y = high + atrValue * 0.35,
+                 text = blockingActiveZone ? riskName + "\nPOLICY BLOCK" : riskName,
+                 xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_down,
+                 color = color.new(riskEventColor, 10), textcolor = color.black,
+                 size = size.tiny, tooltip = bearTooltip)
+            f_storeLabel(bearLabel)
+
+        policyState := STATE_RISK_LOCK
+        riskLockRemaining := riskLockBars
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeBranch := BRANCH_NONE
+        activeSession := "OUTSIDE"
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    // Consecutive RED only turns New Cycle OFF. It does not start RISK LOCK,
+    // cooldown or recovery. The counter is reset immediately with the OFF state.
+    else if consecutiveRedBlock
+        consecutiveRedEvent := true
+        offEvent := true
+        if showConsecutiveRedEvents
+            string redTooltip = "CONSECUTIVE RED / POLICY BLOCK" +
+                 "\nNew Cycle was ON; state changes ACTIVE -> OFF." +
+                 "\nCount=" + str.tostring(activeConsecutiveRedCount) + "/" +
+                 str.tostring(consecutiveRedBars) +
+                 "\nClose=" + f_number(close) + " EMA=" + f_number(emaValue) +
+                 " D=" + f_number(currentD) + " ATR=" + f_number(atrValue) +
+                 "\nNo RISK LOCK. Consecutive RED counting stops while OFF."
+            label redLabel = label.new(x = time_close,
+                 y = high + atrValue * 0.35,
+                 text = "CONSECUTIVE RED\nPOLICY BLOCK",
+                 xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_down,
+                 color = color.new(consecutiveRedEventColor, 10), textcolor = color.black,
+                 size = size.tiny, tooltip = redTooltip)
+            f_storeLabel(redLabel)
+        policyState := STATE_OFF
+        riskLockRemaining := 0
+        consecutiveRecoveryBars := 0
+        consecutivePasses := 0
+        armingSession := "OUTSIDE"
+        activeConsecutiveRedCount := 0
+        activeBranch := BRANCH_NONE
+        activeSession := "OUTSIDE"
+        activeZoneHigh := na
+        activeZoneLow := na
+        activeZoneAtr := na
+        activeZoneBox := na
+
+    else if policyState == STATE_RISK_LOCK
+        if riskLockRemaining > 0
+            riskLockRemaining -= 1
+
+        if riskLockRemaining == 0
+            if recoveryCandidate
+                consecutiveRecoveryBars += 1
+            else
+                consecutiveRecoveryBars := 0
+
+            if consecutiveRecoveryBars >= recoveryBars
+                recoveryEvent := true
+                armEvent := true
+                policyState := STATE_ARMING
+                consecutiveRecoveryBars := 0
+                // The recovery bar is ARM 1/N when N > 1. For N = 1, keep
+                // the counter at zero so recovery can never enable in-place.
+                consecutivePasses := confirmBars > 1 ? 1 : 0
+                armingSession := nextCycleSession
+                activeBranch := BRANCH_NONE
+                activeSession := "OUTSIDE"
+                activeZoneHigh := na
+                activeZoneLow := na
+                activeZoneAtr := na
+                activeZoneBox := na
+                lastDecisionReason := "M15_POLICY_RECOVERED_ARMING"
+                color recoveryColor = candidateBranch == BRANCH_DEEP_BELOW ?
+                     deepBelowZoneColor : aboveZoneColor
+                if showOnEvents or showArmEvents
+                    string recoveryArmText = "POLICY RECOVERED\nARM " +
+                         str.tostring(consecutivePasses) + "/" + str.tostring(confirmBars)
+                    string recoveryTooltip = "POLICY RECOVERED" +
+                         "\nNew Cycle remains OFF; waiting for confirm bars." +
+                         "\nARM=" + str.tostring(consecutivePasses) + "/" +
+                         str.tostring(confirmBars) +
+                         "\nClose=" + f_number(close) + " EMA=" + f_number(emaValue) +
+                         " D=" + f_number(distance) + " ATR=" + f_number(atrValue) +
+                         "\nRecoveryBuffer=" + f_number(atrValue * recoveryBufferAtr) +
+                         " D-rising=" + (recoveryDRising ? "YES" : "NO") +
+                         "\nEMA-check=" + (requireRecoveryEmaNonDown ? "ON" : "OFF") +
+                         " EMA-non-down=" + (emaSlopeNonDown ? "YES" : "NO")
+                    label recoveryLabel = label.new(x = time_close,
+                         y = low - atrValue * 0.35, text = recoveryArmText,
+                         xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_up,
+                         color = color.new(recoveryColor, 15), textcolor = color.black,
+                         size = size.tiny, tooltip = recoveryTooltip)
+                    f_storeLabel(recoveryLabel)
+
+    else if policyState == STATE_ACTIVE
+        if not checklistPass
+            offEvent := true
+            if showOffEvents
+                string offTooltip = "POLICY BLOCK\nClose=" + f_number(close) +
+                     " EMA=" + f_number(emaValue) + " D=" + f_number(distance) +
+                     "\nATR=" + f_number(atrValue) + " MinATR=" + f_number(minAtrPrice) +
+                     "\n" + currentReason
+                label offLabel = label.new(x = time_close,
+                     y = close + activeZoneAtr * 0.35, text = "POLICY BLOCK",
+                     xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_down,
+                     color = color.new(offEventColor, 15), textcolor = color.black,
+                     size = size.tiny, tooltip = offTooltip)
+                f_storeLabel(offLabel)
+            policyState := STATE_OFF
+            consecutivePasses := 0
+            armingSession := "OUTSIDE"
+            activeConsecutiveRedCount := 0
+            activeBranch := BRANCH_NONE
+            activeSession := "OUTSIDE"
+            activeZoneHigh := na
+            activeZoneLow := na
+            activeZoneAtr := na
+            activeZoneBox := na
+
+    else
+        if effectiveChecklistPass
+            if policyState == STATE_ARMING and armingSession != nextCycleSession
+                consecutivePasses := 0
+            if consecutivePasses == 0
+                armingSession := nextCycleSession
+            consecutivePasses += 1
+            policyState := STATE_ARMING
+            if consecutivePasses >= confirmBars
+                onEvent := true
+                policyState := STATE_ACTIVE
+                consecutivePasses := 0
+                activeBranch := candidateBranch
+                activeSession := nextCycleSession
+                armingSession := "OUTSIDE"
+                activeZoneHigh := close
+                activeZoneLow := close
+                activeZoneAtr := atrValue
+                color activeColor = activeBranch == BRANCH_DEEP_BELOW ?
+                     deepBelowZoneColor : aboveZoneColor
+                float startPadding = math.max(activeZoneAtr * zonePaddingAtr,
+                     syminfo.mintick * 10.0)
+                if showZones
+                    activeZoneBox := box.new(left = time_close,
+                         top = activeZoneHigh + startPadding,
+                         right = time_close + DECISION_MILLISECONDS,
+                         bottom = activeZoneLow - startPadding, xloc = xloc.bar_time,
+                         border_color = color.new(activeColor, 15), border_width = 1,
+                         bgcolor = color.new(activeColor, zoneTransparency))
+                    f_storeBox(activeZoneBox)
+                if showOnEvents
+                    string onTooltip = "POLICY ALLOW\n" + f_branchText(activeBranch) +
+                         "\nClose=" + f_number(close) + " EMA=" + f_number(emaValue) +
+                         " D=" + f_number(distance) + "\nATR=" + f_number(atrValue) +
+                         " MinATR=" + f_number(minAtrPrice) + "\n" + currentReason
+                    label onLabel = label.new(x = time_close,
+                         y = close - atrValue * 0.35, text = "POLICY ALLOW",
+                         xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_up,
+                         color = color.new(activeColor, 15), textcolor = color.black,
+                         size = size.tiny, tooltip = onTooltip)
+                    f_storeLabel(onLabel)
+            else
+                armEvent := true
+                if showArmEvents
+                    string armText = "ARM " + str.tostring(consecutivePasses) + "/" +
+                         str.tostring(confirmBars)
+                    string armTooltip = armText + "\nClose=" + f_number(close) +
+                         " EMA=" + f_number(emaValue) + " D=" + f_number(distance) +
+                         "\nATR=" + f_number(atrValue) + " MinATR=" +
+                         f_number(minAtrPrice) + "\n" + currentReason
+                    color armColor = candidateBranch == BRANCH_DEEP_BELOW ?
+                         deepBelowZoneColor : aboveZoneColor
+                    label armLabel = label.new(x = time_close,
+                         y = low - atrValue * 0.20, text = armText,
+                         xloc = xloc.bar_time, yloc = yloc.price, style = label.style_label_up,
+                         color = color.new(armColor, 30), textcolor = color.black,
+                         size = size.tiny, tooltip = armTooltip)
+                    f_storeLabel(armLabel)
+        else
+            consecutivePasses := 0
+            armingSession := "OUTSIDE"
+            policyState := STATE_OFF
+
+// Live extension is visual only. Decisions still use confirmed M15 bars exclusively.
+if isM15Chart and policyState == STATE_ACTIVE and not barstate.isconfirmed and
+     showZones and not na(activeZoneBox)
+    float liveHigh = math.max(activeZoneHigh, high)
+    float liveLow = math.min(activeZoneLow, low)
+    float liveAtr = na(atrValue) ? activeZoneAtr : atrValue
+    float livePadding = math.max(liveAtr * zonePaddingAtr, syminfo.mintick * 10.0)
+    box.set_right(activeZoneBox, time_close)
+    box.set_top(activeZoneBox, liveHigh + livePadding)
+    box.set_bottom(activeZoneBox, liveLow - livePadding)
+
+plot(showEma and isM15Chart ? emaValue : na, "EMA", color = emaColor, linewidth = 1)
+bgcolor(showRiskLockBackground and isM15Chart and policyState == STATE_RISK_LOCK ?
+     color.new(riskLockColor, riskLockTransparency) : na, title = "RISK LOCK")
+
+var table dashboard = table.new(position.top_left, 2, 17,
+     bgcolor = dashboardBackground, frame_color = color.rgb(205, 210, 218), frame_width = 1)
+
+if barstate.islast
+    if showDashboard
+        color stateColor = policyState == STATE_ACTIVE ? color.rgb(0, 120, 80) :
+             policyState == STATE_ARMING ? color.rgb(180, 110, 0) :
+             policyState == STATE_RISK_LOCK ? color.rgb(215, 90, 35) : color.rgb(190, 50, 60)
+        table.cell(dashboard, 0, 0, "CCBSN BOT 2 TV v1.11", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 0, "VISUAL ONLY", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 1, "Policy", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 1, f_stateText(policyState), text_color = stateColor,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 2, "Checklist / Confirm", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 2, (lastDecisionPass ? "PASS" : "FAIL") + " / " +
+             str.tostring(consecutivePasses) + "/" + str.tostring(confirmBars),
+             text_color = lastDecisionPass ? color.rgb(0, 120, 80) : color.rgb(190, 50, 60),
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 3, "Close / ATR" + str.tostring(atrPeriod),
+             text_color = dashboardText, bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 3, f_number(lastDecisionClose) + " / " +
+             f_number(lastDecisionAtr), text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 4, "EMA" + str.tostring(emaPeriod) + " / D",
+             text_color = dashboardText, bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 4, f_number(lastDecisionEma) + " / " +
+             f_number(lastDecisionDistance), text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 5, "ATR Min / EMA Gate", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 5, f_number(minAtrPrice) + " / [0,+" +
+             f_number(maxAboveEma) + "] or <-" + f_number(minBelowEma),
+             text_color = dashboardText, bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 6, "Legacy PeakD / RelDrop", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 6, f_number(lastDecisionPeakDistance) + " / " +
+             f_number(lastDecisionRelativeDrop) + " >= " + f_number(minRelativeDropPrice),
+             text_color = lastDecisionLegacyBearDropVeto ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 7, "Legacy Red / D falling", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 7, str.tostring(lastDecisionBearishBars) + "/" +
+             str.tostring(bearishWindow) + " / " +
+             (lastDecisionDistanceFalling ? "YES" : "NO"),
+             text_color = lastDecisionLegacyBearDropVeto ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 8, "2-Bar Prev High / Low", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 8, f_number(lastDecisionBearDropPreviousHigh) + " / " +
+             f_number(lastDecisionBearDropCurrentLow),
+             text_color = lastDecisionTwoBarBearDropVeto ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 9, "2-Bar Drop / Minimum", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 9, f_number(lastDecisionTwoBarDrop) + " / " +
+             f_number(minTwoBarDropPrice),
+             text_color = lastDecisionTwoBarBearDropVeto ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 10, "Bear Drop / Source", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 10, (enableBearDropVeto ? "ENABLED / " : "DISABLED / ") +
+             lastDecisionBearDropSource,
+             text_color = lastDecisionBearDropVeto ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 11, "New Cycle Session", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        bool sameActiveSession = lastDecisionActiveSession == "OUTSIDE" or
+             lastDecisionActiveSession == lastDecisionNewCycleSession
+        table.cell(dashboard, 1, 11, lastDecisionActiveSession + " -> " +
+             lastDecisionNewCycleSession,
+             text_color = lastDecisionNewCycleSessionOpen and sameActiveSession ?
+             color.rgb(0, 120, 80) : color.rgb(190, 50, 60),
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 12, "Consecutive RED", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 12, str.tostring(lastDecisionConsecutiveRedCount) + "/" +
+             str.tostring(consecutiveRedBars) +
+             (lastDecisionConsecutiveRedBlock ? " / BLOCK" : " / OK"),
+             text_color = lastDecisionConsecutiveRedBlock ? color.rgb(190, 50, 60) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 13, "Lock / Recovery", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 13, str.tostring(riskLockRemaining) + " / " +
+             str.tostring(consecutiveRecoveryBars) + "/" + str.tostring(recoveryBars),
+             text_color = policyState == STATE_RISK_LOCK ? color.rgb(215, 90, 35) : dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 14, "Policy Zone", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 14, f_branchText(activeBranch), text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 15, "Reason", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 15, lastDecisionReason, text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 0, 16, "Chart", text_color = dashboardText,
+             bgcolor = dashboardBackground, text_size = size.small)
+        table.cell(dashboard, 1, 16, isM15Chart ? "M15 OK" : "USE STANDARD M15",
+             text_color = isM15Chart ? color.rgb(0, 120, 80) : color.rgb(190, 50, 60),
+             bgcolor = dashboardBackground, text_size = size.small)
+    else
+        table.clear(dashboard, 0, 0, 1, 16)
+
+alertcondition(armEvent, "CCBSN ARM", "CCBSN Bot 2 M15 checklist started arming.")
+alertcondition(onEvent, "CCBSN POLICY ALLOW", "CCBSN Bot 2 M15 simulated trading zone started.")
+alertcondition(offEvent, "CCBSN POLICY BLOCK", "CCBSN Bot 2 M15 simulated trading zone ended.")
+alertcondition(bearDropEvent, "CCBSN BEAR DROP", "CCBSN Bot 2 detected a legacy and/or two-bar BEAR DROP and entered RISK LOCK.")
+alertcondition(consecutiveRedEvent, "CCBSN CONSECUTIVE RED", "CCBSN Bot 2 detected consecutive bearish M15 candles and turned policy OFF without RISK LOCK.")
+alertcondition(sessionEndEvent, "CCBSN SESSION END", "CCBSN Bot 2 ended the simulated trading zone because the New Cycle session closed.")
+alertcondition(recoveryEvent, "CCBSN POLICY RECOVERED", "CCBSN Bot 2 left RISK LOCK and started ARMING; New Cycle remains OFF until ConfirmBars passes.")

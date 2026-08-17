@@ -1,0 +1,40 @@
+id,area,scenario,expected,method,status
+CFG-01,Compile,"Compile source with MetaEditor64","0 errors and 0 warnings",Automated,PASS
+CFG-02,Inputs,"Invalid XAU quote digits","CONFIG SAFE MODE; no control command",Static contract,PASS
+CFG-03,Account,"Any demo/real account and server","No account/server allow-list rejection",Automated,PASS
+POL-01,Upside,"D=0; ATR=3","Upside entry PASS boundary",Truth-table,PASS
+POL-02,Upside,"D=20; ATR>=3","Upside entry PASS boundary",Truth-table,PASS
+POL-03,Upside,"D>20","Upside entry FAIL",Truth-table,PASS
+POL-04,Downside,"-20<D<0; ATR>=7; D rising","Downside Near entry PASS",Truth-table,PASS
+POL-05,Downside,"D=-20; ATR>=7; D rising","Downside Deep entry PASS boundary",Truth-table,PASS
+POL-06,Downside,"ATR<7","Downside entry FAIL",Static contract,PASS
+POL-07,Downside,"ACTIVE and D=+5","Downside hold PASS boundary",Truth-table,PASS
+POL-08,Downside,"ACTIVE and D>+5","Soft OFF by hold gate",Truth-table,PASS
+POL-09,Policy freeze,"ACTIVE policy crosses EMA","Family remains frozen until zone ends",Automated,PASS
+SES-01,Session,"Entry outside all sessions","No ARM/ACTIVE",Static contract,PASS
+SES-02,Session,"ACTIVE reaches its session boundary","Session End Soft OFF has first priority",Automated,PASS
+EVT-01,cRed,"Three red M15 candles of any morphology","Soft OFF at candle 3",Truth-table,PASS
+EVT-02,cRed,"Green candle interrupts red sequence","Counter resets",Truth-table,PASS
+EVT-03,BearTwo,"Two red candles; ATR each >10","Soft OFF at candle 2",Truth-table,PASS
+EVT-04,BearTwo,"ATR equals 10 on either candle","Counter resets; no BearTwo",Truth-table,PASS
+EVT-05,Low ATR,"Three ACTIVE candles; ATR each <7","Soft OFF at candle 3 for either policy",Truth-table,PASS
+EVT-06,Low ATR,"ATR equals 7","Counter resets",Truth-table,PASS
+EVT-07,Downside EMA,"Candle High-Low intersects EMA +/-0.2","Downside Soft OFF",Truth-table,PASS
+EVT-08,Downside EMA,"Upside candle intersects EMA band","No dEma event",Static contract,PASS
+EVT-09,Inactive,"Red/high ATR/low ATR while OFF or ARMING","All ACTIVE counters remain/reset to zero",Truth-table,PASS
+BD-01,Bear Drop,"Upside Legacy or 2-Bar reaches threshold","RISK LOCK for Upside lock bars",Automated,PASS
+BD-02,Bear Drop,"Downside Bear Drop","Threshold multiplied by 1.25; lock 1 bar",Automated,PASS
+BD-03,Priority,"Bear Drop overlaps BearTwo/cRed/Fall","Bear Drop owns transition; only path to RISK LOCK",Automated,PASS
+REC-01,Recovery,"Policy recovery during RISK LOCK","Return to ARMING; never directly ACTIVE",Automated,PASS
+REC-02,Recovery,"Bullish SCOB OR path","Return to ARMING with frozen risk policy",Automated,PASS
+CTL-01,New Cycle,"Policy state ACTIVE","Desired command is New Cycle ON",Automated,PASS
+CTL-02,New Cycle,"Any state other than ACTIVE","Desired command is New Cycle OFF",Automated,PASS
+CTL-03,Regression,"Compare transport section with audited v2.18","Functionally identical except policy color helper",Automated,PASS
+CTL-04,Persistence,"64-bit pending ticket storage","HI/LO storage retained",Automated,PASS
+CTL-05,Handover,"Remove EA or choose Manual Handover","Cancel ownership/pending control and return manual control",Static contract,PASS
+CTL-06,Drift,"New CCBSN position while policy OFF","Drift alert and bounded OFF reassert",Static contract,PASS
+CSV-01,Audit,"Compare FileWrite header/data arity","64 columns on both calls",Automated,PASS
+VIS-01,Display,"Fresh default inputs","Dashboard and 16 event categories OFF",Automated,PASS
+VIS-02,History,"Trading Zone history raised","Validation accepts up to 100000 M15 bars",Automated,PASS
+RUN-01,Terminal smoke,"Attach EX5 to broker XAUUSD M15 in Visual Only mode","No init/data/object runtime errors",Manual terminal,PENDING_USER_FEED
+RUN-02,CCBSN integration,"Run controller with matching Magic 9696 on demo","ON/OFF tickets consumed and ACK logged",Manual demo,PENDING_USER_DEMO

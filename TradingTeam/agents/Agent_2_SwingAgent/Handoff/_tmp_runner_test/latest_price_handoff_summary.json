@@ -1,0 +1,35 @@
+{
+  "schema_version": "price_to_swing_handoff_v1",
+  "generated_at_utc": "2026-04-01T05:45:44+00:00",
+  "producer": "Agent_1_PriceAgent",
+  "consumer": "Agent_2_SwingAgent",
+  "source_price_schema_version": "price_record_v1",
+  "min_sequence_records": 20,
+  "default_action": "SwingAgent must only run Bob Volman filtering on assets with bob_volman_intraday_ready == true.",
+  "markets": {
+    "crypto": {
+      "asset_count": 50,
+      "normalized_read_ready_count": 50,
+      "structure_context_ready_count": 0,
+      "bob_volman_intraday_ready_count": 0,
+      "default_consumption_mode": "hold",
+      "market_file": "TradingTeam/agents/Agent_2_SwingAgent/Handoff/_tmp_runner_test/markets/crypto.json"
+    },
+    "cfd": {
+      "asset_count": 0,
+      "normalized_read_ready_count": 0,
+      "structure_context_ready_count": 0,
+      "bob_volman_intraday_ready_count": 0,
+      "default_consumption_mode": "hold",
+      "market_file": "TradingTeam/agents/Agent_2_SwingAgent/Handoff/_tmp_runner_test/markets/cfd.json"
+    },
+    "vn_stock": {
+      "asset_count": 50,
+      "normalized_read_ready_count": 50,
+      "structure_context_ready_count": 0,
+      "bob_volman_intraday_ready_count": 0,
+      "default_consumption_mode": "hold",
+      "market_file": "TradingTeam/agents/Agent_2_SwingAgent/Handoff/_tmp_runner_test/markets/vn_stock.json"
+    }
+  }
+}

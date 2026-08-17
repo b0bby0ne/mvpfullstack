@@ -1,0 +1,14 @@
+test_id;level;method;expected;result;status
+SYNC-01;BLOCKER;Source audit;Policy OFF forces OFF command even when ACK cache is already NC DISABLED;Force path uses g_offReassertRequested;PASS
+SYNC-02;BLOCKER;Source audit;Existing Magic 9196 chain is monitored but not auto-closed;State OFF EXISTING CHAIN and no close/Stop Buy call;PASS
+SYNC-03;BLOCKER;Source audit;Position count transition greater-than-zero to zero arms guard and requests OFF;OFF_FLAT_GUARD_ARMED plus reassert request;PASS
+SYNC-04;BLOCKER;Source audit;New Magic 9196 position after flat guard creates drift event and OFF retry;NC_DRIFT_DETECTED plus Alert and reassert request;PASS
+SYNC-05;HIGH;Source audit;OFF remains enforced while policy stays OFF;Periodic reassert interval 60 seconds;PASS
+SYNC-06;HIGH;Source audit;Manual Magic 0 or another Magic is ignored;Snapshot filters symbol and InpCCBSNMagic;PASS
+SYNC-07;HIGH;Source audit;AutoTrading temporary OFF does not leave controller permanently stuck;Retryable environment error recovers when permissions return;PASS
+SYNC-08;HIGH;Source audit;Critical command execution error is not blindly recovered;Only four explicit environment errors are retryable;PASS
+UI-01;MEDIUM;Source audit;Dashboard distinguishes ACK from actual position synchronization;NC Command ACK plus CCBSN Pos/Lots plus Sync;PASS
+CSV-01;MEDIUM;Source audit;Audit captures position and drift context;v3_28 CSV includes count volume sync state drift count;PASS
+BUILD-01;BLOCKER;MetaEditor compile;0 errors and 0 warnings;0 errors and 0 warnings;PASS
+LIVE-01;BLOCKER;MT5 controlled test;Close active chain while policy OFF and verify OFF is consumed before new cycle;Requires terminal observation;NOT_RUN
+LIVE-02;BLOCKER;MT5 controlled test;Inject Magic 9196 position after OFF FLAT GUARDED and verify alert/reassert;Requires demo or controlled account;NOT_RUN

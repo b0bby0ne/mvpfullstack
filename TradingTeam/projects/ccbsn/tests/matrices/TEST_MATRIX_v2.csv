@@ -1,0 +1,36 @@
+id;area;setup;action;expected;status
+V2-001;Build;MetaEditor64;Compile CCBSN_Trading_Zone_Controller_v2.mq5;0 errors and 0 warnings;PASS
+V2-002;Base policy;Inside one enabled session and ATR/EMA PASS;Close two consecutive M15 bars;ARM 1/2 then ACTIVE and desired NC ON;REQUIRES_MT5_REPLAY
+V2-003;Confirmation;ARM 1/2;Close one checklist FAIL bar;Counter resets and desired NC remains OFF;REQUIRES_MT5_REPLAY
+V2-004;Legacy Bear Drop;Legacy formula meets all enabled filters;Close M15 bar;ACTIVE ends and state becomes RISK_LOCK;REQUIRES_MT5_REPLAY
+V2-005;Two-bar Bear Drop;High[1]-Low[0] is at least 30;Close M15 bar;State becomes RISK_LOCK with source 2-BAR;REQUIRES_MT5_REPLAY
+V2-006;Combined Bear Drop;Legacy and 2-Bar are both true;Close M15 bar;One risk episode with source BOTH;REQUIRES_MT5_REPLAY
+V2-007;Risk recovery;Risk lock has just started;Feed two non-bear bars then one valid recovery bar;State becomes ARMING and NC stays OFF;REQUIRES_MT5_REPLAY
+V2-008;Recovery confirm;State is recovered ARM 1/2;Close next PASS bar in same session;State becomes ACTIVE and desired NC ON;REQUIRES_MT5_REPLAY
+V2-009;Consecutive RED;State ACTIVE;Close three bearish M15 bars in active session;State becomes OFF without RISK_LOCK;REQUIRES_MT5_REPLAY
+V2-010;RED scope;State OFF ARMING or RISK_LOCK;Feed bearish bars;RED counter remains zero;REQUIRES_MT5_REPLAY
+V2-011;Session boundary;State ACTIVE in session 1;Reach 12:00 decision boundary;Zone ends and NC OFF even though session 2 starts at 12:00;REQUIRES_MT5_REPLAY
+V2-012;Outside session;No selected session is open;Feed checklist PASS bars;No ARM and no NC ON;REQUIRES_MT5_REPLAY
+V2-013;Controller ACK;Policy changes OFF to ACTIVE;Allow CCBSN to consume SELL LIMIT command;Ticket clears and state is NC ENABLED;REQUIRES_DEMO_ACCOUNT
+V2-014;OFF resend guard;Policy OFF is confirmed and chain becomes flat;Keep state unchanged;No redundant OFF command is sent;REQUIRES_DEMO_ACCOUNT
+V2-015;Drift guard;Policy OFF flat guard is armed;Open a new Magic 9196 position;One OFF reassert is sent and drift is audited;REQUIRES_DEMO_ACCOUNT
+V2-016;Manual handover;Remove Bot 2 or select MANUAL_HANDOVER;Complete handover;Bot 1 New Cycle control is manually operable;REQUIRES_DEMO_ACCOUNT
+V2-017;Visual retention;Set InpMaxClosedZones to 500;Generate more than 500 completed zones;Old objects are bounded and terminal remains responsive;REQUIRES_MT5_REPLAY
+V2-018;Quote validation;Attach to matching 2-digit and 3-digit XAU symbols;Select corresponding quote input;EA initializes only when digits match;REQUIRES_MT5
+V2-019;Event master switch;Set InpShowAllChartEvents false;Reinitialize and process events;No chart event label or event line is created while policy and CSV continue;REQUIRES_MT5_REPLAY
+V2-020;Event category switches;Disable one category at a time;Trigger corresponding event;Only disabled category is hidden and other event categories remain visible;REQUIRES_MT5_REPLAY
+V2-021;Custom event names;Change every InpEventName input and rebuild history;Trigger corresponding events;Chart labels use configured names and ARM keeps dynamic count without changing CSV event IDs;REQUIRES_MT5_REPLAY
+V2-022;Dashboard switch;Set InpShowDashboard false and reinitialize;Process policy and control events;No PANEL objects are shown while policy control event zones and CSV remain active;REQUIRES_MT5
+V2-023;Risk Lock color;Use default InpRiskLockColor and trigger Bear Drop;Enter RISK_LOCK;Risk shade is LightPink and event behavior is unchanged;REQUIRES_MT5_REPLAY
+V2-024;Recovery state scope;State is OFF ARMING or ACTIVE and a valid Bullish SCOB forms;Close current M15 bar;Recovery is not evaluated and state does not change because of SCOB;REQUIRES_MT5_REPLAY
+V2-025;SCOB recovery OR;State is RISK_LOCK cooldown is zero session is open and policy recovery is false;Form bearish bar then bullish sweep bar then bullish close above previous high;State becomes ARMING with source SCOB and New Cycle remains OFF;REQUIRES_MT5_REPLAY
+V2-026;Legacy recovery OR;State is RISK_LOCK cooldown is zero session is open and policy recovery is true without SCOB;Close decision bar;State becomes ARMING with source POLICY;REQUIRES_MT5_REPLAY
+V2-027;Combined recovery;State is RISK_LOCK cooldown is zero and both recovery paths pass;Close decision bar;State becomes ARMING with source POLICY+SCOB;REQUIRES_MT5_REPLAY
+V2-028;SCOB outside session;State is RISK_LOCK cooldown is zero outside all enabled sessions and Bullish SCOB is valid;Close decision bar;State remains RISK_LOCK and recovery count stays zero;REQUIRES_MT5_REPLAY
+V2-029;Bear Drop priority;State is RISK_LOCK and same bar satisfies Bullish SCOB and Bear Drop;Close decision bar;Bear Drop refreshes Risk Lock and recovery is not evaluated;REQUIRES_MT5_REPLAY
+V2-030;Trading Zone history depth;Set Trading Zone history to 100 bars and Risk Lock history to 1000 bars;Rebuild chart;Trading zones are restricted to 100 bars while Risk Lock zones remain available for 1000 bars;REQUIRES_MT5_REPLAY
+V2-031;Risk Lock history depth;Set Risk Lock history to 100 bars and Trading Zone history to 1000 bars;Rebuild chart;Risk Lock zones are restricted to 100 bars while Trading Zones remain available for 1000 bars;REQUIRES_MT5_REPLAY
+V2-032;History renderer isolation;Toggle Trading Zone Risk Lock and Event history independently;Reinitialize after each change;Only selected object class changes and reconstructed policy desired command remains identical;REQUIRES_MT5_REPLAY
+V2-033;History cutoff clipping;Create a zone before the selected history cutoff that continues through it;Rebuild chart;Rectangle starts at visual cutoff and does not extend into excluded history;REQUIRES_MT5_REPLAY
+V2-034;Open zone with history disabled;Disable both zone history switches while current state is ACTIVE or RISK_LOCK;Reinitialize;Closed history is hidden but the current live state visualization is shown;REQUIRES_MT5_REPLAY
+V2-035;Independent object caps;Set stored Trading Zones and Risk Locks to different small values;Generate more completed objects;Each class respects its own cap without deleting the other class;REQUIRES_MT5_REPLAY
