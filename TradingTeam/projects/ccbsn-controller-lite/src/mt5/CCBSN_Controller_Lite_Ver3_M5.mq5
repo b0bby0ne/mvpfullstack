@@ -1,0 +1,5388 @@
+//+------------------------------------------------------------------+
+//|                CCBSN_Controller_Lite_Ver3_M5.mq5 v1.0.0          |
+//|          CCBSN Ver3 cycle control + M5 scaled market policy      |
+//+------------------------------------------------------------------+
+#property strict
+#property copyright "TradingTeam"
+#property version   "1.000"
+#property description "CCBSN Controller Lite - Ver3 policy and cycle control on closed M5 bars"
+#property description "Dual Policy, Bear Drop/Risk Lock, dashboard, checklist and New Cycle handshake."
+
+#include <Trade/Trade.mqh>
+
+enum ENUM_VISUAL_STATE
+  {
+   VISUAL_STATE_OFF = 0,
+   VISUAL_STATE_ARMING,
+   VISUAL_STATE_ACTIVE,
+   VISUAL_STATE_RISK_LOCK,
+   VISUAL_STATE_DATA_ERROR
+  };
+
+enum ENUM_POLICY_SESSION
+  {
+   POLICY_SESSION_OUTSIDE = 0,
+   POLICY_SESSION_1,
+   POLICY_SESSION_2,
+   POLICY_SESSION_3
+  };
+
+enum ENUM_POLICY_FAMILY
+  {
+   POLICY_FAMILY_NONE = 0,
+   POLICY_FAMILY_UPSIDE,
+   POLICY_FAMILY_DOWNSIDE
+  };
+
+enum ENUM_CCBSN_CONTROL_MODE
+  {
+   CCBSN_CONTROL_VISUAL_ONLY = 0,
+   CCBSN_CONTROL_ENABLED,
+   CCBSN_CONTROL_MANUAL_HANDOVER
+  };
+
+enum ENUM_CCBSN_COMMAND
+  {
+   CCBSN_COMMAND_NONE = 0,
+   CCBSN_COMMAND_NEW_CYCLE_ON,
+   CCBSN_COMMAND_NEW_CYCLE_OFF
+  };
+
+enum ENUM_COMMAND_CANCEL_REASON
+  {
+   COMMAND_CANCEL_NONE = 0,
+   COMMAND_CANCEL_SUPERSEDED,
+   COMMAND_CANCEL_TIMEOUT,
+   COMMAND_CANCEL_CONTRACT_MISMATCH
+  };
+
+enum ENUM_XAU_QUOTE_DIGITS
+  {
+   XAU_QUOTE_2_DIGITS = 2,
+   XAU_QUOTE_3_DIGITS = 3
+  };
+
+enum ENUM_CCBSN_CONTROL_STATE
+  {
+   CCBSN_CONTROL_DISABLED = 0,
+   CCBSN_CONTROL_BOT1_MANUAL,
+   CCBSN_CONTROL_UNKNOWN,
+   CCBSN_CONTROL_ON_PENDING,
+   CCBSN_CONTROL_OFF_PENDING,
+   CCBSN_CONTROL_ON_CONFIRMED,
+   CCBSN_CONTROL_OFF_CONFIRMED,
+   CCBSN_CONTROL_ERROR
+  };
+
+input group "01. Symbol & Quote"
+input string InpExpectedSymbolPrefix  = "XAUUSD"; // Allows broker suffixes such as XAUUSDm
+input ENUM_XAU_QUOTE_DIGITS InpXAUQuoteDigits = XAU_QUOTE_2_DIGITS;
+
+input group "02. Ver3 Core on M5"
+input double InpM5PriceScale          = 0.50;     // 1.00 restores raw Ver3 price gates
+input int    InpATRPeriod             = 20;
+input double InpMinATRPrice           = 3.0;      // Ver3 base value before M5 scale
+input int    InpEMAPeriod             = 23;
+
+input group "03. UpsidePolicy"
+input bool   InpEnableUpsidePolicy       = true;
+input double InpUpsideMaxAboveEMAPrice   = 20.0; // Entry/hold: 0 <= D <= maximum
+input int    InpUpsideConfirmBars        = 2;
+input int    InpUpsideRiskLockBars       = 2;
+
+input group "04. DownsidePolicy"
+input bool   InpEnableDownsidePolicy       = true;
+input double InpDownsideMinATRPrice         = 7.0;
+input double InpDownsideBandBoundary        = 20.0;
+input bool   InpEnableDownsideNearEntry      = true;  // -Boundary < D < 0
+input bool   InpEnableDownsideDeepEntry      = true;  // D <= -Boundary
+input double InpDownsideHoldMaxAboveEMA       = 5.0;
+input int    InpDownsideConfirmBars           = 2;
+input bool   InpDownsideRequireDRising        = true;
+input bool   InpDownsideRequireEMANonDown     = false;
+input int    InpDownsideEMASlopeBars          = 3;
+input double InpDownsideBearDropMultiplier    = 1.25;
+input int    InpDownsideRiskLockBars          = 1;
+input bool   InpEnableDownsideEMAApproachBlock = true;
+input double InpDownsideEMAApproachTolerance   = 0.2;
+
+input group "05. Bear Drop Protection"
+input bool   InpEnableBearDrop             = true;
+input bool   InpEnableLegacyBearDrop       = true;
+input int    InpBearDropLookback           = 8;
+input double InpMinRelativeDropPrice       = 30.0;
+input int    InpBearishWindow              = 3;
+input int    InpMinBearishBars             = 2;
+input bool   InpRequireDistanceFalling     = true;
+input bool   InpEnableTwoBarBearDrop       = true;
+input double InpMinTwoBarDropPrice         = 30.0;
+
+input group "06. Active Zone Candle OFF"
+input bool   InpEnableConsecutiveRedBlock  = true;
+input int    InpConsecutiveRedBars         = 3;
+input bool   InpEnableBearTwoBlock          = true;
+input double InpBearTwoATRThreshold         = 10.0; // Strictly above on both red bars
+input bool   InpEnableActiveLowATRBlock     = true;
+input double InpActiveLowATRThreshold       = 7.0;  // Strictly below
+input int    InpActiveLowATRBars            = 3;
+input bool   InpEnableBearishPatternBlock  = true;
+input double InpBearishBodyMultiplier      = 2.0;  // Current body >= multiplier * previous body
+input bool   InpEnableDenyBlock             = true;
+input int    InpDenyLookback                = 8;    // Prior candles before the upthrust
+input double InpDenySweepBufferATR          = 0.05; // Upthrust High above prior High
+input double InpDenyMinUpperWickBody        = 0.50; // Upthrust upper wick/body
+input double InpDenyBodyMultiplier          = 1.00; // Deny body/upthrust body
+input double InpDenyMinBodyOverlapPercent   = 60.0; // Deny overlap of upthrust body
+input bool   InpDenyRequireCloseBelowHigh   = true; // Deny Close returns below prior High
+input bool   InpEnableReverseBlock          = true;
+input double InpReversePinMinUpperWickBody  = 2.0;  // Prior pin upper wick/body
+input double InpReversePinMaxLowerWickBody  = 1.0;  // Prior pin lower wick/body
+input double InpReverseBodyMultiplier       = 1.0;  // Red body must be strictly larger
+input bool   InpEnableFallBlock             = true;
+input double InpFallRangeMultiplier         = 1.00; // High-Low range vs prior 3-bar cluster
+
+input group "07. Continuous New Cycle Session (broker server time)"
+input int    InpSessionTimeShiftMinutes    = 0;       // Shift applied to broker bar time
+input bool   InpEnableSession1             = true;
+input string InpSession1                   = "0600-0300";
+input bool   InpEnableSession2             = false;
+input string InpSession2                   = "0300-0400";
+input bool   InpEnableSession3             = false;
+input string InpSession3                   = "0400-0500";
+
+input group "08. Bear Drop Recovery"
+input int    InpRecoveryBars               = 1;
+input double InpRecoveryBufferATR          = 0.0;
+input bool   InpRequireRecoveryDRising     = true;
+input bool   InpRequireRecoveryEMANonDown  = false;
+input int    InpRecoveryEMASlopeBars       = 3;
+input bool   InpEnableBullishSCOBRecovery  = true; // OR path, evaluated only in RISK_LOCK
+
+input group "09. Ownership & CCBSN Control"
+input ENUM_CCBSN_CONTROL_MODE InpControlMode = CCBSN_CONTROL_VISUAL_ONLY;
+input ulong  InpCCBSNMagic            = 9696;     // Editable; must match the target CCBSN instance
+input ulong  InpControllerMagic       = 996970;   // Must differ from CCBSN Magic and other controllers
+input bool   InpForceSyncOnInit        = false;    // Explicit troubleshooting only
+
+input group "10. Display - Chart & Dashboard"
+input bool   InpApplyChartTheme       = true;
+input bool   InpShowDashboard         = true;
+input bool   InpShowEventDashboard    = true; // Complete checklist at bottom-left
+input color  InpDashboardBackgroundColor = clrWhite;
+input color  InpDashboardTextColor       = C'45,55,70';
+
+input group "11. Trading Zone History (Visual Only)"
+input bool   InpDrawTradingZoneHistory = true;   // Draw closed Trading Zone history
+input int    InpTradingZoneHistoryBars = 4500;   // Trading Zone history bars (M5)
+input int    InpMaxStoredTradingZones  = 100;    // Max stored Trading Zones (1..500)
+
+input group "12. Display - Risk Lock History"
+input bool   InpDrawRiskLockShade     = true;
+input color  InpRiskLockColor         = clrLightPink;
+input bool   InpDrawRiskLockHistory   = true;
+input int    InpRiskLockHistoryBars   = 4500;    // Closed M5 decisions to render
+input int    InpMaxStoredRiskLocks    = 100;     // Valid range 1..500
+
+input group "13. Display - EMA History"
+input bool   InpShowEMAOnChart        = true;
+input int    InpEMADisplayBars        = 1200;
+
+input group "14. Display - Event History & Visibility"
+input bool   InpDrawEventHistory         = true;  // History gate; categories remain OFF by default
+input int    InpEventHistoryBars         = 4500;
+input int    InpMaxEventMarkers          = 250;
+input bool   InpShowAllChartEvents       = false; // Show every category; individual switches also work alone
+input bool   InpShowArmEvents            = false;
+input bool   InpShowPolicyAllowEvents    = false;
+input bool   InpShowPolicyBlockEvents    = false;
+input bool   InpShowBearDropEvents       = false;
+input bool   InpShowConsecutiveRedEvents = false;
+input bool   InpShowBearTwoEvents        = false;
+input bool   InpShowDownsideEMAEvents    = false;
+input bool   InpShowActiveLowATREvents   = false;
+input bool   InpShowBearishPatternEvents = false;
+input bool   InpShowDenyEvents           = false;
+input bool   InpShowReverseEvents        = false;
+input bool   InpShowFallEvents           = false;
+input bool   InpShowSessionEndEvents     = false;
+input bool   InpShowRecoveryEvents       = false;
+input bool   InpShowControlAckEvents     = false;
+input bool   InpShowDriftEvents          = false;
+
+input group "15. Text - Dashboard"
+input string InpTextPanelTitle      = "CCBSN CONTROLLER LITE | VER3 LOGIC M5";
+input string InpTextCycleStatus     = "CYCLE STATUS";
+input string InpTextChecklist       = "Checklist";
+input string InpTextEvent           = "Last Event";
+input string InpTextSession         = "SESSION";
+input string InpTextPerformance     = "PERFORMANCE";
+input string InpTextEventDashboard  = "EVENT CHECKLIST";
+
+input group "16. Chart Event Names - Editable"
+input string InpEventNameArm            = "ARM";             // ARM name; count N/Total is added
+input string InpEventNamePolicyAllow    = "pAllow";     // New Cycle policy ON name
+input string InpEventNamePolicyBlock    = "pBlock";     // New Cycle policy OFF name
+input string InpEventNameBearDrop       = "BearD";      // Bear Drop protection name
+input string InpEventNameRiskLock       = "rLock";      // Risk Lock state name
+input string InpEventNameConsecutiveRed = "cRed";       // Consecutive red block name
+input string InpEventNameBearTwo       = "BearTwo";
+input string InpEventNameDownsideEMA   = "dEma";
+input string InpEventNameActiveLowATR  = "atr3";
+input string InpEventNameBearishEngulfing = "bEngulf";  // Bearish engulfing block name
+input string InpEventNameBearishPinBar    = "bPin";     // Bearish pin bar block name
+input string InpEventNameDeny             = "bDeny";    // Upthrust rejection block name
+input string InpEventNameReverse          = "bReverse"; // Pin bar then larger bearish body
+input string InpEventNameFall             = "bFall";    // 3-bar cluster downside break
+input string InpEventNameSessionEnd     = "sEnd";       // Session boundary name
+input string InpEventNameRecovered      = "pRecovered"; // Recovery name
+input string InpEventNameNCEnabled      = "ncEnabled";  // CCBSN ON ACK name
+input string InpEventNameNCDisabled     = "ncDisabled"; // CCBSN OFF ACK name
+input string InpEventNameNCDrift        = "ncDrift";    // OFF drift warning name
+input string InpEventNameNCSync         = "ncSync";     // Desired/ACK consistency status
+
+input group "17. Audit"
+input bool   InpWriteCsvAudit         = true;
+
+input group "18. External Monitor - Read Only"
+input bool   InpEnableExternalMonitor  = false;
+input string InpMonitorStatusFile      = "CCBSN\\controller_lite_v3_m5_status_v1.json";
+input int    InpMonitorHeartbeatSeconds = 5;
+
+// Fixed policy and protocol values are intentionally not user inputs.
+// This keeps the MT5 Inputs tab operational, safe, and reproducible.
+const double InpCommandPrice              = 888888.0;
+const double InpCommandVolume             = 0.0; // Always use symbol minimum volume
+const int    InpCommandTimeoutSeconds     = 30;
+const int    InpCommandRetryMilliseconds  = 2000;
+const int    InpCycleSyncMaxRetries       = 3;
+const bool   InpDeleteCommandOnTimeout    = true;
+const bool   InpPersistConfirmedState     = true;
+const bool   InpSingleControllerLock      = true;
+const int    InpControllerLockStaleSeconds = 15;
+const bool   InpManualHandoverOnRemove    = true;
+const int    InpDriftAlertCooldownSeconds = 30;
+
+const color InpChartBackgroundColor = clrLightYellow;
+const color InpChartForegroundColor = C'25,30,40';
+const color InpChartGridColor       = C'230,233,238';
+const color InpChartBullColor       = C'0,145,105';
+const color InpChartBearColor       = C'215,65,75';
+const color InpChartLineColor       = C'55,65,81';
+const color InpChartVolumeColor     = C'150,158,170';
+const color InpChartBidColor        = C'65,105,170';
+const color InpChartAskColor        = C'205,65,75';
+const color InpChartLastColor       = C'110,85,165';
+const color InpChartStopLevelColor  = C'190,65,90';
+const color InpPanelBorderColor     = C'205,210,218';
+const color InpEMALineColor         = C'45,90,190';
+const ENUM_LINE_STYLE InpEMALineStyle = STYLE_DASH;
+const int InpEMALineWidth           = 1;
+const int InpEMAOpacityPercent      = 70;
+
+const double InpZonePaddingATR      = 0.25;
+const color InpUpsideZoneColor      = clrLinen;
+const color InpDownsideZoneColor    = clrLavender;
+const color InpOffEventColor        = C'190,55,70';
+const color InpBearDropEventColor   = C'225,125,65';
+const color InpConsecutiveRedColor  = C'210,70,70';
+const double BEARISH_PIN_UPPER_WICK_BODY_RATIO = 2.0;
+const int InpZoneOpacityPercent     = 50;
+const int InpEventOpacityPercent    = 50;
+const int InpRiskLockOpacityPercent = 22;
+
+const int InpTimerMilliseconds      = 250;
+const int VISUAL_REFRESH_MILLISECONDS = 500;
+const int DASHBOARD_REFRESH_MILLISECONDS = 1000;
+const int CONTROL_IDLE_MILLISECONDS = 1000;
+const int LOCK_REFRESH_MILLISECONDS = 1000;
+const int PERFORMANCE_REPORT_MILLISECONDS = 60000;
+const string InpCsvFileName         = "CCBSN_Controller_Lite_Ver3_M5_Events.csv";
+const bool InpKeepObjectsOnRemove   = false;
+const ulong TICKET_STORAGE_BASE     = 1000000000;
+const string MONITOR_SCHEMA_VERSION = "ccbsn-lite-monitor-status.v1";
+
+const ENUM_TIMEFRAMES DECISION_TIMEFRAME = PERIOD_M5;
+const string POLICY_ID      = "ccbsn-controller-lite-ver3-m5";
+const string POLICY_VERSION = "1.0.1-mt5-autotrading-resync";
+
+CTrade g_trade;
+
+int g_atrHandle = INVALID_HANDLE;
+int g_emaHandle = INVALID_HANDLE;
+bool g_configurationValid = true;
+string g_configurationError = "NONE";
+
+string g_objectPrefix = "";
+datetime g_lastM5BarTime = 0;
+datetime g_lastDecisionTime = 0;
+int g_historicalShift = 0;
+datetime g_tradingZoneHistoryCutoff = 0;
+datetime g_riskLockHistoryCutoff = 0;
+
+ENUM_VISUAL_STATE g_state = VISUAL_STATE_OFF;
+int g_consecutivePassCount = 0;
+ENUM_POLICY_FAMILY g_armingPolicy = POLICY_FAMILY_NONE;
+ENUM_POLICY_FAMILY g_activePolicy = POLICY_FAMILY_NONE;
+ENUM_POLICY_FAMILY g_riskPolicy = POLICY_FAMILY_NONE;
+ENUM_POLICY_SESSION g_armingSession = POLICY_SESSION_OUTSIDE;
+ENUM_POLICY_SESSION g_activeSession = POLICY_SESSION_OUTSIDE;
+int g_activeConsecutiveRedCount = 0;
+int g_activeBearTwoCount = 0;
+int g_activeLowATRCount = 0;
+int g_riskLockRemaining = 0;
+int g_consecutiveRecoveryBars = 0;
+bool g_previousBearDropVeto = false;
+
+int g_sessionStartMinutes[3];
+int g_sessionEndMinutes[3];
+
+double g_distanceHistory[];
+double g_openHistory[];
+double g_closeHistory[];
+double g_highHistory[];
+double g_lowHistory[];
+double g_emaHistory[];
+int g_bearishHistory[];
+
+double g_lastClose = 0.0;
+double g_lastATR = 0.0;
+double g_lastEMA = 0.0;
+double g_lastDistance = 0.0;
+bool g_lastChecklistPass = false;
+string g_lastReason = "WAITING_FOR_DATA";
+string g_lastDashboardEvent = "WAITING";
+double g_lastPeakDistance = 0.0;
+double g_lastRelativeDrop = 0.0;
+double g_lastPeakClose = 0.0;
+double g_lastPriceDrop = 0.0;
+int g_lastBearishBarCount = 0;
+bool g_lastDistanceFalling = false;
+double g_lastPreviousHigh = 0.0;
+double g_lastCurrentLow = 0.0;
+double g_lastTwoBarDrop = 0.0;
+bool g_lastLegacyBearDrop = false;
+bool g_lastTwoBarBearDrop = false;
+bool g_lastBearDropVeto = false;
+string g_lastBearDropSource = "NONE";
+int g_lastConsecutiveRedCount = 0;
+bool g_lastConsecutiveRedBlock = false;
+int g_lastBearTwoCount = 0;
+bool g_lastBearTwoBlock = false;
+int g_lastActiveLowATRCount = 0;
+bool g_lastActiveLowATRBlock = false;
+bool g_lastDownsideEMAApproachBlock = false;
+bool g_lastBearishEngulfing = false;
+bool g_lastBearishPinBar = false;
+bool g_lastBearishPatternBlock = false;
+double g_lastCurrentBody = 0.0;
+double g_lastPreviousBody = 0.0;
+string g_lastBearishPatternSource = "NONE";
+bool g_lastUpthrustSweep = false;
+bool g_lastDenyBlock = false;
+double g_lastDenyPriorHigh = 0.0;
+double g_lastDenySweepSize = 0.0;
+double g_lastDenyUpperWickBody = 0.0;
+double g_lastDenyBody = 0.0;
+double g_lastUpthrustBody = 0.0;
+double g_lastDenyBodyOverlapPercent = 0.0;
+bool g_lastReversePinBar = false;
+bool g_lastReverseBlock = false;
+double g_lastReversePinBody = 0.0;
+double g_lastReverseRedBody = 0.0;
+double g_lastReverseUpperWickBody = 0.0;
+double g_lastReverseLowerWickBody = 0.0;
+bool g_lastFallBlock = false;
+double g_lastFallBody = 0.0;
+double g_lastFallRange = 0.0;
+double g_lastFallPriorRange = 0.0;
+double g_lastFallPriorHigh = 0.0;
+double g_lastFallPriorLow = 0.0;
+bool g_lastFallOpenInside = false;
+bool g_lastFallCloseBreak = false;
+ENUM_POLICY_SESSION g_lastDecisionSession = POLICY_SESSION_OUTSIDE;
+bool g_lastPolicyRecoveryCandidate = false;
+bool g_lastBullishSCOB = false;
+bool g_lastRecoveryCandidate = false;
+string g_lastRecoverySource = "NONE";
+
+datetime g_activeZoneStart = 0;
+double g_activeZoneHigh = 0.0;
+double g_activeZoneLow = 0.0;
+double g_activeZoneATR = 0.0;
+ENUM_POLICY_FAMILY g_activeZoneBranch = POLICY_FAMILY_NONE;
+string g_activeZoneBaseName = "";
+
+datetime g_riskLockStart = 0;
+double g_riskLockHigh = 0.0;
+double g_riskLockLow = 0.0;
+double g_riskLockATR = 0.0;
+string g_riskLockBaseName = "";
+
+string g_eventObjectNames[];
+string g_closedZoneObjectNames[];
+string g_closedRiskLockObjectNames[];
+string g_emaObjectNames[];
+
+ENUM_CCBSN_CONTROL_STATE g_controlState = CCBSN_CONTROL_UNKNOWN;
+ENUM_CCBSN_COMMAND g_pendingCommand = CCBSN_COMMAND_NONE;
+ulong g_commandTicket = 0;
+datetime g_commandSentTime = 0;
+bool g_commandCancelRequested = false;
+string g_lastControlError = "NONE";
+string g_commandCancelReason = "";
+ENUM_COMMAND_CANCEL_REASON g_commandCancelCode = COMMAND_CANCEL_NONE;
+int g_cycleSyncRetryCount = 0;
+ENUM_CCBSN_COMMAND g_cycleRetryDesired = CCBSN_COMMAND_NONE;
+double g_instanceToken = 0.0;
+bool g_controllerLockHeld = false;
+bool g_manualHandoverComplete = false;
+
+int g_ccbsnPositionCount = 0;
+double g_ccbsnPositionVolume = 0.0;
+bool g_positionSnapshotReady = false;
+bool g_offFlatGuardArmed = false;
+bool g_offReassertRequested = false;
+bool g_driftDetectedCurrentChain = false;
+bool g_positionSyncRequested = false;
+bool g_controlReconcileRequested = false;
+int g_driftCount = 0;
+datetime g_lastDriftAlertTime = 0;
+ENUM_CCBSN_COMMAND g_lastSyncDesired = CCBSN_COMMAND_NONE;
+string g_syncState = "INITIALIZING";
+string g_lastSyncReason = "WAITING_FOR_POSITION_SNAPSHOT";
+ulong g_nextCommandAttemptTick = 0;
+bool g_autoTradingObservationReady = false;
+bool g_previousAutoTradingAllowed = false;
+ulong g_autoTradingResyncSequence = 0;
+bool g_startupCycleBarrierActive = false;
+ulong g_lastConfirmedCommandTicket = 0;
+
+bool g_chartDirty = false;
+ulong g_nextVisualRefreshTick = 0;
+ulong g_nextDashboardRefreshTick = 0;
+ulong g_nextControlPollTick = 0;
+ulong g_nextLockRefreshTick = 0;
+ulong g_nextMonitorPublishTick = 0;
+
+ulong g_monitorSequence = 0;
+ulong g_monitorWriteFailures = 0;
+datetime g_lastObservedTickUtc = 0;
+string g_monitorRuntimeState = "STARTING";
+string g_monitorLastError = "NONE";
+
+ulong g_perfStartTick = 0;
+ulong g_perfLastReportTick = 0;
+ulong g_perfTickEvents = 0;
+ulong g_perfTimerEvents = 0;
+ulong g_perfPolicyPolls = 0;
+ulong g_perfPolicyUpdates = 0;
+ulong g_perfControlFastRuns = 0;
+ulong g_perfControlIdleRuns = 0;
+ulong g_perfVisualRuns = 0;
+ulong g_perfDashboardRuns = 0;
+ulong g_perfLiveSnapshots = 0;
+ulong g_perfChartRedraws = 0;
+ulong g_perfEMARebuilds = 0;
+ulong g_perfEMAAppends = 0;
+ulong g_perfPolicyTotalMicros = 0;
+ulong g_perfPolicyMaxMicros = 0;
+ulong g_perfControlTotalMicros = 0;
+ulong g_perfControlMaxMicros = 0;
+ulong g_perfVisualTotalMicros = 0;
+ulong g_perfVisualMaxMicros = 0;
+
+//+------------------------------------------------------------------+
+//| String helpers                                                   |
+//+------------------------------------------------------------------+
+string StateToString(const ENUM_VISUAL_STATE state)
+  {
+   switch(state)
+     {
+      case VISUAL_STATE_OFF:        return "OFF";
+      case VISUAL_STATE_ARMING:     return "ARMING";
+      case VISUAL_STATE_ACTIVE:     return "ACTIVE";
+      case VISUAL_STATE_RISK_LOCK:  return "RISK_LOCK";
+      case VISUAL_STATE_DATA_ERROR: return "DATA_ERROR";
+     }
+   return "UNKNOWN";
+  }
+
+string ControlModeToString(const ENUM_CCBSN_CONTROL_MODE mode)
+  {
+   switch(mode)
+     {
+      case CCBSN_CONTROL_VISUAL_ONLY:   return "VISUAL ONLY";
+      case CCBSN_CONTROL_ENABLED:       return "CONTROL ENABLED";
+      case CCBSN_CONTROL_MANUAL_HANDOVER:return "MANUAL HANDOVER";
+     }
+   return "UNKNOWN MODE";
+  }
+
+string ControlOwnerToString()
+  {
+   if(InpControlMode == CCBSN_CONTROL_ENABLED)
+      return "BOT2 CONTROLLER";
+   if(InpControlMode == CCBSN_CONTROL_MANUAL_HANDOVER)
+      return g_manualHandoverComplete ? "BOT1 MANUAL" : "HANDOVER PENDING";
+   return "NO OWNER (VISUAL)";
+  }
+
+string DeinitReasonToString(const int reason)
+  {
+   switch(reason)
+     {
+      case REASON_PROGRAM:     return "PROGRAM";
+      case REASON_REMOVE:      return "REMOVE";
+      case REASON_RECOMPILE:   return "RECOMPILE";
+      case REASON_CHARTCHANGE: return "CHART_CHANGE";
+      case REASON_CHARTCLOSE:  return "CHART_CLOSE";
+      case REASON_PARAMETERS:  return "PARAMETERS";
+      case REASON_ACCOUNT:     return "ACCOUNT";
+      case REASON_TEMPLATE:    return "TEMPLATE";
+      case REASON_INITFAILED:  return "INIT_FAILED";
+      case REASON_CLOSE:       return "TERMINAL_CLOSE";
+     }
+   return "UNKNOWN";
+  }
+
+string CommandToString(const ENUM_CCBSN_COMMAND command)
+  {
+   switch(command)
+     {
+      case CCBSN_COMMAND_NEW_CYCLE_ON:  return "ENABLE NEW CYCLE";
+      case CCBSN_COMMAND_NEW_CYCLE_OFF: return "DISABLE NEW CYCLE";
+      default:                          return "NONE";
+     }
+  }
+
+string ControlStateToString(const ENUM_CCBSN_CONTROL_STATE state)
+  {
+   switch(state)
+     {
+      case CCBSN_CONTROL_DISABLED:      return "DISABLED";
+      case CCBSN_CONTROL_BOT1_MANUAL:   return "BOT1 MANUAL (NC UNTRACKED)";
+      case CCBSN_CONTROL_UNKNOWN:       return "UNKNOWN";
+      case CCBSN_CONTROL_ON_PENDING:    return "ENABLE PENDING";
+      case CCBSN_CONTROL_OFF_PENDING:   return "DISABLE PENDING";
+      case CCBSN_CONTROL_ON_CONFIRMED:  return "NC ENABLED";
+      case CCBSN_CONTROL_OFF_CONFIRMED: return "NC DISABLED";
+      case CCBSN_CONTROL_ERROR:         return "ERROR";
+     }
+   return "UNKNOWN";
+  }
+
+ENUM_CCBSN_COMMAND DesiredCommand()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return CCBSN_COMMAND_NONE;
+   if(g_startupCycleBarrierActive)
+      return CCBSN_COMMAND_NEW_CYCLE_OFF;
+   if(g_state == VISUAL_STATE_ACTIVE)
+      return CCBSN_COMMAND_NEW_CYCLE_ON;
+   return CCBSN_COMMAND_NEW_CYCLE_OFF;
+  }
+
+bool IsConfirmedForCommand(const ENUM_CCBSN_COMMAND command)
+  {
+   if(command == CCBSN_COMMAND_NEW_CYCLE_ON)
+      return g_controlState == CCBSN_CONTROL_ON_CONFIRMED;
+   if(command == CCBSN_COMMAND_NEW_CYCLE_OFF)
+      return g_controlState == CCBSN_CONTROL_OFF_CONFIRMED;
+   return false;
+  }
+
+string CycleConsistencyToString()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return "NOT CONTROLLED";
+   if(InpSingleControllerLock && !g_controllerLockHeld)
+      return "MUTEX LOST";
+   if(g_controlState == CCBSN_CONTROL_ERROR)
+      return "ERROR";
+
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   if(g_commandTicket != 0)
+     {
+      if(g_pendingCommand != desired || g_commandCancelRequested)
+         return "STALE PENDING";
+      return "SYNCING";
+     }
+   return IsConfirmedForCommand(desired) ? "ALIGNED" : "DESYNC";
+  }
+
+bool CycleConsistencyAligned()
+  {
+   return CycleConsistencyToString() == "ALIGNED";
+  }
+
+bool CycleConsistencyAlertActive()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return false;
+   string status = CycleConsistencyToString();
+   return status != "ALIGNED" && status != "SYNCING";
+  }
+
+bool FailCycleConsistency(const string reason, const string message)
+  {
+   string errorCode = "CYCLE_CONSISTENCY:" + reason;
+   bool newFailure = g_controlState != CCBSN_CONTROL_ERROR ||
+                     g_lastControlError != errorCode;
+   g_controlState = CCBSN_CONTROL_ERROR;
+   g_lastControlError = errorCode;
+   g_syncState = "CYCLE SYNC ERROR";
+   g_lastSyncReason = reason;
+   if(newFailure)
+     {
+      AuditEvent("CYCLE_CONSISTENCY_ERROR", TimeCurrent(), reason, false);
+      Print("CONTROL CONSISTENCY ERROR | " + reason + " | " + message);
+      Alert("CCBSN CYCLE SYNC ERROR: " + message);
+     }
+   return false;
+  }
+
+string FormatPrice(const double value)
+  {
+   return DoubleToString(value, (int)InpXAUQuoteDigits);
+  }
+
+double M5Price(const double ver3BaseValue)
+  {
+   return ver3BaseValue * InpM5PriceScale;
+  }
+
+ENUM_COMMAND_CANCEL_REASON CancelReasonCode(const string reason)
+  {
+   if(reason == "SUPERSEDED_BY_NEW_POLICY_STATE")
+      return COMMAND_CANCEL_SUPERSEDED;
+    if(reason == "CCBSN_CONSUMPTION_TIMEOUT")
+       return COMMAND_CANCEL_TIMEOUT;
+    if(reason == "COMMAND_CONTRACT_MISMATCH")
+       return COMMAND_CANCEL_CONTRACT_MISMATCH;
+    return COMMAND_CANCEL_NONE;
+  }
+
+string CancelReasonText(const ENUM_COMMAND_CANCEL_REASON code)
+  {
+   if(code == COMMAND_CANCEL_SUPERSEDED)
+      return "SUPERSEDED_BY_NEW_POLICY_STATE";
+    if(code == COMMAND_CANCEL_TIMEOUT)
+       return "CCBSN_CONSUMPTION_TIMEOUT";
+    if(code == COMMAND_CANCEL_CONTRACT_MISMATCH)
+       return "COMMAND_CONTRACT_MISMATCH";
+   return "RESTORED_CANCEL_REQUEST";
+  }
+
+string PolicyFamilyToString(const ENUM_POLICY_FAMILY policy)
+  {
+   switch(policy)
+     {
+      case POLICY_FAMILY_UPSIDE:   return "UpsidePolicy";
+      case POLICY_FAMILY_DOWNSIDE: return "DownsidePolicy";
+      default:                     return "NONE";
+     }
+  }
+
+string TimeKey(const datetime value)
+  {
+   return IntegerToString((long)value);
+  }
+
+color PolicyFamilyColor(const ENUM_POLICY_FAMILY policy)
+  {
+   if(policy == POLICY_FAMILY_DOWNSIDE)
+      return InpDownsideZoneColor;
+   return InpUpsideZoneColor;
+  }
+
+string SessionToString(const ENUM_POLICY_SESSION session)
+  {
+   switch(session)
+     {
+      case POLICY_SESSION_1: return "SESSION 1";
+      case POLICY_SESSION_2: return "SESSION 2";
+      case POLICY_SESSION_3: return "SESSION 3";
+      default:               return "OUTSIDE";
+     }
+  }
+
+string BearDropSource(const bool legacyVeto, const bool twoBarVeto)
+  {
+   if(legacyVeto && twoBarVeto) return "BOTH";
+   if(legacyVeto) return "LEGACY";
+   if(twoBarVeto) return "2-BAR";
+   return "NONE";
+  }
+
+bool ParseSessionText(const string value, int &startMinute, int &endMinute)
+  {
+   if(StringLen(value) != 9 || StringSubstr(value, 4, 1) != "-")
+      return false;
+   for(int index = 0; index < 9; index++)
+     {
+      if(index == 4)
+         continue;
+      ushort character = StringGetCharacter(value, index);
+      if(character < 48 || character > 57)
+         return false;
+     }
+   int startHour = (int)StringToInteger(StringSubstr(value, 0, 2));
+   int startMin = (int)StringToInteger(StringSubstr(value, 2, 2));
+   int endHour = (int)StringToInteger(StringSubstr(value, 5, 2));
+   int endMin = (int)StringToInteger(StringSubstr(value, 7, 2));
+   if(startHour < 0 || startHour > 23 || endHour < 0 || endHour > 23 ||
+      startMin < 0 || startMin > 59 || endMin < 0 || endMin > 59)
+      return false;
+   startMinute = startHour * 60 + startMin;
+   endMinute = endHour * 60 + endMin;
+   return startMinute != endMinute;
+  }
+
+bool IsMinuteInSession(const int minuteOfDay,
+                       const int startMinute,
+                       const int endMinute)
+  {
+   if(startMinute < endMinute)
+      return minuteOfDay >= startMinute && minuteOfDay < endMinute;
+   return minuteOfDay >= startMinute || minuteOfDay < endMinute;
+  }
+
+bool SessionEnabledByIndex(const int index)
+  {
+   if(index == 0) return InpEnableSession1;
+   if(index == 1) return InpEnableSession2;
+   if(index == 2) return InpEnableSession3;
+   return false;
+  }
+
+ENUM_POLICY_SESSION PolicySessionAt(const datetime brokerTime)
+  {
+   MqlDateTime parts;
+   TimeToStruct(brokerTime + InpSessionTimeShiftMinutes * 60, parts);
+   int minuteOfDay = parts.hour * 60 + parts.min;
+   for(int index = 0; index < 3; index++)
+     {
+      if(SessionEnabledByIndex(index) &&
+         IsMinuteInSession(minuteOfDay,
+                           g_sessionStartMinutes[index],
+                           g_sessionEndMinutes[index]))
+         return (ENUM_POLICY_SESSION)(index + 1);
+     }
+   return POLICY_SESSION_OUTSIDE;
+  }
+
+bool ValidateSessionConfiguration()
+  {
+   if(!ParseSessionText(InpSession1, g_sessionStartMinutes[0], g_sessionEndMinutes[0]))
+     {
+      g_configurationError = "InpSession1=" + InpSession1 +
+                             " (expected HHMM-HHMM with different start/end)";
+      PrintFormat("CONFIG ERROR | %s", g_configurationError);
+      return false;
+     }
+   if(!ParseSessionText(InpSession2, g_sessionStartMinutes[1], g_sessionEndMinutes[1]))
+     {
+      g_configurationError = "InpSession2=" + InpSession2 +
+                             " (expected HHMM-HHMM with different start/end)";
+      PrintFormat("CONFIG ERROR | %s", g_configurationError);
+      return false;
+     }
+   if(!ParseSessionText(InpSession3, g_sessionStartMinutes[2], g_sessionEndMinutes[2]))
+     {
+      g_configurationError = "InpSession3=" + InpSession3 +
+                             " (expected HHMM-HHMM with different start/end)";
+      PrintFormat("CONFIG ERROR | %s", g_configurationError);
+      return false;
+     }
+   for(int minute = 0; minute < 1440; minute++)
+     {
+      int matches = 0;
+      for(int index = 0; index < 3; index++)
+         if(SessionEnabledByIndex(index) &&
+            IsMinuteInSession(minute,
+                              g_sessionStartMinutes[index],
+                              g_sessionEndMinutes[index]))
+            matches++;
+      if(matches > 1)
+        {
+         g_configurationError = "InpSession1..3 overlap at minute " +
+                                IntegerToString(minute) +
+                                " (expected enabled sessions not to overlap)";
+         PrintFormat("CONFIG ERROR | %s", g_configurationError);
+         return false;
+        }
+     }
+   return true;
+  }
+
+int FeatureHistoryCapacity()
+  {
+   int capacity = MathMax(InpBearDropLookback, InpBearishWindow);
+   capacity = MathMax(capacity, InpRecoveryEMASlopeBars + 1);
+   // Deny uses [0]=deny, [1]=upthrust and [2..lookback+1]=prior range.
+   capacity = MathMax(capacity, InpDenyLookback + 1);
+   capacity = MathMax(capacity, 3);
+   return capacity + 1;
+  }
+
+void PushDoubleHistory(double &values[], const double value, const int maximum)
+  {
+   int oldSize = ArraySize(values);
+   int newSize = MathMin(oldSize + 1, maximum);
+   ArrayResize(values, newSize);
+   for(int index = newSize - 1; index >= 1; index--)
+      values[index] = values[index - 1];
+   values[0] = value;
+  }
+
+void PushIntHistory(int &values[], const int value, const int maximum)
+  {
+   int oldSize = ArraySize(values);
+   int newSize = MathMin(oldSize + 1, maximum);
+   ArrayResize(values, newSize);
+   for(int index = newSize - 1; index >= 1; index--)
+      values[index] = values[index - 1];
+   values[0] = value;
+  }
+
+void PushFeatureSample(const MqlRates &bar, const double emaValue)
+  {
+   int capacity = FeatureHistoryCapacity();
+   PushDoubleHistory(g_distanceHistory, bar.close - emaValue, capacity);
+   PushDoubleHistory(g_openHistory, bar.open, capacity);
+   PushDoubleHistory(g_closeHistory, bar.close, capacity);
+   PushDoubleHistory(g_highHistory, bar.high, capacity);
+   PushDoubleHistory(g_lowHistory, bar.low, capacity);
+   PushDoubleHistory(g_emaHistory, emaValue, capacity);
+   PushIntHistory(g_bearishHistory, bar.close < bar.open ? 1 : 0, capacity);
+  }
+
+bool EvaluateBullishSCOB()
+  {
+   if(!InpEnableBullishSCOBRecovery ||
+      ArraySize(g_openHistory) < 3 || ArraySize(g_closeHistory) < 3 ||
+      ArraySize(g_highHistory) < 2 || ArraySize(g_lowHistory) < 3)
+      return false;
+
+   // Bullish Single Candle Order Block (SCOB), confirmed on bar [0]:
+   // [2] bearish; [1] bullish and sweeps Low[2]; [0] bullish and
+   // closes above High[1]. This function is called only in RISK_LOCK.
+   return g_openHistory[2] > g_closeHistory[2] &&
+          g_closeHistory[1] > g_openHistory[1] &&
+          g_closeHistory[0] > g_openHistory[0] &&
+          g_lowHistory[1] < g_lowHistory[2] &&
+           g_closeHistory[0] > g_highHistory[1];
+  }
+
+void ResetBearishPatternSnapshot()
+  {
+   g_lastBearishEngulfing = false;
+   g_lastBearishPinBar = false;
+   g_lastBearishPatternBlock = false;
+   g_lastCurrentBody = 0.0;
+   g_lastPreviousBody = 0.0;
+   g_lastBearishPatternSource = "NONE";
+  }
+
+bool EvaluateBearishPattern()
+  {
+   ResetBearishPatternSnapshot();
+   if(!InpEnableBearishPatternBlock ||
+      ArraySize(g_openHistory) < 2 || ArraySize(g_closeHistory) < 2 ||
+      ArraySize(g_highHistory) < 1 || ArraySize(g_lowHistory) < 1)
+      return false;
+
+   double currentOpen = g_openHistory[0];
+   double currentClose = g_closeHistory[0];
+   double previousOpen = g_openHistory[1];
+   double previousClose = g_closeHistory[1];
+   g_lastCurrentBody = MathAbs(currentClose - currentOpen);
+   g_lastPreviousBody = MathAbs(previousClose - previousOpen);
+
+   bool currentBearish = currentClose < currentOpen;
+   bool previousBullish = previousClose > previousOpen;
+   double minimumBody = MathMax(g_lastPreviousBody * InpBearishBodyMultiplier,
+                                SymbolInfoDouble(_Symbol, SYMBOL_POINT));
+   bool bodyRatioPass = g_lastCurrentBody >= minimumBody;
+
+   // Standard real-body bearish engulfing. Wicks do not need to engulf.
+   g_lastBearishEngulfing = currentBearish && previousBullish &&
+                            currentOpen >= previousClose &&
+                            currentClose <= previousOpen && bodyRatioPass;
+
+   // Bearish pin bar: red body near the low, dominant upper rejection wick.
+   double upperWick = g_highHistory[0] - MathMax(currentOpen, currentClose);
+   double lowerWick = MathMin(currentOpen, currentClose) - g_lowHistory[0];
+   g_lastBearishPinBar = currentBearish && g_lastCurrentBody > 0.0 &&
+                         upperWick >= g_lastCurrentBody *
+                                      BEARISH_PIN_UPPER_WICK_BODY_RATIO &&
+                         lowerWick <= g_lastCurrentBody && bodyRatioPass;
+
+   if(g_lastBearishEngulfing && g_lastBearishPinBar)
+      g_lastBearishPatternSource = "ENGULFING+PIN_BAR";
+   else if(g_lastBearishEngulfing)
+      g_lastBearishPatternSource = "ENGULFING";
+   else if(g_lastBearishPinBar)
+      g_lastBearishPatternSource = "PIN_BAR";
+
+   g_lastBearishPatternBlock = g_lastBearishEngulfing || g_lastBearishPinBar;
+   return g_lastBearishPatternBlock;
+  }
+
+void ResetDenySnapshot()
+  {
+   g_lastUpthrustSweep = false;
+   g_lastDenyBlock = false;
+   g_lastDenyPriorHigh = 0.0;
+   g_lastDenySweepSize = 0.0;
+   g_lastDenyUpperWickBody = 0.0;
+   g_lastDenyBody = 0.0;
+   g_lastUpthrustBody = 0.0;
+   g_lastDenyBodyOverlapPercent = 0.0;
+  }
+
+bool EvaluateDeny(const double atrValue)
+  {
+   ResetDenySnapshot();
+   int required = InpDenyLookback + 2;
+   if(!InpEnableDenyBlock || atrValue <= 0.0 ||
+      ArraySize(g_openHistory) < required ||
+      ArraySize(g_closeHistory) < required ||
+      ArraySize(g_highHistory) < required ||
+      ArraySize(g_lowHistory) < required)
+      return false;
+
+   // [0] is the closed bearish confirmation candle, named DENY.
+   // [1] is the candidate upthrust; [2..lookback+1] form prior resistance.
+   g_lastDenyPriorHigh = g_highHistory[2];
+   for(int index = 3; index <= InpDenyLookback + 1; index++)
+      g_lastDenyPriorHigh = MathMax(g_lastDenyPriorHigh,
+                                    g_highHistory[index]);
+
+   double point = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   double upthrustOpen = g_openHistory[1];
+   double upthrustClose = g_closeHistory[1];
+   double upthrustHigh = g_highHistory[1];
+   g_lastUpthrustBody = MathAbs(upthrustClose - upthrustOpen);
+   double upthrustBodyFloor = MathMax(g_lastUpthrustBody, point);
+   double upthrustUpperWick = upthrustHigh -
+                              MathMax(upthrustOpen, upthrustClose);
+   g_lastDenyUpperWickBody = upthrustUpperWick / upthrustBodyFloor;
+   g_lastDenySweepSize = upthrustHigh - g_lastDenyPriorHigh;
+   bool sweepPass = g_lastDenySweepSize >= atrValue * InpDenySweepBufferATR;
+   bool wickPass = g_lastDenyUpperWickBody >= InpDenyMinUpperWickBody;
+   g_lastUpthrustSweep = sweepPass && wickPass;
+
+   double denyOpen = g_openHistory[0];
+   double denyClose = g_closeHistory[0];
+   g_lastDenyBody = MathAbs(denyClose - denyOpen);
+   bool bearishDeny = denyClose < denyOpen;
+   bool bodyPass = g_lastDenyBody >=
+                   MathMax(g_lastUpthrustBody * InpDenyBodyMultiplier, point);
+   bool closeBackPass = !InpDenyRequireCloseBelowHigh ||
+                        denyClose < g_lastDenyPriorHigh;
+
+   double upthrustBodyLow = MathMin(upthrustOpen, upthrustClose);
+   double upthrustBodyHigh = MathMax(upthrustOpen, upthrustClose);
+   double denyBodyLow = MathMin(denyOpen, denyClose);
+   double denyBodyHigh = MathMax(denyOpen, denyClose);
+   double overlap = MathMax(0.0,
+                            MathMin(upthrustBodyHigh, denyBodyHigh) -
+                            MathMax(upthrustBodyLow, denyBodyLow));
+   if(g_lastUpthrustBody > point)
+      g_lastDenyBodyOverlapPercent = overlap / g_lastUpthrustBody * 100.0;
+   bool overlapPass = g_lastDenyBodyOverlapPercent >=
+                      InpDenyMinBodyOverlapPercent;
+
+   g_lastDenyBlock = g_lastUpthrustSweep && bearishDeny && bodyPass &&
+                     overlapPass && closeBackPass;
+   return g_lastDenyBlock;
+  }
+
+void ResetReverseSnapshot()
+  {
+   g_lastReversePinBar = false;
+   g_lastReverseBlock = false;
+   g_lastReversePinBody = 0.0;
+   g_lastReverseRedBody = 0.0;
+   g_lastReverseUpperWickBody = 0.0;
+   g_lastReverseLowerWickBody = 0.0;
+  }
+
+bool EvaluateReverse()
+  {
+   ResetReverseSnapshot();
+   if(!InpEnableReverseBlock ||
+      ArraySize(g_openHistory) < 2 || ArraySize(g_closeHistory) < 2 ||
+      ArraySize(g_highHistory) < 2 || ArraySize(g_lowHistory) < 2)
+      return false;
+
+   // [1] is an upper-rejection pin bar of either candle color.
+   // [0] is a closed bearish candle with a strictly larger real body.
+   double point = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   double pinOpen = g_openHistory[1];
+   double pinClose = g_closeHistory[1];
+   double pinBody = MathAbs(pinClose - pinOpen);
+   double pinBodyFloor = MathMax(pinBody, point);
+   double pinUpperWick = g_highHistory[1] - MathMax(pinOpen, pinClose);
+   double pinLowerWick = MathMin(pinOpen, pinClose) - g_lowHistory[1];
+
+   g_lastReversePinBody = pinBody;
+   g_lastReverseUpperWickBody = pinUpperWick / pinBodyFloor;
+   g_lastReverseLowerWickBody = pinLowerWick / pinBodyFloor;
+   g_lastReversePinBar = pinBody > 0.0 &&
+      g_lastReverseUpperWickBody >= InpReversePinMinUpperWickBody &&
+      g_lastReverseLowerWickBody <= InpReversePinMaxLowerWickBody;
+
+   double redOpen = g_openHistory[0];
+   double redClose = g_closeHistory[0];
+   g_lastReverseRedBody = MathAbs(redClose - redOpen);
+   bool bearishRed = redClose < redOpen;
+   bool bodyLarger = g_lastReverseRedBody >
+                     MathMax(g_lastReversePinBody *
+                             InpReverseBodyMultiplier, point);
+   g_lastReverseBlock = g_lastReversePinBar && bearishRed && bodyLarger;
+   return g_lastReverseBlock;
+  }
+
+void ResetFallSnapshot()
+  {
+   g_lastFallBlock = false;
+   g_lastFallBody = 0.0;
+   g_lastFallRange = 0.0;
+   g_lastFallPriorRange = 0.0;
+   g_lastFallPriorHigh = 0.0;
+   g_lastFallPriorLow = 0.0;
+   g_lastFallOpenInside = false;
+   g_lastFallCloseBreak = false;
+  }
+
+bool EvaluateFall()
+  {
+   ResetFallSnapshot();
+   if(!InpEnableFallBlock ||
+      ArraySize(g_openHistory) < 4 || ArraySize(g_closeHistory) < 4 ||
+      ArraySize(g_highHistory) < 4 || ArraySize(g_lowHistory) < 4)
+      return false;
+
+   // [1..3] form the preceding cluster using complete High-Low ranges,
+   // including all wicks. [0] must be bearish, open inside the cluster,
+   // have a complete High-Low range large enough relative to the cluster,
+   // and close below its lowest wick. High[0] does NOT have to reach
+   // PriorHigh; Fall is a downside cluster break, not geometric engulfing.
+   g_lastFallPriorHigh = g_highHistory[1];
+   g_lastFallPriorLow = g_lowHistory[1];
+   for(int index = 2; index <= 3; index++)
+     {
+      g_lastFallPriorHigh = MathMax(g_lastFallPriorHigh,
+                                    g_highHistory[index]);
+      g_lastFallPriorLow = MathMin(g_lastFallPriorLow,
+                                   g_lowHistory[index]);
+     }
+   g_lastFallPriorRange = g_lastFallPriorHigh - g_lastFallPriorLow;
+
+   double currentOpen = g_openHistory[0];
+   double currentClose = g_closeHistory[0];
+   double currentHigh = g_highHistory[0];
+   double currentLow = g_lowHistory[0];
+   g_lastFallBody = MathAbs(currentClose - currentOpen);
+   g_lastFallRange = currentHigh - currentLow;
+
+   bool bearish = currentClose < currentOpen;
+   g_lastFallOpenInside = currentOpen >= g_lastFallPriorLow &&
+                          currentOpen <= g_lastFallPriorHigh;
+   bool rangeExpansion = g_lastFallPriorRange > 0.0 &&
+      g_lastFallRange >= g_lastFallPriorRange * InpFallRangeMultiplier;
+   g_lastFallCloseBreak = currentClose < g_lastFallPriorLow;
+   g_lastFallBlock = bearish && g_lastFallOpenInside &&
+                     rangeExpansion && g_lastFallCloseBreak;
+   return g_lastFallBlock;
+  }
+
+bool EvaluateBearDrop(const MqlRates &bar,
+                      const double thresholdMultiplier)
+  {
+   g_lastPeakDistance = g_lastDistance;
+   g_lastRelativeDrop = 0.0;
+   g_lastPeakClose = g_lastClose;
+   g_lastPriceDrop = 0.0;
+   g_lastBearishBarCount = 0;
+   g_lastDistanceFalling = false;
+   g_lastPreviousHigh = 0.0;
+   g_lastCurrentLow = bar.low;
+   g_lastTwoBarDrop = 0.0;
+
+   bool legacyReady = ArraySize(g_distanceHistory) >= InpBearDropLookback &&
+                      ArraySize(g_bearishHistory) >= InpBearishWindow;
+   if(legacyReady)
+     {
+      g_lastPeakDistance = g_distanceHistory[0];
+      g_lastPeakClose = g_closeHistory[0];
+      for(int index = 1; index < InpBearDropLookback; index++)
+        {
+         g_lastPeakDistance = MathMax(g_lastPeakDistance, g_distanceHistory[index]);
+         g_lastPeakClose = MathMax(g_lastPeakClose, g_closeHistory[index]);
+        }
+      for(int index = 0; index < InpBearishWindow; index++)
+         g_lastBearishBarCount += g_bearishHistory[index];
+      g_lastRelativeDrop = g_lastPeakDistance - g_lastDistance;
+      g_lastPriceDrop = g_lastPeakClose - g_lastClose;
+      g_lastDistanceFalling = ArraySize(g_distanceHistory) >= 3 &&
+                              g_distanceHistory[0] < g_distanceHistory[1] &&
+                              g_distanceHistory[1] < g_distanceHistory[2];
+     }
+
+   bool twoBarReady = ArraySize(g_highHistory) >= 2;
+   if(twoBarReady)
+     {
+      g_lastPreviousHigh = g_highHistory[1];
+      g_lastTwoBarDrop = g_lastPreviousHigh - g_lastCurrentLow;
+     }
+
+   int requiredBearishBars = (int)MathMin(InpMinBearishBars, InpBearishWindow);
+    double effectiveMultiplier = MathMax(1.0, thresholdMultiplier);
+    g_lastLegacyBearDrop = InpEnableLegacyBearDrop && legacyReady &&
+                           g_lastRelativeDrop >=
+                           M5Price(InpMinRelativeDropPrice) * effectiveMultiplier &&
+                          g_lastBearishBarCount >= requiredBearishBars &&
+                          (!InpRequireDistanceFalling || g_lastDistanceFalling);
+    g_lastTwoBarBearDrop = InpEnableTwoBarBearDrop && twoBarReady &&
+                           g_lastTwoBarDrop >=
+                           M5Price(InpMinTwoBarDropPrice) * effectiveMultiplier;
+   g_lastBearDropSource = BearDropSource(g_lastLegacyBearDrop,
+                                         g_lastTwoBarBearDrop);
+   g_lastBearDropVeto = InpEnableBearDrop &&
+                        (g_lastLegacyBearDrop || g_lastTwoBarBearDrop);
+   return g_lastBearDropVeto;
+  }
+
+//+------------------------------------------------------------------+
+//| Configuration                                                    |
+//+------------------------------------------------------------------+
+bool ConfigurationError(const string inputName,
+                        const string value,
+                        const string supportedRange)
+  {
+   g_configurationError = inputName + "=" + value +
+                          " (expected " + supportedRange + ")";
+   PrintFormat("CONFIG ERROR | %s", g_configurationError);
+   return false;
+  }
+
+bool ValidateInputs()
+  {
+   if(InpExpectedSymbolPrefix != "" && StringFind(_Symbol, InpExpectedSymbolPrefix) != 0)
+      return ConfigurationError("InpExpectedSymbolPrefix",
+                                InpExpectedSymbolPrefix,
+                                "prefix of " + _Symbol);
+    if(_Digits != (int)InpXAUQuoteDigits)
+       return ConfigurationError("InpXAUQuoteDigits",
+                                 IntegerToString((int)InpXAUQuoteDigits),
+                                 IntegerToString(_Digits) + " for " + _Symbol);
+    if(InpM5PriceScale < 0.05 || InpM5PriceScale > 3.0)
+       return ConfigurationError("InpM5PriceScale",
+                                 DoubleToString(InpM5PriceScale, 2),
+                                 "0.05..3.00");
+   if(InpATRPeriod < 1 || InpATRPeriod > 1000)
+      return ConfigurationError("InpATRPeriod", IntegerToString(InpATRPeriod), "1..1000");
+   if(InpEMAPeriod < 1 || InpEMAPeriod > 1000)
+      return ConfigurationError("InpEMAPeriod", IntegerToString(InpEMAPeriod), "1..1000");
+   if(InpMinATRPrice <= 0.0)
+      return ConfigurationError("InpMinATRPrice", DoubleToString(InpMinATRPrice, 4), "> 0");
+   if(InpUpsideMaxAboveEMAPrice < 0.0)
+      return ConfigurationError("InpUpsideMaxAboveEMAPrice",
+                                DoubleToString(InpUpsideMaxAboveEMAPrice, 4), ">= 0");
+   if(InpUpsideConfirmBars < 1 || InpUpsideConfirmBars > 20)
+      return ConfigurationError("InpUpsideConfirmBars",
+                                IntegerToString(InpUpsideConfirmBars), "1..20");
+   if(InpUpsideRiskLockBars < 1 || InpUpsideRiskLockBars > 96)
+      return ConfigurationError("InpUpsideRiskLockBars",
+                                IntegerToString(InpUpsideRiskLockBars), "1..96");
+   if(InpDownsideMinATRPrice <= 0.0)
+      return ConfigurationError("InpDownsideMinATRPrice",
+                                DoubleToString(InpDownsideMinATRPrice, 4), "> 0");
+   if(InpDownsideBandBoundary < 0.0)
+      return ConfigurationError("InpDownsideBandBoundary",
+                                DoubleToString(InpDownsideBandBoundary, 4), ">= 0");
+   if(InpEnableDownsidePolicy && !InpEnableDownsideNearEntry &&
+      !InpEnableDownsideDeepEntry)
+      return ConfigurationError("DownsideEntryModes", "both disabled",
+                                "at least one enabled");
+   if(InpDownsideHoldMaxAboveEMA < 0.0)
+      return ConfigurationError("InpDownsideHoldMaxAboveEMA",
+                                DoubleToString(InpDownsideHoldMaxAboveEMA, 4), ">= 0");
+   if(InpDownsideConfirmBars < 1 || InpDownsideConfirmBars > 20)
+      return ConfigurationError("InpDownsideConfirmBars",
+                                IntegerToString(InpDownsideConfirmBars), "1..20");
+   if(InpDownsideEMASlopeBars < 1 || InpDownsideEMASlopeBars > 20)
+      return ConfigurationError("InpDownsideEMASlopeBars",
+                                IntegerToString(InpDownsideEMASlopeBars), "1..20");
+   if(InpDownsideBearDropMultiplier < 1.0 ||
+      InpDownsideBearDropMultiplier > 5.0)
+      return ConfigurationError("InpDownsideBearDropMultiplier",
+                                DoubleToString(InpDownsideBearDropMultiplier, 4), "1..5");
+   if(InpDownsideRiskLockBars < 1 || InpDownsideRiskLockBars > 96)
+      return ConfigurationError("InpDownsideRiskLockBars",
+                                IntegerToString(InpDownsideRiskLockBars), "1..96");
+   if(InpDownsideEMAApproachTolerance < 0.0)
+      return ConfigurationError("InpDownsideEMAApproachTolerance",
+                                DoubleToString(InpDownsideEMAApproachTolerance, 4), ">= 0");
+   if(InpBearDropLookback < 3 || InpBearDropLookback > 100)
+      return ConfigurationError("InpBearDropLookback", IntegerToString(InpBearDropLookback), "3..100");
+   if(InpMinRelativeDropPrice <= 0.0)
+      return ConfigurationError("InpMinRelativeDropPrice", DoubleToString(InpMinRelativeDropPrice, 4), "> 0");
+   if(InpBearishWindow < 2 || InpBearishWindow > 10)
+      return ConfigurationError("InpBearishWindow", IntegerToString(InpBearishWindow), "2..10");
+   if(InpMinBearishBars < 1 || InpMinBearishBars > InpBearishWindow)
+      return ConfigurationError("InpMinBearishBars", IntegerToString(InpMinBearishBars),
+                                "1..InpBearishWindow");
+   if(InpMinTwoBarDropPrice <= 0.0)
+      return ConfigurationError("InpMinTwoBarDropPrice", DoubleToString(InpMinTwoBarDropPrice, 4), "> 0");
+   if(InpConsecutiveRedBars < 2 || InpConsecutiveRedBars > 10)
+      return ConfigurationError("InpConsecutiveRedBars", IntegerToString(InpConsecutiveRedBars), "2..10");
+   if(InpBearTwoATRThreshold <= 0.0)
+      return ConfigurationError("InpBearTwoATRThreshold",
+                                DoubleToString(InpBearTwoATRThreshold, 4), "> 0");
+   if(InpActiveLowATRThreshold <= 0.0)
+      return ConfigurationError("InpActiveLowATRThreshold",
+                                DoubleToString(InpActiveLowATRThreshold, 4), "> 0");
+   if(InpActiveLowATRBars < 1 || InpActiveLowATRBars > 20)
+      return ConfigurationError("InpActiveLowATRBars",
+                                IntegerToString(InpActiveLowATRBars), "1..20");
+   if(InpBearishBodyMultiplier < 1.0 || InpBearishBodyMultiplier > 20.0)
+      return ConfigurationError("InpBearishBodyMultiplier", DoubleToString(InpBearishBodyMultiplier, 4), "1..20");
+   if(InpDenyLookback < 3 || InpDenyLookback > 100)
+      return ConfigurationError("InpDenyLookback", IntegerToString(InpDenyLookback), "3..100");
+   if(InpDenySweepBufferATR < 0.0 || InpDenySweepBufferATR > 10.0)
+      return ConfigurationError("InpDenySweepBufferATR", DoubleToString(InpDenySweepBufferATR, 4), "0..10");
+   if(InpDenyMinUpperWickBody < 0.0 || InpDenyMinUpperWickBody > 20.0)
+      return ConfigurationError("InpDenyMinUpperWickBody", DoubleToString(InpDenyMinUpperWickBody, 4), "0..20");
+   if(InpDenyBodyMultiplier <= 0.0 || InpDenyBodyMultiplier > 20.0)
+      return ConfigurationError("InpDenyBodyMultiplier", DoubleToString(InpDenyBodyMultiplier, 4), "> 0 and <= 20");
+   if(InpDenyMinBodyOverlapPercent < 0.0 || InpDenyMinBodyOverlapPercent > 100.0)
+      return ConfigurationError("InpDenyMinBodyOverlapPercent",
+                                DoubleToString(InpDenyMinBodyOverlapPercent, 2), "0..100");
+   if(InpReversePinMinUpperWickBody <= 0.0 || InpReversePinMinUpperWickBody > 20.0)
+      return ConfigurationError("InpReversePinMinUpperWickBody",
+                                DoubleToString(InpReversePinMinUpperWickBody, 4), "> 0 and <= 20");
+   if(InpReversePinMaxLowerWickBody < 0.0 || InpReversePinMaxLowerWickBody > 20.0)
+      return ConfigurationError("InpReversePinMaxLowerWickBody",
+                                DoubleToString(InpReversePinMaxLowerWickBody, 4), "0..20");
+   if(InpReverseBodyMultiplier <= 0.0 || InpReverseBodyMultiplier > 20.0)
+      return ConfigurationError("InpReverseBodyMultiplier",
+                                DoubleToString(InpReverseBodyMultiplier, 4), "> 0 and <= 20");
+   if(InpFallRangeMultiplier <= 0.0 || InpFallRangeMultiplier > 20.0)
+      return ConfigurationError("InpFallRangeMultiplier",
+                                DoubleToString(InpFallRangeMultiplier, 4), "> 0 and <= 20");
+   if(InpRecoveryBars < 1 || InpRecoveryBars > 20)
+      return ConfigurationError("InpRecoveryBars", IntegerToString(InpRecoveryBars), "1..20");
+   if(InpRecoveryBufferATR < 0.0)
+      return ConfigurationError("InpRecoveryBufferATR", DoubleToString(InpRecoveryBufferATR, 4), ">= 0");
+   if(InpRecoveryEMASlopeBars < 1 || InpRecoveryEMASlopeBars > 20)
+      return ConfigurationError("InpRecoveryEMASlopeBars", IntegerToString(InpRecoveryEMASlopeBars), "1..20");
+   if(InpSessionTimeShiftMinutes < -1440 || InpSessionTimeShiftMinutes > 1440)
+      return ConfigurationError("InpSessionTimeShiftMinutes",
+                                IntegerToString(InpSessionTimeShiftMinutes), "-1440..1440");
+   if(!ValidateSessionConfiguration())
+      return false;
+   if(InpTradingZoneHistoryBars < 1 || InpTradingZoneHistoryBars > 100000)
+      return ConfigurationError("InpTradingZoneHistoryBars", IntegerToString(InpTradingZoneHistoryBars), "1..100000");
+   if(InpRiskLockHistoryBars < 1 || InpRiskLockHistoryBars > 100000)
+      return ConfigurationError("InpRiskLockHistoryBars", IntegerToString(InpRiskLockHistoryBars), "1..100000");
+   if(InpEventHistoryBars < 1 || InpEventHistoryBars > 100000)
+      return ConfigurationError("InpEventHistoryBars", IntegerToString(InpEventHistoryBars), "1..100000");
+   if(InpMaxStoredTradingZones < 1 || InpMaxStoredTradingZones > 500)
+      return ConfigurationError("InpMaxStoredTradingZones", IntegerToString(InpMaxStoredTradingZones), "1..500");
+   if(InpMaxStoredRiskLocks < 1 || InpMaxStoredRiskLocks > 500)
+      return ConfigurationError("InpMaxStoredRiskLocks", IntegerToString(InpMaxStoredRiskLocks), "1..500");
+   if(InpMaxEventMarkers < 1 || InpMaxEventMarkers > 1000)
+      return ConfigurationError("InpMaxEventMarkers", IntegerToString(InpMaxEventMarkers), "1..1000");
+   if(InpEMADisplayBars < 2 || InpEMADisplayBars > 5000)
+      return ConfigurationError("InpEMADisplayBars", IntegerToString(InpEMADisplayBars), "2..5000");
+   if(InpTimerMilliseconds < 100)
+      return ConfigurationError("InpTimerMilliseconds", IntegerToString(InpTimerMilliseconds), ">= 100");
+   if(InpEMALineWidth < 1 || InpEMALineWidth > 5)
+      return ConfigurationError("InpEMALineWidth", IntegerToString(InpEMALineWidth), "1..5");
+   if(InpZoneOpacityPercent < 0 || InpZoneOpacityPercent > 100)
+      return ConfigurationError("InpZoneOpacityPercent", IntegerToString(InpZoneOpacityPercent), "0..100");
+   if(InpEventOpacityPercent < 0 || InpEventOpacityPercent > 100)
+      return ConfigurationError("InpEventOpacityPercent", IntegerToString(InpEventOpacityPercent), "0..100");
+   if(InpEMAOpacityPercent < 0 || InpEMAOpacityPercent > 100)
+      return ConfigurationError("InpEMAOpacityPercent", IntegerToString(InpEMAOpacityPercent), "0..100");
+   if(InpCCBSNMagic == 0)
+      return ConfigurationError("InpCCBSNMagic", IntegerToString((long)InpCCBSNMagic), "non-zero");
+   if(InpControllerMagic == 0)
+      return ConfigurationError("InpControllerMagic", IntegerToString((long)InpControllerMagic), "non-zero");
+   if(InpControllerMagic == InpCCBSNMagic)
+      return ConfigurationError("InpControllerMagic", IntegerToString((long)InpControllerMagic),
+                                "different from InpCCBSNMagic");
+   if(InpCommandPrice <= 0.0)
+      return ConfigurationError("InpCommandPrice", DoubleToString(InpCommandPrice, 4), "> 0");
+   if(InpCommandVolume < 0.0)
+      return ConfigurationError("InpCommandVolume", DoubleToString(InpCommandVolume, 4), ">= 0");
+   if(InpCommandTimeoutSeconds < 5)
+      return ConfigurationError("InpCommandTimeoutSeconds", IntegerToString(InpCommandTimeoutSeconds), ">= 5");
+   if(InpControllerLockStaleSeconds < 5)
+      return ConfigurationError("InpControllerLockStaleSeconds",
+                                IntegerToString(InpControllerLockStaleSeconds), ">= 5");
+   if(InpEnableExternalMonitor &&
+      (InpMonitorStatusFile == "" ||
+       StringFind(InpMonitorStatusFile, "..") >= 0))
+      return ConfigurationError("InpMonitorStatusFile",
+                                InpMonitorStatusFile,
+                                "non-empty relative path without '..'");
+   if(InpMonitorHeartbeatSeconds < 1 ||
+      InpMonitorHeartbeatSeconds > 60)
+      return ConfigurationError("InpMonitorHeartbeatSeconds",
+                                IntegerToString(InpMonitorHeartbeatSeconds),
+                                "1..60");
+   g_configurationError = "NONE";
+   return true;
+  }
+
+bool ValidateControlEnvironment()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+     {
+      g_controlState = CCBSN_CONTROL_DISABLED;
+      return true;
+     }
+
+   g_controlState = CCBSN_CONTROL_UNKNOWN;
+   return true;
+  }
+
+long ColorWithOpacity(const color baseColor, const int opacityPercent)
+  {
+   int boundedPercent = opacityPercent;
+   if(boundedPercent < 0) boundedPercent = 0;
+   if(boundedPercent > 100) boundedPercent = 100;
+   uchar alpha = (uchar)MathRound(255.0 * boundedPercent / 100.0);
+   return (long)ColorToARGB(baseColor, alpha);
+  }
+
+void MarkChartDirty()
+  {
+   g_chartDirty = true;
+  }
+
+void RecordPerformanceDuration(const ulong startedMicros,
+                               ulong &totalMicros,
+                               ulong &maximumMicros)
+  {
+   ulong elapsedMicros = GetMicrosecondCount() - startedMicros;
+   totalMicros += elapsedMicros;
+   if(elapsedMicros > maximumMicros)
+      maximumMicros = elapsedMicros;
+  }
+
+double PerformanceAverage(const ulong totalMicros,
+                          const ulong sampleCount)
+  {
+   if(sampleCount == 0)
+      return 0.0;
+   return (double)totalMicros / (double)sampleCount;
+  }
+
+void ReportPerformanceMetrics(const string context,
+                              const bool forceReport)
+  {
+   ulong nowTick = GetTickCount64();
+   if(!forceReport &&
+      nowTick < g_perfLastReportTick +
+                (ulong)PERFORMANCE_REPORT_MILLISECONDS)
+      return;
+
+   g_perfLastReportTick = nowTick;
+   double elapsedSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
+   PrintFormat("PERF LITE V3 M5 | context=%s elapsed=%.1fs | ticks=%I64u timers=%I64u | policy=%I64u/%I64u | control_fast=%I64u idle=%I64u | visual=%I64u dashboard=%I64u snapshots=%I64u redraw=%I64u ema=%I64u/%I64u monitor=%I64u/%I64u",
+               context, elapsedSeconds,
+               g_perfTickEvents, g_perfTimerEvents,
+               g_perfPolicyUpdates, g_perfPolicyPolls,
+               g_perfControlFastRuns, g_perfControlIdleRuns,
+               g_perfVisualRuns, g_perfDashboardRuns,
+               g_perfLiveSnapshots, g_perfChartRedraws,
+               g_perfEMARebuilds, g_perfEMAAppends,
+               g_monitorSequence, g_monitorWriteFailures);
+   PrintFormat("PERF LATENCY LITE V3 M5 | policy_avg=%.1fus max=%I64uus | control_avg=%.1fus max=%I64uus | visual_avg=%.1fus max=%I64uus",
+               PerformanceAverage(g_perfPolicyTotalMicros,
+                                  g_perfPolicyPolls),
+               g_perfPolicyMaxMicros,
+               PerformanceAverage(g_perfControlTotalMicros,
+                                  g_perfControlFastRuns +
+                                  g_perfControlIdleRuns),
+               g_perfControlMaxMicros,
+               PerformanceAverage(g_perfVisualTotalMicros,
+                                  g_perfVisualRuns),
+               g_perfVisualMaxMicros);
+  }
+
+void FlushChartIfDirty()
+  {
+   if(!g_chartDirty)
+      return;
+   ChartRedraw(0);
+   g_perfChartRedraws++;
+   g_chartDirty = false;
+  }
+
+bool ApplyChartTheme()
+  {
+   if(!InpApplyChartTheme)
+      return true;
+
+   bool success = true;
+   if(!ChartSetInteger(0, CHART_COLOR_BACKGROUND, (long)InpChartBackgroundColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_FOREGROUND, (long)InpChartForegroundColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_GRID, (long)InpChartGridColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_CHART_UP, (long)InpChartBullColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_CHART_DOWN, (long)InpChartBearColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_CANDLE_BULL, (long)InpChartBullColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_CANDLE_BEAR, (long)InpChartBearColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_CHART_LINE, (long)InpChartLineColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_VOLUME, (long)InpChartVolumeColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_BID, (long)InpChartBidColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_ASK, (long)InpChartAskColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_LAST, (long)InpChartLastColor)) success = false;
+   if(!ChartSetInteger(0, CHART_COLOR_STOP_LEVEL, (long)InpChartStopLevelColor)) success = false;
+   ChartRedraw(0);
+   g_perfChartRedraws++;
+   g_chartDirty = false;
+   if(!success)
+     {
+      PrintFormat("UI ERROR | Cannot apply chart theme | error=%d", GetLastError());
+      return false;
+     }
+   return true;
+  }
+
+//+------------------------------------------------------------------+
+//| Bounded chart-object queues                                      |
+//+------------------------------------------------------------------+
+void PushBoundedObject(string &items[], const string name, const int maximum)
+  {
+   int size = ArraySize(items);
+   ArrayResize(items, size + 1);
+   items[size] = name;
+
+   while(ArraySize(items) > maximum)
+     {
+      string oldest = items[0];
+      if(ObjectFind(0, oldest) >= 0)
+        {
+         ObjectDelete(0, oldest);
+         MarkChartDirty();
+        }
+
+      int currentSize = ArraySize(items);
+      for(int i = 1; i < currentSize; i++)
+         items[i - 1] = items[i];
+      ArrayResize(items, currentSize - 1);
+     }
+  }
+
+void TrackEventObject(const string name)
+  {
+   // Some events contain both a text marker and a vertical line.
+   PushBoundedObject(g_eventObjectNames, name, InpMaxEventMarkers * 2);
+  }
+
+void TrackClosedZoneObject(const string name)
+  {
+   // Each Trading Zone now owns exactly one lightweight filled rectangle.
+   PushBoundedObject(g_closedZoneObjectNames, name,
+                     InpMaxStoredTradingZones);
+  }
+
+void TrackClosedRiskLockObject(const string name)
+  {
+   PushBoundedObject(g_closedRiskLockObjectNames, name,
+                     InpMaxStoredRiskLocks);
+  }
+
+void TrackEMAObject(const string name)
+  {
+   PushBoundedObject(g_emaObjectNames, name, InpEMADisplayBars);
+  }
+
+//+------------------------------------------------------------------+
+//| Chart primitives                                                 |
+//+------------------------------------------------------------------+
+void SetObjectTooltip(const string name, const string tooltip)
+  {
+   ObjectSetString(0, name, OBJPROP_TOOLTIP, tooltip);
+  }
+
+bool CreateOrMoveRectangle(const string name,
+                           const datetime time1,
+                           const double price1,
+                           const datetime time2,
+                           const double price2,
+                           const color baseColor,
+                           const bool filled,
+                           const int opacityPercent = -1)
+  {
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_RECTANGLE, 0, time1, price1, time2, price2))
+        {
+         PrintFormat("UI ERROR | Cannot create rectangle %s | error=%d", name, GetLastError());
+         return false;
+        }
+      created = true;
+     }
+
+   ObjectMove(0, name, 0, time1, price1);
+   ObjectMove(0, name, 1, time2, price2);
+   if(created)
+     {
+      int appliedOpacity = opacityPercent < 0 ? InpZoneOpacityPercent : opacityPercent;
+      long objectColor = ColorWithOpacity(baseColor, appliedOpacity);
+      ObjectSetInteger(0, name, OBJPROP_COLOR, objectColor);
+      ObjectSetInteger(0, name, OBJPROP_FILL, filled);
+      ObjectSetInteger(0, name, OBJPROP_BACK, filled);
+      ObjectSetInteger(0, name, OBJPROP_STYLE, STYLE_SOLID);
+      ObjectSetInteger(0, name, OBJPROP_WIDTH, filled ? 1 : 2);
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, name, OBJPROP_SELECTED, false);
+      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
+     }
+   MarkChartDirty();
+   return true;
+  }
+
+bool CreateVerticalLine(const string name,
+                        const datetime eventTime,
+                        const color lineColor,
+                        const ENUM_LINE_STYLE style,
+                        const string tooltip)
+  {
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_VLINE, 0, eventTime, 0.0))
+         return false;
+      created = true;
+     }
+   ObjectMove(0, name, 0, eventTime, 0.0);
+   if(created)
+     {
+      ObjectSetInteger(0, name, OBJPROP_COLOR,
+                       ColorWithOpacity(lineColor, InpEventOpacityPercent));
+      ObjectSetInteger(0, name, OBJPROP_STYLE, style);
+      ObjectSetInteger(0, name, OBJPROP_WIDTH, 1);
+      ObjectSetInteger(0, name, OBJPROP_BACK, true);
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      SetObjectTooltip(name, tooltip);
+     }
+   MarkChartDirty();
+   return true;
+  }
+
+bool ShouldRenderEvent(const bool categoryEnabled)
+  {
+   // Show All is a shortcut, not a second gate. A category switch must be
+   // sufficient by itself; otherwise every individual Show input appears broken.
+   return InpShowAllChartEvents || categoryEnabled;
+  }
+
+bool ShouldRenderTradingZone(const bool historical)
+  {
+   return !historical ||
+          (InpDrawTradingZoneHistory &&
+           g_historicalShift > 0 &&
+           g_historicalShift <= InpTradingZoneHistoryBars);
+  }
+
+bool ShouldRenderRiskLock(const bool historical)
+  {
+   return !historical ||
+          (InpDrawRiskLockHistory &&
+           g_historicalShift > 0 &&
+           g_historicalShift <= InpRiskLockHistoryBars);
+  }
+
+bool ShouldRenderHistoricalEvent(const bool historical,
+                                 const bool categoryEnabled)
+  {
+   if(!ShouldRenderEvent(categoryEnabled))
+      return false;
+   return !historical ||
+          (InpDrawEventHistory &&
+           g_historicalShift > 0 &&
+           g_historicalShift <= InpEventHistoryBars);
+  }
+
+void CreateEventMarker(const string eventType,
+                       const datetime eventTime,
+                       const double price,
+                       const string text,
+                       const string tooltip)
+  {
+   string name = g_objectPrefix + "EVENT." + eventType + "." + TimeKey(eventTime);
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_TEXT, 0, eventTime, price))
+         return;
+      TrackEventObject(name);
+      created = true;
+     }
+   ObjectMove(0, name, 0, eventTime, price);
+   ObjectSetString(0, name, OBJPROP_TEXT, text);
+   if(created)
+     {
+      ObjectSetString(0, name, OBJPROP_FONT, "Arial");
+      ObjectSetInteger(0, name, OBJPROP_FONTSIZE, 8);
+      // All chart event labels use one high-contrast color by UI policy.
+      ObjectSetInteger(0, name, OBJPROP_COLOR, clrBlack);
+      ObjectSetInteger(0, name, OBJPROP_ANCHOR, ANCHOR_LOWER);
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
+      SetObjectTooltip(name, tooltip);
+     }
+   MarkChartDirty();
+  }
+
+string FitPanelText(const string value, const int maxCharacters)
+  {
+   if(maxCharacters <= 0 || StringLen(value) <= maxCharacters)
+      return value;
+   if(maxCharacters <= 3)
+      return StringSubstr(value, 0, maxCharacters);
+   return StringSubstr(value, 0, maxCharacters - 3) + "...";
+  }
+
+void SetPanelLabelAt(const string suffix,
+                     const int x,
+                     const int y,
+                     const string value,
+                     const color textColor,
+                     const int maxCharacters)
+  {
+   string name = g_objectPrefix + "PANEL." + suffix;
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_LABEL, 0, 0, 0))
+         return;
+      created = true;
+     }
+   if(created)
+     {
+      ObjectSetInteger(0, name, OBJPROP_CORNER, CORNER_LEFT_UPPER);
+      ObjectSetInteger(0, name, OBJPROP_XDISTANCE, x);
+      ObjectSetInteger(0, name, OBJPROP_YDISTANCE, y);
+      ObjectSetInteger(0, name, OBJPROP_FONTSIZE, 9);
+      ObjectSetString(0, name, OBJPROP_FONT, "Consolas");
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
+     }
+   ObjectSetInteger(0, name, OBJPROP_COLOR, textColor);
+   ObjectSetString(0, name, OBJPROP_TEXT, FitPanelText(value, maxCharacters));
+   MarkChartDirty();
+  }
+
+void SetPanelLabel(const string suffix, const int y, const string value, const color textColor)
+  {
+   SetPanelLabelAt(suffix, 20, y, value, textColor, 82);
+  }
+
+void SetPanelColumnLabel(const string suffix,
+                         const bool rightColumn,
+                         const int y,
+                         const string value,
+                         const color textColor)
+  {
+   SetPanelLabelAt(suffix, rightColumn ? 340 : 20, y, value, textColor, 41);
+  }
+
+void SetWrappedPanelLabel(const string suffix,
+                          const int y,
+                          const string value,
+                          const color textColor,
+                          const int maxCharacters = 82)
+  {
+   string firstLine = value;
+   string secondLine = "";
+   if(StringLen(value) > maxCharacters)
+     {
+      int splitAt = maxCharacters;
+      for(int index = maxCharacters; index >= 1; index--)
+        {
+         if(StringSubstr(value, index, 1) == " ")
+           {
+            splitAt = index;
+            break;
+           }
+        }
+      firstLine = StringSubstr(value, 0, splitAt);
+      int nextCharacter = splitAt;
+      if(StringSubstr(value, splitAt, 1) == " ")
+         nextCharacter++;
+      secondLine = "  " + FitPanelText(StringSubstr(value, nextCharacter),
+                                        maxCharacters - 2);
+     }
+   SetPanelLabel(suffix + ".1", y, firstLine, textColor);
+   SetPanelLabel(suffix + ".2", y + 20, secondLine, textColor);
+  }
+
+void SetEventChecklistLabel(const string suffix,
+                            const bool rightColumn,
+                            const int row,
+                            const string value,
+                            const bool triggered,
+                            const color activeColor)
+  {
+   string name = g_objectPrefix + "EVENT_PANEL." + suffix;
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_LABEL, 0, 0, 0))
+         return;
+      created = true;
+     }
+   if(created)
+     {
+      ObjectSetInteger(0, name, OBJPROP_CORNER, CORNER_LEFT_LOWER);
+      ObjectSetInteger(0, name, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
+      ObjectSetInteger(0, name, OBJPROP_XDISTANCE,
+                       rightColumn ? 340 : 20);
+      ObjectSetInteger(0, name, OBJPROP_YDISTANCE, 205 - row * 20);
+      ObjectSetInteger(0, name, OBJPROP_FONTSIZE, 9);
+      ObjectSetString(0, name, OBJPROP_FONT, "Consolas");
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
+     }
+   color mutedColor = C'125,135,148';
+   ObjectSetInteger(0, name, OBJPROP_COLOR,
+                    triggered ? activeColor : mutedColor);
+   ObjectSetString(0, name, OBJPROP_TEXT, FitPanelText(value, 41));
+   MarkChartDirty();
+  }
+
+void CreateEventChecklistPanel()
+  {
+   if(!InpShowEventDashboard)
+      return;
+   string background = g_objectPrefix + "EVENT_PANEL.BG";
+   bool created = false;
+   if(ObjectFind(0, background) < 0)
+     {
+      if(!ObjectCreate(0, background, OBJ_RECTANGLE_LABEL, 0, 0, 0))
+         return;
+      created = true;
+     }
+   if(!created)
+      return;
+   ObjectSetInteger(0, background, OBJPROP_CORNER, CORNER_LEFT_LOWER);
+   ObjectSetInteger(0, background, OBJPROP_XDISTANCE, 10);
+   ObjectSetInteger(0, background, OBJPROP_YDISTANCE, 15);
+   ObjectSetInteger(0, background, OBJPROP_XSIZE, 650);
+   ObjectSetInteger(0, background, OBJPROP_YSIZE, 235);
+   ObjectSetInteger(0, background, OBJPROP_BGCOLOR,
+                    (long)InpDashboardBackgroundColor);
+   ObjectSetInteger(0, background, OBJPROP_BORDER_COLOR,
+                    InpPanelBorderColor);
+   ObjectSetInteger(0, background, OBJPROP_BACK, false);
+   ObjectSetInteger(0, background, OBJPROP_SELECTABLE, false);
+   ObjectSetInteger(0, background, OBJPROP_HIDDEN, false);
+   MarkChartDirty();
+  }
+
+void UpdateEventChecklistPanel()
+  {
+   if(!InpShowEventDashboard)
+      return;
+   CreateEventChecklistPanel();
+
+   string titleName = g_objectPrefix + "EVENT_PANEL.TITLE";
+   bool titleCreated = false;
+   if(ObjectFind(0, titleName) < 0)
+     {
+      if(!ObjectCreate(0, titleName, OBJ_LABEL, 0, 0, 0))
+         return;
+      titleCreated = true;
+     }
+   if(titleCreated)
+     {
+      ObjectSetInteger(0, titleName, OBJPROP_CORNER, CORNER_LEFT_LOWER);
+      ObjectSetInteger(0, titleName, OBJPROP_ANCHOR, ANCHOR_LEFT_LOWER);
+      ObjectSetInteger(0, titleName, OBJPROP_XDISTANCE, 20);
+      ObjectSetInteger(0, titleName, OBJPROP_YDISTANCE, 225);
+      ObjectSetInteger(0, titleName, OBJPROP_FONTSIZE, 9);
+      ObjectSetString(0, titleName, OBJPROP_FONT, "Consolas");
+      ObjectSetInteger(0, titleName, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, titleName, OBJPROP_HIDDEN, false);
+     }
+   ObjectSetInteger(0, titleName, OBJPROP_COLOR, C'45,90,190');
+   ObjectSetString(0, titleName, OBJPROP_TEXT,
+                   FitPanelText(InpTextEventDashboard +
+                                StringFormat(" | M5 Scale=%.2f",
+                                             InpM5PriceScale), 82));
+   MarkChartDirty();
+
+   bool decisionKnown = g_lastDecisionTime > 0;
+   ENUM_POLICY_FAMILY metricPolicy = g_activePolicy;
+   if(metricPolicy == POLICY_FAMILY_NONE)
+      metricPolicy = g_armingPolicy;
+   if(metricPolicy == POLICY_FAMILY_NONE)
+      metricPolicy = g_riskPolicy;
+   if(metricPolicy == POLICY_FAMILY_NONE)
+      metricPolicy = g_lastDistance < 0.0
+                     ? POLICY_FAMILY_DOWNSIDE : POLICY_FAMILY_UPSIDE;
+   double atrMinimum = metricPolicy == POLICY_FAMILY_DOWNSIDE
+                       ? MathMax(M5Price(InpMinATRPrice),
+                                 M5Price(InpDownsideMinATRPrice))
+                       : M5Price(InpMinATRPrice);
+   bool atrPass = decisionKnown && g_lastATR >= atrMinimum;
+   bool riskLock = g_state == VISUAL_STATE_RISK_LOCK;
+   bool recovered = g_lastRecoveryCandidate ||
+                    g_lastDashboardEvent == "POLICY_RECOVERED_ARMING";
+   string cycleConsistency = CycleConsistencyToString();
+   bool cycleConsistencyAlert = CycleConsistencyAlertActive();
+
+   SetEventChecklistLabel("ATR", false, 0,
+                          StringFormat("ATR%d: %s / %s %s",
+                                       InpATRPeriod,
+                                       FormatPrice(g_lastATR),
+                                       FormatPrice(atrMinimum),
+                                       atrPass ? "PASS" : "BLOCK"),
+                          decisionKnown,
+                          atrPass ? C'0,120,80' : C'190,50,60');
+   SetEventChecklistLabel("EMA", false, 1,
+                          StringFormat("EMA%d: %s", InpEMAPeriod,
+                                       FormatPrice(g_lastEMA)),
+                          decisionKnown, C'45,90,190');
+   SetEventChecklistLabel("DISTANCE", false, 2,
+                          "D(C-EMA): " + FormatPrice(g_lastDistance),
+                          decisionKnown,
+                          g_lastDistance >= 0.0
+                          ? C'0,120,80' : C'45,90,190');
+   SetEventChecklistLabel("BEAR_DROP", false, 3,
+                          InpEventNameBearDrop + ": " +
+                          (g_lastBearDropVeto ? "BLOCK" : "--"),
+                          g_lastBearDropVeto, C'190,50,60');
+   SetEventChecklistLabel("RISK_LOCK", false, 4,
+                          InpEventNameRiskLock + ": " +
+                          (riskLock ? StringFormat("ACTIVE (%d)",
+                                                   g_riskLockRemaining) : "--"),
+                          riskLock, C'215,90,120');
+   SetEventChecklistLabel("CONSECUTIVE_RED", false, 5,
+                          InpEventNameConsecutiveRed + ": " +
+                          StringFormat("%d/%d", g_lastConsecutiveRedCount,
+                                       InpConsecutiveRedBars),
+                          g_lastConsecutiveRedBlock, C'190,50,60');
+   SetEventChecklistLabel("BEAR_TWO", false, 6,
+                          InpEventNameBearTwo + ": " +
+                          StringFormat("%d/2", g_lastBearTwoCount),
+                          g_lastBearTwoBlock, C'190,50,60');
+   SetEventChecklistLabel("DOWNSIDE_EMA", false, 7,
+                          InpEventNameDownsideEMA + ": " +
+                          (g_lastDownsideEMAApproachBlock ? "BLOCK" : "--"),
+                          g_lastDownsideEMAApproachBlock, C'190,50,60');
+   SetEventChecklistLabel("ACTIVE_LOW_ATR", false, 8,
+                          InpEventNameActiveLowATR + ": " +
+                          StringFormat("%d/%d", g_lastActiveLowATRCount,
+                                       InpActiveLowATRBars),
+                          g_lastActiveLowATRBlock, C'190,50,60');
+
+   SetEventChecklistLabel("BEARISH_ENGULFING", true, 0,
+                          InpEventNameBearishEngulfing + ": " +
+                          (g_lastBearishEngulfing ? "HIT" : "--"),
+                          g_lastBearishEngulfing, C'190,50,60');
+   SetEventChecklistLabel("BEARISH_PIN", true, 1,
+                          InpEventNameBearishPinBar + ": " +
+                          (g_lastBearishPinBar ? "HIT" : "--"),
+                          g_lastBearishPinBar, C'190,50,60');
+   SetEventChecklistLabel("DENY", true, 2,
+                          InpEventNameDeny + ": " +
+                          (g_lastDenyBlock ? "BLOCK" : "--"),
+                          g_lastDenyBlock, C'190,50,60');
+   SetEventChecklistLabel("REVERSE", true, 3,
+                          InpEventNameReverse + ": " +
+                          (g_lastReverseBlock ? "BLOCK" : "--"),
+                          g_lastReverseBlock, C'190,50,60');
+   SetEventChecklistLabel("FALL", true, 4,
+                          InpEventNameFall + ": " +
+                          (g_lastFallBlock ? "BLOCK" : "--"),
+                          g_lastFallBlock, C'190,50,60');
+   SetEventChecklistLabel("RECOVERED", true, 5,
+                          InpEventNameRecovered + ": " +
+                          (recovered ? "READY" : "--"),
+                          recovered, C'0,120,80');
+   SetEventChecklistLabel("NC_DRIFT", true, 6,
+                          InpEventNameNCDrift + ": " +
+                          (g_driftDetectedCurrentChain ? "DRIFT" : "--"),
+                          g_driftDetectedCurrentChain, C'190,50,60');
+   SetEventChecklistLabel("NC_SYNC", true, 7,
+                          InpEventNameNCSync + ": " + cycleConsistency +
+                          StringFormat(" (%d/%d)", g_cycleSyncRetryCount,
+                                       InpCycleSyncMaxRetries),
+                          cycleConsistencyAlert, C'190,50,60');
+  }
+
+void CreatePanel()
+  {
+   if(!InpShowDashboard)
+      return;
+   string background = g_objectPrefix + "PANEL.BG";
+   bool created = false;
+   if(ObjectFind(0, background) < 0)
+     {
+      if(!ObjectCreate(0, background, OBJ_RECTANGLE_LABEL, 0, 0, 0))
+         return;
+      created = true;
+     }
+   if(!created)
+      return;
+   ObjectSetInteger(0, background, OBJPROP_CORNER, CORNER_LEFT_UPPER);
+   ObjectSetInteger(0, background, OBJPROP_XDISTANCE, 10);
+   ObjectSetInteger(0, background, OBJPROP_YDISTANCE, 15);
+   ObjectSetInteger(0, background, OBJPROP_XSIZE, 650);
+   ObjectSetInteger(0, background, OBJPROP_YSIZE, 295);
+   ObjectSetInteger(0, background, OBJPROP_BGCOLOR,
+                    (long)InpDashboardBackgroundColor);
+   ObjectSetInteger(0, background, OBJPROP_BORDER_COLOR, InpPanelBorderColor);
+   ObjectSetInteger(0, background, OBJPROP_BACK, false);
+   ObjectSetInteger(0, background, OBJPROP_SELECTABLE, false);
+   ObjectSetInteger(0, background, OBJPROP_HIDDEN, false);
+   MarkChartDirty();
+  }
+
+void UpdatePanel()
+  {
+   if(!InpShowDashboard && !InpShowEventDashboard)
+      return;
+   g_perfDashboardRuns++;
+   UpdateEventChecklistPanel();
+   if(!InpShowDashboard)
+      return;
+   CreatePanel();
+
+   color stateColor = InpDashboardTextColor;
+   if(g_state == VISUAL_STATE_ACTIVE) stateColor = PolicyFamilyColor(g_activeZoneBranch);
+   if(g_state == VISUAL_STATE_ARMING) stateColor = C'160,110,0';
+   if(g_state == VISUAL_STATE_RISK_LOCK) stateColor = C'215,90,35';
+   if(g_state == VISUAL_STATE_DATA_ERROR) stateColor = C'190,50,60';
+
+   ENUM_POLICY_FAMILY panelPolicy = g_activePolicy;
+   if(panelPolicy == POLICY_FAMILY_NONE)
+      panelPolicy = g_armingPolicy;
+   if(panelPolicy == POLICY_FAMILY_NONE)
+      panelPolicy = g_riskPolicy;
+
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   string cycleStatus = desired == CCBSN_COMMAND_NEW_CYCLE_ON ? "ON" : "OFF";
+   color cycleColor = desired == CCBSN_COMMAND_NEW_CYCLE_ON
+                      ? C'0,120,80' : C'190,50,60';
+   color ackColor = InpDashboardTextColor;
+   if(g_controlState == CCBSN_CONTROL_ON_CONFIRMED ||
+      g_controlState == CCBSN_CONTROL_OFF_CONFIRMED)
+      ackColor = C'0,120,80';
+   else if(g_controlState == CCBSN_CONTROL_ERROR)
+      ackColor = C'190,50,60';
+   else if(g_controlState == CCBSN_CONTROL_ON_PENDING ||
+           g_controlState == CCBSN_CONTROL_OFF_PENDING ||
+           g_controlState == CCBSN_CONTROL_UNKNOWN)
+      ackColor = C'180,110,0';
+   if(CycleConsistencyAlertActive())
+      ackColor = C'190,50,60';
+
+   ulong nowTick = GetTickCount64();
+   double uptimeSeconds = (double)(nowTick - g_perfStartTick) / 1000.0;
+   double policyAverage = PerformanceAverage(g_perfPolicyTotalMicros,
+                                              g_perfPolicyPolls);
+   ulong controlSamples = g_perfControlFastRuns + g_perfControlIdleRuns;
+   double controlAverage = PerformanceAverage(g_perfControlTotalMicros,
+                                               controlSamples);
+   double visualAverage = PerformanceAverage(g_perfVisualTotalMicros,
+                                              g_perfVisualRuns);
+
+   SetPanelLabel("TITLE", 22, InpTextPanelTitle,
+                 InpDashboardTextColor);
+   SetPanelLabel("CYCLE_HEADER", 48, InpTextCycleStatus,
+                 C'45,90,190');
+   SetPanelColumnLabel("CYCLE", false, 70,
+                       "Cycle: " + cycleStatus,
+                       cycleColor);
+   SetPanelColumnLabel("ACK", true, 70,
+                       "ACK: " + ControlStateToString(g_controlState) +
+                       " | " + CycleConsistencyToString(),
+                       ackColor);
+   SetPanelColumnLabel("POLICY", false, 90,
+                       "Policy: " + StateToString(g_state) + " | " +
+                       PolicyFamilyToString(panelPolicy) +
+                       StringFormat(" | Scale=%.2f", InpM5PriceScale),
+                       stateColor);
+   SetPanelColumnLabel("CHECKLIST", true, 90,
+                       InpTextChecklist + ": " +
+                       (g_lastChecklistPass ? "PASS" : "FAIL"),
+                       g_lastChecklistPass ? C'0,120,80' : C'190,50,60');
+   SetWrappedPanelLabel("EVENT", 110,
+                        InpTextEvent + ": " + g_lastDashboardEvent +
+                        " | " + g_lastReason,
+                        InpDashboardTextColor);
+
+   SetPanelLabel("SESSION_HEADER", 155, InpTextSession,
+                 C'45,90,190');
+   SetPanelColumnLabel("SESSION_DECISION", false, 177,
+                       "Decision: " + SessionToString(g_lastDecisionSession),
+                       g_lastDecisionSession == POLICY_SESSION_OUTSIDE
+                       ? C'190,50,60' : C'0,120,80');
+   SetPanelColumnLabel("SESSION_ACTIVE", true, 177,
+                       "Active: " + SessionToString(g_activeSession) +
+                       StringFormat(" | Shift=%dm", InpSessionTimeShiftMinutes),
+                       InpDashboardTextColor);
+
+   SetPanelLabel("PERFORMANCE_HEADER", 203, InpTextPerformance,
+                 C'45,90,190');
+   SetPanelColumnLabel("PERF_UPTIME", false, 225,
+                       StringFormat("Uptime: %.0fs | Tick: %I64u",
+                                    uptimeSeconds, g_perfTickEvents),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("PERF_TIMER", true, 225,
+                       StringFormat("Timer: %I64u | Redraw: %I64u",
+                                    g_perfTimerEvents,
+                                    g_perfChartRedraws),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("PERF_POLICY", false, 245,
+                       StringFormat("Policy: %I64u/%I64u | %.0f/%I64uus",
+                                    g_perfPolicyUpdates, g_perfPolicyPolls,
+                                    policyAverage, g_perfPolicyMaxMicros),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("PERF_CONTROL", true, 245,
+                       StringFormat("Control F/I: %I64u/%I64u | %.0f/%I64uus",
+                                    g_perfControlFastRuns,
+                                    g_perfControlIdleRuns,
+                                    controlAverage,
+                                    g_perfControlMaxMicros),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("PERF_VISUAL", false, 265,
+                       StringFormat("Visual: %I64u | %.0f/%I64uus",
+                                    g_perfVisualRuns, visualAverage,
+                                    g_perfVisualMaxMicros),
+                       InpDashboardTextColor);
+   SetPanelColumnLabel("PERF_OBJECTS", true, 265,
+                       StringFormat("Snap/EMA: %I64u | %I64u/%I64u",
+                                    g_perfLiveSnapshots,
+                                    g_perfEMARebuilds,
+                                    g_perfEMAAppends),
+                        InpDashboardTextColor);
+  }
+
+//+------------------------------------------------------------------+
+//| EMA23 M5 line visualization                                     |
+//+------------------------------------------------------------------+
+void DeleteEMAVisualization()
+  {
+   if(ObjectsDeleteAll(0, g_objectPrefix + "EMA.") > 0)
+      MarkChartDirty();
+   ArrayResize(g_emaObjectNames, 0);
+  }
+
+bool CreateOrMoveEMASegment(const string name,
+                            const datetime time1,
+                            const double price1,
+                            const datetime time2,
+                            const double price2,
+                            const bool trackObject)
+  {
+   bool created = false;
+   if(ObjectFind(0, name) < 0)
+     {
+      if(!ObjectCreate(0, name, OBJ_TREND, 0, time1, price1, time2, price2))
+        {
+         PrintFormat("UI ERROR | Cannot create EMA segment %s | error=%d",
+                     name, GetLastError());
+         return false;
+        }
+      created = true;
+     }
+
+   ObjectMove(0, name, 0, time1, price1);
+   ObjectMove(0, name, 1, time2, price2);
+   if(created)
+     {
+      ObjectSetInteger(0, name, OBJPROP_COLOR,
+                       ColorWithOpacity(InpEMALineColor, InpEMAOpacityPercent));
+      ObjectSetInteger(0, name, OBJPROP_STYLE, InpEMALineStyle);
+      ObjectSetInteger(0, name, OBJPROP_WIDTH, InpEMALineWidth);
+      ObjectSetInteger(0, name, OBJPROP_RAY_RIGHT, false);
+      ObjectSetInteger(0, name, OBJPROP_BACK, false);
+      ObjectSetInteger(0, name, OBJPROP_SELECTABLE, false);
+      ObjectSetInteger(0, name, OBJPROP_SELECTED, false);
+      ObjectSetInteger(0, name, OBJPROP_HIDDEN, false);
+      SetObjectTooltip(name,
+                       StringFormat("EMA%d M5\n%s -> %s",
+                                    InpEMAPeriod,
+                                    TimeToString(time1, TIME_DATE | TIME_MINUTES),
+                                    TimeToString(time2, TIME_DATE | TIME_MINUTES)));
+     }
+   if(created && trackObject)
+      TrackEMAObject(name);
+   MarkChartDirty();
+   return true;
+  }
+
+void UpdateLiveEMAVisualization(const MqlRates &previousBar,
+                                const MqlRates &currentBar,
+                                const double previousEMA,
+                                const double currentEMA,
+                                const datetime liveEnd)
+  {
+   if(!InpShowEMAOnChart || g_emaHandle == INVALID_HANDLE)
+      return;
+   if(previousEMA == EMPTY_VALUE || currentEMA == EMPTY_VALUE)
+      return;
+
+   datetime renderEnd = liveEnd;
+   if(renderEnd <= previousBar.time)
+      renderEnd = currentBar.time;
+   CreateOrMoveEMASegment(g_objectPrefix + "EMA.LIVE",
+                          previousBar.time, previousEMA,
+                          renderEnd, currentEMA, false);
+  }
+
+void RebuildEMAVisualization()
+  {
+   g_perfEMARebuilds++;
+   DeleteEMAVisualization();
+   if(!InpShowEMAOnChart || g_emaHandle == INVALID_HANDLE)
+      return;
+
+   int requested = InpEMADisplayBars + 2;
+   MqlRates rates[];
+   double emaValues[];
+   ArraySetAsSeries(rates, true);
+   ArraySetAsSeries(emaValues, true);
+   int ratesCopied = CopyRates(_Symbol, DECISION_TIMEFRAME, 0, requested, rates);
+   int emaCopied = CopyBuffer(g_emaHandle, 0, 0, requested, emaValues);
+   int available = ratesCopied;
+   if(emaCopied < available) available = emaCopied;
+   if(available < 3)
+     {
+      Print("EMA DISPLAY WAIT | M5 EMA data is not ready.");
+      return;
+     }
+
+   int oldestShift = available - 1;
+   for(int shift = oldestShift; shift >= 2; shift--)
+     {
+      string name = g_objectPrefix + "EMA." + TimeKey(rates[shift - 1].time);
+     CreateOrMoveEMASegment(name,
+                             rates[shift].time, emaValues[shift],
+                             rates[shift - 1].time, emaValues[shift - 1], true);
+     }
+  }
+
+bool AppendLatestClosedEMASegment()
+  {
+   if(!InpShowEMAOnChart || g_emaHandle == INVALID_HANDLE)
+      return false;
+
+   MqlRates rates[3];
+   double emaValues[3];
+   if(CopyRates(_Symbol, DECISION_TIMEFRAME, 0, 3, rates) != 3)
+      return false;
+   if(CopyBuffer(g_emaHandle, 0, 0, 3, emaValues) != 3)
+      return false;
+   if(emaValues[0] == EMPTY_VALUE || emaValues[1] == EMPTY_VALUE)
+      return false;
+
+   string name = g_objectPrefix + "EMA." + TimeKey(rates[1].time);
+   bool appended = CreateOrMoveEMASegment(name,
+                                          rates[0].time, emaValues[0],
+                                          rates[1].time, emaValues[1], true);
+   if(appended)
+      g_perfEMAAppends++;
+   return appended;
+  }
+
+//+------------------------------------------------------------------+
+//| Audit                                                            |
+//+------------------------------------------------------------------+
+void AuditEvent(const string eventType,
+                const datetime eventTime,
+                const string reason,
+                const bool historical)
+  {
+   if(!historical)
+      g_lastDashboardEvent = eventType;
+   if(!historical)
+       PrintFormat("CCBSN_V3 | %s | %s | state=%s session=%s | close=%s atr=%s ema=%s d=%s | bear=%s source=%s red=%d/%d pattern=%s body=%s/%s deny=%s sweep=%s overlap=%.1f%% fall=%s range=%s/%s reverse=%s body=%s/%s lock=%d recover=%s scob=%s | %s",
+                   TimeToString(eventTime, TIME_DATE | TIME_MINUTES), eventType,
+                   StateToString(g_state), SessionToString(g_lastDecisionSession),
+                   FormatPrice(g_lastClose),
+                   FormatPrice(g_lastATR), FormatPrice(g_lastEMA),
+                   FormatPrice(g_lastDistance),
+                    g_lastBearDropVeto ? "VETO" : "OK", g_lastBearDropSource,
+                    g_lastConsecutiveRedCount, InpConsecutiveRedBars,
+                    g_lastBearishPatternSource,
+                    FormatPrice(g_lastCurrentBody),
+                    FormatPrice(g_lastPreviousBody),
+                    g_lastDenyBlock ? "BLOCK" :
+                    (g_lastUpthrustSweep ? "SWEEP_ONLY" : "NONE"),
+                    FormatPrice(g_lastDenySweepSize),
+                    g_lastDenyBodyOverlapPercent,
+                    g_lastFallBlock ? "BLOCK" : "NONE",
+                    FormatPrice(g_lastFallRange),
+                    FormatPrice(g_lastFallPriorRange),
+                    g_lastReverseBlock ? "BLOCK" :
+                    (g_lastReversePinBar ? "PIN_ONLY" : "NONE"),
+                    FormatPrice(g_lastReverseRedBody),
+                    FormatPrice(g_lastReversePinBody),
+                    g_riskLockRemaining, g_lastRecoverySource,
+                   g_lastBullishSCOB ? "true" : "false", reason);
+
+   if(historical || !InpWriteCsvAudit)
+      return;
+
+   int handle = FileOpen(InpCsvFileName,
+                         FILE_READ | FILE_WRITE | FILE_CSV | FILE_ANSI | FILE_SHARE_READ,
+                         ';');
+   if(handle == INVALID_HANDLE)
+     {
+      PrintFormat("AUDIT ERROR | FileOpen failed | file=%s error=%d",
+                  InpCsvFileName, GetLastError());
+      return;
+     }
+
+   if(FileSize(handle) == 0)
+      FileWrite(handle, "policy", "version", "symbol", "event_time", "event",
+                "state", "close", "atr", "atr_period", "min_atr", "ema",
+                 "ema_period", "distance", "upside_max_above_ema", "downside_boundary",
+                 "decision_session", "active_session", "policy_counter_snapshot",
+                 "bear_drop", "bear_drop_source", "legacy_bear_drop",
+                 "two_bar_bear_drop", "peak_d", "relative_drop",
+                 "previous_high", "current_low", "two_bar_drop",
+                 "bearish_count", "distance_falling", "consecutive_red_count",
+                 "consecutive_red_block", "bearish_pattern",
+                 "bearish_engulfing", "bearish_pin_bar",
+                 "deny_block", "upthrust_sweep", "deny_prior_high",
+                 "deny_sweep_size", "deny_upper_wick_body",
+                  "deny_body", "upthrust_body", "deny_body_overlap_percent",
+                  "reverse_snapshot", "fall_snapshot",
+                  "risk_lock_remaining",
+                 "recovery_count", "recovery_candidate", "recovery_source",
+                 "policy_recovery_candidate", "bullish_scob",
+                 "ccbsn_magic", "controller_magic", "control_mode",
+                 "control_state", "desired_command", "pending_command",
+                 "ticket", "cancel_requested", "ccbsn_positions",
+                 "ccbsn_volume", "sync_state", "drift_count", "reason");
+   FileSeek(handle, 0, SEEK_END);
+   FileWrite(handle, POLICY_ID, POLICY_VERSION, _Symbol,
+             TimeToString(eventTime, TIME_DATE | TIME_MINUTES | TIME_SECONDS),
+             eventType, StateToString(g_state),
+             FormatPrice(g_lastClose), FormatPrice(g_lastATR),
+             InpATRPeriod, FormatPrice(M5Price(InpMinATRPrice)), FormatPrice(g_lastEMA),
+             InpEMAPeriod, FormatPrice(g_lastDistance),
+              FormatPrice(M5Price(InpUpsideMaxAboveEMAPrice)),
+              FormatPrice(M5Price(InpDownsideBandBoundary)),
+              SessionToString(g_lastDecisionSession),
+              SessionToString(g_activeSession),
+              StringFormat("arm=%s|active=%s|risk=%s|pass=%d|bearTwo=%d:%s|lowATR=%d:%s|dEMA=%s",
+                           PolicyFamilyToString(g_armingPolicy),
+                           PolicyFamilyToString(g_activePolicy),
+                           PolicyFamilyToString(g_riskPolicy),
+                           g_consecutivePassCount, g_lastBearTwoCount,
+                           g_lastBearTwoBlock ? "true" : "false",
+                           g_lastActiveLowATRCount,
+                           g_lastActiveLowATRBlock ? "true" : "false",
+                           g_lastDownsideEMAApproachBlock ? "true" : "false"),
+              g_lastBearDropVeto ? "true" : "false", g_lastBearDropSource,
+              g_lastLegacyBearDrop ? "true" : "false",
+              g_lastTwoBarBearDrop ? "true" : "false",
+              FormatPrice(g_lastPeakDistance), FormatPrice(g_lastRelativeDrop),
+              FormatPrice(g_lastPreviousHigh), FormatPrice(g_lastCurrentLow),
+              FormatPrice(g_lastTwoBarDrop), g_lastBearishBarCount,
+              g_lastDistanceFalling ? "true" : "false",
+              g_lastConsecutiveRedCount,
+              g_lastConsecutiveRedBlock ? "true" : "false",
+              g_lastBearishPatternSource,
+               g_lastBearishEngulfing ? "true" : "false",
+               g_lastBearishPinBar ? "true" : "false",
+               g_lastDenyBlock ? "true" : "false",
+               g_lastUpthrustSweep ? "true" : "false",
+               FormatPrice(g_lastDenyPriorHigh),
+               FormatPrice(g_lastDenySweepSize),
+               DoubleToString(g_lastDenyUpperWickBody, 2),
+               FormatPrice(g_lastDenyBody),
+                FormatPrice(g_lastUpthrustBody),
+                DoubleToString(g_lastDenyBodyOverlapPercent, 2),
+                StringFormat("block=%s|pin=%s|pinBody=%s|redBody=%s|upper=%.2f|lower=%.2f",
+                             g_lastReverseBlock ? "true" : "false",
+                             g_lastReversePinBar ? "true" : "false",
+                             FormatPrice(g_lastReversePinBody),
+                             FormatPrice(g_lastReverseRedBody),
+                             g_lastReverseUpperWickBody,
+                             g_lastReverseLowerWickBody),
+                StringFormat("block=%s|body=%s|range=%s|priorRange=%s|priorHigh=%s|priorLow=%s|openInside=%s|closeBreak=%s",
+                             g_lastFallBlock ? "true" : "false",
+                             FormatPrice(g_lastFallBody),
+                             FormatPrice(g_lastFallRange),
+                             FormatPrice(g_lastFallPriorRange),
+                             FormatPrice(g_lastFallPriorHigh),
+                             FormatPrice(g_lastFallPriorLow),
+                             g_lastFallOpenInside ? "true" : "false",
+                             g_lastFallCloseBreak ? "true" : "false"),
+                g_riskLockRemaining, g_consecutiveRecoveryBars,
+              g_lastRecoveryCandidate ? "true" : "false",
+              g_lastRecoverySource,
+              g_lastPolicyRecoveryCandidate ? "true" : "false",
+              g_lastBullishSCOB ? "true" : "false",
+             StringFormat("%I64u", InpCCBSNMagic),
+             StringFormat("%I64u", InpControllerMagic),
+              ControlModeToString(InpControlMode),
+              ControlStateToString(g_controlState),
+              CommandToString(DesiredCommand()),
+              CommandToString(g_pendingCommand),
+              StringFormat("%I64u", g_commandTicket),
+              g_commandCancelRequested ? "true" : "false",
+              g_ccbsnPositionCount, DoubleToString(g_ccbsnPositionVolume, 2),
+              StringFormat("%s|cycle=%s|retry=%d/%d", g_syncState,
+                           CycleConsistencyToString(), g_cycleSyncRetryCount,
+                           InpCycleSyncMaxRetries),
+              g_driftCount, reason);
+   FileFlush(handle);
+   FileClose(handle);
+  }
+
+int ReadCCBSNPositionSnapshot(double &totalVolume)
+  {
+   totalVolume = 0.0;
+   int count = 0;
+   for(int index = PositionsTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = PositionGetTicket(index);
+      if(ticket == 0)
+         continue;
+      if(PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      if((ulong)PositionGetInteger(POSITION_MAGIC) != InpCCBSNMagic)
+         continue;
+      count++;
+      totalVolume += PositionGetDouble(POSITION_VOLUME);
+     }
+   return count;
+  }
+
+void RaisePositionDriftAlert(const string context)
+  {
+   datetime now = TimeCurrent();
+   g_driftCount++;
+   g_driftDetectedCurrentChain = true;
+   g_offReassertRequested = true;
+   g_syncState = "DRIFT: NEW CCBSN POSITION";
+   g_lastSyncReason = "POSITION_OPENED_WHILE_OFF_FLAT_GUARDED:" + context;
+
+   double markerPrice = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+   if(markerPrice <= 0.0)
+      markerPrice = g_lastClose;
+   if(ShouldRenderEvent(InpShowDriftEvents))
+      CreateEventMarker("NC_DRIFT_DETECTED", now, markerPrice,
+                        InpEventNameNCDrift,
+                        "CCBSN position appeared after policy OFF was flat-guarded.");
+   AuditEvent("NC_DRIFT_DETECTED", now, g_lastSyncReason, false);
+   PrintFormat("SYNC CRITICAL | New CCBSN position while policy OFF | positions=%d volume=%.2f | %s",
+               g_ccbsnPositionCount, g_ccbsnPositionVolume, context);
+
+   if(g_lastDriftAlertTime == 0 ||
+      now - g_lastDriftAlertTime >= InpDriftAlertCooldownSeconds)
+     {
+      Alert(StringFormat("CCBSN SYNC DRIFT: policy OFF but a new Magic %I64u position appeared on %s.",
+                         InpCCBSNMagic, _Symbol));
+      g_lastDriftAlertTime = now;
+     }
+  }
+
+void RefreshCCBSNPositionSync(const string context)
+  {
+   double currentVolume = 0.0;
+   int currentCount = ReadCCBSNPositionSnapshot(currentVolume);
+   int previousCount = g_ccbsnPositionCount;
+   bool wasReady = g_positionSnapshotReady;
+
+   g_ccbsnPositionCount = currentCount;
+   g_ccbsnPositionVolume = currentVolume;
+   g_positionSnapshotReady = true;
+
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+     {
+      g_syncState = "NOT CONTROLLED";
+      g_lastSyncReason = "CONTROL_MODE_NOT_ENABLED";
+      g_offFlatGuardArmed = false;
+      g_offReassertRequested = false;
+      g_driftDetectedCurrentChain = false;
+      return;
+     }
+
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   if(!wasReady)
+     {
+      g_lastSyncDesired = desired;
+      g_driftDetectedCurrentChain = false;
+      if(desired == CCBSN_COMMAND_NEW_CYCLE_OFF)
+        {
+         g_offFlatGuardArmed = currentCount == 0;
+         g_offReassertRequested =
+            !IsConfirmedForCommand(CCBSN_COMMAND_NEW_CYCLE_OFF) &&
+            g_commandTicket == 0;
+         g_lastSyncReason = g_offReassertRequested
+                            ? "INITIAL_OFF_ACK_MISSING:" + context
+                            : "INITIAL_OFF_ACK_RESTORED:" + context;
+        }
+      else
+        {
+         g_offFlatGuardArmed = false;
+         g_offReassertRequested = false;
+         g_syncState = "POLICY ALLOW";
+         g_lastSyncReason = "INITIAL_POLICY_ON:" + context;
+        }
+     }
+   else if(desired != g_lastSyncDesired)
+     {
+      g_lastSyncDesired = desired;
+      g_driftDetectedCurrentChain = false;
+      if(desired == CCBSN_COMMAND_NEW_CYCLE_OFF)
+        {
+         g_offFlatGuardArmed = currentCount == 0;
+         g_offReassertRequested = true;
+         g_lastSyncReason = "POLICY_CHANGED_TO_OFF:" + context;
+        }
+      else
+        {
+         g_offFlatGuardArmed = false;
+         g_offReassertRequested = false;
+         g_syncState = "POLICY ALLOW";
+         g_lastSyncReason = "POLICY_CHANGED_TO_ON:" + context;
+        }
+     }
+
+   if(desired != CCBSN_COMMAND_NEW_CYCLE_OFF)
+     {
+      g_syncState = "POLICY ALLOW";
+      return;
+     }
+
+   if(currentCount == 0)
+     {
+      bool newlyFlat = wasReady && previousCount > 0;
+      if(newlyFlat || !g_offFlatGuardArmed)
+        {
+         g_offFlatGuardArmed = true;
+         g_offReassertRequested = true;
+         g_driftDetectedCurrentChain = false;
+         g_lastSyncReason = newlyFlat
+                            ? "CCBSN_CHAIN_BECAME_FLAT:" + context
+                            : "OFF_FLAT_GUARD_ARMED:" + context;
+         if(newlyFlat)
+            AuditEvent("OFF_FLAT_GUARD_ARMED", TimeCurrent(),
+                       g_lastSyncReason, false);
+        }
+      g_syncState = g_offReassertRequested
+                    ? "OFF FLAT: REASSERT PENDING"
+                    : "OFF FLAT GUARDED";
+     }
+   else
+     {
+      if(wasReady && previousCount == 0 && g_offFlatGuardArmed &&
+         !g_driftDetectedCurrentChain)
+         RaisePositionDriftAlert(context);
+      else if(g_driftDetectedCurrentChain)
+         g_syncState = "DRIFT: ACTIVE CHAIN";
+      else
+         g_syncState = "OFF: EXISTING CHAIN";
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Policy calculation                                               |
+//+------------------------------------------------------------------+
+bool PolicyDataReady(const double closePrice,
+                     const double atrValue,
+                     const double emaValue)
+  {
+   if(!MathIsValidNumber(closePrice) || !MathIsValidNumber(atrValue) ||
+      !MathIsValidNumber(emaValue) || closePrice == EMPTY_VALUE ||
+      atrValue == EMPTY_VALUE || emaValue == EMPTY_VALUE ||
+      closePrice <= 0.0 || atrValue <= 0.0)
+      return false;
+   return true;
+  }
+
+int ConfirmBarsForPolicy(const ENUM_POLICY_FAMILY policy)
+  {
+   if(policy == POLICY_FAMILY_DOWNSIDE)
+      return InpDownsideConfirmBars;
+   return InpUpsideConfirmBars;
+  }
+
+int RiskLockBarsForPolicy(const ENUM_POLICY_FAMILY policy)
+  {
+   if(policy == POLICY_FAMILY_DOWNSIDE)
+      return InpDownsideRiskLockBars;
+   return InpUpsideRiskLockBars;
+  }
+
+bool EvaluatePolicyEntry(const double closePrice,
+                         const double atrValue,
+                         const double emaValue,
+                         const ENUM_POLICY_FAMILY policy,
+                         string &reason)
+  {
+   if(!PolicyDataReady(closePrice, atrValue, emaValue))
+     {
+      reason = "M5_DATA_NOT_READY";
+      return false;
+     }
+
+   double distance = closePrice - emaValue;
+   if(policy == POLICY_FAMILY_UPSIDE)
+     {
+      if(!InpEnableUpsidePolicy)
+        {
+         reason = "UPSIDE_POLICY_DISABLED";
+         return false;
+        }
+      if(atrValue < M5Price(InpMinATRPrice))
+        {
+         reason = "M5_UPSIDE_ATR_BELOW_MIN";
+         return false;
+        }
+      if(distance >= 0.0 &&
+         distance <= M5Price(InpUpsideMaxAboveEMAPrice))
+        {
+         reason = "M5_UPSIDE_ENTRY_PASS";
+         return true;
+        }
+      reason = distance < 0.0 ? "M5_UPSIDE_BELOW_EMA" :
+               "M5_UPSIDE_ABOVE_MAX";
+      return false;
+     }
+
+   if(policy == POLICY_FAMILY_DOWNSIDE)
+     {
+      if(!InpEnableDownsidePolicy)
+        {
+         reason = "DOWNSIDE_POLICY_DISABLED";
+         return false;
+        }
+      if(atrValue < M5Price(InpMinATRPrice) ||
+         atrValue < M5Price(InpDownsideMinATRPrice))
+        {
+         reason = "M5_DOWNSIDE_ATR_BELOW_MIN";
+         return false;
+        }
+      bool nearEntry = InpEnableDownsideNearEntry && distance < 0.0 &&
+                       distance > -M5Price(InpDownsideBandBoundary);
+      bool deepEntry = InpEnableDownsideDeepEntry &&
+                       distance <= -M5Price(InpDownsideBandBoundary);
+      if(!nearEntry && !deepEntry)
+        {
+         reason = "M5_DOWNSIDE_DISTANCE_ENTRY_FAIL";
+         return false;
+        }
+      bool distanceRising = ArraySize(g_distanceHistory) >= 1 &&
+                            distance > g_distanceHistory[0];
+      if(InpDownsideRequireDRising && !distanceRising)
+        {
+         reason = "M5_DOWNSIDE_D_NOT_RISING";
+         return false;
+        }
+      bool emaNonDown = ArraySize(g_emaHistory) >= InpDownsideEMASlopeBars &&
+                        emaValue >=
+                        g_emaHistory[InpDownsideEMASlopeBars - 1];
+      if(InpDownsideRequireEMANonDown && !emaNonDown)
+        {
+         reason = "M5_DOWNSIDE_EMA_DOWN";
+         return false;
+        }
+      reason = nearEntry ? "M5_DOWNSIDE_NEAR_ENTRY_PASS" :
+                           "M5_DOWNSIDE_DEEP_ENTRY_PASS";
+      return true;
+     }
+
+   reason = "M5_POLICY_NONE";
+   return false;
+  }
+
+bool EvaluatePolicyHold(const double closePrice,
+                        const double atrValue,
+                        const double emaValue,
+                        const ENUM_POLICY_FAMILY policy,
+                        string &reason)
+  {
+   if(!PolicyDataReady(closePrice, atrValue, emaValue))
+     {
+      reason = "M5_DATA_NOT_READY";
+      return false;
+     }
+   double distance = closePrice - emaValue;
+   if(policy == POLICY_FAMILY_UPSIDE)
+     {
+      bool pass = InpEnableUpsidePolicy &&
+                  atrValue >= M5Price(InpMinATRPrice) &&
+                  distance >= 0.0 &&
+                  distance <= M5Price(InpUpsideMaxAboveEMAPrice);
+      reason = pass ? "UPSIDE_ACTIVE_HOLD" : "UPSIDE_GATE_FAILED";
+      return pass;
+     }
+   if(policy == POLICY_FAMILY_DOWNSIDE)
+     {
+      bool pass = InpEnableDownsidePolicy &&
+                  distance <= M5Price(InpDownsideHoldMaxAboveEMA);
+      reason = pass ? "DOWNSIDE_ACTIVE_HOLD" :
+                      "DOWNSIDE_HOLD_GATE_FAILED";
+      return pass;
+     }
+   reason = "ACTIVE_POLICY_NONE";
+   return false;
+  }
+
+string FeatureTooltip(const datetime decisionTime, const string eventType, const string reason)
+  {
+   return StringFormat("%s\n%s | %s\nClose=%s EMA%d=%s D=%s\nATR%d=%s MinATR=%s DownMinATR=%s"
+                       "\nBearDrop=%s Source=%s Legacy=%s 2-Bar=%s"
+                       "\nPeakD=%s RelativeDrop=%s | PrevHigh=%s CurrentLow=%s TwoBarDrop=%s"
+                       "\nConsecutiveRED=%d/%d | BearishPattern=%s"
+                       "\nBody=%s PrevBody=%s MinMultiplier=%.2f"
+                        "\nDeny=%s Sweep=%s PriorHigh=%s SweepSize=%s"
+                        "\nDenyBody=%s UpthrustBody=%s Wick/Body=%.2f Overlap=%.1f%%"
+                        "\nReverse=%s PinBody=%s RedBody=%s Upper/Body=%.2f Lower/Body=%.2f"
+                        "\nFall=%s Range=%s Prior3Range=%s PriorHigh=%s PriorLow=%s OpenInside=%s CloseBreak=%s"
+                        "\nLock=%d Recovery=%d/%d"
+                        "\nRecoverySource=%s PolicyCandidate=%s BullishSCOB=%s"
+                        "\nPolicy Arm=%s Active=%s Risk=%s"
+                        "\nBearTwo=%d/2 LowATR=%d/%d dEMA=%s\n%s",
+                       eventType,
+                       TimeToString(decisionTime, TIME_DATE | TIME_MINUTES),
+                       SessionToString(g_lastDecisionSession),
+                       FormatPrice(g_lastClose), InpEMAPeriod,
+                       FormatPrice(g_lastEMA), FormatPrice(g_lastDistance),
+                        InpATRPeriod, FormatPrice(g_lastATR),
+                      FormatPrice(M5Price(InpMinATRPrice)),
+                      FormatPrice(M5Price(InpDownsideMinATRPrice)),
+                       g_lastBearDropVeto ? "VETO" : "OK",
+                       g_lastBearDropSource,
+                       g_lastLegacyBearDrop ? "YES" : "NO",
+                       g_lastTwoBarBearDrop ? "YES" : "NO",
+                       FormatPrice(g_lastPeakDistance),
+                       FormatPrice(g_lastRelativeDrop),
+                       FormatPrice(g_lastPreviousHigh),
+                       FormatPrice(g_lastCurrentLow),
+                        FormatPrice(g_lastTwoBarDrop),
+                        g_activeConsecutiveRedCount, InpConsecutiveRedBars,
+                        g_lastBearishPatternSource,
+                        FormatPrice(g_lastCurrentBody),
+                        FormatPrice(g_lastPreviousBody),
+                        InpBearishBodyMultiplier,
+                        g_lastDenyBlock ? "BLOCK" : "NO",
+                        g_lastUpthrustSweep ? "YES" : "NO",
+                        FormatPrice(g_lastDenyPriorHigh),
+                        FormatPrice(g_lastDenySweepSize),
+                        FormatPrice(g_lastDenyBody),
+                        FormatPrice(g_lastUpthrustBody),
+                         g_lastDenyUpperWickBody,
+                         g_lastDenyBodyOverlapPercent,
+                         g_lastReverseBlock ? "BLOCK" :
+                         (g_lastReversePinBar ? "PIN_ONLY" : "NO"),
+                         FormatPrice(g_lastReversePinBody),
+                         FormatPrice(g_lastReverseRedBody),
+                         g_lastReverseUpperWickBody,
+                         g_lastReverseLowerWickBody,
+                         g_lastFallBlock ? "BLOCK" : "NO",
+                         FormatPrice(g_lastFallRange),
+                         FormatPrice(g_lastFallPriorRange),
+                         FormatPrice(g_lastFallPriorHigh),
+                         FormatPrice(g_lastFallPriorLow),
+                         g_lastFallOpenInside ? "YES" : "NO",
+                         g_lastFallCloseBreak ? "YES" : "NO",
+                         g_riskLockRemaining, g_consecutiveRecoveryBars,
+                        InpRecoveryBars, g_lastRecoverySource,
+                        g_lastPolicyRecoveryCandidate ? "YES" : "NO",
+                        g_lastBullishSCOB ? "YES" : "NO",
+                        PolicyFamilyToString(g_armingPolicy),
+                        PolicyFamilyToString(g_activePolicy),
+                        PolicyFamilyToString(g_riskPolicy),
+                        g_lastBearTwoCount, g_lastActiveLowATRCount,
+                        InpActiveLowATRBars,
+                        g_lastDownsideEMAApproachBlock ? "YES" : "NO", reason);
+  }
+
+void UpdateRiskLockObjects(const datetime endTime)
+  {
+   if(!InpDrawRiskLockShade || g_riskLockStart <= 0 || g_riskLockBaseName == "")
+      return;
+   double padding = MathMax(g_riskLockATR * InpZonePaddingATR,
+                            SymbolInfoDouble(_Symbol, SYMBOL_POINT) * 10.0);
+   string fillName = g_riskLockBaseName + ".FILL";
+   string tooltip = StringFormat("BEAR DROP RISK LOCK\nPolicy=%s\nStart=%s\nHigh=%s Low=%s\nSource=%s",
+                                  PolicyFamilyToString(g_riskPolicy),
+                                  TimeToString(g_riskLockStart,
+                                              TIME_DATE | TIME_MINUTES),
+                                 FormatPrice(g_riskLockHigh),
+                                 FormatPrice(g_riskLockLow),
+                                 g_lastBearDropSource);
+   datetime renderStart = g_riskLockStart;
+   if(g_riskLockHistoryCutoff > 0 && renderStart < g_riskLockHistoryCutoff)
+      renderStart = g_riskLockHistoryCutoff;
+   CreateOrMoveRectangle(fillName, renderStart,
+                         g_riskLockHigh + padding, endTime,
+                         g_riskLockLow - padding, InpRiskLockColor, true,
+                         InpRiskLockOpacityPercent);
+   SetObjectTooltip(fillName, tooltip);
+  }
+
+void StartOrRefreshRiskLock(const MqlRates &bar,
+                            const double atrValue,
+                            const datetime decisionTime,
+                            const ENUM_POLICY_FAMILY policy,
+                            const string reason,
+                            const bool historical,
+                            const bool createEvent,
+                            const bool blockedActiveZone)
+  {
+   if(g_riskLockStart <= 0)
+     {
+      g_riskLockStart = decisionTime;
+      g_riskLockHigh = bar.high;
+      g_riskLockLow = bar.low;
+      g_riskLockBaseName = g_objectPrefix + "RISK." + TimeKey(decisionTime);
+     }
+   else
+     {
+      g_riskLockHigh = MathMax(g_riskLockHigh, bar.high);
+      g_riskLockLow = MathMin(g_riskLockLow, bar.low);
+     }
+   g_riskLockATR = atrValue;
+   g_state = VISUAL_STATE_RISK_LOCK;
+   g_riskPolicy = policy;
+   g_riskLockRemaining = RiskLockBarsForPolicy(policy);
+   g_consecutiveRecoveryBars = 0;
+   g_consecutivePassCount = 0;
+   g_armingPolicy = POLICY_FAMILY_NONE;
+   g_activePolicy = POLICY_FAMILY_NONE;
+   g_armingSession = POLICY_SESSION_OUTSIDE;
+   g_activeSession = POLICY_SESSION_OUTSIDE;
+   g_activeConsecutiveRedCount = 0;
+   g_activeBearTwoCount = 0;
+   g_activeLowATRCount = 0;
+   if(ShouldRenderRiskLock(historical))
+      UpdateRiskLockObjects(decisionTime + PeriodSeconds(DECISION_TIMEFRAME));
+   if(createEvent &&
+      ShouldRenderHistoricalEvent(historical, InpShowBearDropEvents))
+     {
+      string eventText = InpEventNameBearDrop + "\n" +
+                         (blockedActiveZone ? InpEventNamePolicyBlock :
+                          InpEventNameRiskLock);
+      CreateEventMarker("BEAR_DROP", decisionTime,
+                        bar.high + atrValue * 0.35, eventText,
+                        FeatureTooltip(decisionTime, eventText, reason));
+     }
+   if(createEvent)
+      AuditEvent("BEAR_DROP_RISK_LOCK", decisionTime, reason, historical);
+  }
+
+void EndRiskLockVisual(const datetime endTime,
+                       const bool historical)
+  {
+   if(g_riskLockStart <= 0)
+      return;
+   if(ShouldRenderRiskLock(historical))
+     {
+      UpdateRiskLockObjects(endTime);
+      TrackClosedRiskLockObject(g_riskLockBaseName + ".FILL");
+     }
+   g_riskLockStart = 0;
+   g_riskLockHigh = 0.0;
+   g_riskLockLow = 0.0;
+   g_riskLockATR = 0.0;
+   g_riskLockBaseName = "";
+   g_riskPolicy = POLICY_FAMILY_NONE;
+  }
+
+void UpdateActiveZoneObjects(const datetime endTime)
+  {
+   if(g_activeZoneStart <= 0 || g_activeZoneBaseName == "")
+      return;
+
+   double padding = MathMax(g_activeZoneATR * InpZonePaddingATR,
+                            SymbolInfoDouble(_Symbol, SYMBOL_POINT) * 10.0);
+   double top = g_activeZoneHigh + padding;
+   double bottom = g_activeZoneLow - padding;
+   color zoneColor = PolicyFamilyColor(g_activeZoneBranch);
+   string fillName = g_activeZoneBaseName + ".FILL";
+   string tooltip = StringFormat("SIMULATED TRADING ZONE\n%s\nStart=%s\nHigh=%s Low=%s",
+                                  PolicyFamilyToString(g_activeZoneBranch),
+                                 TimeToString(g_activeZoneStart, TIME_DATE | TIME_MINUTES),
+                                 FormatPrice(g_activeZoneHigh),
+                                 FormatPrice(g_activeZoneLow));
+
+   datetime renderStart = g_activeZoneStart;
+   if(g_tradingZoneHistoryCutoff > 0 && renderStart < g_tradingZoneHistoryCutoff)
+       renderStart = g_tradingZoneHistoryCutoff;
+   CreateOrMoveRectangle(fillName, renderStart, top, endTime, bottom, zoneColor, true);
+   SetObjectTooltip(fillName, tooltip);
+  }
+
+void StartActiveZone(const datetime startTime,
+                     const double startPrice,
+                     const double atrValue,
+                     const ENUM_POLICY_FAMILY policy,
+                     const string reason,
+                     const bool historical)
+  {
+   g_state = VISUAL_STATE_ACTIVE;
+   g_consecutivePassCount = 0;
+   g_armingPolicy = POLICY_FAMILY_NONE;
+   g_riskPolicy = POLICY_FAMILY_NONE;
+   g_armingSession = POLICY_SESSION_OUTSIDE;
+   g_activeSession = g_lastDecisionSession;
+   g_activeConsecutiveRedCount = 0;
+   g_activeBearTwoCount = 0;
+   g_activeLowATRCount = 0;
+   g_activeZoneStart = startTime;
+   g_activeZoneHigh = startPrice;
+   g_activeZoneLow = startPrice;
+   g_activeZoneATR = atrValue;
+   g_activePolicy = policy;
+   g_activeZoneBranch = policy;
+   g_activeZoneBaseName = g_objectPrefix + "ZONE." + TimeKey(startTime);
+
+   string allowText = InpEventNamePolicyAllow + "\n" +
+                      PolicyFamilyToString(policy);
+   string tooltip = FeatureTooltip(startTime, "TRADING " +
+                                   allowText, reason);
+   if(ShouldRenderTradingZone(historical))
+      UpdateActiveZoneObjects(startTime + PeriodSeconds(DECISION_TIMEFRAME));
+   if(ShouldRenderHistoricalEvent(historical,
+                                  InpShowPolicyAllowEvents))
+     {
+      color zoneColor = PolicyFamilyColor(policy);
+      string startLine = g_activeZoneBaseName + ".START";
+      CreateVerticalLine(startLine, startTime, zoneColor, STYLE_DASH, tooltip);
+      TrackEventObject(startLine);
+      CreateEventMarker("ON", startTime, startPrice - atrValue * 0.35,
+                        allowText, tooltip);
+     }
+   AuditEvent("TRADING_ZONE_STARTED", startTime, reason, historical);
+  }
+
+void EndActiveZone(const datetime endTime,
+                   const double endPrice,
+                   const string reason,
+                   const bool historical,
+                   const string markerText,
+                   const string eventType,
+                   const bool showChartEvent)
+  {
+   if(g_activeZoneStart <= 0)
+      return;
+
+   string fillName = g_activeZoneBaseName + ".FILL";
+   string endLine = g_activeZoneBaseName + ".END";
+   string tooltip = FeatureTooltip(endTime, "TRADING " +
+                                   InpEventNamePolicyBlock, reason);
+   if(ShouldRenderTradingZone(historical))
+      {
+       UpdateActiveZoneObjects(endTime);
+       TrackClosedZoneObject(fillName);
+      }
+   if(ShouldRenderHistoricalEvent(historical, showChartEvent))
+     {
+      CreateVerticalLine(endLine, endTime, InpOffEventColor, STYLE_DASH, tooltip);
+      TrackEventObject(endLine);
+      string renderedText = markerText == "" ?
+                            InpEventNamePolicyBlock : markerText;
+      CreateEventMarker(eventType, endTime,
+                        endPrice + g_activeZoneATR * 0.35,
+                        renderedText, tooltip);
+     }
+   AuditEvent("TRADING_ZONE_ENDED", endTime, reason, historical);
+
+   g_state = VISUAL_STATE_OFF;
+   g_consecutivePassCount = 0;
+   g_armingPolicy = POLICY_FAMILY_NONE;
+   g_riskPolicy = POLICY_FAMILY_NONE;
+   g_armingSession = POLICY_SESSION_OUTSIDE;
+   g_activeSession = POLICY_SESSION_OUTSIDE;
+   g_activeConsecutiveRedCount = 0;
+   g_activeBearTwoCount = 0;
+   g_activeLowATRCount = 0;
+   g_activeZoneStart = 0;
+   g_activeZoneHigh = 0.0;
+   g_activeZoneLow = 0.0;
+   g_activeZoneATR = 0.0;
+   g_activePolicy = POLICY_FAMILY_NONE;
+   g_activeZoneBranch = POLICY_FAMILY_NONE;
+   g_activeZoneBaseName = "";
+  }
+
+// Fall is a candle classification as well as a Soft OFF branch. When a
+// higher-priority protection owns the state transition, preserve the Fall
+// classification on the same candle instead of hiding it behind that branch.
+void RecordOverlappingFall(const MqlRates &bar,
+                           const double atrValue,
+                           const datetime decisionTime,
+                           const string primaryEvent,
+                           const string reason,
+                           const bool historical)
+  {
+   if(!g_lastFallBlock)
+      return;
+
+   string eventText = InpEventNameFall + " + " + primaryEvent;
+   if(ShouldRenderHistoricalEvent(historical, InpShowFallEvents))
+      CreateEventMarker("FALL_OVERLAP_" + primaryEvent, decisionTime,
+                        bar.low - atrValue * 0.35, eventText,
+                        FeatureTooltip(decisionTime, eventText, reason));
+
+   AuditEvent("FALL_OVERLAP_CLASSIFIED", decisionTime,
+              reason + "|PRIMARY=" + primaryEvent, historical);
+  }
+
+void ProcessDecisionBar(const MqlRates &bar,
+                        const double atrValue,
+                        const double emaValue,
+                        const datetime decisionTime,
+                        const bool historical)
+  {
+   bool wasActive = g_state == VISUAL_STATE_ACTIVE;
+   bool wasRiskLock = g_state == VISUAL_STATE_RISK_LOCK;
+   g_lastPolicyRecoveryCandidate = false;
+   g_lastBullishSCOB = false;
+   g_lastRecoveryCandidate = false;
+   g_lastRecoverySource = "NONE";
+
+   if(wasActive)
+     {
+      g_activeZoneHigh = MathMax(g_activeZoneHigh, bar.high);
+      g_activeZoneLow = MathMin(g_activeZoneLow, bar.low);
+      g_activeZoneATR = atrValue;
+     }
+   if(wasRiskLock)
+     {
+      g_riskLockHigh = MathMax(g_riskLockHigh, bar.high);
+      g_riskLockLow = MathMin(g_riskLockLow, bar.low);
+      g_riskLockATR = atrValue;
+     }
+
+   g_lastClose = bar.close;
+   g_lastATR = atrValue;
+   g_lastEMA = emaValue;
+   g_lastDistance = bar.close - emaValue;
+   g_lastDecisionTime = decisionTime;
+   g_lastDecisionSession = PolicySessionAt(decisionTime);
+
+   string upsideReason = "";
+   string downsideReason = "";
+   bool upsideEntryPass = EvaluatePolicyEntry(bar.close, atrValue, emaValue,
+                                               POLICY_FAMILY_UPSIDE,
+                                               upsideReason);
+   bool downsideEntryPass = EvaluatePolicyEntry(bar.close, atrValue, emaValue,
+                                                 POLICY_FAMILY_DOWNSIDE,
+                                                 downsideReason);
+   ENUM_POLICY_FAMILY candidatePolicy = POLICY_FAMILY_NONE;
+   string candidateReason = g_lastDistance < 0.0 ? downsideReason : upsideReason;
+   if(upsideEntryPass)
+     {
+      candidatePolicy = POLICY_FAMILY_UPSIDE;
+      candidateReason = upsideReason;
+     }
+   else if(downsideEntryPass)
+     {
+      candidatePolicy = POLICY_FAMILY_DOWNSIDE;
+      candidateReason = downsideReason;
+     }
+   bool candidatePass = candidatePolicy != POLICY_FAMILY_NONE;
+   bool dataReady = PolicyDataReady(bar.close, atrValue, emaValue);
+
+   // Entry gates compare current D/EMA against prior samples. Push the current
+   // candle only after those gates have been frozen for this decision.
+   if(dataReady)
+      PushFeatureSample(bar, emaValue);
+
+   ENUM_POLICY_FAMILY decisionPolicy =
+      g_lastDistance < 0.0 ? POLICY_FAMILY_DOWNSIDE :
+                             POLICY_FAMILY_UPSIDE;
+   if(wasActive)
+      decisionPolicy = g_activePolicy;
+   else if(wasRiskLock && g_riskPolicy != POLICY_FAMILY_NONE)
+      decisionPolicy = g_riskPolicy;
+   else if(g_armingPolicy != POLICY_FAMILY_NONE)
+      decisionPolicy = g_armingPolicy;
+   else if(candidatePolicy != POLICY_FAMILY_NONE)
+      decisionPolicy = candidatePolicy;
+
+   double bearDropMultiplier =
+      decisionPolicy == POLICY_FAMILY_DOWNSIDE
+      ? InpDownsideBearDropMultiplier : 1.0;
+   bool bearDropVeto = dataReady &&
+                       EvaluateBearDrop(bar, bearDropMultiplier);
+   if(!dataReady)
+     {
+      g_lastLegacyBearDrop = false;
+      g_lastTwoBarBearDrop = false;
+      g_lastBearDropVeto = false;
+      g_lastBearDropSource = "NONE";
+     }
+
+   ENUM_POLICY_SESSION barSession = PolicySessionAt(bar.time);
+   bool activePolicyBar = wasActive && barSession == g_activeSession;
+   bool currentBearish = bar.close < bar.open;
+
+   if(activePolicyBar)
+      g_activeConsecutiveRedCount = currentBearish
+                                    ? g_activeConsecutiveRedCount + 1 : 0;
+   else
+      g_activeConsecutiveRedCount = 0;
+
+   if(activePolicyBar)
+      g_activeBearTwoCount = currentBearish &&
+                             atrValue > M5Price(InpBearTwoATRThreshold)
+                             ? g_activeBearTwoCount + 1 : 0;
+   else
+      g_activeBearTwoCount = 0;
+
+   if(activePolicyBar)
+      g_activeLowATRCount = atrValue < M5Price(InpActiveLowATRThreshold)
+                            ? g_activeLowATRCount + 1 : 0;
+   else
+      g_activeLowATRCount = 0;
+
+   bool consecutiveRedBlock = InpEnableConsecutiveRedBlock &&
+                              activePolicyBar &&
+                              g_activeConsecutiveRedCount >=
+                              InpConsecutiveRedBars;
+   bool bearTwoBlock = InpEnableBearTwoBlock && activePolicyBar &&
+                       g_activeBearTwoCount >= 2;
+   bool activeLowATRBlock = InpEnableActiveLowATRBlock &&
+                            activePolicyBar &&
+                            g_activeLowATRCount >= InpActiveLowATRBars;
+   bool downsideEMAApproachBlock =
+      InpEnableDownsideEMAApproachBlock && activePolicyBar &&
+      g_activePolicy == POLICY_FAMILY_DOWNSIDE && dataReady &&
+      bar.high >= emaValue - M5Price(InpDownsideEMAApproachTolerance) &&
+      bar.low <= emaValue + M5Price(InpDownsideEMAApproachTolerance);
+
+   ResetBearishPatternSnapshot();
+   ResetDenySnapshot();
+   ResetReverseSnapshot();
+   ResetFallSnapshot();
+   bool bearishPatternBlock = false;
+   bool denyBlock = false;
+   bool reverseBlock = false;
+   bool fallBlock = false;
+   if(activePolicyBar)
+     {
+      bearishPatternBlock = EvaluateBearishPattern();
+      denyBlock = EvaluateDeny(atrValue);
+      reverseBlock = EvaluateReverse();
+      fallBlock = EvaluateFall();
+     }
+
+   string holdReason = "";
+   bool activeHoldPass = wasActive &&
+      EvaluatePolicyHold(bar.close, atrValue, emaValue,
+                         g_activePolicy, holdReason);
+   bool sessionExit = wasActive &&
+      (g_lastDecisionSession == POLICY_SESSION_OUTSIDE ||
+       g_lastDecisionSession != g_activeSession);
+   bool sessionCandidatePass = candidatePass &&
+      g_lastDecisionSession != POLICY_SESSION_OUTSIDE;
+
+   string reason = candidateReason;
+   if(!dataReady)
+      reason = "M5_DATA_NOT_READY";
+   else if(sessionExit)
+      reason = "M5_NEW_CYCLE_SESSION_ENDED";
+   else if(bearDropVeto)
+      reason = "M5_BEAR_DROP_" + g_lastBearDropSource + "_" +
+               PolicyFamilyToString(decisionPolicy);
+   else if(bearTwoBlock)
+      reason = "M5_BEAR_TWO_HIGH_ATR_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(downsideEMAApproachBlock)
+      reason = "M5_DOWNSIDE_EMA_APPROACH_POLICY_BLOCK";
+   else if(activeLowATRBlock)
+      reason = "M5_LOW_ATR_SEQUENCE_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(denyBlock)
+      reason = "M5_DENY_UPTHRUST_REJECTION_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(fallBlock)
+      reason = "M5_FALL_3_BAR_CLUSTER_DOWNSIDE_BREAK_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(reverseBlock)
+      reason = "M5_REVERSE_PIN_THEN_LARGER_BEARISH_BODY_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(bearishPatternBlock)
+      reason = "M5_BEARISH_PATTERN_" + g_lastBearishPatternSource +
+               "_POLICY_BLOCK_" + PolicyFamilyToString(g_activePolicy);
+   else if(consecutiveRedBlock)
+      reason = "M5_CONSECUTIVE_RED_POLICY_BLOCK_" +
+               PolicyFamilyToString(g_activePolicy);
+   else if(wasActive)
+      reason = holdReason;
+   else if(g_lastDecisionSession == POLICY_SESSION_OUTSIDE)
+      reason = "M5_OUTSIDE_NEW_CYCLE_SESSION";
+
+   g_lastChecklistPass = wasActive
+      ? activeHoldPass && !sessionExit && !bearDropVeto &&
+        !bearTwoBlock && !downsideEMAApproachBlock &&
+        !activeLowATRBlock && !denyBlock && !fallBlock &&
+        !reverseBlock && !bearishPatternBlock && !consecutiveRedBlock
+      : sessionCandidatePass && !bearDropVeto;
+   g_lastReason = reason;
+   g_lastConsecutiveRedCount = g_activeConsecutiveRedCount;
+   g_lastConsecutiveRedBlock = consecutiveRedBlock;
+   g_lastBearTwoCount = g_activeBearTwoCount;
+   g_lastBearTwoBlock = bearTwoBlock;
+   g_lastActiveLowATRCount = g_activeLowATRCount;
+   g_lastActiveLowATRBlock = activeLowATRBlock;
+   g_lastDownsideEMAApproachBlock = downsideEMAApproachBlock;
+
+   bool newBearDropEpisode = bearDropVeto && !g_previousBearDropVeto;
+   g_previousBearDropVeto = bearDropVeto;
+
+   // The active session boundary always owns the first OFF transition.
+   if(sessionExit)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameSessionEnd + "\n" +
+                    InpEventNamePolicyBlock,
+                    "SESSION_END", InpShowSessionEndEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("SESSION_END_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   // Bear Drop is the only transition into RISK LOCK.
+   if(bearDropVeto)
+     {
+      bool enteringRiskLock = !wasRiskLock;
+      if(wasActive)
+         EndActiveZone(decisionTime, bar.close, reason, historical,
+                       "", "BEAR_DROP_ZONE_END", false);
+      RecordOverlappingFall(bar, atrValue, decisionTime,
+                            InpEventNameBearDrop, reason, historical);
+      StartOrRefreshRiskLock(bar, atrValue, decisionTime, decisionPolicy,
+                             reason, historical,
+                             enteringRiskLock || newBearDropEpisode, wasActive);
+      return;
+     }
+
+   // BearTwo: two consecutive bearish ACTIVE candles, each ATR > threshold.
+   if(bearTwoBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameBearTwo + "\n" + InpEventNamePolicyBlock,
+                    "BEAR_TWO", InpShowBearTwoEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("BEAR_TWO_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   // The current Downside candle range touches/intersects EMA +/- tolerance.
+   if(downsideEMAApproachBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameDownsideEMA + "\n" +
+                    InpEventNamePolicyBlock,
+                    "DOWNSIDE_EMA", InpShowDownsideEMAEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("DOWNSIDE_EMA_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   // Three ACTIVE candles below the ATR threshold by default, either policy.
+   if(activeLowATRBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameActiveLowATR + "\n" +
+                    InpEventNamePolicyBlock,
+                    "ACTIVE_LOW_ATR", InpShowActiveLowATREvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("ACTIVE_LOW_ATR_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   if(denyBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameDeny + "\n" + InpEventNamePolicyBlock,
+                    "DENY", InpShowDenyEvents);
+      RecordOverlappingFall(bar, atrValue, decisionTime,
+                            InpEventNameDeny, reason, historical);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("DENY_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   if(fallBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameFall + "\n" + InpEventNamePolicyBlock,
+                    "FALL", InpShowFallEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("FALL_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   if(reverseBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameReverse + "\n" + InpEventNamePolicyBlock,
+                    "REVERSE", InpShowReverseEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("REVERSE_POLICY_BLOCK", decisionTime, reason, historical);
+      return;
+     }
+
+   if(bearishPatternBlock)
+     {
+      string patternText = g_lastBearishEngulfing && g_lastBearishPinBar
+                           ? InpEventNameBearishEngulfing + "+" +
+                             InpEventNameBearishPinBar
+                           : (g_lastBearishEngulfing
+                              ? InpEventNameBearishEngulfing
+                              : InpEventNameBearishPinBar);
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    patternText + "\n" + InpEventNamePolicyBlock,
+                    "BEARISH_PATTERN", InpShowBearishPatternEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("BEARISH_PATTERN_POLICY_BLOCK", decisionTime,
+                 reason, historical);
+      return;
+     }
+
+   if(consecutiveRedBlock)
+     {
+      EndActiveZone(decisionTime, bar.close, reason, historical,
+                    InpEventNameConsecutiveRed + "\n" +
+                    InpEventNamePolicyBlock,
+                    "CONSECUTIVE_RED", InpShowConsecutiveRedEvents);
+      g_riskLockRemaining = 0;
+      g_consecutiveRecoveryBars = 0;
+      AuditEvent("CONSECUTIVE_RED_POLICY_BLOCK", decisionTime,
+                 reason, historical);
+      return;
+     }
+
+   if(wasRiskLock)
+     {
+      if(g_riskLockRemaining > 0)
+         g_riskLockRemaining--;
+
+      bool distanceRising = ArraySize(g_distanceHistory) >= 2 &&
+                            g_distanceHistory[0] > g_distanceHistory[1];
+      bool emaNonDown = ArraySize(g_emaHistory) > InpRecoveryEMASlopeBars &&
+                        g_emaHistory[0] >=
+                        g_emaHistory[InpRecoveryEMASlopeBars];
+      bool riskEntryPass =
+         (g_riskPolicy == POLICY_FAMILY_UPSIDE && upsideEntryPass) ||
+         (g_riskPolicy == POLICY_FAMILY_DOWNSIDE && downsideEntryPass);
+      bool commonRecovery =
+         (!InpRequireRecoveryDRising || distanceRising) &&
+         (!InpRequireRecoveryEMANonDown || emaNonDown);
+      bool upsideBufferPass = g_riskPolicy != POLICY_FAMILY_UPSIDE ||
+                              g_lastDistance >=
+                              atrValue * InpRecoveryBufferATR;
+      g_lastPolicyRecoveryCandidate =
+         g_lastDecisionSession != POLICY_SESSION_OUTSIDE &&
+         riskEntryPass && commonRecovery && upsideBufferPass;
+      g_lastBullishSCOB = EvaluateBullishSCOB();
+      g_lastRecoveryCandidate =
+         g_lastDecisionSession != POLICY_SESSION_OUTSIDE &&
+         (g_lastPolicyRecoveryCandidate || g_lastBullishSCOB);
+      if(g_lastPolicyRecoveryCandidate && g_lastBullishSCOB)
+         g_lastRecoverySource = "POLICY+SCOB";
+      else if(g_lastBullishSCOB)
+         g_lastRecoverySource = "SCOB";
+      else if(g_lastPolicyRecoveryCandidate)
+         g_lastRecoverySource = "POLICY";
+      else
+         g_lastRecoverySource = "NONE";
+
+      if(g_riskLockRemaining == 0)
+        {
+         if(g_lastRecoveryCandidate)
+            g_consecutiveRecoveryBars++;
+         else
+            g_consecutiveRecoveryBars = 0;
+
+         if(g_consecutiveRecoveryBars >= InpRecoveryBars)
+           {
+            ENUM_POLICY_FAMILY recoveredPolicy = g_riskPolicy;
+            int confirmBars = ConfirmBarsForPolicy(recoveredPolicy);
+            EndRiskLockVisual(decisionTime, historical);
+            g_state = VISUAL_STATE_ARMING;
+            g_armingPolicy = recoveredPolicy;
+            g_riskPolicy = POLICY_FAMILY_NONE;
+            g_consecutiveRecoveryBars = 0;
+            g_consecutivePassCount = confirmBars > 1 ? 1 : 0;
+            g_armingSession = g_lastDecisionSession;
+            g_lastReason = "M5_POLICY_RECOVERED_ARMING_" +
+                           g_lastRecoverySource + "_" +
+                           PolicyFamilyToString(recoveredPolicy);
+            string recoveryText = StringFormat("%s\n%s %d/%d",
+                                               InpEventNameRecovered,
+                                               InpEventNameArm,
+                                               g_consecutivePassCount,
+                                               confirmBars);
+            if(ShouldRenderHistoricalEvent(historical,
+                                           InpShowRecoveryEvents))
+               CreateEventMarker("RECOVERED", decisionTime,
+                                 bar.low - atrValue * 0.35,
+                                 recoveryText,
+                                 FeatureTooltip(decisionTime, recoveryText,
+                                                g_lastReason));
+            AuditEvent("POLICY_RECOVERED_ARMING", decisionTime,
+                       g_lastReason, historical);
+            return;
+           }
+        }
+      if(ShouldRenderRiskLock(historical))
+         UpdateRiskLockObjects(decisionTime);
+      return;
+     }
+
+   if(wasActive)
+     {
+      if(!activeHoldPass)
+         EndActiveZone(decisionTime, bar.close, holdReason, historical,
+                       InpEventNamePolicyBlock, "POLICY_BLOCK",
+                       InpShowPolicyBlockEvents);
+      else if(ShouldRenderTradingZone(historical))
+         UpdateActiveZoneObjects(decisionTime);
+      return;
+     }
+
+   if(sessionCandidatePass)
+     {
+      if(g_state != VISUAL_STATE_ARMING ||
+         g_armingPolicy != candidatePolicy ||
+         g_armingSession != g_lastDecisionSession)
+        {
+         g_consecutivePassCount = 0;
+         g_armingPolicy = candidatePolicy;
+         g_armingSession = g_lastDecisionSession;
+        }
+      g_consecutivePassCount++;
+      g_state = VISUAL_STATE_ARMING;
+      int confirmBars = ConfirmBarsForPolicy(g_armingPolicy);
+      if(g_consecutivePassCount >= confirmBars)
+         StartActiveZone(decisionTime, bar.close, atrValue,
+                         g_armingPolicy, candidateReason, historical);
+      else
+        {
+         string armText = StringFormat("%s %d/%d\n%s",
+                                       InpEventNameArm,
+                                       g_consecutivePassCount,
+                                       confirmBars,
+                                       PolicyFamilyToString(g_armingPolicy));
+         if(ShouldRenderHistoricalEvent(historical, InpShowArmEvents))
+           {
+            string tooltip = FeatureTooltip(decisionTime, armText,
+                                            candidateReason);
+            CreateEventMarker("ARM" +
+                              IntegerToString(g_consecutivePassCount),
+                              decisionTime, bar.low - atrValue * 0.20,
+                              armText, tooltip);
+           }
+         AuditEvent("ENABLE_CANDIDATE_STARTED", decisionTime,
+                    candidateReason, historical);
+        }
+     }
+   else
+     {
+      if(g_state == VISUAL_STATE_ARMING && !historical)
+         AuditEvent("ENABLE_CANDIDATE_CANCELLED", decisionTime,
+                    candidateReason, historical);
+      g_consecutivePassCount = 0;
+      g_armingPolicy = POLICY_FAMILY_NONE;
+      g_armingSession = POLICY_SESSION_OUTSIDE;
+      g_activeConsecutiveRedCount = 0;
+      g_activeBearTwoCount = 0;
+      g_activeLowATRCount = 0;
+      g_state = VISUAL_STATE_OFF;
+     }
+  }
+//+------------------------------------------------------------------+
+//| Data and history                                                 |
+//+------------------------------------------------------------------+
+void ResetRuntimeState()
+  {
+   g_state = VISUAL_STATE_OFF;
+   g_consecutivePassCount = 0;
+   g_armingPolicy = POLICY_FAMILY_NONE;
+   g_activePolicy = POLICY_FAMILY_NONE;
+   g_riskPolicy = POLICY_FAMILY_NONE;
+   g_armingSession = POLICY_SESSION_OUTSIDE;
+   g_activeSession = POLICY_SESSION_OUTSIDE;
+   g_activeConsecutiveRedCount = 0;
+   g_activeBearTwoCount = 0;
+   g_activeLowATRCount = 0;
+   g_lastConsecutiveRedCount = 0;
+   g_lastConsecutiveRedBlock = false;
+   g_lastBearTwoCount = 0;
+   g_lastBearTwoBlock = false;
+   g_lastActiveLowATRCount = 0;
+   g_lastActiveLowATRBlock = false;
+   g_lastDownsideEMAApproachBlock = false;
+   ResetBearishPatternSnapshot();
+   ResetDenySnapshot();
+   ResetReverseSnapshot();
+   ResetFallSnapshot();
+   g_riskLockRemaining = 0;
+   g_consecutiveRecoveryBars = 0;
+   g_previousBearDropVeto = false;
+   g_lastPolicyRecoveryCandidate = false;
+   g_lastBullishSCOB = false;
+   g_lastRecoveryCandidate = false;
+   g_lastRecoverySource = "NONE";
+   g_activeZoneStart = 0;
+   g_activeZoneHigh = 0.0;
+   g_activeZoneLow = 0.0;
+   g_activeZoneATR = 0.0;
+   g_activeZoneBranch = POLICY_FAMILY_NONE;
+   g_activeZoneBaseName = "";
+   g_riskLockStart = 0;
+   g_riskLockHigh = 0.0;
+   g_riskLockLow = 0.0;
+   g_riskLockATR = 0.0;
+   g_riskLockBaseName = "";
+   ArrayResize(g_distanceHistory, 0);
+   ArrayResize(g_openHistory, 0);
+   ArrayResize(g_closeHistory, 0);
+   ArrayResize(g_highHistory, 0);
+   ArrayResize(g_lowHistory, 0);
+   ArrayResize(g_emaHistory, 0);
+   ArrayResize(g_bearishHistory, 0);
+   ArrayResize(g_eventObjectNames, 0);
+   ArrayResize(g_closedZoneObjectNames, 0);
+   ArrayResize(g_closedRiskLockObjectNames, 0);
+   ArrayResize(g_emaObjectNames, 0);
+   g_historicalShift = 0;
+   g_tradingZoneHistoryCutoff = 0;
+   g_riskLockHistoryCutoff = 0;
+  }
+
+int MaximumPolicyHistoryBars()
+  {
+   // Preserve state reconstruction depth when a renderer is toggled OFF.
+   int maximum = 1500;
+   maximum = MathMax(maximum, InpTradingZoneHistoryBars);
+   maximum = MathMax(maximum, InpRiskLockHistoryBars);
+   maximum = MathMax(maximum, InpEventHistoryBars);
+   return maximum;
+  }
+
+bool BuildHistoricalZones()
+  {
+   if(ObjectsDeleteAll(0, g_objectPrefix) > 0)
+      MarkChartDirty();
+   ResetRuntimeState();
+
+   int longestPeriod = InpATRPeriod;
+   if(InpEMAPeriod > longestPeriod)
+      longestPeriod = InpEMAPeriod;
+   longestPeriod = MathMax(longestPeriod, InpBearDropLookback);
+   longestPeriod = MathMax(longestPeriod, InpBearishWindow);
+   longestPeriod = MathMax(longestPeriod, InpRecoveryEMASlopeBars + 1);
+   longestPeriod = MathMax(longestPeriod, InpDownsideEMASlopeBars + 1);
+   // Extra bars are loaded only as policy warm-up. Render helpers independently
+   // enforce each visual history depth without changing the reconstructed state.
+   int requested = MaximumPolicyHistoryBars() + longestPeriod + 5;
+   MqlRates rates[];
+   double atrValues[];
+   double emaValues[];
+   ArraySetAsSeries(rates, true);
+   ArraySetAsSeries(atrValues, true);
+   ArraySetAsSeries(emaValues, true);
+
+   int ratesCopied = CopyRates(_Symbol, DECISION_TIMEFRAME, 0, requested, rates);
+   int atrCopied = CopyBuffer(g_atrHandle, 0, 0, requested, atrValues);
+   int emaCopied = CopyBuffer(g_emaHandle, 0, 0, requested, emaValues);
+   int available = ratesCopied;
+   if(atrCopied < available) available = atrCopied;
+   if(emaCopied < available) available = emaCopied;
+   int minimum = longestPeriod + 3;
+   if(available < minimum)
+     {
+      PrintFormat("DATA WAIT | Need at least %d M5 values, available=%d", minimum, available);
+      g_state = VISUAL_STATE_DATA_ERROR;
+      g_lastReason = "M5_DATA_NOT_READY";
+      UpdatePanel();
+      FlushChartIfDirty();
+      return false;
+     }
+
+   if(InpDrawTradingZoneHistory)
+     {
+      int cutoffIndex = MathMin(InpTradingZoneHistoryBars - 1, available - 1);
+      g_tradingZoneHistoryCutoff = rates[cutoffIndex].time;
+     }
+   if(InpDrawRiskLockHistory)
+     {
+      int cutoffIndex = MathMin(InpRiskLockHistoryBars - 1, available - 1);
+      g_riskLockHistoryCutoff = rates[cutoffIndex].time;
+     }
+
+   int oldestShift = available - 1;
+   for(int shift = oldestShift; shift >= 1; shift--)
+     {
+      g_historicalShift = shift;
+      datetime decisionTime = rates[shift - 1].time;
+      ProcessDecisionBar(rates[shift], atrValues[shift], emaValues[shift],
+                         decisionTime, true);
+     }
+   g_historicalShift = 0;
+
+   if(!InpDrawTradingZoneHistory && g_state == VISUAL_STATE_ACTIVE)
+      UpdateActiveZoneObjects(TimeCurrent());
+   if(!InpDrawRiskLockHistory && g_state == VISUAL_STATE_RISK_LOCK)
+      UpdateRiskLockObjects(TimeCurrent());
+
+   g_lastM5BarTime = rates[0].time;
+   RebuildEMAVisualization();
+   RefreshLiveVisualization();
+   UpdatePanel();
+   FlushChartIfDirty();
+   return true;
+  }
+
+bool ReadLatestClosedBar(MqlRates &closedBar,
+                         double &atrValue,
+                         double &emaValue,
+                         datetime &decisionTime)
+  {
+   MqlRates rates[2];
+   if(CopyRates(_Symbol, DECISION_TIMEFRAME, 0, 2, rates) != 2)
+      return false;
+
+   double atrBuffer[1];
+   double emaBuffer[1];
+   if(CopyBuffer(g_atrHandle, 0, 1, 1, atrBuffer) != 1)
+      return false;
+   if(CopyBuffer(g_emaHandle, 0, 1, 1, emaBuffer) != 1)
+      return false;
+
+   // CopyRates writes the oldest requested value first in physical memory.
+   closedBar = rates[0];
+   decisionTime = rates[1].time;
+   atrValue = atrBuffer[0];
+   emaValue = emaBuffer[0];
+   return true;
+  }
+
+void UpdateLiveZoneExtent(const MqlRates &currentBar,
+                          const datetime liveEnd)
+  {
+   if(g_state != VISUAL_STATE_ACTIVE && g_state != VISUAL_STATE_RISK_LOCK)
+      return;
+   if(g_state == VISUAL_STATE_ACTIVE)
+     {
+      if(currentBar.high > 0.0)
+         g_activeZoneHigh = MathMax(g_activeZoneHigh, currentBar.high);
+      if(currentBar.low > 0.0)
+         g_activeZoneLow = MathMin(g_activeZoneLow, currentBar.low);
+      UpdateActiveZoneObjects(liveEnd);
+     }
+   else
+     {
+      if(currentBar.high > 0.0)
+         g_riskLockHigh = MathMax(g_riskLockHigh, currentBar.high);
+      if(currentBar.low > 0.0)
+         g_riskLockLow = MathMin(g_riskLockLow, currentBar.low);
+      UpdateRiskLockObjects(liveEnd);
+     }
+  }
+
+void RefreshLiveVisualization()
+  {
+   bool needsZone = g_state == VISUAL_STATE_ACTIVE ||
+                    g_state == VISUAL_STATE_RISK_LOCK;
+   bool needsEMA = InpShowEMAOnChart && g_emaHandle != INVALID_HANDLE;
+   if(!needsZone && !needsEMA)
+      return;
+
+   MqlRates rates[2];
+   if(CopyRates(_Symbol, DECISION_TIMEFRAME, 0, 2, rates) != 2)
+      return;
+   g_perfLiveSnapshots++;
+
+   datetime liveEnd = TimeCurrent();
+   if(liveEnd <= 0)
+      liveEnd = rates[1].time;
+   if(needsZone)
+      UpdateLiveZoneExtent(rates[1], liveEnd);
+
+   if(!needsEMA)
+      return;
+   double emaValues[2];
+   if(CopyBuffer(g_emaHandle, 0, 0, 2, emaValues) != 2)
+      return;
+   UpdateLiveEMAVisualization(rates[0], rates[1],
+                              emaValues[0], emaValues[1], liveEnd);
+  }
+
+bool ProcessPolicyRuntime()
+  {
+   g_perfPolicyPolls++;
+   datetime currentM5Bar = iTime(_Symbol, DECISION_TIMEFRAME, 0);
+   if(currentM5Bar <= 0)
+     {
+      g_state = VISUAL_STATE_DATA_ERROR;
+      g_lastReason = "M5_DATA_NOT_READY";
+      return true;
+     }
+
+   if(g_lastM5BarTime == 0)
+      return BuildHistoricalZones();
+
+   if(currentM5Bar != g_lastM5BarTime)
+     {
+      int elapsed = (int)(currentM5Bar - g_lastM5BarTime);
+      if(elapsed != PeriodSeconds(DECISION_TIMEFRAME))
+        {
+         PrintFormat("DATA RECONCILE | M5 sequence gap=%d sec. Rebuilding all visual state.",
+                     elapsed);
+         return BuildHistoricalZones();
+        }
+
+      MqlRates closedBar;
+      double atrValue = 0.0;
+      double emaValue = 0.0;
+      datetime decisionTime = 0;
+      if(!ReadLatestClosedBar(closedBar, atrValue, emaValue, decisionTime))
+        {
+         g_lastReason = "M5_DATA_NOT_READY";
+         g_lastChecklistPass = false;
+          if(g_state == VISUAL_STATE_ACTIVE)
+             EndActiveZone(currentM5Bar, g_lastClose, g_lastReason, false,
+                           InpEventNamePolicyBlock, "DATA_ERROR_BLOCK",
+                           InpShowPolicyBlockEvents);
+          else if(g_state == VISUAL_STATE_RISK_LOCK)
+            {
+             EndRiskLockVisual(currentM5Bar, false);
+             g_state = VISUAL_STATE_DATA_ERROR;
+            }
+          else
+             g_state = VISUAL_STATE_DATA_ERROR;
+         AuditEvent("DATA_NOT_READY", currentM5Bar, g_lastReason, false);
+         return true;
+        }
+
+      ProcessDecisionBar(closedBar, atrValue, emaValue, decisionTime, false);
+      g_lastM5BarTime = currentM5Bar;
+      AppendLatestClosedEMASegment();
+      return true;
+     }
+   return false;
+  }
+
+//+------------------------------------------------------------------+
+//| CCBSN New Cycle command transport                               |
+//+------------------------------------------------------------------+
+int VolumeDigits(const double step)
+  {
+   for(int digits = 0; digits <= 8; digits++)
+     {
+      if(MathAbs(NormalizeDouble(step, digits) - step) < 0.00000001)
+         return digits;
+     }
+   return 8;
+  }
+
+double NormalizedCommandVolume()
+  {
+   double minimum = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
+   double maximum = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MAX);
+   double step = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
+   if(minimum <= 0.0 || maximum < minimum || step <= 0.0)
+      return 0.0;
+
+   double requested = InpCommandVolume <= 0.0 ? minimum : InpCommandVolume;
+   requested = MathMax(minimum, MathMin(maximum, requested));
+   double steps = MathFloor((requested - minimum) / step + 0.0000001);
+   return NormalizeDouble(minimum + steps * step, VolumeDigits(step));
+  }
+
+double NormalizedCommandPrice()
+  {
+   double tickSize = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE);
+   if(tickSize <= 0.0)
+      tickSize = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   if(tickSize <= 0.0)
+      return 0.0;
+   return NormalizeDouble(MathRound(InpCommandPrice / tickSize) * tickSize,
+                          (int)SymbolInfoInteger(_Symbol, SYMBOL_DIGITS));
+  }
+
+bool IsControlTradeAllowed()
+  {
+   if(InpSingleControllerLock && !g_controllerLockHeld)
+     {
+      g_lastControlError = "CONTROLLER_MUTEX_NOT_HELD";
+      return false;
+     }
+   if(!TerminalInfoInteger(TERMINAL_CONNECTED))
+     {
+      g_lastControlError = "TERMINAL_NOT_CONNECTED";
+      return false;
+     }
+   if(!TerminalInfoInteger(TERMINAL_TRADE_ALLOWED))
+     {
+      g_lastControlError = "TERMINAL_AUTOTRADING_OFF";
+      return false;
+     }
+   if(!MQLInfoInteger(MQL_TRADE_ALLOWED))
+     {
+      g_lastControlError = "EA_TRADING_NOT_ALLOWED";
+      return false;
+     }
+   if(!AccountInfoInteger(ACCOUNT_TRADE_ALLOWED) ||
+      !AccountInfoInteger(ACCOUNT_TRADE_EXPERT))
+     {
+      g_lastControlError = "ACCOUNT_EXPERT_TRADING_BLOCKED";
+      return false;
+     }
+   return true;
+  }
+
+bool IsRetryableEnvironmentError()
+  {
+   return g_lastControlError == "TERMINAL_NOT_CONNECTED" ||
+          g_lastControlError == "TERMINAL_AUTOTRADING_OFF" ||
+          g_lastControlError == "EA_TRADING_NOT_ALLOWED" ||
+          g_lastControlError == "ACCOUNT_EXPERT_TRADING_BLOCKED";
+  }
+
+bool RecoverRetryableControlError()
+  {
+   if(g_controlState != CCBSN_CONTROL_ERROR || g_commandTicket != 0 ||
+      !IsRetryableEnvironmentError())
+      return g_controlState != CCBSN_CONTROL_ERROR;
+
+   string previousError = g_lastControlError;
+   if(!IsControlTradeAllowed())
+      return false;
+
+   g_controlState = CCBSN_CONTROL_UNKNOWN;
+   g_lastControlError = "RECOVERED_FROM:" + previousError;
+   Print("CONTROL RECOVER | " + previousError + " cleared; synchronization will retry.");
+   AuditEvent("CONTROL_ENVIRONMENT_RECOVERED", TimeCurrent(),
+              previousError, false);
+   return true;
+  }
+
+bool InvalidateCycleAckForAutoTrading(const string reason)
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return false;
+   if(g_controlState == CCBSN_CONTROL_ERROR &&
+      !IsRetryableEnvironmentError())
+     {
+      PrintFormat("AUTOTRADING RESYNC BLOCKED | reason=%s existing_error=%s",
+                  reason, g_lastControlError);
+      return false;
+     }
+
+   // CCBSN v3.0 does not persist New Cycle across terminal restarts. A stored
+   // ACK therefore cannot be treated as proof after startup or after the
+   // terminal AutoTrading switch has been re-enabled.
+   GlobalVariableDel(ControlStorageKey("STATE"));
+   GlobalVariableDel(ControlStorageKey("SYNC_RETRY"));
+   GlobalVariableDel(ControlStorageKey("SYNC_DESIRED"));
+   GlobalVariablesFlush();
+
+   g_cycleSyncRetryCount = 0;
+   g_cycleRetryDesired = CCBSN_COMMAND_NONE;
+   g_nextCommandAttemptTick = 0;
+   g_autoTradingResyncSequence++;
+   g_syncState = "AUTOTRADING RESYNC REQUIRED";
+   g_lastSyncReason = reason;
+   g_positionSyncRequested = true;
+   g_controlReconcileRequested = true;
+
+   if(g_commandTicket == 0)
+     {
+      g_controlState = CCBSN_CONTROL_UNKNOWN;
+      g_lastControlError = reason;
+      g_offReassertRequested =
+         DesiredCommand() == CCBSN_COMMAND_NEW_CYCLE_OFF;
+     }
+
+   AuditEvent("AUTOTRADING_CYCLE_RESYNC_REQUIRED", TimeCurrent(),
+              reason, false);
+   PrintFormat("AUTOTRADING RESYNC | sequence=%I64u reason=%s desired=%s state=%s pending=%s ticket=%I64u",
+               g_autoTradingResyncSequence, reason,
+               CommandToString(DesiredCommand()),
+               ControlStateToString(g_controlState),
+               CommandToString(g_pendingCommand), g_commandTicket);
+   return true;
+  }
+
+bool InitializeAutoTradingCycleGuard()
+  {
+   // Startup is always fail-closed. The policy cannot enable a new cycle until
+   // CCBSN has consumed and the controller has reconciled this OFF command.
+   g_startupCycleBarrierActive = InpControlMode == CCBSN_CONTROL_ENABLED;
+   g_previousAutoTradingAllowed =
+      TerminalInfoInteger(TERMINAL_TRADE_ALLOWED) != 0;
+   g_autoTradingObservationReady = true;
+   return InvalidateCycleAckForAutoTrading(
+      g_previousAutoTradingAllowed
+      ? "STARTUP_AUTOTRADING_ON_FORCE_RESYNC"
+      : "STARTUP_AUTOTRADING_OFF_ACK_INVALIDATED");
+  }
+
+bool ObserveAutoTradingCycleGuard()
+  {
+   bool currentAllowed =
+      TerminalInfoInteger(TERMINAL_TRADE_ALLOWED) != 0;
+   if(!g_autoTradingObservationReady)
+     {
+      g_previousAutoTradingAllowed = currentAllowed;
+      g_autoTradingObservationReady = true;
+      return InvalidateCycleAckForAutoTrading(
+         currentAllowed
+         ? "STARTUP_AUTOTRADING_ON_FORCE_RESYNC"
+         : "STARTUP_AUTOTRADING_OFF_ACK_INVALIDATED");
+     }
+   if(currentAllowed == g_previousAutoTradingAllowed)
+      return false;
+
+   g_previousAutoTradingAllowed = currentAllowed;
+   return InvalidateCycleAckForAutoTrading(
+      currentAllowed
+      ? "AUTOTRADING_ENABLED_FORCE_RESYNC"
+      : "AUTOTRADING_DISABLED_ACK_INVALIDATED");
+  }
+
+bool ValidateCommandGeometry(const double price)
+  {
+   MqlTick tick;
+   if(!SymbolInfoTick(_Symbol, tick) || tick.ask <= 0.0)
+     {
+      g_lastControlError = "NO_LIVE_SYMBOL_TICK";
+      return false;
+     }
+   double point = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   long stopsLevel = SymbolInfoInteger(_Symbol, SYMBOL_TRADE_STOPS_LEVEL);
+   double safeDistance = MathMax((double)stopsLevel * point, 100.0 * point);
+   if(price <= tick.ask + safeDistance)
+     {
+      g_lastControlError = "COMMAND_PRICE_NOT_SAFELY_ABOVE_ASK";
+      return false;
+     }
+   return true;
+  }
+
+bool IsControllerOrderSelected(const ulong ticket)
+  {
+   if(ticket == 0 || !OrderSelect(ticket))
+      return false;
+   if(OrderGetString(ORDER_SYMBOL) != _Symbol)
+      return false;
+   if((ulong)OrderGetInteger(ORDER_MAGIC) != InpControllerMagic)
+      return false;
+   return StringFind(OrderGetString(ORDER_COMMENT), "CCBSN_CTRL:") == 0;
+  }
+
+ENUM_CCBSN_COMMAND SelectedOrderCommand()
+  {
+   ENUM_ORDER_TYPE type = (ENUM_ORDER_TYPE)OrderGetInteger(ORDER_TYPE);
+   if(type == ORDER_TYPE_SELL_LIMIT)
+      return CCBSN_COMMAND_NEW_CYCLE_ON;
+   if(type == ORDER_TYPE_BUY_STOP)
+      return CCBSN_COMMAND_NEW_CYCLE_OFF;
+   return CCBSN_COMMAND_NONE;
+  }
+
+bool CommandPriceMatches(const double actualPrice)
+  {
+   double expectedPrice = NormalizedCommandPrice();
+   double tickSize = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE);
+   if(tickSize <= 0.0)
+      tickSize = SymbolInfoDouble(_Symbol, SYMBOL_POINT);
+   if(expectedPrice <= 0.0 || tickSize <= 0.0)
+      return false;
+   return MathAbs(actualPrice - expectedPrice) <= tickSize * 0.51;
+  }
+
+bool CommandVolumeMatches(const double actualVolume)
+  {
+   double expectedVolume = NormalizedCommandVolume();
+   double volumeStep = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
+   if(expectedVolume <= 0.0 || volumeStep <= 0.0)
+      return false;
+   return MathAbs(actualVolume - expectedVolume) <= volumeStep * 0.01;
+  }
+
+string ExpectedCommandCommentPrefix(const ENUM_CCBSN_COMMAND command)
+  {
+   if(command == CCBSN_COMMAND_NEW_CYCLE_ON)
+      return "CCBSN_CTRL:ON:";
+   if(command == CCBSN_COMMAND_NEW_CYCLE_OFF)
+      return "CCBSN_CTRL:OFF:";
+   return "";
+  }
+
+bool ValidateSelectedOrderContract(const ENUM_CCBSN_COMMAND expectedCommand,
+                                   string &reason)
+  {
+   ENUM_CCBSN_COMMAND actualCommand = SelectedOrderCommand();
+   if(actualCommand == CCBSN_COMMAND_NONE)
+     {
+      reason = "ACTIVE_COMMAND_TYPE_INVALID";
+      return false;
+     }
+   if(expectedCommand != CCBSN_COMMAND_NONE && actualCommand != expectedCommand)
+     {
+      reason = "ACTIVE_COMMAND_DIRECTION_MISMATCH";
+      return false;
+     }
+   if(StringFind(OrderGetString(ORDER_COMMENT),
+                 ExpectedCommandCommentPrefix(actualCommand)) != 0)
+     {
+      reason = "ACTIVE_COMMAND_COMMENT_MISMATCH";
+      return false;
+     }
+   if(!CommandPriceMatches(OrderGetDouble(ORDER_PRICE_OPEN)))
+     {
+      reason = "ACTIVE_COMMAND_PRICE_MISMATCH";
+      return false;
+     }
+   if(!CommandVolumeMatches(OrderGetDouble(ORDER_VOLUME_INITIAL)))
+     {
+      reason = "ACTIVE_COMMAND_VOLUME_MISMATCH";
+      return false;
+     }
+   reason = "ACTIVE_COMMAND_CONTRACT_OK";
+   return true;
+  }
+
+bool ValidateHistoryOrderContract(const ulong ticket,
+                                  const ENUM_CCBSN_COMMAND expectedCommand,
+                                  string &reason)
+  {
+   if(ticket == 0 || !HistoryOrderSelect(ticket))
+     {
+      reason = "HISTORY_COMMAND_NOT_FOUND";
+      return false;
+     }
+   if(HistoryOrderGetString(ticket, ORDER_SYMBOL) != _Symbol ||
+      (ulong)HistoryOrderGetInteger(ticket, ORDER_MAGIC) != InpControllerMagic)
+     {
+      reason = "HISTORY_COMMAND_OWNER_MISMATCH";
+      return false;
+     }
+   ENUM_ORDER_TYPE type =
+      (ENUM_ORDER_TYPE)HistoryOrderGetInteger(ticket, ORDER_TYPE);
+   ENUM_CCBSN_COMMAND actualCommand = CCBSN_COMMAND_NONE;
+   if(type == ORDER_TYPE_SELL_LIMIT)
+      actualCommand = CCBSN_COMMAND_NEW_CYCLE_ON;
+   else if(type == ORDER_TYPE_BUY_STOP)
+      actualCommand = CCBSN_COMMAND_NEW_CYCLE_OFF;
+   if(actualCommand == CCBSN_COMMAND_NONE || actualCommand != expectedCommand)
+     {
+      reason = "HISTORY_COMMAND_DIRECTION_MISMATCH";
+      return false;
+     }
+   if(StringFind(HistoryOrderGetString(ticket, ORDER_COMMENT),
+                 ExpectedCommandCommentPrefix(actualCommand)) != 0)
+     {
+      reason = "HISTORY_COMMAND_COMMENT_MISMATCH";
+      return false;
+     }
+   if(!CommandPriceMatches(
+         HistoryOrderGetDouble(ticket, ORDER_PRICE_OPEN)))
+     {
+      reason = "HISTORY_COMMAND_PRICE_MISMATCH";
+      return false;
+     }
+   if(!CommandVolumeMatches(
+         HistoryOrderGetDouble(ticket, ORDER_VOLUME_INITIAL)))
+     {
+      reason = "HISTORY_COMMAND_VOLUME_MISMATCH";
+      return false;
+     }
+   reason = "HISTORY_COMMAND_CONTRACT_OK";
+   return true;
+  }
+
+string ControlStorageKey(const string suffix)
+  {
+   return "CCBSN.NC." + IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN)) +
+          "." + _Symbol + "." + IntegerToString((long)InpCCBSNMagic) +
+           "." + IntegerToString((long)InpControllerMagic) + "." + suffix;
+  }
+
+void SaveCycleSyncRetryState()
+  {
+   GlobalVariableSet(ControlStorageKey("SYNC_RETRY"),
+                     (double)g_cycleSyncRetryCount);
+   GlobalVariableSet(ControlStorageKey("SYNC_DESIRED"),
+                     (double)g_cycleRetryDesired);
+   GlobalVariablesFlush();
+  }
+
+void ResetCycleSyncRetryState()
+  {
+   g_cycleSyncRetryCount = 0;
+   g_cycleRetryDesired = CCBSN_COMMAND_NONE;
+   GlobalVariableDel(ControlStorageKey("SYNC_RETRY"));
+   GlobalVariableDel(ControlStorageKey("SYNC_DESIRED"));
+   GlobalVariablesFlush();
+  }
+
+string ControllerLockKey(const string suffix)
+  {
+   return "CCBSN.NC.LOCK." +
+          IntegerToString(AccountInfoInteger(ACCOUNT_LOGIN)) + "." +
+          _Symbol + "." + IntegerToString((long)InpCCBSNMagic) + "." + suffix;
+  }
+
+bool AcquireControllerLock()
+  {
+   if(InpControlMode == CCBSN_CONTROL_VISUAL_ONLY || !InpSingleControllerLock)
+      return true;
+
+   ulong rawChart = (ulong)ChartID();
+   ulong rawTick = GetTickCount64();
+   ulong exactToken = (rawChart % 9000000000) * 1000000 +
+                      (rawTick % 1000000);
+   if(exactToken == 0) exactToken = 1;
+   g_instanceToken = (double)exactToken; // Remains below the exact integer limit of double
+   string ownerKey = ControllerLockKey("OWNER");
+   string heartbeatKey = ControllerLockKey("HEARTBEAT");
+   if(!GlobalVariableCheck(ownerKey))
+      GlobalVariableSet(ownerKey, 0.0);
+
+   double currentOwner = GlobalVariableGet(ownerKey);
+   datetime heartbeat = GlobalVariableCheck(heartbeatKey)
+                        ? (datetime)MathRound(GlobalVariableGet(heartbeatKey)) : 0;
+   datetime now = TimeLocal();
+   if(currentOwner == g_instanceToken)
+     {
+      GlobalVariableSet(heartbeatKey, (double)now);
+      g_controllerLockHeld = true;
+      return true;
+     }
+
+   if(currentOwner != 0.0 && heartbeat > 0 &&
+      now - heartbeat <= InpControllerLockStaleSeconds)
+     {
+      PrintFormat("SAFETY BLOCK | Another Controller owns %s | owner=%.0f age=%d sec",
+                  _Symbol, currentOwner, (int)(now - heartbeat));
+      return false;
+     }
+
+   ResetLastError();
+   if(!GlobalVariableSetOnCondition(ownerKey, g_instanceToken, currentOwner))
+     {
+      PrintFormat("SAFETY BLOCK | Cannot acquire Controller mutex | error=%d",
+                  GetLastError());
+      return false;
+     }
+   GlobalVariableSet(heartbeatKey, (double)now);
+   GlobalVariablesFlush();
+   g_controllerLockHeld = true;
+   return true;
+  }
+
+void RefreshControllerLock()
+  {
+   if(!InpSingleControllerLock || !g_controllerLockHeld)
+      return;
+   string ownerKey = ControllerLockKey("OWNER");
+   if(!GlobalVariableCheck(ownerKey) ||
+      GlobalVariableGet(ownerKey) != g_instanceToken)
+     {
+      g_controllerLockHeld = false;
+      g_controlState = CCBSN_CONTROL_ERROR;
+      g_lastControlError = "CONTROLLER_MUTEX_LOST";
+      Print("CONTROL ERROR | Controller mutex ownership was lost.");
+      return;
+     }
+   GlobalVariableSet(ControllerLockKey("HEARTBEAT"), (double)TimeLocal());
+  }
+
+void ReleaseControllerLock()
+  {
+   if(!InpSingleControllerLock || !g_controllerLockHeld)
+      return;
+   string ownerKey = ControllerLockKey("OWNER");
+   if(GlobalVariableCheck(ownerKey) &&
+      GlobalVariableSetOnCondition(ownerKey, 0.0, g_instanceToken))
+      GlobalVariableSet(ControllerLockKey("HEARTBEAT"), 0.0);
+   g_controllerLockHeld = false;
+  }
+
+void SaveConfirmedControlState()
+  {
+   if(!InpPersistConfirmedState)
+      return;
+   double storedValue = 0.0;
+   if(g_controlState == CCBSN_CONTROL_ON_CONFIRMED)
+      storedValue = 1.0;
+   else if(g_controlState == CCBSN_CONTROL_OFF_CONFIRMED)
+      storedValue = 2.0;
+   if(storedValue > 0.0)
+     {
+      GlobalVariableSet(ControlStorageKey("STATE"), storedValue);
+      GlobalVariablesFlush();
+     }
+  }
+
+void SaveStoredTicket(const ulong ticket)
+  {
+   ulong highPart = ticket / TICKET_STORAGE_BASE;
+   ulong lowPart = ticket % TICKET_STORAGE_BASE;
+   GlobalVariableSet(ControlStorageKey("P_TICKET_HI"), (double)highPart);
+   GlobalVariableSet(ControlStorageKey("P_TICKET_LO"), (double)lowPart);
+   GlobalVariableDel(ControlStorageKey("P_TICKET")); // v3.1 legacy key
+  }
+
+ulong LoadStoredTicket()
+  {
+   string highKey = ControlStorageKey("P_TICKET_HI");
+   string lowKey = ControlStorageKey("P_TICKET_LO");
+   if(GlobalVariableCheck(highKey) && GlobalVariableCheck(lowKey))
+     {
+      ulong highPart = (ulong)MathRound(GlobalVariableGet(highKey));
+      ulong lowPart = (ulong)MathRound(GlobalVariableGet(lowKey));
+      return highPart * TICKET_STORAGE_BASE + lowPart;
+     }
+
+   string legacyKey = ControlStorageKey("P_TICKET");
+   if(GlobalVariableCheck(legacyKey))
+      return (ulong)MathRound(GlobalVariableGet(legacyKey));
+   return 0;
+  }
+
+void SavePendingCommand()
+  {
+   if(g_commandTicket == 0 || g_pendingCommand == CCBSN_COMMAND_NONE)
+      return;
+   SaveStoredTicket(g_commandTicket);
+   GlobalVariableSet(ControlStorageKey("P_COMMAND"), (double)g_pendingCommand);
+   GlobalVariableSet(ControlStorageKey("P_SENT"), (double)g_commandSentTime);
+   GlobalVariableSet(ControlStorageKey("P_CANCEL"),
+                     g_commandCancelRequested ? 1.0 : 0.0);
+    GlobalVariableSet(ControlStorageKey("P_CANCEL_REASON"),
+                      (double)g_commandCancelCode);
+    SaveCycleSyncRetryState();
+    GlobalVariablesFlush();
+  }
+
+void DeleteStoredPendingCommand()
+  {
+   GlobalVariableDel(ControlStorageKey("P_TICKET"));
+   GlobalVariableDel(ControlStorageKey("P_TICKET_HI"));
+   GlobalVariableDel(ControlStorageKey("P_TICKET_LO"));
+   GlobalVariableDel(ControlStorageKey("P_COMMAND"));
+   GlobalVariableDel(ControlStorageKey("P_SENT"));
+   GlobalVariableDel(ControlStorageKey("P_CANCEL"));
+   GlobalVariableDel(ControlStorageKey("P_CANCEL_REASON"));
+  }
+
+void ClearStoredControlOwnership()
+  {
+    GlobalVariableDel(ControlStorageKey("STATE"));
+    GlobalVariableDel(ControlStorageKey("SYNC_RETRY"));
+    GlobalVariableDel(ControlStorageKey("SYNC_DESIRED"));
+   DeleteStoredPendingCommand();
+   GlobalVariablesFlush();
+   g_commandTicket = 0;
+   g_commandSentTime = 0;
+   g_pendingCommand = CCBSN_COMMAND_NONE;
+   g_commandCancelRequested = false;
+    g_commandCancelReason = "";
+    g_commandCancelCode = COMMAND_CANCEL_NONE;
+    g_cycleSyncRetryCount = 0;
+    g_cycleRetryDesired = CCBSN_COMMAND_NONE;
+  }
+
+bool DeleteActiveControllerCommands(const string context)
+  {
+   bool allDeleted = true;
+   for(int index = OrdersTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = OrderGetTicket(index);
+      if(!IsControllerOrderSelected(ticket))
+         continue;
+      bool deleted = g_trade.OrderDelete(ticket);
+      uint retcode = g_trade.ResultRetcode();
+      if(!deleted ||
+         (retcode != TRADE_RETCODE_DONE && retcode != TRADE_RETCODE_PLACED))
+        {
+         // CCBSN can consume the command while CTrade is still returning.
+         // A command that is no longer active is already safe for handover.
+         if(IsControllerOrderSelected(ticket))
+           {
+            allDeleted = false;
+            PrintFormat("HANDOVER ERROR | Cannot delete controller command #%I64u | %s | %u %s",
+                        ticket, context, retcode,
+                        g_trade.ResultRetcodeDescription());
+           }
+         else
+            PrintFormat("HANDOVER NORMALIZED | Command #%I64u already removed | %s",
+                        ticket, context);
+        }
+      else
+         PrintFormat("HANDOVER | Deleted controller command #%I64u | %s",
+                     ticket, context);
+     }
+   return allDeleted;
+  }
+
+void LoadStoredPendingForHandover()
+  {
+   if(g_commandTicket > 0)
+      return;
+   g_commandTicket = LoadStoredTicket();
+   if(g_commandTicket == 0)
+      return;
+   string commandKey = ControlStorageKey("P_COMMAND");
+   if(GlobalVariableCheck(commandKey))
+      g_pendingCommand =
+         (ENUM_CCBSN_COMMAND)(int)MathRound(GlobalVariableGet(commandKey));
+  }
+
+bool VerifyNoControllerCommandsRemain()
+  {
+   for(int index = OrdersTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = OrderGetTicket(index);
+      if(IsControllerOrderSelected(ticket))
+        {
+         g_lastControlError = "HANDOVER_WAITING_ACTIVE_COMMAND_" +
+                              IntegerToString((long)ticket);
+         return false;
+        }
+     }
+
+   if(g_commandTicket == 0)
+      return true;
+   if(OrderSelect(g_commandTicket))
+     {
+      g_lastControlError = "HANDOVER_WAITING_TRACKED_COMMAND";
+      return false;
+     }
+   if(!HistoryOrderSelect(g_commandTicket))
+     {
+      g_lastControlError = "HANDOVER_CANNOT_VERIFY_COMMAND_HISTORY";
+      return false;
+     }
+
+   ENUM_ORDER_STATE state =
+      (ENUM_ORDER_STATE)HistoryOrderGetInteger(g_commandTicket, ORDER_STATE);
+   if(state == ORDER_STATE_FILLED || state == ORDER_STATE_PARTIAL)
+     {
+      g_lastControlError = "CRITICAL_HANDOVER_COMMAND_EXECUTED";
+      Alert("CCBSN HANDOVER ERROR: command order was executed. Check account immediately.");
+      return false;
+     }
+   return true;
+  }
+
+bool PerformManualHandover(const string context)
+  {
+   if(g_manualHandoverComplete)
+      return true;
+   if(InpSingleControllerLock && !g_controllerLockHeld)
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      g_lastControlError = "MANUAL_HANDOVER_REQUIRES_MUTEX";
+      PrintFormat("HANDOVER BLOCK | Mutex not held | %s", context);
+      return false;
+     }
+   LoadStoredPendingForHandover();
+   if(!DeleteActiveControllerCommands(context))
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      g_lastControlError = "MANUAL_HANDOVER_COMMAND_DELETE_FAILED";
+      return false;
+     }
+   if(!VerifyNoControllerCommandsRemain())
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      PrintFormat("HANDOVER WAIT | %s | %s", context, g_lastControlError);
+      return false;
+     }
+   ClearStoredControlOwnership();
+   g_controlState = CCBSN_CONTROL_BOT1_MANUAL;
+   g_lastControlError = "MANUAL_HANDOVER_READY";
+   g_manualHandoverComplete = true;
+   AuditEvent("BOT1_MANUAL_HANDOVER_READY", TimeCurrent(), context, false);
+   PrintFormat("HANDOVER READY | Bot 1 owns New Cycle manual control | %s",
+               context);
+   return true;
+  }
+
+void LoadStoredControlState()
+  {
+   string retryKey = ControlStorageKey("SYNC_RETRY");
+   string retryDesiredKey = ControlStorageKey("SYNC_DESIRED");
+   if(GlobalVariableCheck(retryKey))
+      g_cycleSyncRetryCount =
+         (int)MathRound(GlobalVariableGet(retryKey));
+   if(GlobalVariableCheck(retryDesiredKey))
+      g_cycleRetryDesired =
+         (ENUM_CCBSN_COMMAND)(int)MathRound(
+            GlobalVariableGet(retryDesiredKey));
+
+   string stateKey = ControlStorageKey("STATE");
+   if(!InpPersistConfirmedState)
+      GlobalVariableDel(stateKey);
+   else if(InpForceSyncOnInit)
+     {
+      GlobalVariableDel(stateKey);
+      g_controlState = CCBSN_CONTROL_UNKNOWN;
+      g_lastControlError = "FORCE_SYNC_REQUESTED_STATE_CLEARED";
+     }
+   else if(!InpForceSyncOnInit && GlobalVariableCheck(stateKey))
+     {
+      int storedState = (int)MathRound(GlobalVariableGet(stateKey));
+      if(storedState == 1)
+        {
+         g_controlState = CCBSN_CONTROL_ON_CONFIRMED;
+         g_lastControlError = "RESTORED_NC_ENABLED";
+        }
+      else if(storedState == 2)
+        {
+         g_controlState = CCBSN_CONTROL_OFF_CONFIRMED;
+         g_lastControlError = "RESTORED_NC_DISABLED";
+        }
+     }
+   string commandKey = ControlStorageKey("P_COMMAND");
+   ulong storedTicket = LoadStoredTicket();
+   if(storedTicket > 0 && GlobalVariableCheck(commandKey))
+     {
+      ENUM_CCBSN_COMMAND storedCommand =
+         (ENUM_CCBSN_COMMAND)(int)MathRound(GlobalVariableGet(commandKey));
+      if(storedTicket > 0 &&
+         (storedCommand == CCBSN_COMMAND_NEW_CYCLE_ON ||
+          storedCommand == CCBSN_COMMAND_NEW_CYCLE_OFF))
+        {
+         g_commandTicket = storedTicket;
+         g_pendingCommand = storedCommand;
+         string sentKey = ControlStorageKey("P_SENT");
+         g_commandSentTime = GlobalVariableCheck(sentKey)
+                             ? (datetime)MathRound(GlobalVariableGet(sentKey)) : 0;
+         string cancelKey = ControlStorageKey("P_CANCEL");
+         g_commandCancelRequested = GlobalVariableCheck(cancelKey) &&
+                                    GlobalVariableGet(cancelKey) > 0.5;
+         string cancelReasonKey = ControlStorageKey("P_CANCEL_REASON");
+         g_commandCancelCode = GlobalVariableCheck(cancelReasonKey)
+            ? (ENUM_COMMAND_CANCEL_REASON)(int)MathRound(
+                 GlobalVariableGet(cancelReasonKey))
+            : COMMAND_CANCEL_NONE;
+         if(g_commandCancelRequested)
+            g_commandCancelReason = CancelReasonText(g_commandCancelCode);
+         g_controlState = storedCommand == CCBSN_COMMAND_NEW_CYCLE_ON
+                          ? CCBSN_CONTROL_ON_PENDING
+                          : CCBSN_CONTROL_OFF_PENDING;
+         g_lastControlError = g_commandCancelRequested
+                              ? "RESTORED_PENDING_CANCELLATION"
+                              : "RESTORED_PENDING_COMMAND";
+        }
+     }
+
+   PrintFormat("CONTROL RESTORE | applied=%s pending=%s ticket=%I64u",
+               ControlStateToString(g_controlState),
+               CommandToString(g_pendingCommand), g_commandTicket);
+  }
+
+bool RecoverPendingControllerOrder()
+  {
+   ulong previouslyTrackedTicket = g_commandTicket;
+   int matches = 0;
+   int invalidContracts = 0;
+   ulong recoveredTicket = 0;
+   datetime recoveredTime = 0;
+   ENUM_CCBSN_COMMAND recoveredCommand = CCBSN_COMMAND_NONE;
+
+   for(int index = OrdersTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = OrderGetTicket(index);
+      if(!IsControllerOrderSelected(ticket))
+         continue;
+      ENUM_CCBSN_COMMAND command = SelectedOrderCommand();
+      string contractReason = "";
+      if(!ValidateSelectedOrderContract(command, contractReason))
+        {
+         invalidContracts++;
+         g_lastControlError = contractReason + ":" +
+                              IntegerToString((long)ticket);
+         continue;
+        }
+      matches++;
+      recoveredTicket = ticket;
+      recoveredTime = (datetime)OrderGetInteger(ORDER_TIME_SETUP);
+      recoveredCommand = command;
+     }
+
+   if(invalidContracts > 0)
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      Alert("CCBSN CONTROL ERROR: malformed controller command found. Check pending orders immediately.");
+      PrintFormat("CONTROL ERROR | %d malformed controller command(s) | %s",
+                  invalidContracts, g_lastControlError);
+      return false;
+     }
+
+   if(matches > 1)
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      g_lastControlError = "MULTIPLE_CONTROLLER_COMMANDS_FOUND";
+      Print("CONTROL ERROR | Multiple active controller commands found; no new command will be sent.");
+      return false;
+     }
+   if(matches == 1)
+     {
+      if(previouslyTrackedTicket != recoveredTicket)
+        {
+         g_commandCancelRequested = false;
+         g_commandCancelReason = "";
+         g_commandCancelCode = COMMAND_CANCEL_NONE;
+        }
+      g_commandTicket = recoveredTicket;
+      g_commandSentTime = recoveredTime;
+      g_pendingCommand = recoveredCommand;
+      g_controlState = recoveredCommand == CCBSN_COMMAND_NEW_CYCLE_ON
+                       ? CCBSN_CONTROL_ON_PENDING
+                       : CCBSN_CONTROL_OFF_PENDING;
+      g_lastControlError = "RECOVERED_PENDING_COMMAND";
+      SavePendingCommand();
+      PrintFormat("CONTROL RECOVER | ticket=%I64u command=%s",
+                  g_commandTicket, CommandToString(g_pendingCommand));
+     }
+   return true;
+  }
+
+bool ValidateRuntimeControllerCommandSet()
+  {
+   if(g_commandTicket != 0 && OrderSelect(g_commandTicket) &&
+      !IsControllerOrderSelected(g_commandTicket))
+      return FailCycleConsistency(
+         "TRACKED_TICKET_OWNER_MISMATCH",
+         "Tracked ticket no longer belongs to this controller.");
+
+   int ownedCount = 0;
+   ulong ownedTicket = 0;
+   ENUM_CCBSN_COMMAND ownedCommand = CCBSN_COMMAND_NONE;
+   for(int index = OrdersTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = OrderGetTicket(index);
+      if(!IsControllerOrderSelected(ticket))
+         continue;
+      ownedCount++;
+      ownedTicket = ticket;
+      ownedCommand = SelectedOrderCommand();
+      string contractReason = "";
+      if(!ValidateSelectedOrderContract(ownedCommand, contractReason))
+         return FailCycleConsistency(
+            contractReason,
+            "Active controller order violates type/comment/price/volume contract.");
+     }
+
+   if(ownedCount > 1)
+      return FailCycleConsistency(
+         "MULTIPLE_ACTIVE_CONTROLLER_COMMANDS",
+         "More than one controller command is active.");
+   if(ownedCount == 1 && g_commandTicket == 0)
+      return FailCycleConsistency(
+         "UNTRACKED_ACTIVE_CONTROLLER_COMMAND",
+         "An active controller command exists without a tracked ticket.");
+   if(ownedCount == 1 && ownedTicket != g_commandTicket)
+      return FailCycleConsistency(
+         "ACTIVE_TICKET_MISMATCH",
+         "Active controller ticket differs from the persisted tracked ticket.");
+   if(ownedCount == 1 && ownedCommand != g_pendingCommand)
+      return FailCycleConsistency(
+         "ACTIVE_DIRECTION_MISMATCH",
+         "Active controller command direction differs from pending state.");
+   return true;
+  }
+
+void MarkCommandConfirmed(const ENUM_CCBSN_COMMAND command)
+  {
+   datetime confirmedTime = TimeCurrent();
+   g_lastConfirmedCommandTicket = g_commandTicket;
+   ENUM_CCBSN_COMMAND desiredAtAck = DesiredCommand();
+   bool ackAligned = command == desiredAtAck;
+   double markerPrice = SymbolInfoDouble(_Symbol, SYMBOL_BID);
+   if(markerPrice <= 0.0)
+      markerPrice = g_lastClose;
+   g_controlState = command == CCBSN_COMMAND_NEW_CYCLE_ON
+                    ? CCBSN_CONTROL_ON_CONFIRMED
+                    : CCBSN_CONTROL_OFF_CONFIRMED;
+   g_lastControlError = "CCBSN_COMMAND_CONSUMED";
+   if(command == CCBSN_COMMAND_NEW_CYCLE_OFF)
+     {
+      g_offReassertRequested = false;
+      g_offFlatGuardArmed = g_ccbsnPositionCount == 0;
+      if(g_driftDetectedCurrentChain)
+         g_syncState = "DRIFT: OFF ACK RECEIVED";
+      else if(g_ccbsnPositionCount == 0)
+         g_syncState = "OFF FLAT GUARDED";
+      else
+         g_syncState = "OFF: EXISTING CHAIN";
+      g_lastSyncReason = "OFF_COMMAND_CONSUMED";
+     }
+   else
+     {
+      g_offFlatGuardArmed = false;
+      g_offReassertRequested = false;
+      g_driftDetectedCurrentChain = false;
+      g_syncState = "POLICY ALLOW";
+      g_lastSyncReason = "ON_COMMAND_CONSUMED";
+     }
+   SaveConfirmedControlState();
+   if(ackAligned)
+     {
+      ResetCycleSyncRetryState();
+      if(command == CCBSN_COMMAND_NEW_CYCLE_OFF &&
+         g_startupCycleBarrierActive)
+        {
+         g_startupCycleBarrierActive = false;
+         g_nextControlPollTick = 0;
+         AuditEvent("STARTUP_CYCLE_BARRIER_RELEASED", confirmedTime,
+                    "OFF_ACK_RECONCILED", false);
+         Print("STARTUP CYCLE BARRIER RELEASED | OFF ACK reconciled; policy control enabled");
+        }
+     }
+   else
+     {
+      g_controlState = CCBSN_CONTROL_UNKNOWN;
+      g_lastControlError = "STALE_ACK_REQUIRES_RESYNC";
+      g_nextCommandAttemptTick = 0;
+      if(desiredAtAck == CCBSN_COMMAND_NEW_CYCLE_OFF)
+         g_offReassertRequested = true;
+      g_syncState = "STALE ACK: RESYNC REQUIRED";
+      g_lastSyncReason = CommandToString(command) + " != " +
+                         CommandToString(desiredAtAck);
+      AuditEvent("STALE_ACK_REQUIRES_RESYNC", confirmedTime,
+                 g_lastSyncReason, false);
+     }
+
+   string eventName = command == CCBSN_COMMAND_NEW_CYCLE_ON
+                      ? "CCBSN_ON_CONFIRMED" : "CCBSN_OFF_CONFIRMED";
+   string eventText = command == CCBSN_COMMAND_NEW_CYCLE_ON
+                      ? InpEventNameNCEnabled : InpEventNameNCDisabled;
+    color eventColor = command == CCBSN_COMMAND_NEW_CYCLE_ON
+                       ? PolicyFamilyColor(g_activeZoneBranch) : InpOffEventColor;
+   if(ShouldRenderEvent(InpShowControlAckEvents))
+     {
+      CreateVerticalLine(g_objectPrefix + "CONTROL." + eventName + "." +
+                         TimeKey(confirmedTime), confirmedTime, eventColor,
+                         STYLE_DOT, eventName);
+      CreateEventMarker(eventName, confirmedTime, markerPrice,
+                        eventText,
+                        "Owned command contract verified; canceled history observed.");
+     }
+   AuditEvent(eventName, confirmedTime, "CCBSN_COMMAND_CONSUMED", false);
+   PrintFormat("CONTROL CONFIRMED | %s | ticket=%I64u",
+               CommandToString(command), g_commandTicket);
+  }
+
+void ClearPendingCommand()
+  {
+   DeleteStoredPendingCommand();
+   g_commandTicket = 0;
+   g_commandSentTime = 0;
+   g_pendingCommand = CCBSN_COMMAND_NONE;
+   g_commandCancelRequested = false;
+   g_commandCancelReason = "";
+   g_commandCancelCode = COMMAND_CANCEL_NONE;
+  }
+
+bool ScheduleCycleResync(const string reason)
+  {
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   if(g_cycleRetryDesired != desired)
+     {
+      g_cycleRetryDesired = desired;
+      g_cycleSyncRetryCount = 0;
+     }
+   g_cycleSyncRetryCount++;
+   SaveCycleSyncRetryState();
+   if(g_cycleSyncRetryCount > InpCycleSyncMaxRetries)
+      return FailCycleConsistency(
+         "RESYNC_RETRIES_EXHAUSTED:" + reason,
+         "CCBSN did not ACK the desired cycle state after bounded retries.");
+
+   g_controlState = CCBSN_CONTROL_UNKNOWN;
+   g_lastControlError = "CYCLE_RESYNC_RETRY_" +
+                        IntegerToString(g_cycleSyncRetryCount) + ":" + reason;
+   g_nextCommandAttemptTick = GetTickCount64() +
+                              (ulong)InpCommandRetryMilliseconds;
+   if(desired == CCBSN_COMMAND_NEW_CYCLE_OFF)
+      g_offReassertRequested = true;
+   g_syncState = "CYCLE RESYNC PENDING";
+   g_lastSyncReason = reason;
+   AuditEvent("CYCLE_RESYNC_SCHEDULED", TimeCurrent(),
+              g_lastControlError, false);
+   PrintFormat("CONTROL RESYNC | desired=%s retry=%d/%d | %s",
+               CommandToString(desired), g_cycleSyncRetryCount,
+               InpCycleSyncMaxRetries, reason);
+   return true;
+  }
+
+bool RequestCommandCancellation(const string reason)
+  {
+   if(g_commandTicket == 0)
+      return true;
+   if(!g_commandCancelRequested)
+     {
+      g_commandCancelRequested = true;
+      g_commandCancelReason = reason;
+      g_commandCancelCode = CancelReasonCode(reason);
+      SavePendingCommand(); // Persist intent before the server-side delete.
+     }
+   bool ok = g_trade.OrderDelete(g_commandTicket);
+   uint retcode = g_trade.ResultRetcode();
+   if(!ok || (retcode != TRADE_RETCODE_DONE && retcode != TRADE_RETCODE_PLACED))
+     {
+      // A fast CCBSN ACK removes the order before CTrade exposes its final
+      // result. Let ReconcilePendingCommand classify the history state.
+      if(!IsControllerOrderSelected(g_commandTicket))
+        {
+         g_lastControlError = "COMMAND_DELETE_ALREADY_COMPLETED";
+         PrintFormat("CONTROL NORMALIZED | Delete already completed | ticket=%I64u retcode=%u %s",
+                     g_commandTicket, retcode,
+                     g_trade.ResultRetcodeDescription());
+         return true;
+        }
+      g_lastControlError = "COMMAND_DELETE_RETRY:" +
+                           g_trade.ResultRetcodeDescription();
+      PrintFormat("CONTROL RETRY | Cannot delete ticket=%I64u yet | retcode=%u %s",
+                  g_commandTicket, retcode, g_trade.ResultRetcodeDescription());
+      return false;
+     }
+   g_lastControlError = "DELETE_REQUESTED:" + reason;
+   return true;
+  }
+
+void ReconcilePendingCommand()
+  {
+   if(g_commandTicket == 0)
+      return;
+
+   if(IsControllerOrderSelected(g_commandTicket))
+     {
+      string activeContractReason = "";
+      if(!ValidateSelectedOrderContract(g_pendingCommand,
+                                        activeContractReason))
+        {
+         RequestCommandCancellation("COMMAND_CONTRACT_MISMATCH");
+         FailCycleConsistency(activeContractReason,
+            "Tracked active command contract changed while pending.");
+         return;
+        }
+      if(g_commandCancelRequested)
+        {
+         RequestCommandCancellation(g_commandCancelReason);
+         return;
+        }
+      ENUM_CCBSN_COMMAND desired = DesiredCommand();
+      if(desired != g_pendingCommand)
+        {
+         RequestCommandCancellation("SUPERSEDED_BY_NEW_POLICY_STATE");
+         return;
+        }
+
+      datetime now = TimeCurrent();
+      if(now > 0 && g_commandSentTime > 0 &&
+         now - g_commandSentTime >= InpCommandTimeoutSeconds)
+        {
+         if(InpDeleteCommandOnTimeout)
+            RequestCommandCancellation("CCBSN_CONSUMPTION_TIMEOUT");
+         else
+           {
+            g_controlState = CCBSN_CONTROL_ERROR;
+            g_lastControlError = "CCBSN_CONSUMPTION_TIMEOUT_ORDER_LEFT_ACTIVE";
+           }
+        }
+      return;
+     }
+
+   if(!HistoryOrderSelect(g_commandTicket))
+     {
+      g_lastControlError = "WAITING_FOR_COMMAND_HISTORY";
+      return;
+     }
+
+   string historyContractReason = "";
+   if(!ValidateHistoryOrderContract(g_commandTicket, g_pendingCommand,
+                                    historyContractReason))
+     {
+      FailCycleConsistency(historyContractReason,
+         "Tracked history order cannot prove controller command identity.");
+      ClearPendingCommand();
+      return;
+     }
+
+   ENUM_ORDER_STATE orderState =
+      (ENUM_ORDER_STATE)HistoryOrderGetInteger(g_commandTicket, ORDER_STATE);
+   ENUM_CCBSN_COMMAND completedCommand = g_pendingCommand;
+   if(orderState == ORDER_STATE_FILLED || orderState == ORDER_STATE_PARTIAL)
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      g_lastControlError = "CRITICAL_COMMAND_ORDER_EXECUTED";
+      Alert("CCBSN CONTROL ERROR: command order was executed. Check account immediately.");
+      PrintFormat("CONTROL CRITICAL | Command ticket=%I64u was executed.",
+                  g_commandTicket);
+      ClearPendingCommand();
+      return;
+     }
+
+   if(g_commandCancelRequested)
+     {
+      string cancelReason = g_commandCancelReason;
+      ClearPendingCommand();
+      if(cancelReason == "SUPERSEDED_BY_NEW_POLICY_STATE")
+        {
+         g_controlState = CCBSN_CONTROL_UNKNOWN;
+         g_lastControlError = "STALE_COMMAND_CANCELLED";
+        }
+      else if(cancelReason == "CCBSN_CONSUMPTION_TIMEOUT")
+         ScheduleCycleResync(cancelReason);
+      else if(cancelReason == "COMMAND_CONTRACT_MISMATCH")
+         FailCycleConsistency(cancelReason,
+            "Malformed controller command was canceled; automatic control is stopped.");
+      else
+        {
+         g_controlState = CCBSN_CONTROL_ERROR;
+         g_lastControlError = cancelReason;
+        }
+      return;
+     }
+
+   if(orderState == ORDER_STATE_CANCELED)
+     {
+      MarkCommandConfirmed(completedCommand);
+      ClearPendingCommand();
+      return;
+     }
+
+   g_controlState = CCBSN_CONTROL_ERROR;
+   g_lastControlError = "UNEXPECTED_COMMAND_HISTORY_STATE:" + EnumToString(orderState);
+   ClearPendingCommand();
+  }
+
+bool SendCCBSNCommand(const ENUM_CCBSN_COMMAND command)
+  {
+   if(command == CCBSN_COMMAND_NONE)
+      return false;
+   if(!IsControlTradeAllowed())
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      Print("CONTROL ERROR | " + g_lastControlError);
+      return false;
+     }
+
+   double price = NormalizedCommandPrice();
+   double volume = NormalizedCommandVolume();
+   if(price <= 0.0 || volume <= 0.0 || !ValidateCommandGeometry(price))
+     {
+      g_controlState = CCBSN_CONTROL_ERROR;
+      if(g_lastControlError == "NONE")
+         g_lastControlError = "INVALID_COMMAND_PRICE_OR_VOLUME";
+      return false;
+     }
+
+   string action = command == CCBSN_COMMAND_NEW_CYCLE_ON ? "ON" : "OFF";
+   string comment = "CCBSN_CTRL:" + action + ":" +
+                    IntegerToString((long)TimeCurrent());
+   ResetLastError();
+   bool requestOk = false;
+   if(command == CCBSN_COMMAND_NEW_CYCLE_ON)
+      requestOk = g_trade.SellLimit(volume, price, _Symbol, 0.0, 0.0,
+                                    ORDER_TIME_GTC, 0, comment);
+   else
+      requestOk = g_trade.BuyStop(volume, price, _Symbol, 0.0, 0.0,
+                                  ORDER_TIME_GTC, 0, comment);
+
+   uint retcode = g_trade.ResultRetcode();
+   ulong ticket = g_trade.ResultOrder();
+   int terminalError = GetLastError();
+   if(ticket == 0)
+     {
+      // With no ticket there is nothing that CCBSN can consume. Keep the
+      // controller retryable instead of latching ERROR forever.
+      g_controlState = CCBSN_CONTROL_UNKNOWN;
+      g_lastControlError = "COMMAND_SEND_RETRY:" +
+                           g_trade.ResultRetcodeDescription();
+      g_nextCommandAttemptTick = GetTickCount64() +
+                                 (ulong)InpCommandRetryMilliseconds;
+      PrintFormat("CONTROL RETRY | Send %s has no ticket | request=%s retcode=%u %s error=%d",
+                  action, requestOk ? "true" : "false", retcode,
+                  g_trade.ResultRetcodeDescription(), terminalError);
+      return false;
+     }
+
+   // ResultOrder is authoritative. CCBSN may cancel the command during the
+   // synchronous CTrade call, producing requestOk=false/retcode=0 even though
+   // the server accepted the order and returned a valid ticket.
+   g_commandTicket = ticket;
+   g_commandSentTime = TimeCurrent();
+   g_pendingCommand = command;
+   g_commandCancelRequested = false;
+   g_commandCancelReason = "";
+   g_commandCancelCode = COMMAND_CANCEL_NONE;
+   g_controlState = command == CCBSN_COMMAND_NEW_CYCLE_ON
+                    ? CCBSN_CONTROL_ON_PENDING
+                    : CCBSN_CONTROL_OFF_PENDING;
+   g_lastControlError = "WAITING_FOR_CCBSN_CONSUMPTION";
+   g_nextCommandAttemptTick = 0;
+   SavePendingCommand();
+   AuditEvent("CCBSN_COMMAND_SENT", g_commandSentTime,
+              CommandToString(command), false);
+   PrintFormat("CONTROL SENT | %s | ticket=%I64u price=%s volume=%.2f request=%s retcode=%u",
+               CommandToString(command), ticket,
+               FormatPrice(price), volume,
+               requestOk ? "true" : "false", retcode);
+   if(!requestOk ||
+      (retcode != TRADE_RETCODE_DONE && retcode != TRADE_RETCODE_PLACED))
+      PrintFormat("CONTROL NORMALIZED | Fast ACK candidate | ticket=%I64u retcode=%u %s error=%d",
+                  ticket, retcode, g_trade.ResultRetcodeDescription(),
+                  terminalError);
+   ReconcilePendingCommand();
+   return true;
+  }
+
+void ProcessCCBSNControl()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return;
+   RefreshCCBSNPositionSync("CONTROL_LOOP");
+   if(!g_positionSnapshotReady)
+     {
+      FailCycleConsistency("POSITION_SNAPSHOT_NOT_READY",
+         "Cannot synchronize cycle state without a CCBSN position snapshot.");
+      return;
+     }
+
+   ReconcilePendingCommand();
+   if(!ValidateRuntimeControllerCommandSet())
+      return;
+   if(!RecoverRetryableControlError())
+      return;
+   if(g_commandTicket != 0 || g_controlState == CCBSN_CONTROL_ERROR)
+      return;
+
+   ENUM_CCBSN_COMMAND desired = DesiredCommand();
+   bool forceOffReassert = desired == CCBSN_COMMAND_NEW_CYCLE_OFF &&
+                           g_offReassertRequested;
+   if(IsConfirmedForCommand(desired) && !forceOffReassert)
+      return;
+   if(g_nextCommandAttemptTick > 0 &&
+      GetTickCount64() < g_nextCommandAttemptTick)
+      return;
+   string syncReason = g_lastSyncReason;
+   if(!SendCCBSNCommand(desired))
+      return;
+
+   if(desired == CCBSN_COMMAND_NEW_CYCLE_OFF && g_commandTicket != 0)
+     {
+      datetime reassertTime = TimeCurrent();
+      g_syncState = g_driftDetectedCurrentChain
+                    ? "DRIFT: OFF REASSERT SENT"
+                    : "OFF REASSERT SENT";
+      g_lastSyncReason = syncReason;
+      AuditEvent("NC_OFF_REASSERT_SENT", reassertTime,
+                 syncReason, false);
+      PrintFormat("SYNC | OFF reassert sent | positions=%d volume=%.2f | %s",
+                  g_ccbsnPositionCount, g_ccbsnPositionVolume, syncReason);
+     }
+  }
+
+//+------------------------------------------------------------------+
+//| Read-only external monitor                                      |
+//+------------------------------------------------------------------+
+string JsonEscape(const string value)
+  {
+   string escaped = value;
+   StringReplace(escaped, "\\", "\\\\");
+   StringReplace(escaped, "\"", "\\\"");
+   StringReplace(escaped, "\r", "\\r");
+   StringReplace(escaped, "\n", "\\n");
+   StringReplace(escaped, "\t", "\\t");
+   return escaped;
+  }
+
+string JsonString(const string value)
+  {
+   return "\"" + JsonEscape(value) + "\"";
+  }
+
+string JsonBool(const bool value)
+  {
+   return value ? "true" : "false";
+  }
+
+string UtcTimestamp(const datetime value)
+  {
+   if(value <= 0)
+      return "";
+   string result = TimeToString(value, TIME_DATE | TIME_SECONDS);
+   StringReplace(result, ".", "-");
+   StringReplace(result, " ", "T");
+   return result + "Z";
+  }
+
+ENUM_POLICY_FAMILY MonitorPolicyFamily()
+  {
+   if(g_activePolicy != POLICY_FAMILY_NONE)
+      return g_activePolicy;
+   if(g_armingPolicy != POLICY_FAMILY_NONE)
+      return g_armingPolicy;
+   if(g_riskPolicy != POLICY_FAMILY_NONE)
+      return g_riskPolicy;
+   if(g_lastDecisionTime > 0)
+      return g_lastDistance >= 0.0
+             ? POLICY_FAMILY_UPSIDE : POLICY_FAMILY_DOWNSIDE;
+   return POLICY_FAMILY_NONE;
+  }
+
+double ReadCCBSNFloatingProfit()
+  {
+   double result = 0.0;
+   for(int index = PositionsTotal() - 1; index >= 0; index--)
+     {
+      ulong ticket = PositionGetTicket(index);
+      if(ticket == 0)
+         continue;
+      if(PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      if((ulong)PositionGetInteger(POSITION_MAGIC) != InpCCBSNMagic)
+         continue;
+      result += PositionGetDouble(POSITION_PROFIT) +
+                PositionGetDouble(POSITION_SWAP);
+     }
+   return result;
+  }
+
+string BuildMonitorStatusJson(const ulong sequence)
+  {
+   datetime generatedUtc = TimeGMT();
+   if(generatedUtc <= 0)
+      generatedUtc = TimeCurrent();
+   string decisionTime = g_lastDecisionTime > 0
+                         ? TimeToString(g_lastDecisionTime,
+                                        TIME_DATE | TIME_SECONDS)
+                         : "";
+   long decisionAgeSeconds = -1;
+   datetime serverNow = TimeCurrent();
+   if(g_lastDecisionTime > 0 && serverNow >= g_lastDecisionTime)
+      decisionAgeSeconds = (long)(serverNow - g_lastDecisionTime);
+   long pendingAgeSeconds = -1;
+   if(g_commandTicket > 0 && g_commandSentTime > 0 &&
+      serverNow >= g_commandSentTime)
+      pendingAgeSeconds = (long)(serverNow - g_commandSentTime);
+   bool terminalConnected =
+      (bool)TerminalInfoInteger(TERMINAL_CONNECTED);
+   bool drift = g_driftDetectedCurrentChain || g_offReassertRequested;
+   string json = "{\n";
+   json += "  \"schema_version\": " + JsonString(MONITOR_SCHEMA_VERSION) + ",\n";
+   json += "  \"sequence\": " + StringFormat("%I64u", sequence) + ",\n";
+   json += "  \"generated_at_utc\": " + JsonString(UtcTimestamp(generatedUtc)) + ",\n";
+   json += "  \"runtime_state\": " + JsonString(g_monitorRuntimeState) + ",\n";
+   json += "  \"ea_version\": \"1.0.0\",\n";
+   json += "  \"policy_version\": " + JsonString(POLICY_VERSION) + ",\n";
+   json += "  \"symbol\": " + JsonString(_Symbol) + ",\n";
+   json += "  \"ccbsn_magic\": " + StringFormat("%I64u", InpCCBSNMagic) + ",\n";
+   json += "  \"controller_magic\": " + StringFormat("%I64u", InpControllerMagic) + ",\n";
+   json += "  \"account_login\": " + StringFormat("%I64d", AccountInfoInteger(ACCOUNT_LOGIN)) + ",\n";
+   json += "  \"account_server\": " + JsonString(AccountInfoString(ACCOUNT_SERVER)) + ",\n";
+   json += "  \"terminal_connected\": " + JsonBool(terminalConnected) + ",\n";
+   json += "  \"last_tick_time_utc\": " + JsonString(UtcTimestamp(g_lastObservedTickUtc)) + ",\n";
+   json += "  \"last_m5_decision_server\": " + JsonString(decisionTime) + ",\n";
+   json += "  \"last_m5_decision_age_seconds\": " + IntegerToString(decisionAgeSeconds) + ",\n";
+   json += "  \"visual_state\": " + JsonString(StateToString(g_state)) + ",\n";
+   json += "  \"policy_family\": " + JsonString(PolicyFamilyToString(MonitorPolicyFamily())) + ",\n";
+   json += "  \"desired_cycle\": " + JsonString(CommandToString(DesiredCommand())) + ",\n";
+   json += "  \"control_state\": " + JsonString(ControlStateToString(g_controlState)) + ",\n";
+   json += "  \"cycle_consistency\": " + JsonString(CycleConsistencyToString()) + ",\n";
+   json += "  \"cycle_sync_retries\": " + IntegerToString(g_cycleSyncRetryCount) + ",\n";
+   json += "  \"controller_mutex_held\": " + JsonBool(g_controllerLockHeld) + ",\n";
+   json += "  \"pending_command\": " + JsonString(CommandToString(g_pendingCommand)) + ",\n";
+   json += "  \"pending_ticket\": " + StringFormat("%I64u", g_commandTicket) + ",\n";
+   json += "  \"pending_age_seconds\": " + IntegerToString(pendingAgeSeconds) + ",\n";
+   json += "  \"last_confirmed_ticket\": " + StringFormat("%I64u", g_lastConfirmedCommandTicket) + ",\n";
+   json += "  \"startup_cycle_barrier\": " + JsonBool(g_startupCycleBarrierActive) + ",\n";
+   json += "  \"drift\": " + JsonBool(drift) + ",\n";
+   json += "  \"session\": " + JsonString(SessionToString(g_lastDecisionSession)) + ",\n";
+   json += "  \"atr\": " + DoubleToString(g_lastATR, 6) + ",\n";
+   json += "  \"ema\": " + DoubleToString(g_lastEMA, 6) + ",\n";
+   json += "  \"distance_d\": " + DoubleToString(g_lastDistance, 6) + ",\n";
+   json += "  \"last_event\": " + JsonString(g_lastDashboardEvent) + ",\n";
+   json += "  \"last_reason\": " + JsonString(g_lastReason) + ",\n";
+   json += "  \"positions\": " + IntegerToString(g_ccbsnPositionCount) + ",\n";
+   json += "  \"volume\": " + DoubleToString(g_ccbsnPositionVolume, 2) + ",\n";
+   json += "  \"floating_profit\": " + DoubleToString(ReadCCBSNFloatingProfit(), 2) + ",\n";
+   json += "  \"margin_level\": " + DoubleToString(AccountInfoDouble(ACCOUNT_MARGIN_LEVEL), 2) + ",\n";
+   json += "  \"configuration_valid\": " + JsonBool(g_configurationValid) + ",\n";
+   json += "  \"configuration_error\": " + JsonString(g_configurationError) + ",\n";
+   json += "  \"control_error\": " + JsonString(g_lastControlError) + ",\n";
+   json += "  \"monitor_error\": " + JsonString(g_monitorLastError) + ",\n";
+   json += "  \"monitor_write_failures\": " + StringFormat("%I64u", g_monitorWriteFailures) + "\n";
+   json += "}\n";
+   return json;
+  }
+
+bool WriteMonitorStatusAtomic(const string payload)
+  {
+   string tempFile = InpMonitorStatusFile + ".tmp";
+   ResetLastError();
+   int handle = FileOpen(tempFile,
+                         FILE_WRITE | FILE_TXT | FILE_ANSI |
+                         FILE_COMMON | FILE_SHARE_READ,
+                         0, CP_UTF8);
+   if(handle == INVALID_HANDLE)
+     {
+      g_monitorLastError = "TEMP_OPEN_FAILED:" +
+                           IntegerToString(GetLastError());
+      return false;
+     }
+   uint written = FileWriteString(handle, payload);
+   FileFlush(handle);
+   ulong actualSize = FileSize(handle);
+   FileClose(handle);
+   // FileWriteString returns bytes, while StringLen returns UTF-16 code units.
+   // TXT mode can also expand LF to CRLF, so compare with the flushed file size.
+   if(written == 0 || actualSize != written)
+     {
+      g_monitorLastError = "TEMP_WRITE_INCOMPLETE";
+      FileDelete(tempFile, FILE_COMMON);
+      return false;
+     }
+   ResetLastError();
+   if(!FileMove(tempFile, FILE_COMMON, InpMonitorStatusFile,
+                FILE_COMMON | FILE_REWRITE))
+     {
+      g_monitorLastError = "ATOMIC_REPLACE_FAILED:" +
+                           IntegerToString(GetLastError());
+      FileDelete(tempFile, FILE_COMMON);
+      return false;
+     }
+   g_monitorLastError = "NONE";
+   return true;
+  }
+
+void PublishMonitorStatus(const bool forcePublish)
+  {
+   if(!InpEnableExternalMonitor)
+      return;
+   if(InpMonitorStatusFile == "" ||
+      StringFind(InpMonitorStatusFile, "..") >= 0)
+      return;
+   ulong nowTick = GetTickCount64();
+   if(!forcePublish && nowTick < g_nextMonitorPublishTick)
+      return;
+   ulong nextSequence = g_monitorSequence + 1;
+   string payload = BuildMonitorStatusJson(nextSequence);
+   if(WriteMonitorStatusAtomic(payload))
+      g_monitorSequence = nextSequence;
+   else
+     {
+      g_monitorWriteFailures++;
+      if(g_monitorWriteFailures == 1 ||
+         (g_monitorWriteFailures % 12) == 0)
+         PrintFormat("MONITOR WRITE ERROR | file=%s failures=%I64u error=%s",
+                     InpMonitorStatusFile, g_monitorWriteFailures,
+                     g_monitorLastError);
+     }
+   int heartbeatSeconds = InpMonitorHeartbeatSeconds;
+   if(heartbeatSeconds < 1 || heartbeatSeconds > 60)
+      heartbeatSeconds = 5;
+   g_nextMonitorPublishTick = nowTick +
+      (ulong)(heartbeatSeconds * 1000);
+  }
+
+//+------------------------------------------------------------------+
+//| EA lifecycle                                                     |
+//+------------------------------------------------------------------+
+bool ControlNeedsFastPolling()
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return false;
+   return g_commandTicket != 0 ||
+          g_controlState == CCBSN_CONTROL_UNKNOWN ||
+          g_controlState == CCBSN_CONTROL_ON_PENDING ||
+          g_controlState == CCBSN_CONTROL_OFF_PENDING ||
+          g_positionSyncRequested || g_controlReconcileRequested ||
+          g_offReassertRequested || g_nextCommandAttemptTick > 0 ||
+          (!CycleConsistencyAligned() &&
+           g_controlState != CCBSN_CONTROL_ERROR);
+  }
+
+bool RunControlLane(const ulong nowTick,
+                    const bool forceRun)
+  {
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return false;
+   if(!forceRun && nowTick < g_nextControlPollTick)
+      return false;
+
+   bool fastRun = forceRun || ControlNeedsFastPolling();
+   g_positionSyncRequested = false;
+   g_controlReconcileRequested = false;
+   ulong startedMicros = GetMicrosecondCount();
+   ProcessCCBSNControl();
+   RecordPerformanceDuration(startedMicros,
+                             g_perfControlTotalMicros,
+                             g_perfControlMaxMicros);
+   if(fastRun)
+      g_perfControlFastRuns++;
+   else
+      g_perfControlIdleRuns++;
+   int delay = ControlNeedsFastPolling()
+               ? InpTimerMilliseconds : CONTROL_IDLE_MILLISECONDS;
+   g_nextControlPollTick = nowTick + (ulong)delay;
+   return true;
+  }
+
+int OnInit()
+  {
+   g_perfStartTick = GetTickCount64();
+   g_perfLastReportTick = g_perfStartTick;
+   g_nextMonitorPublishTick = 0;
+   g_configurationValid = ValidateInputs();
+   if(!g_configurationValid)
+     {
+      g_monitorRuntimeState = "CONFIG_SAFE_MODE";
+      g_controlState = CCBSN_CONTROL_DISABLED;
+      g_lastControlError = "CONFIG_SAFE_MODE: " + g_configurationError;
+      g_objectPrefix = "CCBSN_LITE_V3_M5." + IntegerToString(ChartID()) + ".";
+      EventSetMillisecondTimer(InpTimerMilliseconds);
+      Comment("CCBSN Controller CONFIG SAFE MODE\n",
+              g_configurationError,
+              "\nNo policy evaluation or New Cycle command is active.",
+              "\nCorrect Inputs and press OK to resume.");
+      PrintFormat("INIT SAFE MODE | %s | EA remains attached; control disabled.",
+                  g_configurationError);
+      PublishMonitorStatus(true);
+      return INIT_SUCCEEDED;
+     }
+   if(!ValidateControlEnvironment())
+      return INIT_PARAMETERS_INCORRECT;
+
+   g_trade.SetExpertMagicNumber(InpControllerMagic);
+   g_trade.SetAsyncMode(false);
+   g_trade.SetTypeFillingBySymbol(_Symbol);
+   g_trade.SetMarginMode();
+
+   g_objectPrefix = "CCBSN_LITE_V3_M5." + IntegerToString(ChartID()) + ".";
+   if(!AcquireControllerLock())
+      return INIT_FAILED;
+
+   // Establish the CCBSN cycle fence before any visual/indicator/history work.
+   // CCBSN v3.0 resets New Cycle on terminal restart, so delaying this lane
+   // gives it a window in which it can attempt the first Buy with stale state.
+   if(InpControlMode == CCBSN_CONTROL_ENABLED)
+     {
+      LoadStoredControlState();
+      RecoverPendingControllerOrder();
+      ReconcilePendingCommand();
+      InitializeAutoTradingCycleGuard();
+      ProcessCCBSNControl();
+      AuditEvent("CONTROL_STARTUP_SYNC_CHECK", TimeCurrent(),
+                 CommandToString(DesiredCommand()), false);
+      PrintFormat("CONTROL STARTUP CHECK | desired=%s state=%s pending=%s ticket=%I64u",
+                  CommandToString(DesiredCommand()),
+                  ControlStateToString(g_controlState),
+                  CommandToString(g_pendingCommand), g_commandTicket);
+     }
+   else if(InpControlMode == CCBSN_CONTROL_MANUAL_HANDOVER)
+      PerformManualHandover("MANUAL_HANDOVER_MODE");
+
+   ApplyChartTheme();
+   g_atrHandle = iATR(_Symbol, DECISION_TIMEFRAME, InpATRPeriod);
+   g_emaHandle = iMA(_Symbol, DECISION_TIMEFRAME, InpEMAPeriod, 0,
+                     MODE_EMA, PRICE_CLOSE);
+   if(g_atrHandle == INVALID_HANDLE || g_emaHandle == INVALID_HANDLE)
+     {
+      PrintFormat("INIT ERROR | Cannot create indicator handles | error=%d", GetLastError());
+      return INIT_FAILED;
+     }
+
+   if(!EventSetMillisecondTimer(InpTimerMilliseconds))
+     {
+      PrintFormat("INIT ERROR | EventSetMillisecondTimer failed | error=%d",
+                  GetLastError());
+      return INIT_FAILED;
+     }
+   ulong nowTick = GetTickCount64();
+   g_nextVisualRefreshTick = nowTick;
+   g_nextDashboardRefreshTick = nowTick;
+   g_nextControlPollTick = nowTick;
+   g_nextLockRefreshTick = nowTick + (ulong)LOCK_REFRESH_MILLISECONDS;
+   CreatePanel();
+   BuildHistoricalZones();
+   UpdatePanel();
+   FlushChartIfDirty();
+   g_monitorRuntimeState = "RUNNING";
+   PublishMonitorStatus(true);
+   PrintFormat("INIT OK | %s %s | symbol=%s | mode=%s",
+               POLICY_ID, POLICY_VERSION, _Symbol,
+               ControlModeToString(InpControlMode));
+   return INIT_SUCCEEDED;
+  }
+
+void OnDeinit(const int reason)
+  {
+   EventKillTimer();
+   if(g_configurationValid && InpControlMode == CCBSN_CONTROL_ENABLED)
+     {
+      ReconcilePendingCommand();
+      AuditEvent("CONTROL_SHUTDOWN_SYNC_CHECK", TimeCurrent(),
+                 DeinitReasonToString(reason), false);
+      PrintFormat("CONTROL SHUTDOWN CHECK | reason=%s desired=%s state=%s pending=%s ticket=%I64u",
+                  DeinitReasonToString(reason),
+                  CommandToString(DesiredCommand()),
+                  ControlStateToString(g_controlState),
+                  CommandToString(g_pendingCommand), g_commandTicket);
+     }
+   bool explicitHandover =
+      (reason == REASON_PROGRAM || reason == REASON_REMOVE ||
+       reason == REASON_CHARTCLOSE || reason == REASON_TEMPLATE);
+   bool handoverRequested = InpManualHandoverOnRemove && explicitHandover &&
+                            g_configurationValid &&
+                            InpControlMode != CCBSN_CONTROL_VISUAL_ONLY;
+   bool handoverReady = g_manualHandoverComplete;
+   if(handoverRequested)
+      handoverReady = PerformManualHandover("EA_DEINIT_" +
+                                            DeinitReasonToString(reason));
+   PrintFormat("DEINIT | reason=%s | mode=%s | handover_requested=%s | handover_ready=%s",
+               DeinitReasonToString(reason), ControlModeToString(InpControlMode),
+               handoverRequested ? "true" : "false",
+               handoverReady ? "true" : "false");
+   g_monitorRuntimeState = "STOPPING";
+   PublishMonitorStatus(true);
+   ReleaseControllerLock();
+   if(g_atrHandle != INVALID_HANDLE) IndicatorRelease(g_atrHandle);
+   if(g_emaHandle != INVALID_HANDLE) IndicatorRelease(g_emaHandle);
+   if(!InpKeepObjectsOnRemove && g_objectPrefix != "")
+     {
+      if(ObjectsDeleteAll(0, g_objectPrefix) > 0)
+         MarkChartDirty();
+     }
+   Comment("");
+   MarkChartDirty();
+   FlushChartIfDirty();
+   ReportPerformanceMetrics("DEINIT_" + DeinitReasonToString(reason), true);
+  }
+
+void OnTick()
+  {
+   g_perfTickEvents++;
+   g_lastObservedTickUtc = TimeGMT();
+   if(!g_configurationValid)
+      return;
+   bool autoTradingTransition = ObserveAutoTradingCycleGuard();
+   if((autoTradingTransition || g_positionSyncRequested ||
+       g_controlReconcileRequested) &&
+      InpControlMode == CCBSN_CONTROL_ENABLED)
+     {
+      ulong nowTick = GetTickCount64();
+      RunControlLane(nowTick, true);
+      g_nextDashboardRefreshTick = 0;
+     }
+  }
+
+void OnTradeTransaction(const MqlTradeTransaction &transaction,
+                        const MqlTradeRequest &request,
+                        const MqlTradeResult &result)
+  {
+   if(!g_configurationValid)
+      return;
+   if(InpControlMode != CCBSN_CONTROL_ENABLED)
+      return;
+   if(transaction.type == TRADE_TRANSACTION_DEAL_ADD ||
+      transaction.type == TRADE_TRANSACTION_POSITION)
+     {
+      RefreshCCBSNPositionSync("TRADE_TRANSACTION");
+      g_positionSyncRequested = true;
+     }
+   if(transaction.type == TRADE_TRANSACTION_ORDER_ADD ||
+      transaction.type == TRADE_TRANSACTION_ORDER_UPDATE ||
+      transaction.type == TRADE_TRANSACTION_ORDER_DELETE ||
+      transaction.type == TRADE_TRANSACTION_HISTORY_ADD)
+      g_controlReconcileRequested = true;
+  }
+
+void OnTimer()
+  {
+   g_perfTimerEvents++;
+   if(!g_configurationValid)
+     {
+      PublishMonitorStatus(false);
+      return;
+     }
+
+   ulong nowTick = GetTickCount64();
+   bool autoTradingTransition = ObserveAutoTradingCycleGuard();
+   bool lockLaneDue = nowTick >= g_nextLockRefreshTick;
+   if(lockLaneDue)
+     {
+      RefreshControllerLock();
+      if(InpControlMode == CCBSN_CONTROL_MANUAL_HANDOVER &&
+         !g_manualHandoverComplete)
+         PerformManualHandover("MANUAL_HANDOVER_RETRY");
+      g_nextLockRefreshTick = nowTick +
+                              (ulong)LOCK_REFRESH_MILLISECONDS;
+     }
+
+   ulong policyStartedMicros = GetMicrosecondCount();
+   bool policyUpdated = ProcessPolicyRuntime();
+   RecordPerformanceDuration(policyStartedMicros,
+                             g_perfPolicyTotalMicros,
+                             g_perfPolicyMaxMicros);
+   if(policyUpdated)
+      g_perfPolicyUpdates++;
+   bool forceControl = autoTradingTransition || policyUpdated ||
+                        g_positionSyncRequested ||
+                        g_controlReconcileRequested;
+   bool controlUpdated = RunControlLane(nowTick, forceControl);
+
+   if(nowTick >= g_nextVisualRefreshTick)
+     {
+      ulong visualStartedMicros = GetMicrosecondCount();
+      RefreshLiveVisualization();
+      RecordPerformanceDuration(visualStartedMicros,
+                                g_perfVisualTotalMicros,
+                                g_perfVisualMaxMicros);
+      g_perfVisualRuns++;
+      g_nextVisualRefreshTick = nowTick +
+                                (ulong)VISUAL_REFRESH_MILLISECONDS;
+     }
+
+   if(policyUpdated || controlUpdated ||
+      nowTick >= g_nextDashboardRefreshTick)
+     {
+      UpdatePanel();
+      g_nextDashboardRefreshTick = nowTick +
+                                   (ulong)DASHBOARD_REFRESH_MILLISECONDS;
+     }
+   FlushChartIfDirty();
+   PublishMonitorStatus(false);
+   ReportPerformanceMetrics("PERIODIC", false);
+  }
+
+//+------------------------------------------------------------------+

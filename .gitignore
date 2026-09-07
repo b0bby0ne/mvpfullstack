@@ -1,9 +1,17 @@
 .cursor/
 .tools/
+.env
 **/__pycache__/
 **/.pytest_cache/
 **/.mypy_cache/
 **/.venv/
 **/venv/
+**/.env
+**/.env.local
+**/secrets.json
 *.pyc
 TradingTeam/projects/*/build/
+TradingTeam/projects/*/runtime/
+# Generated MT5 profiles, terminal logs, account snapshots, and QA extraction trees.
+# Keep the reusable runtime-approval scripts, but never commit their generated folders.
+TradingTeam/projects/*/tests/runtime-approval/*/

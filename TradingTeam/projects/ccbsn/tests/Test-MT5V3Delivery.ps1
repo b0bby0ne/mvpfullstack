@@ -3,7 +3,7 @@ param(
     [string]$PinePath = (Join-Path $PSScriptRoot '..\src\pine\v3\CCBSN_Trading_Zone_Visual_v3.pine'),
     [string]$V2ReferencePath = (Join-Path $PSScriptRoot '..\src\mt5\v2\CCBSN_Trading_Zone_Controller_v2.mq5'),
     [string]$MetaEditorPath = 'D:\Test Bot 1\MetaEditor64.exe',
-    [string]$CompileLogPath = (Join-Path $PSScriptRoot '..\build\logs\compile-controller-v3.2.4-final.log'),
+    [string]$CompileLogPath = (Join-Path $PSScriptRoot '..\build\logs\compile-controller-v3.2.5-final.log'),
     [string]$BinaryOutputPath = (Join-Path $PSScriptRoot '..\build\bin\CCBSN_Trading_Zone_Controller_v3.ex5'),
     [switch]$SkipCompile
 )
@@ -112,8 +112,8 @@ elseif ((Get-Item -LiteralPath $ex5Path).Length -lt 100000) {
 }
 
 Assert-SourcePattern 'MQL5 strict mode' '(?m)^#property strict\s*$'
-Assert-SourcePattern 'Version 3.240' '#property version\s+"3\.240"'
-Assert-SourcePattern 'MT5 v3.2.4 identity' 'POLICY_VERSION\s*=\s*"3\.2\.4-mt5-market-event-checklist"'
+Assert-SourcePattern 'Version 3.250' '#property version\s+"3\.250"'
+Assert-SourcePattern 'MT5 v3.2.5 identity' 'POLICY_VERSION\s*=\s*"3\.2\.5-mt5-read-only-monitor-status"'
 Assert-SourcePattern 'M15 decision timeframe' 'DECISION_TIMEFRAME\s*=\s*PERIOD_M15'
 Assert-SourcePattern 'CCBSN magic default 9696' 'InpCCBSNMagic\s*=\s*9696;'
 Assert-SourcePattern 'Controller magic differs by default' 'InpControllerMagic\s*=\s*99196;'
@@ -241,7 +241,7 @@ if ($eventVisibilityInputs -ne 16) {
 }
 Assert-SourcePattern 'Dashboard default OFF' 'InpShowDashboard\s*=\s*false;'
 Assert-SourcePattern 'Event dashboard default OFF' 'InpShowEventDashboard\s*=\s*false;'
-Assert-SourcePattern 'CSV versioned filename' 'CCBSN_Trading_Zone_Events_v3_2_4\.csv'
+Assert-SourcePattern 'CSV versioned filename' 'CCBSN_Trading_Zone_Events_v3_2_5\.csv'
 
 $dashboardTextInputs = [regex]::Matches(
     $source,
@@ -344,8 +344,8 @@ if ($onTickStart -lt 0 -or $onTickEnd -lt 0) {
 }
 else {
     $onTickBody = $source.Substring($onTickStart, $onTickEnd - $onTickStart)
-    if ($onTickBody -match 'ProcessPolicyRuntime|RefreshLiveVisualization|CopyRates|CopyBuffer|ChartRedraw') {
-        $errors.Add('OnTick contains policy, series, or rendering work.')
+    if ($onTickBody -match 'ProcessPolicyRuntime|RefreshLiveVisualization|CopyRates|CopyBuffer|ChartRedraw|PublishMonitorStatus|FileOpen|FileMove') {
+        $errors.Add('OnTick contains policy, series, rendering, or monitor I/O work.')
     }
 }
 
@@ -367,12 +367,52 @@ Assert-SourcePattern 'Trading history maximum 100000' 'InpTradingZoneHistoryBars
 Assert-SourcePattern 'Manual handover mode retained' 'CCBSN_CONTROL_MANUAL_HANDOVER'
 Assert-SourcePattern 'Force sync remains opt-in' 'InpForceSyncOnInit\s*=\s*false;'
 
+Assert-SourcePattern 'External monitor defaults OFF' 'InpEnableExternalMonitor\s*=\s*false;'
+Assert-SourcePattern 'Monitor status schema v1' 'MONITOR_SCHEMA_VERSION\s*=\s*"ccbsn-monitor-status\.v1"'
+Assert-SourcePattern 'Monitor writes to terminal common files' 'FileOpen\(tempFile,[\s\S]*?FILE_COMMON'
+Assert-SourcePattern 'Monitor uses atomic replace' 'FileMove\(tempFile,\s*FILE_COMMON,\s*InpMonitorStatusFile,[\s\S]*?FILE_COMMON\s*\|\s*FILE_REWRITE'
+Assert-SourcePattern 'Monitor publishes from timer lane' 'void OnTimer\(\)[\s\S]*?PublishMonitorStatus\(false\);'
+Assert-SourcePattern 'Monitor publishes stopping state' 'g_monitorRuntimeState\s*=\s*"STOPPING";[\s\S]*?PublishMonitorStatus\(true\);'
+if ($source -match 'WebRequest|TELEGRAM_BOT_TOKEN|api\.telegram\.org') {
+    $errors.Add('MT5 source unexpectedly contains Telegram networking or credentials.')
+}
+$monitorFields = @(
+    'schema_version', 'sequence', 'generated_at_utc', 'runtime_state',
+    'ea_version', 'policy_version', 'symbol', 'ccbsn_magic',
+    'controller_magic', 'terminal_connected', 'last_tick_time_utc',
+    'last_m15_decision_server', 'last_m15_decision_age_seconds',
+    'visual_state', 'policy_family',
+    'desired_cycle', 'control_state', 'pending_command', 'drift',
+    'session', 'atr', 'ema', 'distance_d', 'last_event', 'last_reason',
+    'positions', 'volume', 'floating_profit', 'margin_level',
+    'configuration_valid', 'configuration_error', 'control_error',
+    'monitor_error', 'monitor_write_failures'
+)
+foreach ($field in $monitorFields) {
+    if ($source -notmatch ('\\"' + [regex]::Escape($field) + '\\"')) {
+        $errors.Add("Monitor status field missing: $field")
+    }
+}
+
+$decisionStart = $source.IndexOf('void ProcessDecisionBar')
+$decisionEnd = $source.IndexOf('void ResetRuntimeState', $decisionStart)
+if ($decisionStart -lt 0 -or $decisionEnd -lt 0) {
+    $errors.Add('Cannot locate decision function for monitor isolation check.')
+}
+else {
+    $decisionBody = $source.Substring($decisionStart, $decisionEnd - $decisionStart)
+    if ($decisionBody -match 'PublishMonitorStatus|FileOpen|FileMove') {
+        $errors.Add('Monitor I/O leaked into M15 policy decision function.')
+    }
+}
+
 $transportMarker = '//| CCBSN New Cycle command transport'
 $lifecycleMarker = '//| EA lifecycle'
+$monitorMarker = '//| Read-only external monitor'
 $v2TransportStart = $v2Reference.IndexOf($transportMarker)
 $v2TransportEnd = $v2Reference.IndexOf($lifecycleMarker)
 $v3TransportStart = $source.IndexOf($transportMarker)
-$v3TransportEnd = $source.IndexOf($lifecycleMarker)
+$v3TransportEnd = $source.IndexOf($monitorMarker)
 if ($v2TransportStart -lt 0 -or $v2TransportEnd -lt 0 -or
     $v3TransportStart -lt 0 -or $v3TransportEnd -lt 0) {
     $errors.Add('Cannot locate New Cycle transport regression section.')

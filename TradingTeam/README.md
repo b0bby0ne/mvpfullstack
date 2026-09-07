@@ -15,10 +15,14 @@
 
 ## Mô hình vận hành mặc định
 
+0. `agents/Agent_0_Sprint_Manager`: quản lý product backlog, sprint goal, dependency, blocker và evidence.
 1. `agents/Agent_1_EA_Requirements`: chuyển ý tưởng giao dịch thành đặc tả tín hiệu và máy trạng thái có thể lập trình.
 2. `agents/Agent_2_MQL5_Developer`: xây kiến trúc EA, lập trình MQL5, indicator adapter và bảng điều khiển trên chart.
 3. `agents/Agent_3_Signal_Integration`: nhận tín hiệu, chống lặp, kiểm tra rủi ro và thực thi lệnh an toàn.
 4. `agents/Agent_4_EA_QA_Release`: review mã nguồn, backtest, forward test và đóng gói bản phát hành.
+
+Sprint Manager chỉ điều phối scope và trạng thái. Agent này không tự thay đổi
+strategy, source, release gate, terminal real hoặc Git remote.
 
 Các thư mục `Agent_1_PriceAgent`, `Agent_2_SwingAgent`, `Agent_3_ScalpingAgent` cùng các script quét thị trường được giữ lại làm tài sản legacy. Chúng không còn là pipeline mặc định, nhưng có thể cung cấp tín hiệu hoặc logic tham khảo cho dự án EA.
 

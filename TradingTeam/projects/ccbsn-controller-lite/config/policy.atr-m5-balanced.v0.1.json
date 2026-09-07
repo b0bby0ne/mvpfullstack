@@ -1,0 +1,48 @@
+{
+  "schema_version": "ccbsn-controller-lite-policy.v1",
+  "policy_id": "atr-m5-balanced-lite",
+  "policy_version": "0.1.0",
+  "status": "backtest-baseline",
+  "decision_timeframe": "M5",
+  "closed_bar_only": true,
+  "atr": {
+    "period": 14,
+    "baseline_bars": 48,
+    "entry_ratio_min": 0.65,
+    "entry_ratio_max": 1.65,
+    "hold_ratio_min": 0.45,
+    "hold_ratio_max": 2.10,
+    "entry_max_range_atr": 1.80,
+    "soft_expansion_range_atr": 2.00
+  },
+  "stability": {
+    "enable_confirm_bars": 2,
+    "soft_exit_confirm_bars": 2,
+    "minimum_zone_bars": 4
+  },
+  "bearish_shock": {
+    "range_atr_min": 2.80,
+    "body_share_min": 0.60,
+    "close_location_max": 0.25,
+    "risk_lock_bars": 6,
+    "recovery_confirm_bars": 2
+  },
+  "session": {
+    "enabled": true,
+    "start_hhmm": 600,
+    "end_hhmm": 300,
+    "time_basis": "broker_server",
+    "time_shift_minutes": 0
+  },
+  "liquidity": {
+    "spread_atr_guard": true,
+    "max_spread_atr_ratio": 0.15,
+    "max_tick_age_seconds": 30
+  },
+  "control": {
+    "default_mode": "VISUAL_ONLY",
+    "authority": "NEW_CYCLE_ONLY",
+    "command_price": 888888,
+    "live_approved": false
+  }
+}

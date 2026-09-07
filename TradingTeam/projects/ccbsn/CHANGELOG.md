@@ -1,5 +1,19 @@
 # CCBSN Changelog
 
+## MT5 v3.2.5 + Telegram Monitor v0.1.0 — 2026-08-18
+
+- Thêm status/heartbeat JSON schema v1, mặc định OFF, ghi atomic trong MT5
+  `FILE_COMMON` từ timer lane.
+- Không thêm Telegram networking/credential vào EA và không thay đổi policy hay
+  New Cycle transport đã audit.
+- Thêm watchdog PowerShell độc lập với incident OPEN/RESOLVED persistence,
+  allowlist, update dedup và per-chat rate boundary.
+- Chỉ hỗ trợ `/status`, `/health`, `/market`, `/version`; toàn bộ command khác bị
+  từ chối theo contract monitor-only.
+- Thêm test security/isolation, status schema, stale heartbeat/M15, terminal
+  disconnect và runbook cấu hình/rollback.
+- Chưa deploy v3.2.5 vào terminal và chưa tích hợp Telegram credential thật.
+
 ## MT5 v3.2.4 — 2026-08-17
 
 - Bổ sung ATR hiện tại/ngưỡng/PASS-BLOCK, EMA hiện tại và khoảng cách `D = Close - EMA` vào checklist dưới.

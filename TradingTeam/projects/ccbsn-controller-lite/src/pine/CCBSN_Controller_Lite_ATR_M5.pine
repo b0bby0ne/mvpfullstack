@@ -1,0 +1,567 @@
+//@version=6
+indicator("CCBSN Controller Lite - ATR M5 Visual v0.1.0",
+     "CCBSN Lite ATR M5", overlay = true,
+     max_boxes_count = 500, max_labels_count = 500)
+
+// Visual-only TradingView prototype for CCBSN Controller Lite.
+// It never places orders, sends webhooks, or controls the MT5 CCBSN EA.
+// Market-policy decisions run only on confirmed standard M5 candles.
+
+string GROUP_PROFILE = "01. ATR M5 Profile"
+string policyProfile = input.string("Balanced Lite", "Policy profile",
+     options = ["Balanced Lite", "Wide Lite", "High-Veto Only", "Custom"],
+     group = GROUP_PROFILE)
+int atrPeriod = input.int(14, "ATR period", minval = 2, maxval = 200,
+     group = GROUP_PROFILE)
+int atrBaselineBars = input.int(48, "ATR baseline bars", minval = 10,
+     maxval = 2000, group = GROUP_PROFILE)
+float customEntryRatioMin = input.float(0.65, "Custom entry ratio minimum",
+     minval = 0.0, step = 0.05, group = GROUP_PROFILE)
+float customEntryRatioMax = input.float(1.65, "Custom entry ratio maximum",
+     minval = 0.05, step = 0.05, group = GROUP_PROFILE)
+float customHoldRatioMin = input.float(0.45, "Custom hold ratio minimum",
+     minval = 0.0, step = 0.05, group = GROUP_PROFILE)
+float customHoldRatioMax = input.float(2.10, "Custom hold ratio maximum",
+     minval = 0.05, step = 0.05, group = GROUP_PROFILE)
+float entryMaxRangeAtr = input.float(1.80, "Entry maximum candle Range/ATR",
+     minval = 0.05, step = 0.05, group = GROUP_PROFILE)
+float softExpansionRangeAtr = input.float(2.00,
+     "Soft OFF candle Range/ATR", minval = 0.05, step = 0.05,
+     group = GROUP_PROFILE)
+int enableConfirmBars = input.int(2, "Entry confirmation bars", minval = 1,
+     maxval = 20, group = GROUP_PROFILE)
+int softExitConfirmBars = input.int(2, "Soft OFF confirmation bars",
+     minval = 1, maxval = 20, group = GROUP_PROFILE)
+int minimumZoneBars = input.int(4, "Minimum active zone bars", minval = 1,
+     maxval = 1000, group = GROUP_PROFILE)
+
+string GROUP_SHOCK = "02. Bearish ATR Shock"
+float hardBearShockRangeAtr = input.float(2.80,
+     "Hard shock minimum Range/ATR", minval = 0.10, step = 0.05,
+     group = GROUP_SHOCK)
+float hardBearMinBodyShare = input.float(0.60,
+     "Hard shock minimum body/range", minval = 0.0, maxval = 1.0,
+     step = 0.05, group = GROUP_SHOCK)
+float hardBearMaxCloseLocation = input.float(0.25,
+     "Hard shock maximum close location", minval = 0.0, maxval = 1.0,
+     step = 0.05, group = GROUP_SHOCK)
+int riskLockBars = input.int(6, "Risk Lock bars", minval = 0,
+     maxval = 1000, group = GROUP_SHOCK)
+int recoveryConfirmBars = input.int(2, "Recovery confirmation bars",
+     minval = 1, maxval = 20, group = GROUP_SHOCK)
+
+string GROUP_SESSION = "03. Continuous Session"
+bool enableSession = input.bool(true, "Enable session gate",
+     group = GROUP_SESSION)
+string continuousSession = input.session("0600-0300", "Allowed session",
+     group = GROUP_SESSION)
+string sessionTimezone = input.string("Asia/Ho_Chi_Minh",
+     "Session timezone (match MT5 broker effective time)",
+     group = GROUP_SESSION)
+
+string GROUP_ZONE = "04. Zone & Risk Lock Visual"
+bool showTradingZones = input.bool(true, "Show Trading Zones",
+     group = GROUP_ZONE)
+int zoneHistoryBars = input.int(5000, "Zone history bars", minval = 100,
+     maxval = 100000, group = GROUP_ZONE)
+int maxStoredZones = input.int(150, "Maximum stored Trading Zones",
+     minval = 1, maxval = 250, group = GROUP_ZONE)
+float zonePaddingAtr = input.float(0.25, "Zone padding ATR", minval = 0.0,
+     step = 0.05, group = GROUP_ZONE)
+color activeZoneColor = input.color(color.rgb(152, 251, 152),
+     "Active zone color", group = GROUP_ZONE)
+int activeZoneTransparency = input.int(70, "Active zone transparency",
+     minval = 0, maxval = 100, group = GROUP_ZONE)
+bool showRiskLocks = input.bool(true, "Show Risk Lock zones",
+     group = GROUP_ZONE)
+int maxStoredRiskLocks = input.int(100, "Maximum stored Risk Locks",
+     minval = 1, maxval = 250, group = GROUP_ZONE)
+color riskLockColor = input.color(color.rgb(255, 99, 71),
+     "Risk Lock color", group = GROUP_ZONE)
+int riskLockTransparency = input.int(80, "Risk Lock transparency",
+     minval = 0, maxval = 100, group = GROUP_ZONE)
+
+string GROUP_EVENTS = "05. Events & Alerts"
+bool showArmEvents = input.bool(false, "Show ARM events", group = GROUP_EVENTS)
+bool showZoneEvents = input.bool(true, "Show Zone Start/End events",
+     group = GROUP_EVENTS)
+bool showSoftExitEvents = input.bool(false, "Show Soft OFF events",
+     group = GROUP_EVENTS)
+bool showShockEvents = input.bool(true, "Show Bear Shock events",
+     group = GROUP_EVENTS)
+bool showRecoveryEvents = input.bool(true, "Show recovery events",
+     group = GROUP_EVENTS)
+int maxStoredEventLabels = input.int(300, "Maximum event labels",
+     minval = 10, maxval = 500, group = GROUP_EVENTS)
+
+string GROUP_DASHBOARD = "06. Dashboard"
+bool showDashboard = input.bool(true, "Show dashboard", group = GROUP_DASHBOARD)
+color dashboardBackground = input.color(color.white, "Dashboard background",
+     group = GROUP_DASHBOARD)
+color dashboardText = input.color(color.rgb(45, 55, 70), "Dashboard text",
+     group = GROUP_DASHBOARD)
+
+int STATE_OFF = 0
+int STATE_ARMING = 1
+int STATE_ACTIVE = 2
+int STATE_RISK_LOCK = 3
+
+float entryRatioMin = switch policyProfile
+    "Balanced Lite" => 0.65
+    "Wide Lite" => 0.45
+    "High-Veto Only" => 0.00
+    => customEntryRatioMin
+
+float entryRatioMax = switch policyProfile
+    "Balanced Lite" => 1.65
+    "Wide Lite" => 1.90
+    "High-Veto Only" => 1.90
+    => customEntryRatioMax
+
+float holdRatioMin = switch policyProfile
+    "Balanced Lite" => 0.45
+    "Wide Lite" => 0.30
+    "High-Veto Only" => 0.00
+    => customHoldRatioMin
+
+float holdRatioMax = switch policyProfile
+    "Balanced Lite" => 2.10
+    "Wide Lite" => 2.40
+    "High-Veto Only" => 2.50
+    => customHoldRatioMax
+
+f_stateText(int value) =>
+    string result = "OFF"
+    if value == STATE_ARMING
+        result := "ARMING"
+    else if value == STATE_ACTIVE
+        result := "ACTIVE"
+    else if value == STATE_RISK_LOCK
+        result := "RISK LOCK"
+    result
+
+f_number(float value, string pattern) =>
+    na(value) ? "n/a" : str.tostring(value, pattern)
+
+var array<box> zoneBoxes = array.new<box>()
+var array<box> riskBoxes = array.new<box>()
+var array<label> eventLabels = array.new<label>()
+
+f_storeBox(array<box> storage, box value, int maximum) =>
+    if not na(value)
+        array.push(storage, value)
+        while array.size(storage) > maximum
+            box.delete(array.shift(storage))
+
+f_storeEventLabel(label value) =>
+    if not na(value)
+        array.push(eventLabels, value)
+        while array.size(eventLabels) > maxStoredEventLabels
+            label.delete(array.shift(eventLabels))
+
+f_event(bool visible, string textValue, float yValue, color eventColor,
+     bool belowBar, string tooltipValue) =>
+    label result = na
+    if visible and bar_index >= last_bar_index - zoneHistoryBars
+        result := label.new(x = time_close, y = yValue, text = textValue,
+             xloc = xloc.bar_time, yloc = yloc.price,
+             style = belowBar ? label.style_label_up : label.style_label_down,
+             color = color.new(eventColor, 10), textcolor = color.white,
+             size = size.tiny, tooltip = tooltipValue)
+        f_storeEventLabel(result)
+    result
+
+f_newZoneBox(int leftTime, int rightTime, float topValue, float bottomValue) =>
+    box result = na
+    if showTradingZones and bar_index >= last_bar_index - zoneHistoryBars and
+         not na(rightTime)
+        result := box.new(left = leftTime, top = topValue,
+             right = rightTime, bottom = bottomValue,
+             xloc = xloc.bar_time, border_color = activeZoneColor,
+             bgcolor = color.new(activeZoneColor, activeZoneTransparency))
+        f_storeBox(zoneBoxes, result, maxStoredZones)
+    result
+
+f_newRiskBox(int leftTime, int rightTime, float topValue, float bottomValue) =>
+    box result = na
+    if showRiskLocks and bar_index >= last_bar_index - zoneHistoryBars and
+         not na(rightTime)
+        result := box.new(left = leftTime, top = topValue,
+             right = rightTime, bottom = bottomValue,
+             xloc = xloc.bar_time, border_color = riskLockColor,
+             bgcolor = color.new(riskLockColor, riskLockTransparency))
+        f_storeBox(riskBoxes, result, maxStoredRiskLocks)
+    result
+
+bool isM5Chart = timeframe.isminutes and timeframe.multiplier == 5
+bool decisionSessionOpen = not enableSession or
+     not na(time(timeframe.period, continuousSession, sessionTimezone,
+                 bars_back = -1))
+int nextBarCloseTime = time_close(timeframe.period, bars_back = -1)
+
+float atrValue = ta.atr(atrPeriod)
+float atrBaseline = ta.sma(atrValue, atrBaselineBars)
+float atrRatio = atrBaseline > 0.0 ? atrValue / atrBaseline : na
+float candleRange = high - low
+float rangeAtr = atrValue > 0.0 ? candleRange / atrValue : na
+float bodyShare = candleRange > 0.0 ? math.abs(close - open) / candleRange : 0.0
+float closeLocation = candleRange > 0.0 ? (close - low) / candleRange : 0.5
+bool dataReady = not na(atrValue) and atrValue > 0.0 and
+     not na(atrBaseline) and atrBaseline > 0.0 and not na(atrRatio)
+bool hardBearShock = dataReady and close < open and
+     rangeAtr >= hardBearShockRangeAtr and
+     bodyShare >= hardBearMinBodyShare and
+     closeLocation <= hardBearMaxCloseLocation
+bool entryCandidate = dataReady and decisionSessionOpen and
+     not hardBearShock and atrRatio >= entryRatioMin and
+     atrRatio <= entryRatioMax and rangeAtr <= entryMaxRangeAtr
+bool activeHoldPass = dataReady and decisionSessionOpen and
+     atrRatio >= holdRatioMin and atrRatio <= holdRatioMax and
+     rangeAtr < softExpansionRangeAtr
+
+bool effectiveThresholdsValid = entryRatioMax > entryRatioMin and
+     holdRatioMax >= entryRatioMax and holdRatioMin <= entryRatioMin and
+     softExpansionRangeAtr >= entryMaxRangeAtr and
+     hardBearShockRangeAtr > softExpansionRangeAtr
+bool configurationValid = effectiveThresholdsValid
+
+var int state = STATE_OFF
+var int entryConfirmCount = 0
+var int softExitCount = 0
+var int zoneBars = 0
+var int riskLockRemaining = 0
+var int recoveryCount = 0
+var float zoneHigh = na
+var float zoneLow = na
+var float riskHigh = na
+var float riskLow = na
+var box activeZoneBox = na
+var box activeRiskBox = na
+var string lastEvent = "INIT"
+var string lastReason = "WAITING FOR M5 DATA"
+
+bool armStartedEvent = false
+bool armCancelledEvent = false
+bool zoneStartedEvent = false
+bool zoneEndedEvent = false
+bool softExitStartedEvent = false
+bool softExitClearedEvent = false
+bool shockEvent = false
+bool recoveryStartedEvent = false
+bool recoveredEvent = false
+
+if barstate.isconfirmed and isM5Chart and configurationValid
+    bool wasActive = state == STATE_ACTIVE
+    bool wasRiskLock = state == STATE_RISK_LOCK
+
+    if wasActive
+        zoneHigh := math.max(zoneHigh, high)
+        zoneLow := math.min(zoneLow, low)
+        zoneBars += 1
+
+        if hardBearShock
+            if not na(activeZoneBox)
+                box.set_right(activeZoneBox, time_close)
+                box.set_top(activeZoneBox, zoneHigh + atrValue * zonePaddingAtr)
+                box.set_bottom(activeZoneBox, zoneLow - atrValue * zonePaddingAtr)
+            activeZoneBox := na
+            zoneEndedEvent := true
+            shockEvent := true
+            state := STATE_RISK_LOCK
+            riskLockRemaining := riskLockBars
+            recoveryCount := 0
+            entryConfirmCount := 0
+            softExitCount := 0
+            zoneBars := 0
+            riskHigh := high
+            riskLow := low
+            activeRiskBox := f_newRiskBox(time_close, nextBarCloseTime,
+                 riskHigh + atrValue * zonePaddingAtr,
+                 riskLow - atrValue * zonePaddingAtr)
+            lastEvent := "BEAR_SHOCK_RISK_LOCK"
+            lastReason := "ACTIVE SHOCK " + f_number(rangeAtr, "#.00") + " ATR"
+            f_event(showShockEvents, "Bear Shock\nRisk Lock",
+                 high + atrValue * 0.35, riskLockColor, false, lastReason)
+        else if not decisionSessionOpen or not dataReady
+            if not na(activeZoneBox)
+                box.set_right(activeZoneBox, time_close)
+                box.set_top(activeZoneBox, zoneHigh + atrValue * zonePaddingAtr)
+                box.set_bottom(activeZoneBox, zoneLow - atrValue * zonePaddingAtr)
+            activeZoneBox := na
+            zoneEndedEvent := true
+            state := STATE_OFF
+            entryConfirmCount := 0
+            softExitCount := 0
+            zoneBars := 0
+            lastEvent := "POLICY_ZONE_ENDED"
+            lastReason := not decisionSessionOpen ? "SESSION BLOCK" : "DATA NOT READY"
+            f_event(showZoneEvents, "Zone End", high + atrValue * 0.30,
+                 color.orange, false, lastReason)
+        else if activeHoldPass
+            if softExitCount > 0
+                softExitClearedEvent := true
+                lastEvent := "SOFT_EXIT_CLEARED"
+                lastReason := "ATR HOLD RECOVERED"
+                f_event(showSoftExitEvents, "Soft OFF\nCleared",
+                     low - atrValue * 0.25, color.teal, true, lastReason)
+            softExitCount := 0
+            if not na(activeZoneBox)
+                box.set_right(activeZoneBox, nextBarCloseTime)
+                box.set_top(activeZoneBox, zoneHigh + atrValue * zonePaddingAtr)
+                box.set_bottom(activeZoneBox, zoneLow - atrValue * zonePaddingAtr)
+        else if zoneBars < minimumZoneBars
+            softExitCount := 0
+            lastEvent := "SOFT_EXIT_SUPPRESSED"
+            lastReason := "MINIMUM ZONE " + str.tostring(zoneBars) + "/" +
+                 str.tostring(minimumZoneBars)
+            f_event(showSoftExitEvents, "Soft OFF\nSuppressed",
+                 high + atrValue * 0.25, color.gray, false, lastReason)
+            if not na(activeZoneBox)
+                box.set_right(activeZoneBox, nextBarCloseTime)
+                box.set_top(activeZoneBox, zoneHigh + atrValue * zonePaddingAtr)
+                box.set_bottom(activeZoneBox, zoneLow - atrValue * zonePaddingAtr)
+        else
+            softExitCount += 1
+            if softExitCount == 1
+                softExitStartedEvent := true
+                lastEvent := "SOFT_EXIT_STARTED"
+                lastReason := "HOLD FAIL " + str.tostring(softExitCount) + "/" +
+                     str.tostring(softExitConfirmBars)
+                f_event(showSoftExitEvents, "Soft OFF " +
+                     str.tostring(softExitCount) + "/" +
+                     str.tostring(softExitConfirmBars),
+                     high + atrValue * 0.25, color.orange, false, lastReason)
+            if softExitCount >= softExitConfirmBars
+                if not na(activeZoneBox)
+                    box.set_right(activeZoneBox, time_close)
+                    box.set_top(activeZoneBox,
+                         zoneHigh + atrValue * zonePaddingAtr)
+                    box.set_bottom(activeZoneBox,
+                         zoneLow - atrValue * zonePaddingAtr)
+                activeZoneBox := na
+                zoneEndedEvent := true
+                state := STATE_OFF
+                entryConfirmCount := 0
+                softExitCount := 0
+                zoneBars := 0
+                lastEvent := "POLICY_ZONE_ENDED"
+                lastReason := "SOFT EXIT CONFIRMED"
+                f_event(showZoneEvents, "Zone End\nSoft OFF",
+                     high + atrValue * 0.30, color.orange, false, lastReason)
+            else if not na(activeZoneBox)
+                box.set_right(activeZoneBox, nextBarCloseTime)
+                box.set_top(activeZoneBox, zoneHigh + atrValue * zonePaddingAtr)
+                box.set_bottom(activeZoneBox, zoneLow - atrValue * zonePaddingAtr)
+
+    else if wasRiskLock
+        riskHigh := math.max(riskHigh, high)
+        riskLow := math.min(riskLow, low)
+        if not na(activeRiskBox)
+            box.set_right(activeRiskBox, nextBarCloseTime)
+            box.set_top(activeRiskBox, riskHigh + atrValue * zonePaddingAtr)
+            box.set_bottom(activeRiskBox, riskLow - atrValue * zonePaddingAtr)
+
+        if hardBearShock
+            riskLockRemaining := riskLockBars
+            recoveryCount := 0
+            shockEvent := true
+            lastEvent := "RISK_LOCK_REFRESHED"
+            lastReason := "NEW BEAR SHOCK"
+            f_event(showShockEvents, "Bear Shock\nLock Refreshed",
+                 high + atrValue * 0.35, riskLockColor, false, lastReason)
+        else if riskLockRemaining > 0
+            riskLockRemaining -= 1
+            recoveryCount := 0
+        else if entryCandidate
+            recoveryCount += 1
+            if recoveryCount == 1
+                recoveryStartedEvent := true
+                lastEvent := "RISK_LOCK_RECOVERY_STARTED"
+                lastReason := "ATR ENTRY CANDIDATE"
+                f_event(showRecoveryEvents, "Recovery " +
+                     str.tostring(recoveryCount) + "/" +
+                     str.tostring(recoveryConfirmBars),
+                     low - atrValue * 0.25, color.teal, true, lastReason)
+            if recoveryCount >= recoveryConfirmBars
+                if not na(activeRiskBox)
+                    box.set_right(activeRiskBox, time_close)
+                    box.set_top(activeRiskBox,
+                         riskHigh + atrValue * zonePaddingAtr)
+                    box.set_bottom(activeRiskBox,
+                         riskLow - atrValue * zonePaddingAtr)
+                activeRiskBox := na
+                recoveredEvent := true
+                zoneStartedEvent := true
+                state := STATE_ACTIVE
+                entryConfirmCount := 0
+                softExitCount := 0
+                zoneBars := 1
+                riskLockRemaining := 0
+                recoveryCount := 0
+                zoneHigh := high
+                zoneLow := low
+                activeZoneBox := f_newZoneBox(time_close, nextBarCloseTime,
+                     zoneHigh + atrValue * zonePaddingAtr,
+                     zoneLow - atrValue * zonePaddingAtr)
+                lastEvent := "RISK_LOCK_RECOVERED"
+                lastReason := "RECOVERY CONFIRMED"
+                f_event(showRecoveryEvents, "Recovered\nZone Start",
+                     low - atrValue * 0.30, color.teal, true, lastReason)
+        else
+            recoveryCount := 0
+
+    else if hardBearShock
+        shockEvent := true
+        state := STATE_RISK_LOCK
+        entryConfirmCount := 0
+        softExitCount := 0
+        zoneBars := 0
+        riskLockRemaining := riskLockBars
+        recoveryCount := 0
+        riskHigh := high
+        riskLow := low
+        activeRiskBox := f_newRiskBox(time_close, nextBarCloseTime,
+             riskHigh + atrValue * zonePaddingAtr,
+             riskLow - atrValue * zonePaddingAtr)
+        lastEvent := "BEAR_SHOCK_RISK_LOCK"
+        lastReason := "OUTSIDE SHOCK " + f_number(rangeAtr, "#.00") + " ATR"
+        f_event(showShockEvents, "Bear Shock\nRisk Lock",
+             high + atrValue * 0.35, riskLockColor, false, lastReason)
+
+    else if entryCandidate
+        if state != STATE_ARMING
+            state := STATE_ARMING
+            entryConfirmCount := 0
+            armStartedEvent := true
+            lastEvent := "ENTRY_ARM_STARTED"
+            lastReason := "ATR ENTRY BAND PASS"
+        entryConfirmCount += 1
+        if entryConfirmCount >= enableConfirmBars
+            state := STATE_ACTIVE
+            entryConfirmCount := 0
+            softExitCount := 0
+            zoneBars := 1
+            zoneHigh := high
+            zoneLow := low
+            activeZoneBox := f_newZoneBox(time_close, nextBarCloseTime,
+                 zoneHigh + atrValue * zonePaddingAtr,
+                 zoneLow - atrValue * zonePaddingAtr)
+            zoneStartedEvent := true
+            lastEvent := "POLICY_ZONE_STARTED"
+            lastReason := "ATR ENTRY CONFIRMED " +
+                 f_number(atrRatio, "#.00")
+            f_event(showZoneEvents, "Zone Start",
+                 low - atrValue * 0.30, activeZoneColor, true, lastReason)
+        else
+            f_event(showArmEvents, "ARM " + str.tostring(entryConfirmCount) +
+                 "/" + str.tostring(enableConfirmBars),
+                 low - atrValue * 0.25, color.blue, true, lastReason)
+
+    else
+        if state == STATE_ARMING
+            armCancelledEvent := true
+            lastEvent := "ENTRY_ARM_CANCELLED"
+            lastReason := not decisionSessionOpen ? "SESSION BLOCK" :
+                 "ATR ENTRY BAND FAILED"
+            f_event(showArmEvents, "ARM Cancelled",
+                 high + atrValue * 0.25, color.gray, false, lastReason)
+        state := STATE_OFF
+        entryConfirmCount := 0
+
+if not configurationValid
+    state := STATE_OFF
+    entryConfirmCount := 0
+    softExitCount := 0
+    lastEvent := "CONFIG ERROR"
+    lastReason := "CUSTOM HYSTERESIS/THRESHOLD ORDER INVALID"
+
+var table dashboard = table.new(position.top_right, 2, 12,
+     border_width = 1, frame_width = 1)
+
+if barstate.islast
+    if showDashboard
+        color stateColor = state == STATE_ACTIVE ? color.green :
+             state == STATE_RISK_LOCK ? color.red :
+             state == STATE_ARMING ? color.blue : color.gray
+        table.cell(dashboard, 0, 0, "CCBSN LITE ATR M5",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 0, "v0.1.0 VISUAL",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 1, "Chart",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 1, isM5Chart ? "M5 READY" : "USE 5 MINUTES",
+             bgcolor = isM5Chart ? color.new(color.green, 75) :
+             color.new(color.red, 65), text_color = dashboardText)
+        table.cell(dashboard, 0, 2, "Profile",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 2, policyProfile,
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 3, "State",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 3, f_stateText(state),
+             bgcolor = color.new(stateColor, 70), text_color = dashboardText)
+        table.cell(dashboard, 0, 4, "Session",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 4, decisionSessionOpen ? "ALLOWED" : "BLOCKED",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 5, "ATR / Base",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 5, f_number(atrValue, "#.000") + " / " +
+             f_number(atrBaseline, "#.000"),
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 6, "ATR Ratio",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 6, f_number(atrRatio, "#.00") + " [" +
+             f_number(entryRatioMin, "#.00") + ".." +
+             f_number(entryRatioMax, "#.00") + "]",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 7, "Range / ATR",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 7, f_number(rangeAtr, "#.00"),
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 8, "ARM / Soft OFF",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 8, str.tostring(entryConfirmCount) + "/" +
+             str.tostring(enableConfirmBars) + " | " +
+             str.tostring(softExitCount) + "/" +
+             str.tostring(softExitConfirmBars),
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 9, "Zone / Risk",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 9, str.tostring(zoneBars) + " | " +
+             str.tostring(riskLockRemaining),
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 10, "Shock",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 10, hardBearShock ? "HARD VETO" : "CLEAR",
+             bgcolor = hardBearShock ? color.new(color.red, 65) :
+             dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 0, 11, "Last Event",
+             bgcolor = dashboardBackground, text_color = dashboardText)
+        table.cell(dashboard, 1, 11, lastEvent,
+             bgcolor = dashboardBackground, text_color = dashboardText,
+             tooltip = lastReason)
+    else
+        table.clear(dashboard, 0, 0, 1, 11)
+
+bgcolor(not isM5Chart ? color.new(color.red, 92) : na,
+     title = "M5 timeframe warning")
+
+alertcondition(armStartedEvent, "CCBSN Lite ARM started",
+     "CCBSN Lite ATR M5 ARM started on {{ticker}} at {{time}}")
+alertcondition(armCancelledEvent, "CCBSN Lite ARM cancelled",
+     "CCBSN Lite ATR M5 ARM cancelled on {{ticker}} at {{time}}")
+alertcondition(zoneStartedEvent, "CCBSN Lite Zone started",
+     "CCBSN Lite ATR M5 Zone started on {{ticker}} at {{time}}")
+alertcondition(zoneEndedEvent, "CCBSN Lite Zone ended",
+     "CCBSN Lite ATR M5 Zone ended on {{ticker}} at {{time}}")
+alertcondition(softExitStartedEvent, "CCBSN Lite Soft OFF started",
+     "CCBSN Lite ATR M5 Soft OFF candidate on {{ticker}} at {{time}}")
+alertcondition(softExitClearedEvent, "CCBSN Lite Soft OFF cleared",
+     "CCBSN Lite ATR M5 Soft OFF cleared on {{ticker}} at {{time}}")
+alertcondition(shockEvent, "CCBSN Lite Bear Shock",
+     "CCBSN Lite ATR M5 Bear Shock on {{ticker}} at {{time}}")
+alertcondition(recoveryStartedEvent, "CCBSN Lite recovery started",
+     "CCBSN Lite ATR M5 recovery started on {{ticker}} at {{time}}")
+alertcondition(recoveredEvent, "CCBSN Lite recovered",
+     "CCBSN Lite ATR M5 recovered and Zone started on {{ticker}} at {{time}}")

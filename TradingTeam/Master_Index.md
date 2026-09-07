@@ -8,6 +8,7 @@
 - [Signal Contract mẫu](./templates/Signal_Contract.example.json)
 - [Test Scenarios](./Test_Scenarios.md)
 - [Projects](./projects/README.md)
+- [Sprint Plan Template](./templates/Sprint_Plan.md)
 
 ## Product Knowledge Skills
 
@@ -31,6 +32,14 @@
   - [Controller brief](./templates/CCBSN_Only_Buy_Controller_Brief.md)
   - [Trading Zone Strategy Spec](./templates/Trading_Zone_Strategy_Spec.md)
   - [Bot 1 Frozen Set Manifest](./templates/Bot1_Frozen_Set_Manifest.md)
+
+## Agent 0 - Sprint Manager
+
+- [Vai trò](./agents/Agent_0_Sprint_Manager/Knowledge/Sprint_Manager.md)
+- [Backlog và sprint planning](./agents/Agent_0_Sprint_Manager/Skills/Backlog_and_Sprint_Planning.md)
+- [Workflow quản lý sprint](./agents/Agent_0_Sprint_Manager/Workflows/Sprint_Management_Workflow.md)
+- [Sprint governance](./agents/Agent_0_Sprint_Manager/Rules/Sprint_Governance.md)
+- [Sprint plan template](./templates/Sprint_Plan.md)
 
 ## Agent 1 - EA Requirements
 
@@ -85,5 +94,11 @@ Các mục legacy không còn là tuyến xử lý mặc định của team EA.
 - [TradingView v3 source](./projects/ccbsn/src/pine/v3/CCBSN_Trading_Zone_Visual_v3.pine)
 - [Control handshake regression](./projects/ccbsn/tests/Test-ControlHandshake.ps1)
 - [MT5 v3 delivery test](./projects/ccbsn/tests/Test-MT5V3Delivery.ps1)
+- [Telegram Monitor source](./projects/ccbsn/src/monitor/Start-CCBSNMonitor.ps1)
+- [Telegram Monitor runbook](./projects/ccbsn/docs/operations/TELEGRAM_MONITOR_RUNBOOK.md)
+- [Monitor status contract](./projects/ccbsn/docs/architecture/TELEGRAM_MONITOR_STATUS_CONTRACT.md)
+- [Telegram Monitor test](./projects/ccbsn/tests/Test-TelegramMonitor.ps1)
 - [Input guide v3](./projects/ccbsn/docs/operations/INPUT_GUIDE_v3.md)
+- [Sprint planning](./projects/ccbsn/docs/planning/README.md)
+- [Release MT5 v3.2.5 + Monitor v0.1.0](./projects/ccbsn/releases/mt5-v3.2.5/RELEASE.md)
 - [Release MT5 v3.1.4](./projects/ccbsn/releases/mt5-v3.1.4/RELEASE.md)

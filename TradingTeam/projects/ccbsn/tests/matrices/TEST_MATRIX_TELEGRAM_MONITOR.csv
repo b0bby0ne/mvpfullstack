@@ -1,0 +1,18 @@
+id,area,scenario,expected,evidence
+TM-001,Status,Complete schema v1 JSON,Snapshot accepted,Test-TelegramMonitor.ps1
+TM-002,Status,Partial JSON,STATUS_PARSE_ERROR and no crash,Test-TelegramMonitor.ps1
+TM-003,Status,Required field missing,Snapshot rejected,Test-TelegramMonitor.ps1
+TM-004,Heartbeat,Snapshot older than 30 seconds,One Critical OPEN transition,Test-TelegramMonitor.ps1
+TM-005,Terminal,terminal_connected false,One Critical OPEN then one RESOLVED,Test-TelegramMonitor.ps1
+TM-006,M15,Decision older than tolerance inside session,Warning OPEN,Test-TelegramMonitor.ps1
+TM-007,M15,Decision old outside session,No stale incident,Test-TelegramMonitor.ps1
+TM-008,Persistence,Gateway restarts,Incident and update state restored,Test-TelegramMonitor.ps1
+TM-009,Authorization,Unknown chat requests status,No data returned,Test-TelegramMonitor.ps1
+TM-010,Dedup,Same Telegram update received twice,Processed once,Test-TelegramMonitor.ps1
+TM-011,Read-only,/pause or unsupported command,READ_ONLY_MONITOR rejection,Test-TelegramMonitor.ps1
+TM-012,TLS,Static transport audit,Certificate verification not disabled,Test-TelegramMonitor.ps1
+TM-013,Isolation,Monitor source audit,No trading/control command writer,Test-TelegramMonitor.ps1
+TM-014,MT5,Compile v3.2.5,0 errors and 0 warnings,Test-MT5V3Delivery.ps1
+TM-015,Regression,New Cycle transport parity,Exact functional parity with audited v2.19,Test-ControlHandshake.ps1
+TM-016,Failure,Telegram unavailable,Watchdog loop remains alive and delivery incident persists,manual integration pending credentials
+TM-017,Latency,Authorized /status normal network,Response within 3 seconds,manual integration pending credentials

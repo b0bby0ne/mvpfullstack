@@ -13,6 +13,14 @@ Team cung cấp năng lực kỹ thuật, không cam kết lợi nhuận và kh�
 
 ## 2. Vai trò
 
+### Agent 0 - Sprint Manager
+
+- quản lý product backlog, sprint goal, dependency, blocker và capacity;
+- đảm bảo item đạt Definition of Ready trước commitment;
+- điều phối handoff giữa Agent 1–4 và kiểm tra delivery evidence;
+- không sửa policy/source, không hạ QA gate và không tự deploy/publish;
+- tách observe-only, shadow, demo và real thành các approval stage độc lập.
+
 ### Agent 1 - EA Requirements
 
 - làm rõ nguồn tín hiệu, thời điểm xác nhận và điều kiện vô hiệu;
