@@ -71,7 +71,7 @@ React Trading Dashboard
 
 | ID | Type | Priority | Outcome / Item | Owner | Risk | Estimate | Dependency | Target | Status |
 |---|---|---|---|---|---|---:|---|---|---|
-| DISC-001 | SPIKE | P1 | Chọn market, instrument và timeframe đầu tiên | Agent 0 | Medium | 3 | None | D0 | BACKLOG |
+| DISC-001 | SPIKE | P1 | Chọn market, instrument và timeframe đầu tiên | Agent 0 | Medium | 3 | None | D0 | DONE |
 | RULE-001 | STORY | P1 | Glossary và rulebook SMC, Trading Hub, Elliott, Wyckoff | Agent 1 | High | 8 | DISC-001 | D0 | BACKLOG |
 | RULE-002 | STORY | P1 | Bộ 20–30 golden charts đã gắn nhãn | Agent 1 | Medium | 8 | RULE-001 | D0 | BACKLOG |
 | ARCH-001 | SPIKE | P1 | Mapping reuse/adapt/drop giữa Vibe-Trading và project | Agent 2 | Medium | 5 | DISC-001 | D0 | BACKLOG |
