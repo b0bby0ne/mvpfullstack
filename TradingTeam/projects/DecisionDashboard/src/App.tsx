@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { GoldMacroDashboard } from "./components/GoldMacroDashboard";
 import { TradingViewChart } from "./components/TradingViewChart";
 import {
   getMarket,
@@ -11,6 +12,7 @@ import {
 import "./styles.css";
 
 const STORAGE_PREFIX = "decision-dashboard:analysis-note:";
+type AppView = "macro" | "workspace";
 
 function ChartIcon() {
   return (
@@ -31,6 +33,15 @@ function GridIcon() {
   );
 }
 
+function MacroIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 17 9 12l3 3 7-8" />
+      <path d="M14 7h5v5" />
+    </svg>
+  );
+}
+
 function NoteIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -40,8 +51,7 @@ function NoteIcon() {
   );
 }
 
-function App() {
-  const [marketId, setMarketId] = useState<MarketId>("XAU_USD");
+function MarketWorkspace({ marketId }: { marketId: MarketId }) {
   const [timeframe, setTimeframe] = useState<Timeframe>("15");
   const market = useMemo(() => getMarket(marketId), [marketId]);
   const noteKey = `${STORAGE_PREFIX}${marketId}`;
@@ -60,164 +70,114 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand" aria-label="DecisionDashboard">
-          <span className="brand-mark"><ChartIcon /></span>
-          <span>Decision<span>Dashboard</span></span>
+    <>
+      <header className="topbar">
+        <div><p className="eyebrow">Decision workspace</p><h1>Market analysis</h1></div>
+        <div className="topbar-actions">
+          <span className="timezone">UTC+7 · Hồ Chí Minh</span>
+          <a className="external-button" href={getTradingViewUrl(market)} target="_blank" rel="noreferrer">
+            Mở trên TradingView <span aria-hidden="true">↗</span>
+          </a>
         </div>
+      </header>
+
+      <section className="market-header">
+        <div className="market-heading">
+          <span className={`hero-token hero-token--${market.accent}`}>{market.shortName.slice(0, 1)}</span>
+          <div>
+            <div className="heading-line"><h2>{market.displayName}</h2><span className="market-code">{market.shortName}/USD</span></div>
+            <p>{market.tradingViewSymbol} · Reference chart feed</p>
+          </div>
+        </div>
+        <div className="timeframes" aria-label="Chọn khung thời gian">
+          {TIMEFRAMES.map((item) => (
+            <button key={item.value} className={item.value === timeframe ? "is-active" : ""} onClick={() => setTimeframe(item.value)} type="button">{item.label}</button>
+          ))}
+        </div>
+      </section>
+
+      <div className="workspace-grid">
+        <section className="chart-card">
+          <div className="chart-toolbar">
+            <div className="chart-status"><span className="status-pulse" />TradingView connected</div>
+            <p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p>
+          </div>
+          <TradingViewChart market={market} timeframe={timeframe} />
+        </section>
+
+        <aside className="analysis-panel" id="analysis-note">
+          <div className="panel-heading">
+            <div><p className="eyebrow">Working note</p><h3>Phân tích kỹ thuật</h3></div>
+            <span className="draft-badge">Local draft</span>
+          </div>
+          <div className="guide-card">
+            <span className="guide-number">01</span>
+            <div><strong>Vẽ trên biểu đồ</strong><p>Trendline, Fibonacci, vùng giá và ghi chú nằm trong toolbar TradingView.</p></div>
+          </div>
+          <label className="note-field">
+            <span>Ghi chú cho {market.shortName}/USD</span>
+            <textarea value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="Bias, vùng quan sát, điều kiện xác nhận và invalidation…" />
+          </label>
+          <button className="save-button" onClick={saveNote} type="button">{saved ? "Đã lưu trên thiết bị" : "Lưu ghi chú"}</button>
+          <div className="data-note"><span>i</span><p>Giá hiển thị do TradingView cung cấp. Feed này chưa phải nguồn dữ liệu xác nhận cho detector.</p></div>
+        </aside>
+      </div>
+    </>
+  );
+}
+
+function App() {
+  const [view, setView] = useState<AppView>("macro");
+  const [marketId, setMarketId] = useState<MarketId>("XAU_USD");
+
+  function selectMarket(nextMarket: MarketId) {
+    setMarketId(nextMarket);
+    if (nextMarket === "BTC_USD" && view === "macro") setView("workspace");
+  }
+
+  return (
+    <div className={`app-shell ${view === "macro" ? "app-shell--macro" : ""}`}>
+      <aside className="sidebar">
+        <div className="brand" aria-label="DecisionDashboard"><span className="brand-mark"><ChartIcon /></span><span>Decision<span>Dashboard</span></span></div>
 
         <nav className="primary-nav" aria-label="Điều hướng chính">
-          <a className="nav-item nav-item--active" href="#workspace">
-            <GridIcon />
-            <span>Workspace</span>
-          </a>
-          <a className="nav-item" href="#analysis-note">
-            <NoteIcon />
-            <span>Thesis notes</span>
-          </a>
+          <button className={`nav-item ${view === "macro" ? "nav-item--active" : ""}`} onClick={() => { setMarketId("XAU_USD"); setView("macro"); }} type="button">
+            <MacroIcon /><span>Macro · Gold</span>
+          </button>
+          <button className={`nav-item ${view === "workspace" ? "nav-item--active" : ""}`} onClick={() => setView("workspace")} type="button">
+            <GridIcon /><span>Chart workspace</span>
+          </button>
+          <button className="nav-item" onClick={() => setView("workspace")} type="button">
+            <NoteIcon /><span>Thesis notes</span>
+          </button>
         </nav>
 
         <div className="watchlist">
-          <div className="section-label">
-            <span>Markets</span>
-            <span className="live-dot">Live</span>
-          </div>
-
+          <div className="section-label"><span>Markets</span><span className="live-dot">Live</span></div>
           {MARKETS.map((item) => (
-            <button
-              key={item.id}
-              className={`market-row ${item.id === marketId ? "market-row--active" : ""}`}
-              onClick={() => setMarketId(item.id)}
-              type="button"
-            >
-              <span className={`market-token market-token--${item.accent}`}>
-                {item.shortName.slice(0, 1)}
-              </span>
-              <span className="market-copy">
-                <strong>{item.shortName}/USD</strong>
-                <small>{item.marketHours} · TradingView</small>
-              </span>
+            <button key={item.id} className={`market-row ${item.id === marketId ? "market-row--active" : ""}`} onClick={() => selectMarket(item.id)} type="button">
+              <span className={`market-token market-token--${item.accent}`}>{item.shortName.slice(0, 1)}</span>
+              <span className="market-copy"><strong>{item.shortName}/USD</strong><small>{item.marketHours} · TradingView</small></span>
               <span className="market-chevron">›</span>
             </button>
           ))}
         </div>
 
-        <div className="sidebar-foot">
-          <span className="status-pulse" />
-          <div>
-            <strong>Research mode</strong>
-            <small>Không gửi lệnh broker</small>
-          </div>
-        </div>
+        <div className="sidebar-foot"><span className="status-pulse" /><div><strong>Research mode</strong><small>Không gửi lệnh broker</small></div></div>
       </aside>
 
       <main className="workspace" id="workspace">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">Decision workspace</p>
-            <h1>Market analysis</h1>
-          </div>
-          <div className="topbar-actions">
-            <span className="timezone">UTC+7 · Hồ Chí Minh</span>
-            <a
-              className="external-button"
-              href={getTradingViewUrl(market)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Mở trên TradingView
-              <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </header>
+        {view === "macro" ? (
+          <>
+            <header className="topbar">
+              <div><p className="eyebrow">Decision workspace</p><h1>Macro research</h1></div>
+              <div className="topbar-actions"><span className="timezone">UTC+7 · Hồ Chí Minh</span><span className="research-badge">XAU · Phase 01</span></div>
+            </header>
+            <GoldMacroDashboard />
+          </>
+        ) : <MarketWorkspace marketId={marketId} />}
 
-        <section className="market-header">
-          <div className="market-heading">
-            <span className={`hero-token hero-token--${market.accent}`}>
-              {market.shortName.slice(0, 1)}
-            </span>
-            <div>
-              <div className="heading-line">
-                <h2>{market.displayName}</h2>
-                <span className="market-code">{market.shortName}/USD</span>
-              </div>
-              <p>{market.tradingViewSymbol} · Reference chart feed</p>
-            </div>
-          </div>
-
-          <div className="timeframes" aria-label="Chọn khung thời gian">
-            {TIMEFRAMES.map((item) => (
-              <button
-                key={item.value}
-                className={item.value === timeframe ? "is-active" : ""}
-                onClick={() => setTimeframe(item.value)}
-                type="button"
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <div className="workspace-grid">
-          <section className="chart-card">
-            <div className="chart-toolbar">
-              <div className="chart-status">
-                <span className="status-pulse" />
-                TradingView connected
-              </div>
-              <p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p>
-            </div>
-            <TradingViewChart market={market} timeframe={timeframe} />
-          </section>
-
-          <aside className="analysis-panel" id="analysis-note">
-            <div className="panel-heading">
-              <div>
-                <p className="eyebrow">Working note</p>
-                <h3>Phân tích kỹ thuật</h3>
-              </div>
-              <span className="draft-badge">Local draft</span>
-            </div>
-
-            <div className="guide-card">
-              <span className="guide-number">01</span>
-              <div>
-                <strong>Vẽ trên biểu đồ</strong>
-                <p>Trendline, Fibonacci, vùng giá và ghi chú nằm trong toolbar TradingView.</p>
-              </div>
-            </div>
-
-            <label className="note-field">
-              <span>Ghi chú cho {market.shortName}/USD</span>
-              <textarea
-                value={note}
-                onChange={(event) => {
-                  setNote(event.target.value);
-                  setSaved(false);
-                }}
-                placeholder="Bias, vùng quan sát, điều kiện xác nhận và invalidation…"
-              />
-            </label>
-
-            <button className="save-button" onClick={saveNote} type="button">
-              {saved ? "Đã lưu trên thiết bị" : "Lưu ghi chú"}
-            </button>
-
-            <div className="data-note">
-              <span>i</span>
-              <p>
-                Giá hiển thị do TradingView cung cấp. Feed này chưa phải nguồn dữ liệu xác nhận cho detector.
-              </p>
-            </div>
-          </aside>
-        </div>
-
-        <footer className="workspace-footer">
-          <span>DECISION DASHBOARD · MVP 0.1</span>
-          <span>Research &amp; paper validation only</span>
-        </footer>
+        <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.2</span><span>Research &amp; paper validation only</span></footer>
       </main>
     </div>
   );

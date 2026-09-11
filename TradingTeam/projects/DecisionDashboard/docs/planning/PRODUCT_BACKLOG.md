@@ -93,7 +93,7 @@ React Trading Dashboard
 | SMC-003 | STORY | P1 | FVG/imbalance, liquidity pool và sweep engine | Agent 2 | High | 13 | SMC-001 | MVP | BACKLOG |
 | HUB-001 | STORY | P1 | Trading Hub specification và detector contract | Agent 1 | High | 8 | RULE-001, RULE-002 | MVP | BACKLOG |
 | HUB-002 | STORY | P1 | Trading Hub deterministic engine | Agent 2 | High | 13 | HUB-001, DATA-002 | MVP | BACKLOG |
-| MAC-001 | STORY | P1 | Economic calendar và macro indicator ingestion | Agent 3 | High | 13 | DATA-004 | MVP | BACKLOG |
+| MAC-001 | STORY | P1 | Economic calendar và macro indicator ingestion | Agent 3 | High | 13 | DATA-004 | MVP | IN_PROGRESS |
 | MAC-002 | STORY | P1 | Macro regime classifier và asset-impact matrix | Agent 1 | High | 13 | MAC-001 | MVP | BACKLOG |
 | MAC-003 | STORY | P2 | Quant/investment-firm research ingestion có license | Agent 3 | High | 13 | SEC-001, DATA-004 | R1 | BACKLOG |
 | MAC-004 | STORY | P1 | Daily/weekly macro brief có citation và confidence | Agent 1 | Medium | 8 | MAC-001, MAC-002 | MVP | BACKLOG |
