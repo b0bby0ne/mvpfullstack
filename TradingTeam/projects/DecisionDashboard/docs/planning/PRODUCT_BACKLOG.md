@@ -75,7 +75,7 @@ React Trading Dashboard
 | RULE-001 | STORY | P1 | Glossary và rulebook SMC, Trading Hub, Elliott, Wyckoff | Agent 1 | High | 8 | DISC-001 | D0 | BACKLOG |
 | RULE-002 | STORY | P1 | Bộ 20–30 golden charts đã gắn nhãn | Agent 1 | Medium | 8 | RULE-001 | D0 | BACKLOG |
 | ARCH-001 | SPIKE | P1 | Mapping reuse/adapt/drop giữa Vibe-Trading và project | Agent 2 | Medium | 5 | DISC-001 | D0 | BACKLOG |
-| UX-001 | STORY | P1 | Information architecture theo Overview/Analysis/Macro/Thesis/Journal | Agent 1 | Low | 5 | DISC-001 | D0 | BACKLOG |
+| UX-001 | STORY | P1 | Information architecture theo Overview/Analysis/Macro/Thesis/Journal | Agent 1 | Low | 5 | DISC-001 | D0 | IN_PROGRESS |
 | SEC-001 | STORY | P0 | Auth, secret boundary, data license và audit baseline | Agent 4 | High | 8 | ARCH-001 | MVP | BACKLOG |
 | DATA-001 | STORY | P1 | Symbol, venue, timezone, session và timeframe contract | Agent 3 | High | 8 | DISC-001 | MVP | BACKLOG |
 | DATA-002 | STORY | P1 | OHLCV ingestion cho market MVP | Agent 3 | High | 8 | DATA-001, ARCH-001 | MVP | BACKLOG |

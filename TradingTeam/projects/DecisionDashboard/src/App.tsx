@@ -12,43 +12,18 @@ import {
 import "./styles.css";
 
 const STORAGE_PREFIX = "decision-dashboard:analysis-note:";
-type AppView = "macro" | "workspace";
+type Section = "macro" | "chart";
 
 function ChartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 19V9m5 10V5m5 14v-7m5 7V3" />
-    </svg>
-  );
-}
-
-function GridIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="4" y="4" width="6" height="6" rx="1" />
-      <rect x="14" y="4" width="6" height="6" rx="1" />
-      <rect x="4" y="14" width="6" height="6" rx="1" />
-      <rect x="14" y="14" width="6" height="6" rx="1" />
-    </svg>
-  );
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" /></svg>;
 }
 
 function MacroIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M4 17 9 12l3 3 7-8" />
-      <path d="M14 7h5v5" />
-    </svg>
-  );
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17 9 12l3 3 7-8" /><path d="M14 7h5v5" /></svg>;
 }
 
-function NoteIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 4h12a2 2 0 0 1 2 2v9l-5 5H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
-      <path d="M15 20v-5h5M8 9h8M8 13h5" />
-    </svg>
-  );
+function GridIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>;
 }
 
 function MarketWorkspace({ marketId }: { marketId: MarketId }) {
@@ -70,18 +45,8 @@ function MarketWorkspace({ marketId }: { marketId: MarketId }) {
   }
 
   return (
-    <>
-      <header className="topbar">
-        <div><p className="eyebrow">Decision workspace</p><h1>Market analysis</h1></div>
-        <div className="topbar-actions">
-          <span className="timezone">UTC+7 · Hồ Chí Minh</span>
-          <a className="external-button" href={getTradingViewUrl(market)} target="_blank" rel="noreferrer">
-            Mở trên TradingView <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </header>
-
-      <section className="market-header">
+    <section className="chart-page" aria-label={`Chart ${market.shortName}/USD`}>
+      <div className="market-header">
         <div className="market-heading">
           <span className={`hero-token hero-token--${market.accent}`}>{market.shortName.slice(0, 1)}</span>
           <div>
@@ -94,90 +59,94 @@ function MarketWorkspace({ marketId }: { marketId: MarketId }) {
             <button key={item.value} className={item.value === timeframe ? "is-active" : ""} onClick={() => setTimeframe(item.value)} type="button">{item.label}</button>
           ))}
         </div>
-      </section>
+      </div>
 
       <div className="workspace-grid">
         <section className="chart-card">
-          <div className="chart-toolbar">
-            <div className="chart-status"><span className="status-pulse" />TradingView connected</div>
-            <p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p>
-          </div>
+          <div className="chart-toolbar"><div className="chart-status"><span className="status-pulse" />TradingView connected</div><p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p></div>
           <TradingViewChart market={market} timeframe={timeframe} />
         </section>
-
         <aside className="analysis-panel" id="analysis-note">
-          <div className="panel-heading">
-            <div><p className="eyebrow">Working note</p><h3>Phân tích kỹ thuật</h3></div>
-            <span className="draft-badge">Local draft</span>
-          </div>
-          <div className="guide-card">
-            <span className="guide-number">01</span>
-            <div><strong>Vẽ trên biểu đồ</strong><p>Trendline, Fibonacci, vùng giá và ghi chú nằm trong toolbar TradingView.</p></div>
-          </div>
-          <label className="note-field">
-            <span>Ghi chú cho {market.shortName}/USD</span>
-            <textarea value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="Bias, vùng quan sát, điều kiện xác nhận và invalidation…" />
-          </label>
+          <div className="panel-heading"><div><p className="eyebrow">Working note</p><h3>Phân tích kỹ thuật</h3></div><span className="draft-badge">Local draft</span></div>
+          <div className="guide-card"><span className="guide-number">01</span><div><strong>Vẽ trên biểu đồ</strong><p>Trendline, Fibonacci, vùng giá và ghi chú nằm trong toolbar TradingView.</p></div></div>
+          <label className="note-field"><span>Ghi chú cho {market.shortName}/USD</span><textarea value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="Bias, vùng quan sát, điều kiện xác nhận và invalidation…" /></label>
           <button className="save-button" onClick={saveNote} type="button">{saved ? "Đã lưu trên thiết bị" : "Lưu ghi chú"}</button>
           <div className="data-note"><span>i</span><p>Giá hiển thị do TradingView cung cấp. Feed này chưa phải nguồn dữ liệu xác nhận cho detector.</p></div>
         </aside>
       </div>
-    </>
+    </section>
+  );
+}
+
+function EmptyMacroState({ onOpenChart }: { onOpenChart: () => void }) {
+  return (
+    <section className="macro-empty" aria-labelledby="btc-macro-title">
+      <span className="empty-token market-token--orange">B</span>
+      <p className="eyebrow">BTC macro intelligence</p>
+      <h2 id="btc-macro-title">Macro BTC đang chờ nguồn dữ liệu</h2>
+      <p>Flow đã sẵn sàng, nhưng phase hiện tại mới thu thập và xác minh evidence cho vàng. Dashboard không tái sử dụng dữ liệu XAU hoặc tạo nhận định BTC chưa có nguồn.</p>
+      <div className="empty-actions">
+        <button type="button" onClick={onOpenChart}>Mở chart BTC/USD</button>
+        <span>Planned: ETF · on-chain · liquidity · macro beta</span>
+      </div>
+    </section>
   );
 }
 
 function App() {
-  const [view, setView] = useState<AppView>("macro");
   const [marketId, setMarketId] = useState<MarketId>("XAU_USD");
-
-  function selectMarket(nextMarket: MarketId) {
-    setMarketId(nextMarket);
-    if (nextMarket === "BTC_USD" && view === "macro") setView("workspace");
-  }
+  const [section, setSection] = useState<Section>("macro");
+  const market = getMarket(marketId);
 
   return (
-    <div className={`app-shell ${view === "macro" ? "app-shell--macro" : ""}`}>
+    <div className={`app-shell app-shell--${section}`}>
       <aside className="sidebar">
         <div className="brand" aria-label="DecisionDashboard"><span className="brand-mark"><ChartIcon /></span><span>Decision<span>Dashboard</span></span></div>
-
-        <nav className="primary-nav" aria-label="Điều hướng chính">
-          <button className={`nav-item ${view === "macro" ? "nav-item--active" : ""}`} onClick={() => { setMarketId("XAU_USD"); setView("macro"); }} type="button">
-            <MacroIcon /><span>Macro · Gold</span>
-          </button>
-          <button className={`nav-item ${view === "workspace" ? "nav-item--active" : ""}`} onClick={() => setView("workspace")} type="button">
-            <GridIcon /><span>Chart workspace</span>
-          </button>
-          <button className="nav-item" onClick={() => setView("workspace")} type="button">
-            <NoteIcon /><span>Thesis notes</span>
-          </button>
-        </nav>
-
-        <div className="watchlist">
-          <div className="section-label"><span>Markets</span><span className="live-dot">Live</span></div>
-          {MARKETS.map((item) => (
-            <button key={item.id} className={`market-row ${item.id === marketId ? "market-row--active" : ""}`} onClick={() => selectMarket(item.id)} type="button">
-              <span className={`market-token market-token--${item.accent}`}>{item.shortName.slice(0, 1)}</span>
-              <span className="market-copy"><strong>{item.shortName}/USD</strong><small>{item.marketHours} · TradingView</small></span>
-              <span className="market-chevron">›</span>
-            </button>
-          ))}
+        <div className="flow-rail" aria-label="Decision flow">
+          <p className="section-label">Decision flow</p>
+          <div className="flow-step flow-step--done"><span>01</span><div><strong>Market</strong><small>{market.shortName}/USD</small></div></div>
+          <div className="flow-line" />
+          <div className="flow-step flow-step--active"><span>02</span><div><strong>Section</strong><small>{section === "macro" ? "Vĩ mô" : "Chart"}</small></div></div>
+          <div className="flow-line" />
+          <div className="flow-step"><span>03</span><div><strong>Thesis</strong><small>Evidence first</small></div></div>
         </div>
-
         <div className="sidebar-foot"><span className="status-pulse" /><div><strong>Research mode</strong><small>Không gửi lệnh broker</small></div></div>
       </aside>
 
       <main className="workspace" id="workspace">
-        {view === "macro" ? (
-          <>
-            <header className="topbar">
-              <div><p className="eyebrow">Decision workspace</p><h1>Macro research</h1></div>
-              <div className="topbar-actions"><span className="timezone">UTC+7 · Hồ Chí Minh</span><span className="research-badge">XAU · Phase 01</span></div>
-            </header>
-            <GoldMacroDashboard />
-          </>
-        ) : <MarketWorkspace marketId={marketId} />}
+        <header className="topbar">
+          <div><p className="eyebrow">Decision workspace</p><h1>{market.shortName}/USD · {section === "macro" ? "Vĩ mô" : "Chart"}</h1></div>
+          <div className="topbar-actions">
+            <span className="timezone">UTC+7 · Hồ Chí Minh</span>
+            {section === "chart" ? <a className="external-button" href={getTradingViewUrl(market)} target="_blank" rel="noreferrer">Mở trên TradingView <span aria-hidden="true">↗</span></a> : <span className={`research-badge research-badge--${market.accent}`}>{market.shortName} · Macro</span>}
+          </div>
+        </header>
 
-        <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.2</span><span>Research &amp; paper validation only</span></footer>
+        <section className="decision-switcher" aria-label="Chọn market và section">
+          <div className="switch-group">
+            <div className="switch-label"><span>01</span><div><strong>Chọn market</strong><small>Context phân tích</small></div></div>
+            <div className="market-pills">
+              {MARKETS.map((item) => (
+                <button key={item.id} type="button" aria-pressed={marketId === item.id} aria-label={`Chọn market ${item.shortName}/USD`} className={`market-pill ${marketId === item.id ? "is-active" : ""}`} onClick={() => setMarketId(item.id)}>
+                  <span className={`market-token market-token--${item.accent}`}>{item.shortName.slice(0, 1)}</span>
+                  <span><strong>{item.shortName}/USD</strong><small>{item.marketHours}</small></span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="switch-divider"><span>›</span></div>
+          <div className="switch-group switch-group--section">
+            <div className="switch-label"><span>02</span><div><strong>Chọn section</strong><small>Cùng một workspace</small></div></div>
+            <div className="section-pills">
+              <button type="button" aria-pressed={section === "macro"} className={section === "macro" ? "is-active" : ""} onClick={() => setSection("macro")}><MacroIcon /><span><strong>Vĩ mô</strong><small>Flows &amp; events</small></span></button>
+              <button type="button" aria-pressed={section === "chart"} className={section === "chart" ? "is-active" : ""} onClick={() => setSection("chart")}><GridIcon /><span><strong>Chart</strong><small>TradingView</small></span></button>
+            </div>
+          </div>
+        </section>
+
+        {section === "macro" ? (marketId === "XAU_USD" ? <GoldMacroDashboard /> : <EmptyMacroState onOpenChart={() => setSection("chart")} />) : <MarketWorkspace marketId={marketId} />}
+
+        <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.3</span><span>Market → Section → Evidence</span></footer>
       </main>
     </div>
   );
