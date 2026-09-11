@@ -79,8 +79,8 @@ React Trading Dashboard
 | SEC-001 | STORY | P0 | Auth, secret boundary, data license và audit baseline | Agent 4 | High | 8 | ARCH-001 | MVP | BACKLOG |
 | DATA-001 | STORY | P1 | Symbol, venue, timezone, session và timeframe contract | Agent 3 | High | 8 | DISC-001 | MVP | BACKLOG |
 | DATA-002 | STORY | P1 | OHLCV ingestion cho market MVP | Agent 3 | High | 8 | DATA-001, ARCH-001 | MVP | BACKLOG |
-| DATA-003 | STORY | P1 | Cache, background jobs và time-series persistence | Agent 3 | Medium | 8 | DATA-002 | MVP | BACKLOG |
-| DATA-004 | STORY | P1 | Provenance, freshness và incomplete-source state | Agent 3 | High | 5 | DATA-002 | MVP | BACKLOG |
+| DATA-003 | STORY | P1 | Cache, background jobs và time-series persistence | Agent 3 | Medium | 8 | DATA-002 | MVP | IN_PROGRESS |
+| DATA-004 | STORY | P1 | Provenance, freshness và incomplete-source state | Agent 3 | High | 5 | DATA-002 | MVP | IN_PROGRESS |
 | UI-001 | STORY | P1 | App shell, authentication, workspace và watchlist | Agent 2 | Medium | 8 | UX-001, SEC-001 | MVP | BACKLOG |
 | UI-002 | STORY | P1 | Chart đa khung thời gian với overlay toggle | Agent 2 | High | 13 | DATA-002, UI-001 | MVP | BACKLOG |
 | ENV-001 | STORY | P1 | Asia/London/New York session và custom timing window | Agent 2 | Medium | 5 | DATA-001, UI-002 | MVP | BACKLOG |

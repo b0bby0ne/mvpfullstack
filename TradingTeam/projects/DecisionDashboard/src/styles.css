@@ -814,6 +814,56 @@ h1 {
   font: 400 8px/1 "DM Mono", monospace;
 }
 
+.daily-ops {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: flex;
+  gap: 12px;
+  margin: -4px 0 18px;
+  padding: 12px 16px;
+}
+
+.daily-ops > span:first-child {
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 10px;
+  justify-content: center;
+  width: 10px;
+}
+
+.daily-ops > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.daily-ops strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.daily-ops small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.daily-ops--partial,
+.daily-ops--failed {
+  border-color: rgba(245, 158, 11, 0.32);
+}
+
+.daily-ops-mark,
+.daily-ops--failed > span:first-child {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  font-size: 9px;
+  font-weight: 800;
+}
+
 .regime-banner {
   display: grid;
   grid-template-columns: 190px minmax(0, 1fr) 155px;

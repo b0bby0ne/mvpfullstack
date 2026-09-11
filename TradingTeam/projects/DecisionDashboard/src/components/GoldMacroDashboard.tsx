@@ -4,6 +4,7 @@ import {
   GOLD_MACRO_SNAPSHOT_AT,
   GOLD_SOURCES,
 } from "../domain/goldMacro";
+import type { DailyMacroState } from "../hooks/useDailyGoldMacro";
 
 function SourceLink({ sourceId, compact = false }: { sourceId: string; compact?: boolean }) {
   const source = getSource(sourceId);
@@ -45,7 +46,35 @@ function MetricCard({
   );
 }
 
-export function GoldMacroDashboard() {
+function DailyOperationsStatus({ operations }: { operations: DailyMacroState }) {
+  if (operations.phase === "checking") {
+    return <div className="daily-ops daily-ops--checking" role="status"><span className="status-pulse" /><div><strong>Đang kiểm tra nguồn hôm nay</strong><small>App sẽ tự bù nếu cronjob chưa chạy.</small></div></div>;
+  }
+
+  if (operations.phase === "error") {
+    return <div className="daily-ops daily-ops--failed" role="status"><span>!</span><div><strong>Kiểm tra nguồn thất bại</strong><small>{operations.message}</small></div></div>;
+  }
+
+  const { snapshot } = operations;
+  const checkedAt = new Intl.DateTimeFormat("vi-VN", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "Asia/Ho_Chi_Minh",
+  }).format(new Date(snapshot.checkedAt));
+  const statusLabel = snapshot.status === "current" ? "Nguồn đầy đủ" : snapshot.status === "partial" ? "Nguồn một phần" : "Nguồn lỗi";
+
+  return (
+    <div className={`daily-ops daily-ops--${snapshot.status}`} role="status">
+      <span className={snapshot.status === "current" ? "status-pulse" : "daily-ops-mark"}>{snapshot.status === "current" ? "" : "!"}</span>
+      <div>
+        <strong>{statusLabel} · {snapshot.summary.ok}/{snapshot.summary.total}</strong>
+        <small>Đã kiểm tra {checkedAt} · {snapshot.trigger === "cache" ? "cron/cache hôm nay" : "bù khi mở app"}</small>
+      </div>
+    </div>
+  );
+}
+
+export function GoldMacroDashboard({ operations }: { operations: DailyMacroState }) {
   const snapshot = new Intl.DateTimeFormat("vi-VN", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -67,6 +96,8 @@ export function GoldMacroDashboard() {
           <div><strong>Verified snapshot</strong><small>{snapshot}</small></div>
         </div>
       </section>
+
+      <DailyOperationsStatus operations={operations} />
 
       <section className="regime-banner">
         <div className="regime-score">

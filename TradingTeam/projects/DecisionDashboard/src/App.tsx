@@ -9,6 +9,7 @@ import {
   type MarketId,
   type Timeframe,
 } from "./domain/markets";
+import { useDailyGoldMacro } from "./hooks/useDailyGoldMacro";
 import "./styles.css";
 
 const STORAGE_PREFIX = "decision-dashboard:analysis-note:";
@@ -97,6 +98,7 @@ function App() {
   const [marketId, setMarketId] = useState<MarketId>("XAU_USD");
   const [section, setSection] = useState<Section>("macro");
   const market = getMarket(marketId);
+  const goldMacroOperations = useDailyGoldMacro();
 
   return (
     <div className={`app-shell app-shell--${section}`}>
@@ -144,7 +146,7 @@ function App() {
           </div>
         </section>
 
-        {section === "macro" ? (marketId === "XAU_USD" ? <GoldMacroDashboard /> : <EmptyMacroState onOpenChart={() => setSection("chart")} />) : <MarketWorkspace marketId={marketId} />}
+        {section === "macro" ? (marketId === "XAU_USD" ? <GoldMacroDashboard operations={goldMacroOperations} /> : <EmptyMacroState onOpenChart={() => setSection("chart")} />) : <MarketWorkspace marketId={marketId} />}
 
         <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.3</span><span>Market → Section → Evidence</span></footer>
       </main>
