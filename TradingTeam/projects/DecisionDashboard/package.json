@@ -13,9 +13,12 @@
     "view": "vite --open",
     "data:ensure": "node server/ensure.mjs",
     "data:refresh": "node server/refresh.mjs",
-    "data:install-cron": "powershell -ExecutionPolicy Bypass -File scripts/install-daily-data-task.ps1"
+    "data:install-cron": "powershell -ExecutionPolicy Bypass -File scripts/install-daily-data-task.ps1",
+    "liquidity:btc": "node server/liquidityRefresh.mjs BTC_USD",
+    "liquidity:xau": "node server/liquidityRefresh.mjs XAU_USD"
   },
   "dependencies": {
+    "pdf-parse": "^2.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

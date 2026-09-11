@@ -7,7 +7,7 @@ Choose market
   XAU/USD | BTC/USD
           ↓
 Choose section
-  Vĩ mô | Chart
+  Vĩ mô | Chart | Liquid
           ↓
 Review evidence → build thesis
 ```
@@ -23,13 +23,14 @@ Market là context cấp một. Section là context cấp hai. Hai lựa chọn 
 5. Nếu market chưa có macro evidence, hiển thị explicit empty state và đường sang chart; không tạo dữ liệu placeholder giả.
 6. Chart dùng đúng venue-qualified TradingView symbol của market hiện tại.
 7. Technical note được lưu riêng theo canonical market ID.
+8. Liquid giữ nguyên market context, hiển thị source latency và không tạo zone khi nguồn unavailable.
 
 ## Current state matrix
 
-| Market | Vĩ mô | Chart |
-|---|---|---|
-| `XAU_USD` | Gold macro snapshot, flows, events, catalysts, sources | `OANDA:XAUUSD` TradingView widget |
-| `BTC_USD` | Evidence-not-connected empty state | `COINBASE:BTCUSD` TradingView widget |
+| Market | Vĩ mô | Chart | Liquid |
+|---|---|---|---|
+| `XAU_USD` | Gold macro snapshot, flows, events, catalysts, sources | `OANDA:XAUUSD` TradingView widget | CME delayed options OI hoặc explicit unavailable state |
+| `BTC_USD` | Evidence-not-connected empty state | `COINBASE:BTCUSD` TradingView widget | Deribit depth, taker flow và options OI walls |
 
 ## UI states covered
 
@@ -39,6 +40,7 @@ Market là context cấp một. Section là context cấp hai. Hai lựa chọn 
 - macro empty state without fabricated data;
 - TradingView loading and external-script failure guidance;
 - chart note unsaved/saved state;
+- liquidity loading/current/stale/unavailable states;
 - desktop and mobile navigation layout.
 
 ## Remaining UX-001 scope

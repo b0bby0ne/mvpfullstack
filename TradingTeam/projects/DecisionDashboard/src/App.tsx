@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { GoldMacroDashboard } from "./components/GoldMacroDashboard";
+import { LiquidityDashboard } from "./components/LiquidityDashboard";
 import { TradingViewChart } from "./components/TradingViewChart";
 import {
   getMarket,
@@ -13,7 +14,7 @@ import { useDailyGoldMacro } from "./hooks/useDailyGoldMacro";
 import "./styles.css";
 
 const STORAGE_PREFIX = "decision-dashboard:analysis-note:";
-type Section = "macro" | "chart";
+type Section = "macro" | "chart" | "liquidity";
 
 function ChartIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" /></svg>;
@@ -25,6 +26,26 @@ function MacroIcon() {
 
 function GridIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg>;
+}
+
+function LiquidityIcon() {
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M7 12h10M9 17h6" /><circle cx="5" cy="7" r="1" /><circle cx="19" cy="7" r="1" /></svg>;
+}
+
+function sectionLabel(section: Section) {
+  if (section === "macro") return "Vĩ mô";
+  if (section === "liquidity") return "Liquid";
+  return "Chart";
+}
+
+function initialMarket(): MarketId {
+  const market = new URLSearchParams(window.location.search).get("market");
+  return market === "BTC_USD" ? "BTC_USD" : "XAU_USD";
+}
+
+function initialSection(): Section {
+  const section = new URLSearchParams(window.location.search).get("section");
+  return section === "chart" || section === "liquidity" ? section : "macro";
 }
 
 function MarketWorkspace({ marketId }: { marketId: MarketId }) {
@@ -95,10 +116,17 @@ function EmptyMacroState({ onOpenChart }: { onOpenChart: () => void }) {
 }
 
 function App() {
-  const [marketId, setMarketId] = useState<MarketId>("XAU_USD");
-  const [section, setSection] = useState<Section>("macro");
+  const [marketId, setMarketId] = useState<MarketId>(initialMarket);
+  const [section, setSection] = useState<Section>(initialSection);
   const market = getMarket(marketId);
   const goldMacroOperations = useDailyGoldMacro();
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("market", marketId);
+    url.searchParams.set("section", section);
+    window.history.replaceState(null, "", url);
+  }, [marketId, section]);
 
   return (
     <div className={`app-shell app-shell--${section}`}>
@@ -108,7 +136,7 @@ function App() {
           <p className="section-label">Decision flow</p>
           <div className="flow-step flow-step--done"><span>01</span><div><strong>Market</strong><small>{market.shortName}/USD</small></div></div>
           <div className="flow-line" />
-          <div className="flow-step flow-step--active"><span>02</span><div><strong>Section</strong><small>{section === "macro" ? "Vĩ mô" : "Chart"}</small></div></div>
+          <div className="flow-step flow-step--active"><span>02</span><div><strong>Section</strong><small>{sectionLabel(section)}</small></div></div>
           <div className="flow-line" />
           <div className="flow-step"><span>03</span><div><strong>Thesis</strong><small>Evidence first</small></div></div>
         </div>
@@ -117,10 +145,10 @@ function App() {
 
       <main className="workspace" id="workspace">
         <header className="topbar">
-          <div><p className="eyebrow">Decision workspace</p><h1>{market.shortName}/USD · {section === "macro" ? "Vĩ mô" : "Chart"}</h1></div>
+          <div><p className="eyebrow">Decision workspace</p><h1>{market.shortName}/USD · {sectionLabel(section)}</h1></div>
           <div className="topbar-actions">
             <span className="timezone">UTC+7 · Hồ Chí Minh</span>
-            {section === "chart" ? <a className="external-button" href={getTradingViewUrl(market)} target="_blank" rel="noreferrer">Mở trên TradingView <span aria-hidden="true">↗</span></a> : <span className={`research-badge research-badge--${market.accent}`}>{market.shortName} · Macro</span>}
+            {section === "chart" ? <a className="external-button" href={getTradingViewUrl(market)} target="_blank" rel="noreferrer">Mở trên TradingView <span aria-hidden="true">↗</span></a> : <span className={`research-badge research-badge--${market.accent}`}>{market.shortName} · {section === "liquidity" ? "Liquid" : "Macro"}</span>}
           </div>
         </header>
 
@@ -142,13 +170,16 @@ function App() {
             <div className="section-pills">
               <button type="button" aria-pressed={section === "macro"} className={section === "macro" ? "is-active" : ""} onClick={() => setSection("macro")}><MacroIcon /><span><strong>Vĩ mô</strong><small>Flows &amp; events</small></span></button>
               <button type="button" aria-pressed={section === "chart"} className={section === "chart" ? "is-active" : ""} onClick={() => setSection("chart")}><GridIcon /><span><strong>Chart</strong><small>TradingView</small></span></button>
+              <button type="button" aria-pressed={section === "liquidity"} className={section === "liquidity" ? "is-active" : ""} onClick={() => setSection("liquidity")}><LiquidityIcon /><span><strong>Liquid</strong><small>Futures &amp; options</small></span></button>
             </div>
           </div>
         </section>
 
-        {section === "macro" ? (marketId === "XAU_USD" ? <GoldMacroDashboard operations={goldMacroOperations} /> : <EmptyMacroState onOpenChart={() => setSection("chart")} />) : <MarketWorkspace marketId={marketId} />}
+        {section === "macro" && (marketId === "XAU_USD" ? <GoldMacroDashboard operations={goldMacroOperations} /> : <EmptyMacroState onOpenChart={() => setSection("chart")} />)}
+        {section === "chart" && <MarketWorkspace marketId={marketId} />}
+        {section === "liquidity" && <LiquidityDashboard marketId={marketId} />}
 
-        <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.3</span><span>Market → Section → Evidence</span></footer>
+        <footer className="workspace-footer"><span>DECISION DASHBOARD · MVP 0.4</span><span>Market → Section → Evidence</span></footer>
       </main>
     </div>
   );

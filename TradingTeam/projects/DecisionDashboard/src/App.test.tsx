@@ -5,15 +5,31 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 
 beforeEach(() => {
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-    ok: true,
-    json: async () => ({
+  window.history.replaceState(null, "", "/");
+  vi.stubGlobal("fetch", vi.fn().mockImplementation((input: unknown) => {
+    const url = String(input);
+    const payload = url.includes("/api/liquidity/") ? {
+      market: "BTC_USD",
+      status: "current",
+      checkedAt: "2026-09-11T02:31:00.000Z",
+      trigger: "refresh",
+      methodology: "exchange-depth+taker-trades+options-oi",
+      disclaimer: "Ranked observations only.",
+      sources: [{ id: "deribit", publisher: "Deribit", url: "https://www.deribit.com", data: "BTC derivatives", latency: "snapshot" }],
+      data: {
+        referencePrice: 100000,
+        observedAt: "2026-09-11T02:31:00.000Z",
+        futures: { instrument: "BTC-PERPETUAL", openInterestUsd: 1_000_000, volume24hUsd: 2_000_000, sampledTrades: 500, buyAmountUsd: 600, sellAmountUsd: 400, deltaUsd: 200, buyRatio: 0.6, liquidations: 2, liquidationAmountUsd: 50, walls: [] },
+        options: { instruments: 100, levels: [] },
+      },
+    } : {
       businessDate: "2026-09-11",
       checkedAt: "2026-09-11T02:30:00.000Z",
       status: "current",
       trigger: "cache",
       summary: { total: 10, ok: 10, failed: 0, requiredFailures: 0 },
-    }),
+    };
+    return Promise.resolve({ ok: true, json: async () => payload });
   }));
 });
 
@@ -49,5 +65,15 @@ describe("market to section flow", () => {
 
     expect(await screen.findByText("Kiểm tra nguồn thất bại")).toBeTruthy();
     expect(screen.getByText(/network unavailable/)).toBeTruthy();
+  });
+
+  it("opens the Liquid section for the selected market", async () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Chọn market BTC/USD" }));
+    fireEvent.click(screen.getByRole("button", { name: /Liquid/ }));
+
+    expect(await screen.findByRole("region", { name: "Liquidity BTC/USD" })).toBeTruthy();
+    expect(screen.getByText("Bản đồ thanh khoản BTC/USD")).toBeTruthy();
+    expect(screen.getByText("BTC-PERPETUAL")).toBeTruthy();
   });
 });

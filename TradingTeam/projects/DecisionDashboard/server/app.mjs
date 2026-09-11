@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { startDailyScheduler } from "./goldMacroOps.mjs";
 import { handleEnsureRequest } from "./httpHelpers.mjs";
+import { handleLiquidityEnsureRequest } from "./liquidityHttp.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const port = Number(process.env.PORT || 4173);
@@ -13,6 +14,7 @@ const mimeTypes = { ".css": "text/css", ".html": "text/html", ".js": "text/javas
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "127.0.0.1"}`);
   if (url.pathname === "/api/gold-macro/ensure") return handleEnsureRequest(request, response);
+  if (url.pathname === "/api/liquidity/ensure") return handleLiquidityEnsureRequest(request, response);
 
   const relativePath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
   let filePath = path.resolve(root, relativePath);

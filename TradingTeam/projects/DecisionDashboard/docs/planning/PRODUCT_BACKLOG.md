@@ -88,6 +88,7 @@ React Trading Dashboard
 | ENV-003 | STORY | P1 | Economic-event markers trên chart/timeline | Agent 3 | High | 8 | DATA-004, UI-002 | MVP | BACKLOG |
 | ENV-004 | STORY | P1 | Zone lifecycle: fresh/touched/reacted/broken/expired | Agent 2 | High | 8 | UI-002, RULE-001 | MVP | BACKLOG |
 | ENV-005 | STORY | P1 | Alert khi giá, session hoặc event chạm điều kiện | Agent 3 | High | 8 | ENV-003, ENV-004 | MVP | BACKLOG |
+| LIQ-001 | STORY | P1 | Futures/options order flow, OI walls và liquidity section | Agent 3 | High | 13 | DATA-004, UI-002 | MVP | IN_PROGRESS |
 | SMC-001 | STORY | P1 | Deterministic pivot và swing hierarchy | Agent 2 | High | 8 | RULE-002, DATA-002 | MVP | BACKLOG |
 | SMC-002 | STORY | P1 | HH/HL/LH/LL, BOS và CHoCH engine | Agent 2 | High | 13 | SMC-001 | MVP | BACKLOG |
 | SMC-003 | STORY | P1 | FVG/imbalance, liquidity pool và sweep engine | Agent 2 | High | 13 | SMC-001 | MVP | BACKLOG |
@@ -137,6 +138,7 @@ React Trading Dashboard
 | ENV-003 | Event có actual/forecast/previous, impact, source và timezone; stale source hiển thị lỗi | API/UI tests |
 | ENV-004 | Zone transitions chỉ tiến theo event contract, có created/confirmed/invalidated timestamp | State-machine tests |
 | ENV-005 | Alert dedup, cooldown, expiry, timezone và delivery failure có audit; không gửi broker command | Alert integration tests |
+| LIQ-001 | BTC có depth/trades/options OI theo nguồn exchange; XAU fail closed nếu thiếu CME licensed depth; mọi wall có observed_at, source và latency | API/UI tests + liquidity runbook |
 | SMC-001 | Pivot trên golden charts đạt tolerance đã duyệt và không repaint sau confirmation | Golden tests + VAL-001 |
 | SMC-002 | Structure/BOS/CHoCH giải thích được bằng pivot ID và confirmed bar | Engine fixtures |
 | SMC-003 | FVG/liquidity/sweep có geometry, lifecycle và invalidation xác định | Engine fixtures |
