@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { PDFParse } from "pdf-parse";
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const CME_PUBLIC_FALLBACK_PATH = path.join(PROJECT_ROOT, "data", "cme", "gold-public-latest.json");
 const CACHE_TTL_MS = { BTC_USD: 60_000, XAU_USD: 6 * 60 * 60 * 1000 };
 const activeRefreshes = new Map();
 
@@ -274,23 +275,37 @@ async function fetchPdfData(url) {
 async function collectXauLiquidity() {
   const futuresSource = LIQUIDITY_SOURCES.XAU_USD[0];
   const optionSource = LIQUIDITY_SOURCES.XAU_USD[1];
-  const [futuresPdf, optionsPdf] = await Promise.all([fetchPdfData(futuresSource.url), fetchPdfData(optionSource.url)]);
-  const futures = parseCmeGoldFuturesText(futuresPdf.text);
-  const levels = parseCmeGoldOptionTables(optionsPdf.tables);
-  if (!futures && !levels.length) throw new Error("CME bulletins loaded but no standard Gold futures/options data was parsed");
+  const fallback = JSON.parse(await readFile(CME_PUBLIC_FALLBACK_PATH, "utf8"));
+  const [futuresResult, optionsResult] = await Promise.allSettled([fetchPdfData(futuresSource.url), fetchPdfData(optionSource.url)]);
+  const parsedFutures = futuresResult.status === "fulfilled" ? parseCmeGoldFuturesText(futuresResult.value.text) : null;
+  const levels = optionsResult.status === "fulfilled" ? parseCmeGoldOptionTables(optionsResult.value.tables) : [];
+  const futures = parsedFutures ?? fallback.futures;
   const partialReasons = [];
-  if (!futures) partialReasons.push("No COMEX Gold futures summary parsed");
-  if (!levels.length) partialReasons.push("No COMEX Gold option strikes parsed");
+  if (!parsedFutures) partialReasons.push("Direct CME futures bulletin unavailable; using dated verified CME fallback");
+  if (!levels.length) partialReasons.push("No COMEX Gold option OI strikes parsed; showing CME block prints separately");
+  const sourceErrors = [
+    futuresResult.status === "rejected" ? `Futures: ${futuresResult.reason?.message ?? futuresResult.reason}` : null,
+    optionsResult.status === "rejected" ? `Options: ${optionsResult.reason?.message ?? optionsResult.reason}` : null,
+  ].filter(Boolean);
+  const blockTrades = (fallback.options?.blockTrades ?? []).map((trade) => ({
+    ...trade,
+    strength: round(trade.volumeContracts / Math.max(...fallback.options.blockTrades.map((item) => item.volumeContracts)), 2),
+  }));
   return {
     referencePrice: futures?.activeSettlement ?? null,
-    observedAt: new Date().toISOString(),
+    observedAt: parsedFutures ? new Date().toISOString() : fallback.tradeDate,
     partialReasons,
+    sourceErrors,
+    cmeTradeDate: parsedFutures ? null : fallback.tradeDate,
+    sourceMode: parsedFutures ? "direct-public-bulletin" : "verified-public-fallback",
     futures: {
       instrument: futures ? `COMEX:GC ${futures.activeContract}` : "COMEX:GC",
       openInterestUsd: null,
       volume24hUsd: null,
       openInterestContracts: futures?.openInterestContracts ?? null,
       volumeContracts: futures?.volumeContracts ?? null,
+      openInterestChangeContracts: futures?.openInterestChangeContracts ?? null,
+      settlementChange: futures?.activeSettlementChange ?? null,
       sampledTrades: 0,
       buyAmountUsd: null,
       sellAmountUsd: null,
@@ -300,7 +315,7 @@ async function collectXauLiquidity() {
       liquidationAmountUsd: null,
       walls: [],
     },
-    options: { instruments: null, levels },
+    options: { instruments: null, levels, blockTrades: levels.length ? [] : blockTrades, blockTradesTradeDate: fallback.tradeDate },
   };
 }
 

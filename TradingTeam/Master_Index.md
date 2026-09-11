@@ -102,3 +102,9 @@ Các mục legacy không còn là tuyến xử lý mặc định của team EA.
 - [Sprint planning](./projects/ccbsn/docs/planning/README.md)
 - [Release MT5 v3.2.5 + Monitor v0.1.0](./projects/ccbsn/releases/mt5-v3.2.5/RELEASE.md)
 - [Release MT5 v3.1.4](./projects/ccbsn/releases/mt5-v3.1.4/RELEASE.md)
+
+## DecisionDashboard Project
+
+- [Project overview](./projects/DecisionDashboard/README.md)
+- [Product backlog](./projects/DecisionDashboard/docs/planning/PRODUCT_BACKLOG.md)
+- [Planning rules](./projects/DecisionDashboard/docs/planning/README.md)

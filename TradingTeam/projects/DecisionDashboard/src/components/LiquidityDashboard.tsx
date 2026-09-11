@@ -32,6 +32,7 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
   const { snapshot } = state;
   const checkedAt = new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "medium", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(snapshot.checkedAt));
   const data = snapshot.data;
+  const dataThrough = data ? new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(data.observedAt)) : null;
   const maxWallAmount = Math.max(1, ...(data?.futures.walls.map((wall) => wall.amountUsd) ?? []));
   const statusLabel = snapshot.status === "current" ? "Current" : snapshot.status === "partial" ? "Partial" : snapshot.status === "stale" ? "Stale fallback" : "Source unavailable";
   const futuresOi = data?.futures.openInterestUsd !== null
@@ -44,12 +45,14 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
     : data?.futures.volumeContracts
       ? `${number.format(data.futures.volumeContracts)} contracts EOD`
       : "Không có trong public snapshot";
+  const optionBlockTrades = data?.options.blockTrades ?? [];
+  const optionPanelTitle = data?.options.levels.length ? "Open-interest walls" : optionBlockTrades.length ? "Block volume prints" : "Open-interest walls";
 
   return (
     <section className="liquidity-page" aria-label={`Liquidity ${market.shortName}/USD`}>
       <header className="liquidity-hero">
         <div><p className="eyebrow">Futures · Options · Order flow</p><h2>Bản đồ thanh khoản {market.shortName}/USD</h2><p>Xác định cụm lệnh chờ và open-interest wall lớn để đưa vào context trước khi phân tích chart.</p></div>
-        <div className={`liquidity-status liquidity-status--${snapshot.status}`}><span /><div><strong>{statusLabel}</strong><small>{checkedAt} · {snapshot.trigger}</small></div></div>
+        <div className={`liquidity-status liquidity-status--${snapshot.status}`}><span /><div><strong>{statusLabel}</strong><small>Checked {checkedAt} · data through {dataThrough ?? "—"}</small></div></div>
       </header>
 
       {!data ? (
@@ -60,10 +63,10 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
       ) : (
         <>
           <div className="liquidity-metrics">
-            <article><span>Reference</span><strong>{data.referencePrice ? `$${price.format(data.referencePrice)}` : "EOD strikes"}</strong><small>{data.futures.instrument}</small></article>
-            <article><span>Futures OI</span><strong>{futuresOi}</strong><small>{futuresVolume}</small></article>
+            <article><span>Reference</span><strong>{data.referencePrice ? `$${price.format(data.referencePrice)}` : "EOD strikes"}</strong><small>{data.futures.instrument}{data.futures.settlementChange ? ` · +${price.format(data.futures.settlementChange)}` : ""}</small></article>
+            <article><span>Futures OI</span><strong>{futuresOi}</strong><small>{futuresVolume}{data.futures.openInterestChangeContracts ? ` · OI +${number.format(data.futures.openInterestChangeContracts)}` : ""}</small></article>
             <article><span>Taker delta</span><strong className={(data.futures.deltaUsd ?? 0) >= 0 ? "positive" : "negative"}>{signedUsd(data.futures.deltaUsd)}</strong><small>{data.futures.sampledTrades ? `${data.futures.sampledTrades} trades gần nhất` : "Không có tick-level public data"}</small></article>
-            <article><span>Option universe</span><strong>{data.options.instruments === null ? "COMEX EOD" : number.format(data.options.instruments)}</strong><small>{data.options.levels.length} OI walls được xếp hạng</small></article>
+            <article><span>Option universe</span><strong>{data.options.instruments === null ? "COMEX EOD" : number.format(data.options.instruments)}</strong><small>{data.options.levels.length ? `${data.options.levels.length} OI walls được xếp hạng` : `${optionBlockTrades.length} block prints · chưa phải OI`}</small></article>
           </div>
 
           <div className="liquidity-grid">
@@ -83,7 +86,7 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
             </article>
 
             <article className="liquidity-panel">
-              <div className="liquidity-panel-head"><div><p className="eyebrow">Options positioning</p><h3>Open-interest walls</h3></div><span>Không phải dealer gamma</span></div>
+              <div className="liquidity-panel-head"><div><p className="eyebrow">Options positioning</p><h3>{optionPanelTitle}</h3></div><span>{data.options.levels.length ? "Không phải dealer gamma" : "Không phải OI wall"}</span></div>
               <div className="option-wall-list">
                 {data.options.levels.map((level) => (
                   <div className={`option-wall option-wall--${level.bias}`} key={`${level.expiry ?? "all"}-${level.strike}`}>
@@ -92,7 +95,14 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
                     <div><span>C {optionOi(level, "call")}</span><span>P {optionOi(level, "put")}</span></div>
                   </div>
                 ))}
-                {!data.options.levels.length && <div className="panel-empty">Không có option OI level hợp lệ trong snapshot.</div>}
+                {!data.options.levels.length && optionBlockTrades.map((trade) => (
+                  <div className={`option-wall option-wall--${trade.side}-wall`} key={`block-${trade.expiry}-${trade.side}-${trade.strike}`}>
+                    <div><strong>${price.format(trade.strike)}</strong><small>{trade.expiry} · {trade.side}</small></div>
+                    <div className="option-bar"><i style={{ width: `${Math.max(5, trade.strength * 100)}%` }} /></div>
+                    <div><span>BLOCK</span><span>{number.format(trade.volumeContracts)} contracts</span></div>
+                  </div>
+                ))}
+                {!data.options.levels.length && !optionBlockTrades.length && <div className="panel-empty">Không có option OI level hợp lệ trong snapshot.</div>}
               </div>
             </article>
           </div>
@@ -107,7 +117,7 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
         </>
       )}
 
-      <div className="liquidity-method"><span>i</span><p><strong>Phương pháp:</strong> {snapshot.disclaimer} Wall được xếp hạng theo quy mô quan sát tại thời điểm snapshot và có thể bị rút trước khi giá chạm.</p></div>
+      <div className="liquidity-method"><span>i</span><p><strong>Phương pháp:</strong> {snapshot.disclaimer} {data?.sourceMode === "verified-public-fallback" ? `Đang dùng CME bulletin đã xác minh cho trade date ${data.cmeTradeDate}; option panel là block volume, không phải OI wall.` : "Wall được xếp hạng theo quy mô quan sát tại thời điểm snapshot và có thể bị rút trước khi giá chạm."}</p></div>
       <div className="liquidity-sources">
         {snapshot.sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.id}><span>{source.publisher}</span><strong>{source.data}</strong><small>{source.latency} ↗</small></a>)}
       </div>

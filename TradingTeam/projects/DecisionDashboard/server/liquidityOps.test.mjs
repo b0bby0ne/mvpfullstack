@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFile } from "node:fs/promises";
 import { deriveBtcLiquidity, parseCmeGoldFuturesText, parseCmeGoldOptionTables } from "./liquidityOps.mjs";
 
 describe("liquidity derivation", () => {
@@ -57,5 +58,15 @@ describe("liquidity derivation", () => {
     `);
 
     expect(result).toEqual({ volumeContracts: 189132, openInterestContracts: 414150, activeContract: "DEC26", activeSettlement: 4460.7 });
+  });
+
+  it("keeps a dated, source-labelled CME fallback without calling blocks OI", async () => {
+    const fallback = JSON.parse(await readFile(new URL("../data/cme/gold-public-latest.json", import.meta.url), "utf8"));
+
+    expect(fallback.publisher).toBe("CME Group / COMEX");
+    expect(fallback.tradeDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(fallback.futures).toMatchObject({ productCode: "GC", openInterestContracts: 414150, volumeContracts: 189132 });
+    expect(fallback.options.note).toContain("not open interest");
+    expect(fallback.options.blockTrades.length).toBeGreaterThan(0);
   });
 });

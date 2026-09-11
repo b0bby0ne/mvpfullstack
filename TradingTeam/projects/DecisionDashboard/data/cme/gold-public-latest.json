@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "publisher": "CME Group / COMEX",
+  "sourceUrl": "https://www.cmegroup.com/market-data/daily-bulletin.html",
+  "futuresBulletinUrl": "https://www.cmegroup.com/daily_bulletin/current/Section62_Metals_Futures_Products.pdf",
+  "optionsBulletinUrl": "https://www.cmegroup.com/daily_bulletin/current/Section64_Metals_Option_Products.pdf",
+  "bulletinNumber": 173,
+  "tradeDate": "2026-09-09",
+  "verifiedAt": "2026-09-11T10:45:00+07:00",
+  "provenance": "Manually verified against CME public Daily Bulletin while direct machine access was unavailable.",
+  "futures": {
+    "productCode": "GC",
+    "productName": "COMEX Gold Futures",
+    "activeContract": "DEC26",
+    "activeSettlement": 4460.7,
+    "activeSettlementChange": 21.7,
+    "activeOpenInterestContracts": 316290,
+    "volumeContracts": 189132,
+    "openInterestContracts": 414150,
+    "openInterestChangeContracts": 2923,
+    "bulletinPage": "PG62 Side 03"
+  },
+  "options": {
+    "productCode": "OG",
+    "productName": "COMEX Gold Options",
+    "blockTrades": [
+      { "expiry": "JAN27", "side": "call", "strike": 5500, "volumeContracts": 600 },
+      { "expiry": "OCT26", "side": "put", "strike": 4100, "volumeContracts": 375 },
+      { "expiry": "DEC26", "side": "call", "strike": 6000, "volumeContracts": 350 },
+      { "expiry": "JAN27", "side": "call", "strike": 5200, "volumeContracts": 300 },
+      { "expiry": "JAN27", "side": "call", "strike": 5800, "volumeContracts": 300 },
+      { "expiry": "JUN27", "side": "call", "strike": 5500, "volumeContracts": 220 },
+      { "expiry": "JUN27", "side": "put", "strike": 4500, "volumeContracts": 220 },
+      { "expiry": "NOV26", "side": "put", "strike": 4150, "volumeContracts": 200 },
+      { "expiry": "OCT26", "side": "put", "strike": 4400, "volumeContracts": 150 },
+      { "expiry": "OCT26", "side": "put", "strike": 4275, "volumeContracts": 100 },
+      { "expiry": "NOV26", "side": "put", "strike": 4350, "volumeContracts": 100 },
+      { "expiry": "JAN27", "side": "call", "strike": 4520, "volumeContracts": 100 }
+    ],
+    "blockTradesBulletinPage": "PG64 Side 68",
+    "note": "These are EOO/block volumes, not open interest and not resting order-book depth."
+  }
+}

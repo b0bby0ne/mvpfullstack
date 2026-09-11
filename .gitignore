@@ -15,3 +15,6 @@ TradingTeam/projects/*/runtime/
 # Generated MT5 profiles, terminal logs, account snapshots, and QA extraction trees.
 # Keep the reusable runtime-approval scripts, but never commit their generated folders.
 TradingTeam/projects/*/tests/runtime-approval/*/
+
+# CloneTeam keeps source repositories as local, nested Git checkouts.
+CloneTeam/Repositories/*/*/

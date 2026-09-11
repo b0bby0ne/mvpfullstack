@@ -5,6 +5,7 @@
 2. **SaleTeam**: Market intelligence & Lead enrichment.
 3. **TrendTeam**: Weak signal scanning.
 4. **AgileTeam**: Workspace monitoring & logging.
+5. **CloneTeam**: Repository archaeology, team blueprint design, safe integration & QA.
 
 ## Open Backlog
 ## BLG-001

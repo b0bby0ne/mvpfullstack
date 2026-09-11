@@ -32,7 +32,16 @@ Nguồn công khai cố định:
 
 Public bulletin là dữ liệu end-of-day/reference. Parser chỉ đọc standard COMEX Gold options (`OG`), gom OI theo strike/expiry và loại trừ Micro/Weekly/kim loại khác. Cache XAU là 6 giờ.
 
-CME order-by-order depth và trade flow thời gian thực cần market-data feed có license. Nếu bulletin không truy cập hoặc parser không xác nhận được strike, API trả `unavailable` và UI không tạo liquidity zones giả. Trạng thái này là behavior mong đợi cho tới khi kết nối CME MDP/API hoặc vendor được cấp quyền.
+Khi máy không tải trực tiếp được `www.cmegroup.com`, app dùng snapshot CME public đã xác minh tại `data/cme/gold-public-latest.json`. Snapshot phải giữ nguyên `tradeDate`, bulletin number, URL và trang nguồn; không được đổi timestamp để giả làm dữ liệu live. Snapshot hiện tại lấy từ Bulletin #173, trade date `09/09/2026`:
+
+- GC active contract `DEC26`, settlement `4,460.70`, change `+21.70`;
+- total futures volume `189,132` contracts;
+- total futures open interest `414,150`, OI change `+2,923`;
+- options panel hiển thị EOO/block volume theo strike từ PG64 Side 68 và gắn nhãn `block prints`, không gọi là open-interest wall.
+
+CME order-by-order depth và trade flow thời gian thực cần market-data feed có license. Khi direct bulletin lỗi nhưng fallback đã xác minh còn tồn tại, API trả `partial`; nếu cả hai đều không có dữ liệu hợp lệ thì trả `unavailable`. UI không tạo bid/ask hoặc OI walls giả.
+
+CME DataMine endpoint `https://datamine.new.cmegroup.com/api/list_entitlements_files` có thể truy cập từ máy hiện tại nhưng yêu cầu OAuth/Basic Auth và entitlement cho dataset `EOD_XCEC_GC_FUT_0`. Credential không được lưu trong repository. Để thay delayed public fallback bằng API tự động, cần CME API ID/password hoặc bearer-token workflow đã được cấp quyền.
 
 ## API và persistence
 

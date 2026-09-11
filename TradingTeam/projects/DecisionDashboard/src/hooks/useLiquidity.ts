@@ -37,12 +37,18 @@ export type LiquiditySnapshot = {
   data: null | {
     referencePrice: number | null;
     observedAt: string;
+    cmeTradeDate?: string | null;
+    sourceMode?: "direct-public-bulletin" | "verified-public-fallback";
+    partialReasons?: string[];
+    sourceErrors?: string[];
     futures: {
       instrument: string;
       openInterestUsd: number | null;
       volume24hUsd: number | null;
       openInterestContracts?: number | null;
       volumeContracts?: number | null;
+      openInterestChangeContracts?: number | null;
+      settlementChange?: number | null;
       funding8hPct?: number;
       sampledTrades: number;
       buyAmountUsd: number | null;
@@ -53,7 +59,12 @@ export type LiquiditySnapshot = {
       liquidationAmountUsd: number | null;
       walls: FuturesWall[];
     };
-    options: { instruments: number | null; levels: OptionLevel[] };
+    options: {
+      instruments: number | null;
+      levels: OptionLevel[];
+      blockTrades?: Array<{ expiry: string; side: "call" | "put"; strike: number; volumeContracts: number; strength: number }>;
+      blockTradesTradeDate?: string;
+    };
   };
 };
 
