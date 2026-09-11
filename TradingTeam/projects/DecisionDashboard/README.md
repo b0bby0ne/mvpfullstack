@@ -12,10 +12,20 @@ MVP là hệ thống `research + decision support + paper validation`. Live exec
 
 - [Product Backlog](./docs/planning/PRODUCT_BACKLOG.md)
 - [Planning Rules](./docs/planning/README.md)
+- [TradingView Integration](./docs/architecture/TRADINGVIEW_INTEGRATION.md)
 - [Source Workspace](./src/README.md)
 - [Test Evidence](./tests/README.md)
 - [Release Workspace](./releases/README.md)
 - [Archive](./archive/README.md)
+
+## Chạy webapp
+
+```bash
+npm install
+npm run dev
+```
+
+Mở `http://127.0.0.1:4173` để xem biểu đồ TradingView cho XAU/USD và BTC/USD. Đây là reference chart phục vụ research; không có broker write path.
 
 ## Trách nhiệm theo project
 
@@ -26,4 +36,3 @@ MVP là hệ thống `research + decision support + paper validation`. Live exec
 - `Agent 4`: data-quality, look-ahead/repainting test, security, regression và release gate.
 
 Các vai trò trên là specialization trong project; các approval gate và nguyên tắc an toàn của TradingTeam vẫn được giữ nguyên.
-
