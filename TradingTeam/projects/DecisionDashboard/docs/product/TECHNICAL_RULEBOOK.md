@@ -5,7 +5,7 @@ Scope: `XAU/USD`, `BTC/USD`
 Methods: `SMC / Trading Hub`, `Wyckoff`, `Elliott Wave`  
 Owner gate: Product Owner và Technical Analyst phải ký duyệt trước khi dùng làm detector tự động.
 
-Nghiên cứu chuyên sâu và bảng đối chiếu ba nhánh SMC nằm tại [SMC Schools: HenrySMC, ICT và Trading Hub 3.0](../research/SMC_SCHOOLS_CONVERGENCE.md). Tài liệu này giữ common rulebook; các định nghĩa riêng của từng trường phái phải đi qua school adapter có version.
+Nghiên cứu chuyên sâu và bảng đối chiếu ba nhánh SMC nằm tại [SMC Schools: HenrySMC, ICT và Trading Hub 3.0](../research/SMC_SCHOOLS_CONVERGENCE.md). Core method sau logic audit nằm tại [SMC Method Specification](./SMC_METHOD_SPEC.md). Tài liệu này giữ common rulebook; các định nghĩa riêng của từng trường phái phải đi qua school adapter có version.
 
 ## 1. Mục tiêu
 
@@ -124,7 +124,7 @@ FVG ba nến dự thảo:
 
 ### 3.6 Order block, order flow và IFC
 
-Các thuật ngữ này có nhiều biến thể giữa SMC communities. Candidate glossary từ tài liệu Trading Hub được lập chỉ để chuyên gia đối chiếu:
+Curriculum chính thức của Trading Hub xác nhận Order Flow, Order Block, IFC và SCOB là các bài riêng, nhưng không công bố đủ geometry/threshold để tạo detector. Candidate glossary dưới đây chỉ dùng để chuyên gia đối chiếu:
 
 - `OB`: vùng nến đối hướng cuối trước displacement tạo structural break.
 - `SCOB`: order block được biểu diễn bởi một nến đơn.
@@ -148,9 +148,11 @@ Không triển khai detector cho các mục trên trước khi chốt:
 3. Xác định dealing range và vị trí giá trong range; premium/discount chỉ có ý nghĩa khi hai đầu range hợp lệ.
 4. Ghi draw-on-liquidity chính và alternate draw.
 5. Đợi giá đi vào POI; không mở rộng zone sau khi thấy phản ứng.
-6. Trên LTF, quan sát sweep/IDM, displacement và structural shift.
-7. Định nghĩa entry scenario, confirmation, invalidation và target trước khi ghi bias cuối.
-8. Gắn `no setup` khi thiếu confirmation; không ép mọi chart thành mô hình SMC.
+6. Chọn model: `SMC_RR_01` yêu cầu sweep; `SMC_TC_01` không bắt buộc sweep nhưng bắt buộc context trend và protected swing.
+7. Trên LTF, quan sát displacement và accepted break; BOS/CHoCH/MSS chỉ được gắn trong school adapter.
+8. Tách trigger liquidity khỏi target liquidity và thesis invalidation khỏi execution stop.
+9. Định nghĩa scenario, confirmation, invalidation và target candidates trước khi ghi bias cuối.
+10. Gắn `no setup` khi thiếu confirmation; không ép mọi chart thành mô hình SMC.
 
 ## 4. Wyckoff
 
@@ -365,7 +367,7 @@ Các mục sau đang `OPEN`:
 | TH-01 | Thuật toán valid pullback và swing degree |
 | TH-02 | IDM selection, sweep và reset rules |
 | TH-03 | BOS/CHoCH dùng wick hay close theo từng timeframe |
-| TH-04 | FBOS và Smart Money Trap confirmation window |
+| TH-04 | FBOS và `KHAN_TRAP` confirmation window; không dùng acronym trần `SMT` |
 | TH-05 | Order Flow/OB/SCOB/IFC geometry |
 | TH-06 | POI priority và nested-zone resolution |
 | TH-07 | FVG/IMB minimum size, lifecycle và invalidation |
@@ -385,7 +387,13 @@ Các mục sau đang `OPEN`:
 - [Impulse](https://www.elliottwave.com/waveopedia/impulse/), [Corrective Waves](https://www.elliottwave.com/waveopedia/corrective-waves/), [Diagonals](https://www.elliottwave.com/waveopedia/elliott-wave-pattern-diagonals/): hard rules và structural exceptions.
 - [Fibonacci Relationships](https://www.elliottwave.com/waveopedia/fibonacci-relationships/), [Alternation](https://www.elliottwave.com/waveopedia/alternation/), [Channeling](https://www.elliottwave.com/waveopedia/channeling/): guidelines dùng để rank count, không override hard rules.
 
-### Tier C — chỉ dùng để discovery Trading Hub
+### Tier A — SMC school curricula
+
+- [HenrySMC All-in-One](https://t.me/s/henrysmcallinone?before=12): thứ tự bài Order Block, Liquidity, Imbalance, CHoCH/OTE, Flip/3 Drive/refined OB, QML và MTF entry; dùng để xác nhận phạm vi, không tự suy threshold.
+- [ICT 2022 Mentorship Episode 3](https://www.youtube.com/watch?v=nQfHZ2DEJ8c) và [Episode 6](https://www.youtube.com/watch?v=Bkt8B3kLATQ): internal range liquidity, market structure shifts, market efficiency và FVG.
+- [Trading Hub 3.0 curriculum](https://tradinghub.thinkific.com/) và [Order Flow Identification](https://www.youtube.com/watch?v=MWnn_-ifBY4): xác nhận curriculum structure, liquidity và zone/entry modules; chưa đủ làm deterministic contract.
+
+### Tier C — chỉ dùng để discovery
 
 - Publicly indexed metadata for `Trading Hub 3.0 Member Handbook 2023` cho thấy glossary gồm IDM, BOS, CHoCH, FBOS, OB, Order Flow, FVG, IMB, IFC, POI, BSL và SSL. Các bản tìm thấy là user-uploaded/reposted, không được ingest hoặc coi là bản canonical.
 - Video diễn giải tiếng Việt như chuỗi `SMC phần ... Trading Hub` của Bank Traps là secondary interpretation, chỉ dùng để lập câu hỏi cho PO.
@@ -393,4 +401,4 @@ Các mục sau đang `OPEN`:
 
 ### Provenance conclusion
 
-Wyckoff và Elliott có nguồn đào tạo công khai đủ để tạo research draft. Trading Hub chưa có nguồn canonical do Product Owner cung cấp, vì vậy phần đó vẫn là `candidate specification`, không phải detector contract.
+Nguồn chính chủ công khai đã đủ để xác nhận phạm vi và sự khác nhau giữa HenrySMC, ICT và Trading Hub 3.0. Chúng chưa đủ để suy ra toàn bộ geometry, threshold và lifecycle deterministic. Vì vậy core `DD-SMC-R0.3` là implementation reference của DecisionDashboard; mọi school-specific detector vẫn là `candidate specification` cho tới khi có golden charts và PO/chuyên gia ký duyệt.

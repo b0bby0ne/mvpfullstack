@@ -1,6 +1,6 @@
 # SMC Schools: HenrySMC, ICT và Trading Hub 3.0 của Mr Khan
 
-Status: `RESEARCH_DRAFT v0.2`
+Status: `RESEARCH_DRAFT v0.3 — logic audited`
 
 Scope: ontology, workflow, điểm hội tụ và detector contract cho `XAU/USD`, `BTC/USD`
 
@@ -19,7 +19,7 @@ Mục đích: research và decision support; không phải khuyến nghị đầ
 3. chỉ quan tâm điểm vào ở một location/POI có lý do;
 4. đợi displacement thể hiện sự mất cân bằng;
 5. đợi break/shift cấu trúc có reference rõ ràng;
-6. quan sát lần hồi về FVG, imbalance, order block hoặc vùng nguồn;
+6. với retracement model, quan sát lần hồi về FVG, imbalance, order block hoặc vùng nguồn; continuation-at-market model phải có contract riêng;
 7. đặt invalidation ngoài cấu trúc làm phát sinh luận điểm;
 8. dùng liquidity đối diện làm candidate target.
 
@@ -30,6 +30,23 @@ Khác biệt cốt lõi nằm ở bằng chứng được ưu tiên:
 - **Trading Hub 3.0 của Mr Khan** thiên về mapping cơ giới hơn: impulse/correction, cấu trúc, IDM/inducement, BOS/CHoCH, “Order Flow” zone, OB/IFC/SCOB và các module CHoCH/Flip. Giáo trình chính thức cho thấy liquidity ngày và session là các lớp riêng trong workflow.[^7][^8]
 
 DecisionDashboard không nên tạo một nhãn `SMC signal` tổng hợp. Kiến trúc phù hợp là một lớp observation trung lập, ba school adapters độc lập và một confluence engine chỉ công bố bằng chứng nào đồng thuận hoặc mâu thuẫn. Không có detector nào được production hóa trước khi có threshold, golden chart positive/negative, quy tắc `confirmed_at` và invalidation do chuyên gia ký duyệt.
+
+### Kết quả logic audit
+
+| Mâu thuẫn/rủi ro | Kết luận | Cách giải quyết trong v0.3 |
+|---|---|---|
+| Gọi `three-school confluence` nhưng chỉ yêu cầu một adapter | Mâu thuẫn | Tách `core candidate`, `multi-school` và `three-school` theo số adapter thật sự xác nhận |
+| Retracement/mitigation bị coi là bắt buộc cho mọi SMC setup | Khái quát quá mức | Tách `reversal retracement` và `trend continuation`; mỗi model có transition riêng |
+| Liquidity vừa là nguyên nhân trigger vừa là target | Mơ hồ vai trò | Mỗi thesis phải gắn `trigger_liquidity_ids[]` và `target_liquidity_ids[]` riêng |
+| BOS, CHoCH và MSS có nguy cơ được coi đồng nghĩa | Sai ontology | Chỉ lưu `accepted_break` ở lớp chung; label nằm trong school adapter |
+| “Order Flow” có ba nghĩa | Va nghĩa nghiêm trọng | Tách `executed_order_flow`, `ict_order_flow_narrative` và `khan_order_flow_zone` |
+| `SMT` có thể là Khan Smart Money Trap hoặc ICT/community SMT divergence | Va acronym | Dùng `KHAN_TRAP` và `ICT_SMT_DIVERGENCE`; cấm field trần `SMT` |
+| Nhiều nhãn sinh từ cùng một nến được tính như nhiều phiếu | Double-count | Thêm `evidence_group_id`; một event gốc chỉ đóng góp một lần trong mỗi nhóm score |
+| Structural invalidation bị lẫn với stop placement | Sai tầng quyết định | Tách `thesis_invalidation` khỏi `execution_stop`; rulebook không tự đặt lệnh |
+| Score 0–10 dễ bị hiểu là xác suất | Pseudo-precision | Gọi là `research_rank`, hiển thị thành phần và version; không quy đổi sang win rate |
+| XAU spot chart và COMEX footprint có thể bị nối trực tiếp | Sai venue | Bắt buộc symbol/contract/basis metadata và trạng thái `cross_venue_support` |
+
+Đặc tả SMC đã chuẩn hóa sau audit nằm tại [SMC Method Specification](../product/SMC_METHOD_SPEC.md).
 
 ## 1. Phạm vi và độ tin cậy nguồn
 
@@ -285,7 +302,15 @@ Curriculum tách Order Flow, Order Block, IFC và SCOB thành bài riêng.[^7] V
 
 Mỗi zone cần relation tới `impulse_id`, `break_id` và `liquidity_event_id`. Nếu không có causal relation, nó chỉ là một candle range được tô lại.
 
-### 5.4 Entry modules
+### 5.4 Semantic firewall cho SMT
+
+Curriculum Trading Hub gọi `Smart Money Trap (SMT)` là một bài riêng.[^7] Trong hệ sinh thái ICT, acronym `SMT` thường xuất hiện với nghĩa divergence/Smart Money Technique. Hai nhãn không được map tự động dù viết tắt giống nhau:
+
+- `KHAN_TRAP`: pattern/liquidity trap theo contract Trading Hub đã ký;
+- `ICT_SMT_DIVERGENCE`: divergence giữa hai tài sản tương quan theo contract ICT đã ký;
+- `SMT`: field bị cấm vì không đủ nghĩa.
+
+### 5.5 Entry modules
 
 Course page tách ba module: putting together with CHoCH, Flip entry và SCOB.[^7] Đây là bằng chứng rằng Trading Hub không có một entry trigger duy nhất.
 
@@ -304,11 +329,11 @@ confirmed_at
 
 Không được gộp tất cả thành `entry=true`. Mỗi module cần confusion matrix và golden chart riêng.
 
-### 5.5 Daily và session liquidity
+### 5.6 Daily và session liquidity
 
 Daily Candle Liquidity, Session Liquidity và Session Liquidity Entry là ba phần riêng trong curriculum.[^7] Điều này tạo cầu nối rõ với ICT, nhưng chưa chứng minh hai trường phái dùng cùng session definition hoặc cùng rule sweep. Dashboard phải reuse primitive `session_level`, rồi để adapter đánh nhãn riêng.
 
-### 5.6 Điểm mạnh và rủi ro khi tự động hóa
+### 5.7 Điểm mạnh và rủi ro khi tự động hóa
 
 | Thuộc tính | Đánh giá |
 |---|---|
@@ -340,9 +365,9 @@ Daily Candle Liquidity, Session Liquidity và Session Liquidity Entry là ba ph�
 
 ## 7. Điểm hội tụ có thể đưa vào DecisionDashboard
 
-### 7.1 Convergence kernel
+### 7.1 Convergence kernel và cấp đồng thuận
 
-Một setup chỉ được coi là `three-school confluence candidate` khi có đủ các gate trung lập:
+Một `core SMC candidate` cần các gate trung lập:
 
 1. **Data gate**: venue, symbol, timeframe và freshness hợp lệ.
 2. **Context gate**: external structure và candidate draw/target đã xác định trước trigger.
@@ -350,14 +375,24 @@ Một setup chỉ được coi là `three-school confluence candidate` khi có �
 4. **Liquidity gate**: có level ID và event run/sweep xác nhận được.
 5. **Intent gate**: có displacement với metrics, không chỉ subjective large candle.
 6. **Structure gate**: break/shift có structural reference và `confirmed_at`.
-7. **Execution gate**: retracement/mitigation vào vùng được phép theo ít nhất một school adapter.
+7. **Model gate**: thỏa transition của model cụ thể; retracement/mitigation chỉ bắt buộc với retracement model.
 8. **Risk gate**: invalidation và candidate target tồn tại trước khi setup được publish.
 
-Không bắt buộc ba trường phái phải gọi cùng một tên. Ví dụ cùng một sequence có thể được Henry adapter gọi là QML confirmed entry, ICT adapter gọi là raid–MSS–FVG, và Khan adapter gọi là CHoCH module. Confluence là các event IDs chung bên dưới, không phải trùng label.
+Sau khi có core candidate, cấp đồng thuận được xác định bằng số adapter độc lập thật sự pass:
+
+| Cấp | Điều kiện |
+|---|---|
+| `CORE_ONLY` | Common kernel pass, chưa adapter nào evaluable |
+| `NO_SCHOOL_AGREEMENT` | Có adapter evaluable nhưng không adapter nào pass |
+| `SINGLE_SCHOOL` | Đúng một adapter pass |
+| `MULTI_SCHOOL` | Hai adapter pass trên cùng shared event IDs |
+| `THREE_SCHOOL` | Cả Henry, ICT và Khan adapters pass; không có hard conflict |
+
+Không bắt buộc ba trường phái phải gọi cùng một tên. Ví dụ cùng một sequence có thể được Henry adapter gọi là QML confirmed entry, ICT adapter gọi là raid–MSS–FVG, và Khan adapter gọi là CHoCH module. Confluence là các event IDs chung bên dưới, không phải trùng label. Nếu một adapter chưa có contract ký duyệt, nó trả `NOT_EVALUABLE`, không được tính là đồng thuận hay phản đối.
 
 ### 7.2 Mô hình scoring đề xuất
 
-Score chỉ giúp xếp hạng nghiên cứu, không phải xác suất thắng:
+`research_rank` chỉ giúp xếp hạng nghiên cứu, không phải xác suất thắng. Bảng điểm dưới đây là calibration hypothesis `RANK-0.1`, không phải một claim của Henry, ICT hoặc Khan:
 
 | Nhóm | Điểm tối đa | Nguyên tắc |
 |---|---:|---|
@@ -367,13 +402,14 @@ Score chỉ giúp xếp hạng nghiên cứu, không phải xác suất thắng:
 | POI/inefficiency | 1 | Fresh zone và causal relation |
 | Time/session | 1 | ICT/Khan window hợp lệ, timezone-aware |
 | Independent flow/volume | 1 | CME/venue data thật, không phải OHLC-derived proxy |
-| School agreement | 1 | Ít nhất hai adapters đồng thuận và không có hard conflict |
+| School agreement | 1 | `MULTI_SCHOOL` hoặc `THREE_SCHOOL`, không có hard conflict |
 
 Cap rules:
 
 - tối đa `5/10` nếu không có invalidation;
 - tối đa `6/10` nếu liquidity level được tạo sau khi sweep xảy ra;
 - tối đa `7/10` nếu toàn bộ điểm đến từ cùng một displacement candle;
+- các feature có cùng `evidence_group_id` chỉ được tính một lần trong nhóm điểm tương ứng;
 - không publish nếu data stale, session/timezone sai hoặc `confirmed_at` có look-ahead;
 - hiển thị score components, không đổi thành phần trăm xác suất.
 

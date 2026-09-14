@@ -122,7 +122,7 @@ React Trading Dashboard
 | ID | Acceptance criteria có thể kiểm tra | Evidence dự kiến |
 |---|---|---|
 | DISC-001 | Chỉ định market, symbol convention, bar interval, timezone, data latency và lý do chọn; PO phê duyệt | `docs/product/MVP_MARKET_DECISION.md` |
-| RULE-001 | Mỗi thuật ngữ có input, điều kiện xác nhận, invalidation, `confirmed_at` và edge cases; Trading Hub do PO xác nhận | `docs/product/TECHNICAL_RULEBOOK.md`, `docs/research/SMC_SCHOOLS_CONVERGENCE.md` |
+| RULE-001 | Mỗi thuật ngữ có input, điều kiện xác nhận, invalidation, `confirmed_at` và edge cases; Trading Hub do PO xác nhận | `docs/product/TECHNICAL_RULEBOOK.md`, `docs/product/SMC_METHOD_SPEC.md`, `docs/research/SMC_SCHOOLS_CONVERGENCE.md` |
 | RULE-002 | Có ít nhất 20 chart gồm positive/negative/ambiguous labels và reviewer agreement | `tests/fixtures/golden_charts/manifest.*` |
 | ARCH-001 | Mỗi thành phần Vibe-Trading có quyết định Keep/Adapt/Drop/Create, license, dependency và target mapping | `docs/architecture/VIBE_TRADING_REUSE.md` |
 | UX-001 | Prototype bao phủ năm màn hình, empty/error/loading states và luồng tạo thesis | `docs/product/UX_FLOW.md` |

@@ -18,6 +18,7 @@ MVP là hệ thống `research + decision support + paper validation`. Live exec
 - [SMC Schools: HenrySMC, ICT và Trading Hub 3.0](./docs/research/SMC_SCHOOLS_CONVERGENCE.md)
 - [UX Flow](./docs/product/UX_FLOW.md)
 - [Technical Analysis Rulebook](./docs/product/TECHNICAL_RULEBOOK.md)
+- [SMC Method Specification](./docs/product/SMC_METHOD_SPEC.md)
 - [Daily Macro Data Operations](./docs/operations/DAILY_MACRO_DATA.md)
 - [Futures and Options Liquidity Data](./docs/operations/LIQUIDITY_DATA.md)
 - [Source Workspace](./src/README.md)
