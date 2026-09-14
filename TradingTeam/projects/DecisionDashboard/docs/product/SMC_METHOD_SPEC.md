@@ -1,12 +1,26 @@
 # SMC Method Specification
 
-Status: `REVIEW_CANDIDATE v0.3`
+Status: `APPROVED_RESEARCH_BASELINE v0.3`
 
 Scope: phương pháp SMC chuẩn hóa cho research, annotation và detector của DecisionDashboard
 
 Markets: `XAU/USD`, `BTC/USD`
 
 Phương pháp này không phải hệ thống đặt lệnh và không khẳng định quan sát được vị thế của tổ chức. Nó chuẩn hóa những phần có thể đo từ market data, sau đó cho phép HenrySMC, ICT và Trading Hub 3.0 diễn giải bằng adapter riêng. Nguồn và phân tích khác biệt giữa ba trường phái được ghi trong [SMC Schools Convergence](../research/SMC_SCHOOLS_CONVERGENCE.md).
+
+Product Owner đã xác nhận toàn bộ decision set `D1–D16` ngày `2026-09-14`. Nguồn định danh canonical được chốt là [TRADiNG hub của Mr Khan](https://www.youtube.com/@TRADiNGhub) và [playlist SMC của HenrySMC](https://www.youtube.com/playlist?list=PLv0VULT3OVVo4QoxBFhdWU0Gn996QReev). Approval này khóa baseline nghiên cứu; production vẫn phụ thuộc golden charts, calibration và walk-forward validation.
+
+## Approval record D1–D16
+
+| Decisions | Baseline đã duyệt |
+|---|---|
+| D1–D2 | `4H→1H→15m`, `1D→4H→1H`; triển khai reversal trước continuation |
+| D3–D6 | Close + displacement; sweep reaccept 2 bars; OB full-wick/refinement; FVG wick-to-wick |
+| D7–D9 | Liquidity hierarchy; bốn regimes; XAU event holds ±15/±30 phút |
+| D10–D11 | XAU OANDA + CME GC; BTC Coinbase + Deribit, luôn giữ venue boundary |
+| D12–D13 | School agreement không thay core; adapter order Khan → ICT → Henry |
+| D14–D15 | 40 core charts, 30/adapter, hai reviewers, ≥80%, zero look-ahead, walk-forward |
+| D16 | Research/paper validation only; không broker execution path |
 
 ## 1. Mục tiêu thiết kế
 
@@ -463,8 +477,8 @@ Cho tới khi ký duyệt, core output dùng `RESEARCH_ONLY`; school adapters ch
 [^2]: CME Group, [“Market by Order Market Data”](https://www.cmegroup.com/notices/electronic-trading/2016/12/20161212.html), individual queue/order size và tính ẩn danh.
 [^3]: HenrySMC, [“Liquidity Là Gì? Sự Liên Quan Giữa Thanh Khoản Và Order Block”](https://www.youtube.com/watch?v=-FQPD4K9WYs), YouTube, 2021.
 [^4]: HenrySMC, [“ChOCh và BOS là gì? ... Fibo OTE và Order Block”](https://www.youtube.com/watch?v=8voEa8l45ro), YouTube, 2021.
-[^5]: HenrySMC, [curriculum HenrySMC All-in-One](https://t.me/s/henrysmcallinone?before=12), Telegram; danh mục Order Block, Liquidity, Imbalance, CHoCH/OTE, Flip/3 Drive, QML và MTF entry.
+[^5]: HenrySMC, [playlist SMC canonical](https://www.youtube.com/playlist?list=PLv0VULT3OVVo4QoxBFhdWU0Gn996QReev), YouTube; nguồn định danh do Product Owner xác nhận.
 [^6]: The Inner Circle Trader, [“2022 ICT Mentorship Episode 3”](https://www.youtube.com/watch?v=nQfHZ2DEJ8c), internal range liquidity và market structure shifts.
 [^7]: The Inner Circle Trader, [“2022 ICT Mentorship Episode 6”](https://www.youtube.com/watch?v=Bkt8B3kLATQ), market efficiency, institutional order flow, FVG và market structure shifts.
 [^8]: Trading Hub, [“TRADING HUB 3.0 — Course curriculum”](https://tradinghub.thinkific.com/), 20 bài từ structure mapping tới CHoCH, Flip và SCOB.
-[^9]: TRADiNG hub, [“ORDER FLOW Identification | TRADiNG HUB 3.0”](https://www.youtube.com/watch?v=MWnn_-ifBY4), YouTube, 2025.
+[^9]: TRADiNG hub, [kênh YouTube canonical](https://www.youtube.com/@TRADiNGhub) và [“ORDER FLOW Identification | TRADiNG HUB 3.0”](https://www.youtube.com/watch?v=MWnn_-ifBY4), nguồn định danh do Product Owner xác nhận.

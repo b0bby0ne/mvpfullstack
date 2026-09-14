@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { GoldMacroDashboard } from "./components/GoldMacroDashboard";
 import { LiquidityDashboard } from "./components/LiquidityDashboard";
+import { SmcMethodGuide } from "./components/SmcMethodGuide";
 import { TradingViewChart } from "./components/TradingViewChart";
 import {
   getMarket,
@@ -91,6 +92,7 @@ function MarketWorkspace({ marketId }: { marketId: MarketId }) {
         <aside className="analysis-panel" id="analysis-note">
           <div className="panel-heading"><div><p className="eyebrow">Working note</p><h3>Phân tích kỹ thuật</h3></div><span className="draft-badge">Local draft</span></div>
           <div className="guide-card"><span className="guide-number">01</span><div><strong>Vẽ trên biểu đồ</strong><p>Trendline, Fibonacci, vùng giá và ghi chú nằm trong toolbar TradingView.</p></div></div>
+          <SmcMethodGuide marketId={marketId} />
           <label className="note-field"><span>Ghi chú cho {market.shortName}/USD</span><textarea value={note} onChange={(event) => { setNote(event.target.value); setSaved(false); }} placeholder="Bias, vùng quan sát, điều kiện xác nhận và invalidation…" /></label>
           <button className="save-button" onClick={saveNote} type="button">{saved ? "Đã lưu trên thiết bị" : "Lưu ghi chú"}</button>
           <div className="data-note"><span>i</span><p>Giá hiển thị do TradingView cung cấp. Feed này chưa phải nguồn dữ liệu xác nhận cho detector.</p></div>

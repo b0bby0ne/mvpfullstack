@@ -1,0 +1,27 @@
+{
+  "methodVersion": "DD-SMC-R0.3",
+  "status": "collecting",
+  "approval": {
+    "decisionSet": "D1-D16",
+    "confirmedAt": "2026-09-14"
+  },
+  "targets": {
+    "core": 40,
+    "perAdapter": 30,
+    "reviewers": 2,
+    "reviewerAgreementMinimum": 0.8,
+    "zeroLookAheadRequired": true,
+    "walkForwardRequired": true
+  },
+  "requiredClasses": [
+    "reversal-positive",
+    "reversal-negative",
+    "continuation-positive",
+    "continuation-negative",
+    "ambiguous",
+    "no-setup",
+    "event-shock",
+    "cross-venue-divergence"
+  ],
+  "cases": []
+}

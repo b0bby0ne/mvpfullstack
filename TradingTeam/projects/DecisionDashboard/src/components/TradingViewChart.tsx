@@ -55,18 +55,45 @@ export function TradingViewChart({ market, timeframe }: TradingViewChartProps) {
       support_host: "https://www.tradingview.com",
     });
 
-    script.addEventListener("load", () => setLoading(false));
+    let settled = false;
+    let fallbackTimer = 0;
+
+    const markReady = () => {
+      if (settled || !container.querySelector("iframe")) return;
+      settled = true;
+      window.clearTimeout(fallbackTimer);
+      observer.disconnect();
+      setLoading(false);
+      setFailed(false);
+    };
+
+    const observer = new MutationObserver(markReady);
+    observer.observe(container, { childList: true, subtree: true });
+
+    script.addEventListener("load", () => {
+      markReady();
+    });
     script.addEventListener("error", () => {
+      settled = true;
+      window.clearTimeout(fallbackTimer);
+      observer.disconnect();
       setLoading(false);
       setFailed(true);
     });
 
     container.append(widgetMount, script);
 
-    const fallbackTimer = window.setTimeout(() => setLoading(false), 4500);
+    fallbackTimer = window.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      observer.disconnect();
+      setLoading(false);
+      setFailed(true);
+    }, 4500);
 
     return () => {
       window.clearTimeout(fallbackTimer);
+      observer.disconnect();
       container.replaceChildren();
     };
   }, [market.tradingViewSymbol, timeframe]);

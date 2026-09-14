@@ -1,0 +1,33 @@
+{
+  "caseId": "replace-me",
+  "methodVersion": "DD-SMC-R0.3",
+  "market": "XAU_USD",
+  "chartSymbol": "OANDA:XAUUSD",
+  "evidenceVenues": ["CME:GC"],
+  "profile": "INTRADAY_4H_1H_15M",
+  "model": "SMC_RR_01",
+  "direction": "bullish",
+  "expectedClass": "ambiguous",
+  "state": "candidate",
+  "contextStructureId": "replace-me",
+  "poiZoneIds": [],
+  "triggerLiquidityIds": [],
+  "targetLiquidityIds": [],
+  "evidenceEventIds": [],
+  "evidenceGroupIds": [],
+  "candidateAt": "2026-09-14T00:00:00.000Z",
+  "confirmedAt": null,
+  "thesisInvalidation": {
+    "type": "price",
+    "value": null
+  },
+  "schoolResults": {
+    "henry": "not_evaluable",
+    "ict": "not_evaluable",
+    "khan": "not_evaluable"
+  },
+  "agreement": "CORE_ONLY",
+  "dataQuality": "valid",
+  "reviewers": [],
+  "notes": ""
+}

@@ -1,6 +1,6 @@
 # SMC Schools: HenrySMC, ICT và Trading Hub 3.0 của Mr Khan
 
-Status: `RESEARCH_DRAFT v0.3 — logic audited`
+Status: `RESEARCH_BASELINE v0.4 — canonical channels confirmed`
 
 Scope: ontology, workflow, điểm hội tụ và detector contract cho `XAU/USD`, `BTC/USD`
 
@@ -54,9 +54,9 @@ DecisionDashboard không nên tạo một nhãn `SMC signal` tổng hợp. Kiế
 
 Trong tài liệu này:
 
-- `Henry` nghĩa là kênh đào tạo tiếng Việt **HenrySMC**. Danh mục bài công khai của kênh bao gồm Order Block, Liquidity, Imbalance, CHoCH, OTE, Flip, 3 Drive, refined OB, Quasimodo, multi-timeframe và confirmation entry.[^1][^2][^3]
+- `Henry` nghĩa là **HenrySMC** theo [playlist SMC canonical](https://www.youtube.com/playlist?list=PLv0VULT3OVVo4QoxBFhdWU0Gn996QReev) do Product Owner xác nhận. Danh mục bài công khai bao gồm Order Block, Liquidity, Imbalance, CHoCH, OTE, Flip, 3 Drive, refined OB, Quasimodo, multi-timeframe và confirmation entry.[^1][^2][^3]
 - `ICT` nghĩa là **The Inner Circle Trader**, Michael J. Huddleston. Nguồn ưu tiên là các video trên kênh chính thức, đặc biệt chuỗi 2022 Mentorship về internal range liquidity, market structure shift, institutional order flow và FVG.[^4][^5]
-- `Khan` nghĩa là **Mr Khan / TRADiNG hub / Trading Hub 3.0**. Nguồn ưu tiên là curriculum chính thức, kênh YouTube đã xác minh và kênh Telegram của Trading Hub.[^7][^8][^9]
+- `Khan` nghĩa là **Mr Khan / TRADiNG hub / Trading Hub 3.0** theo [kênh `@TRADiNGhub` canonical](https://www.youtube.com/@TRADiNGhub) do Product Owner xác nhận. Nguồn curriculum và video riêng được dùng để đối chiếu nội dung.[^7][^8][^9]
 
 Nếu “SMC Henry” hoặc “SMC Khan” trong team chỉ một người/khóa học khác, phần tương ứng phải được đổi provenance trước khi phê duyệt detector.
 
@@ -620,7 +620,7 @@ Giá trị của điểm hội tụ không nằm ở việc ba người dùng c�
 [^6]: The Inner Circle Trader, [“2022 ICT Mentorship Episode 31”](https://www.youtube.com/watch?v=OYNpIeu9czw), YouTube; ví dụ sell-side liquidity tại các đáy cũ.
 [^7]: Trading Hub, [“TRADING HUB 3.0 — Course curriculum”](https://tradinghub.thinkific.com/), Thinkific; 20 bài từ structure mapping tới CHoCH, Flip và SCOB.
 [^8]: TRADiNG hub, [“ORDER FLOW Identification | TRADiNG HUB 3.0”](https://www.youtube.com/watch?v=MWnn_-ifBY4), YouTube, 2025.
-[^9]: TRADiNG hub / Mr Khan, [kênh thông báo chính thức](https://t.me/s/tradinghubreal), Telegram; dùng để đối chiếu liên kết course và video chính chủ.
+[^9]: TRADiNG hub / Mr Khan, [kênh YouTube canonical `@TRADiNGhub`](https://www.youtube.com/@TRADiNGhub), nguồn định danh do Product Owner xác nhận.
 [^10]: HenrySMC, [“Weak Buy Momentum, Weak Sell Momentum. Strong Confluence Zones for SMC Entries”](https://www.youtube.com/watch?v=kZb1-hcM9pc), YouTube, 2022; mô tả curriculum và các phương pháp kết hợp.
 [^11]: CME Group, [“Market Data Trade Summary Message”](https://www.cmegroup.com/tools-information/webhelp/acp-brokertec-chicago-mdp-price-precision/Content/market-data-trade-summary.html); trường price và size của trade message.
 [^12]: CME Group, [“Market by Order Market Data”](https://www.cmegroup.com/notices/electronic-trading/2016/12/20161212.html); MBO, queue position, individual order size và tính ẩn danh.

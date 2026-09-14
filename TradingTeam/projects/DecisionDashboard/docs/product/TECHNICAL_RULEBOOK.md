@@ -389,9 +389,9 @@ Các mục sau đang `OPEN`:
 
 ### Tier A — SMC school curricula
 
-- [HenrySMC All-in-One](https://t.me/s/henrysmcallinone?before=12): thứ tự bài Order Block, Liquidity, Imbalance, CHoCH/OTE, Flip/3 Drive/refined OB, QML và MTF entry; dùng để xác nhận phạm vi, không tự suy threshold.
+- [Playlist SMC canonical của HenrySMC](https://www.youtube.com/playlist?list=PLv0VULT3OVVo4QoxBFhdWU0Gn996QReev): nguồn định danh do PO xác nhận; dùng để xác nhận phạm vi, không tự suy threshold.
 - [ICT 2022 Mentorship Episode 3](https://www.youtube.com/watch?v=nQfHZ2DEJ8c) và [Episode 6](https://www.youtube.com/watch?v=Bkt8B3kLATQ): internal range liquidity, market structure shifts, market efficiency và FVG.
-- [Trading Hub 3.0 curriculum](https://tradinghub.thinkific.com/) và [Order Flow Identification](https://www.youtube.com/watch?v=MWnn_-ifBY4): xác nhận curriculum structure, liquidity và zone/entry modules; chưa đủ làm deterministic contract.
+- [Kênh canonical `@TRADiNGhub`](https://www.youtube.com/@TRADiNGhub), [Trading Hub 3.0 curriculum](https://tradinghub.thinkific.com/) và [Order Flow Identification](https://www.youtube.com/watch?v=MWnn_-ifBY4): PO xác nhận identity; curriculum/video xác nhận structure, liquidity và zone/entry modules nhưng chưa đủ làm deterministic contract.
 
 ### Tier C — chỉ dùng để discovery
 

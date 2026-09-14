@@ -7,6 +7,8 @@ Frontend MVP dùng React, TypeScript và Vite. Biểu đồ giá được nhúng
 
 Widget là reference chart feed và chưa thay thế data contract/ingestion dành cho detector. Mapping nằm tại `src/domain/markets.ts`; integration được cô lập trong `src/components/TradingViewChart.tsx` để có thể thay bằng Advanced Charts SDK khi project được TradingView cấp quyền.
 
+Baseline SMC `DD-SMC-R0.3` và decision set `D1-D16` nằm tại `src/domain/smcMethod.ts`. `SmcMethodGuide` hiển thị hai model đã duyệt cùng ranh giới chart/flow venue; đây là hướng dẫn research, chưa phải detector signal. TradingView chỉ chuyển sang trạng thái connected khi iframe widget được mount; timeout hoặc script error phải hiển thị failure guidance.
+
 ## Local development
 
 ```bash

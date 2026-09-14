@@ -14,3 +14,5 @@ Dữ liệu tài khoản thật, credential và journal nhạy cảm không đư
 `server/goldMacroOps.test.mjs` kiểm tra ngày nghiệp vụ UTC+7, lịch 06:05 và allowlist provenance của registry nguồn XAU hằng ngày.
 
 `server/liquidityOps.test.mjs` kiểm tra xếp hạng BTC depth wall, taker delta, option OI aggregation và parser COMEX không trộn Micro/Weekly products.
+
+`src/domain/smcMethod.test.ts` khóa decision set `D1-D16`, model transitions, school agreement/conflict và venue boundary. `tests/fixtures/golden_charts/` chứa manifest cùng annotation template cho quá trình gắn nhãn SMC.

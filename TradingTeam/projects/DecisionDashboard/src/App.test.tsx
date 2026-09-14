@@ -57,6 +57,20 @@ describe("market to section flow", () => {
 
     expect(screen.getByRole("region", { name: "Chart BTC/USD" })).toBeTruthy();
     expect(screen.getByText("Bitcoin / U.S. Dollar")).toBeTruthy();
+    expect(screen.getByText("DD-SMC-R0.3")).toBeTruthy();
+    expect(screen.getAllByText("COINBASE:BTCUSD").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("DERIBIT:BTC")).toBeTruthy();
+  });
+
+  it("explains the approved SMC models and XAU venue boundary", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: /Chart/ }));
+
+    expect(screen.getByText("Sweep reversal")).toBeTruthy();
+    expect(screen.getByText("Trend continuation")).toBeTruthy();
+    expect(screen.getAllByText("OANDA:XAUUSD").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("CME:GC")).toBeTruthy();
+    expect(screen.getByText(/Không có setup nếu thiếu location/)).toBeTruthy();
   });
 
   it("shows an explicit source failure instead of claiming freshness", async () => {
