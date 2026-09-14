@@ -34,6 +34,8 @@ Mở `http://127.0.0.1:4173` để xem biểu đồ TradingView cho XAU/USD và 
 
 Section `Liquid` thu thập Deribit BTC futures depth, taker trades và option OI theo strike. XAU dùng CME Daily Bulletin: futures settlement/volume/OI và options block activity được hiển thị theo trade date; order-book depth chỉ bật khi có nguồn COMEX được cấp quyền.
 
+Kết nối CME có sẵn OAuth, DataMine và Market Data WebSocket. Sao chép `.env.example` thành `.env.local`, điền API ID/password trực tiếp trên máy rồi chạy `npm run cme:check`. Khi mở `XAU → Liquid`, app tự gọi connector và hiển thị trạng thái `TOB / TRD / STAT`; `.env.local` đã bị loại khỏi Git.
+
 Webapp tự gọi daily ensure khi mở. Cài lịch kiểm tra nguồn XAU lúc 06:05 hằng ngày trên Windows bằng `npm run data:install-cron`; chi tiết nguồn, freshness và cách xử lý lỗi nằm trong tài liệu Daily Macro Data Operations.
 
 Sau mỗi bước triển khai, chạy `npm run verify` rồi `npm run view`. Lệnh `view` tự mở webapp để thực hiện gate View & Debug trước khi commit.

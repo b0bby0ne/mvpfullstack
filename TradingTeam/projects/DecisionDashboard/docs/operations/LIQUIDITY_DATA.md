@@ -43,11 +43,43 @@ CME order-by-order depth và trade flow thời gian thực cần market-data fee
 
 CME DataMine endpoint `https://datamine.new.cmegroup.com/api/list_entitlements_files` có thể truy cập từ máy hiện tại nhưng yêu cầu OAuth/Basic Auth và entitlement cho dataset `EOD_XCEC_GC_FUT_0`. Credential không được lưu trong repository. Để thay delayed public fallback bằng API tự động, cần CME API ID/password hoặc bearer-token workflow đã được cấp quyền.
 
+## Kết nối CME API
+
+Connector hỗ trợ hai đường dữ liệu chính thức:
+
+- [CME Market Data over WebSocket](https://www.cmegroup.com/market-data/real-time-futures-and-options-data-api.html): realtime top-of-book (`TOB`), trade summary có aggressor side (`TRD`) và daily statistics (`STAT`). Endpoint mặc định là certification/UAT; production chỉ được bật sau khi hoàn tất CME AutoCert+ và entitlement.
+- [CME DataMine API](https://www.cmegroup.com/datamine/datamine-api.html): REST end-of-day dự phòng cho Gold futures dataset `EOD_XCEC_GC_FUT_0`.
+
+Thiết lập local:
+
+```powershell
+Copy-Item .env.example .env.local
+# Mở .env.local trên máy và điền CME_API_ID/CME_API_SECRET.
+npm run cme:check
+npm start
+```
+
+Không gửi API secret qua chat và không commit `.env.local`. Cấu hình mặc định:
+
+```text
+CME_ENV=certification
+CME_PRODUCT_CODE=GC
+CME_PRODUCT_TYPE=FUT
+CME_MESSAGE_TYPES=TOB,TRD,STAT
+CME_DATAMINE_DATASET=EOD_XCEC_GC_FUT_0
+```
+
+`POST /api/cme/status` khởi tạo OAuth và WebSocket khi section `XAU → Liquid` mở. `GET /api/cme/status` chỉ trả trạng thái đã làm sạch: môi trường, subscription, heartbeat, message counters và tổng buy/sell contracts; API ID/password hoặc bearer token không bao giờ được trả về client. Connector tự ngắt và reconnect nếu không nhận market data/heartbeat trong 35 giây.
+
+WebSocket này là book 1-deep, phù hợp top-of-book và taker flow nhưng không phải full order-by-order depth. Việc suy ra resting liquidity nhiều mức vẫn cần gói dữ liệu depth riêng có license; dashboard không gắn nhãn TOB là full-depth.
+
 ## API và persistence
 
 ```text
 POST /api/liquidity/ensure?market=BTC_USD
 POST /api/liquidity/ensure?market=XAU_USD
+POST /api/cme/status
+GET  /api/cme/status
 ```
 
 Snapshot runtime:

@@ -1,5 +1,6 @@
 import type { MarketId } from "../domain/markets";
 import { getMarket } from "../domain/markets";
+import { useCmeStatus } from "../hooks/useCmeStatus";
 import { useLiquidity, type OptionLevel } from "../hooks/useLiquidity";
 
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 });
@@ -21,6 +22,7 @@ function optionOi(level: OptionLevel, side: "call" | "put") {
 export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
   const market = getMarket(marketId);
   const state = useLiquidity(marketId);
+  const cme = useCmeStatus(marketId === "XAU_USD");
 
   if (state.phase === "loading") {
     return <section className="liquidity-page liquidity-state" role="status"><span className="liquidity-loader" /><p className="eyebrow">Liquidity engine</p><h2>Đang xây bản đồ thanh khoản {market.shortName}/USD</h2><p>{state.message}</p></section>;
@@ -47,6 +49,8 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
       : "Không có trong public snapshot";
   const optionBlockTrades = data?.options.blockTrades ?? [];
   const optionPanelTitle = data?.options.levels.length ? "Open-interest walls" : optionBlockTrades.length ? "Block volume prints" : "Open-interest walls";
+  const cmeLive = cme?.phase === "streaming" || cme?.phase === "subscribed";
+  const cmePhaseLabel = !cme ? "Checking connector" : cme.phase === "not_configured" ? "Awaiting local credentials" : cme.phase.replaceAll("_", " ");
 
   return (
     <section className="liquidity-page" aria-label={`Liquidity ${market.shortName}/USD`}>
@@ -115,6 +119,25 @@ export function LiquidityDashboard({ marketId }: { marketId: MarketId }) {
             </div>
           )}
         </>
+      )}
+
+      {marketId === "XAU_USD" && (
+        <div className={`cme-connection cme-connection--${cmeLive ? "live" : "idle"}`}>
+          <span className="cme-connection-dot" />
+          <div>
+            <p className="eyebrow">CME Market Data API · {cme?.environment ?? "certification"}</p>
+            <strong>{cmePhaseLabel}</strong>
+            <small>{cme?.configured
+              ? `${cme.productCode} ${cme.productType} · ${cme.messageTypes.join(" / ")} · heartbeat ${cme.lastHeartbeatAt ? "received" : "waiting"}`
+              : "Tạo .env.local từ .env.example để OAuth và WebSocket tự kết nối khi mở section Liquid."}</small>
+          </div>
+          <div className="cme-message-counts">
+            <span>TOB <b>{cme?.marketData.messages.TOB ?? 0}</b></span>
+            <span>TRD <b>{cme?.marketData.messages.TRD ?? 0}</b></span>
+            <span>STAT <b>{cme?.marketData.messages.STAT ?? 0}</b></span>
+          </div>
+          {cme?.lastError && <em>{cme.lastError}</em>}
+        </div>
       )}
 
       <div className="liquidity-method"><span>i</span><p><strong>Phương pháp:</strong> {snapshot.disclaimer} {data?.sourceMode === "verified-public-fallback" ? `Đang dùng CME bulletin đã xác minh cho trade date ${data.cmeTradeDate}; option panel là block volume, không phải OI wall.` : "Wall được xếp hạng theo quy mô quan sát tại thời điểm snapshot và có thể bị rút trước khi giá chạm."}</p></div>

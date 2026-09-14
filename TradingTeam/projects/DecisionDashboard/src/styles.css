@@ -1039,6 +1039,77 @@ h1 {
   background: rgba(251, 191, 36, 0.035);
 }
 
+.cme-connection {
+  position: relative;
+  align-items: center;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid rgba(126, 140, 153, 0.18);
+  border-radius: 7px;
+  background: rgba(13, 16, 19, 0.72);
+}
+
+.cme-connection-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.08);
+}
+
+.cme-connection--live .cme-connection-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(211, 255, 92, 0.08), 0 0 14px rgba(211, 255, 92, 0.25);
+}
+
+.cme-connection > div:nth-child(2) {
+  display: grid;
+  gap: 4px;
+}
+
+.cme-connection p {
+  margin: 0;
+}
+
+.cme-connection strong {
+  font-size: 10px;
+  text-transform: capitalize;
+}
+
+.cme-connection small,
+.cme-connection em {
+  color: var(--muted);
+  font: 400 8px/1.45 "DM Mono", monospace;
+}
+
+.cme-connection em {
+  grid-column: 2 / -1;
+  max-width: 100%;
+  overflow: hidden;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cme-message-counts {
+  display: flex;
+  gap: 12px;
+}
+
+.cme-message-counts span {
+  color: var(--muted);
+  font: 400 7px/1 "DM Mono", monospace;
+}
+
+.cme-message-counts b {
+  margin-left: 3px;
+  color: #d9dee3;
+  font-weight: 500;
+}
+
 .liquidity-method > span {
   color: #fbbf24;
   font: 500 10px/1 "DM Mono", monospace;
