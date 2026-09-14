@@ -5,6 +5,8 @@ Scope: `XAU/USD`, `BTC/USD`
 Methods: `SMC / Trading Hub`, `Wyckoff`, `Elliott Wave`  
 Owner gate: Product Owner và Technical Analyst phải ký duyệt trước khi dùng làm detector tự động.
 
+Nghiên cứu chuyên sâu và bảng đối chiếu ba nhánh SMC nằm tại [SMC Schools: HenrySMC, ICT và Trading Hub 3.0](../research/SMC_SCHOOLS_CONVERGENCE.md). Tài liệu này giữ common rulebook; các định nghĩa riêng của từng trường phái phải đi qua school adapter có version.
+
 ## 1. Mục tiêu
 
 Tài liệu này chuẩn bị một ngôn ngữ chung cho chuyên gia phân tích kỹ thuật và đội xây DecisionDashboard. Nó tách bốn lớp không được trộn lẫn:
