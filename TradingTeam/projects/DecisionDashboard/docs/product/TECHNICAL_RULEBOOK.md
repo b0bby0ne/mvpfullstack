@@ -217,12 +217,15 @@ Không bắt buộc mọi accumulation có spring hoặc mọi distribution có 
 
 ## 5. Elliott Wave
 
+Kho tri thức học tập chuyên sâu nằm tại [Elliott Wave Knowledge Atlas](../research/ELLIOTT_WAVE_KNOWLEDGE_ATLAS.md). Phần dưới đây giữ baseline ngắn gọn dùng chung với rulebook.
+
 ### 5.1 Nền tảng
 
 - Price action có tính fractal: một wave ở degree lớn chứa các subwaves degree nhỏ.
 - `Motive` đi cùng hướng trend của degree lớn hơn; `corrective` đi ngược hướng đó.
 - Một complete cycle lý tưởng gồm motive five và corrective three, nhưng real-time count thường có nhiều alternate.
-- Degree phải được đặt tên hoặc định danh nhất quán; không đổi degree chỉ để cứu một count sai.
+- Degree là kích thước tương đối và quan hệ parent–child, không phải mapping cố định với timeframe. Degree phải được đặt tên hoặc định danh nhất quán; không đổi degree chỉ để cứu một count sai.
+- `Impulse` trong Elliott là pattern có hard rules; không alias với impulse/displacement trong SMC.
 
 ### 5.2 Hard rules của impulse
 
@@ -230,27 +233,31 @@ Một impulse tiêu chuẩn có cấu trúc `5-3-5-3-5` và phải thỏa:
 
 1. wave 2 không retrace quá điểm bắt đầu wave 1;
 2. wave 3 đi vượt điểm cuối wave 1 và không bao giờ là wave ngắn nhất trong 1, 3, 5;
-3. wave 4 không đi vào price territory của wave 1 đối với impulse tiêu chuẩn;
-4. subwaves 1, 3, 5 là motive; wave 3 luôn là impulse.
+3. wave 4 không retrace toàn bộ wave 3;
+4. wave 4 không đi vào price territory của wave 1 đối với impulse tiêu chuẩn;
+5. subwaves 1, 3, 5 là motive; wave 3 luôn là impulse.
 
-Rule 3 không được áp dụng máy móc cho diagonal. Với futures có thể xuất hiện extreme intraday/overlap hiếm; detector phải chọn policy nhất quán theo instrument và bar close/wick.
+No-overlap rule không áp dụng cho diagonal. Với futures có thể xuất hiện extreme intraday/overlap hiếm; knowledge note phải ghi caveat, instrument và wick/close policy nhất quán, không dùng ngoại lệ để cứu count.
 
 ### 5.3 Motive patterns
 
 - `Impulse`: 5-3-5-3-5; thường một trong waves 1, 3 hoặc 5 mở rộng.
-- `Leading diagonal`: có thể xuất hiện ở wave 1 hoặc A; boundary thường hội tụ/mở rộng và wave 4 overlap wave 1.
-- `Ending diagonal`: thường ở wave 5 hoặc C, overlap là đặc điểm cho phép và cảnh báo exhaustion; không tự động short/long nếu chưa có break xác nhận.
+- `Leading diagonal`: có thể xuất hiện ở wave 1 hoặc wave A của zigzag; boundary thường hội tụ/mở rộng và wave 4 overlap wave 1. Current reference chủ yếu dùng 3-3-3-3-3 nhưng có leading examples được label 5-3-5-3-5, nên phải ghi convention.
+- `Ending diagonal`: thường ở wave 5 hoặc terminal wave C, overlap là đặc điểm cho phép và cảnh báo exhaustion; không tự động short/long nếu chưa có break xác nhận.
+- `Truncated fifth`: wave 5 không vượt extreme wave 3 nhưng vẫn phải có internal five; target miss đơn lẻ không đủ.
 
 ### 5.4 Corrective patterns
 
 | Pattern | Subdivision | Ghi chú |
 |---|---|---|
-| Zigzag | `5-3-5` | Correction sắc; có thể double/triple |
+| Zigzag | `5-3-5` | Correction sắc; multiple zigzag dùng W-X-Y(-X-Z) |
 | Flat | `3-3-5` | Regular, expanded, running |
-| Triangle | `3-3-3-3-3` | Thường là continuation/penultimate structure |
-| Combination | `W-X-Y` hoặc `W-X-Y-X-Z` | Kéo dài correction về thời gian/độ phức tạp |
+| Triangle | `3-3-3-3-3` qua A–B–C–D–E | Thường ở wave 4, B hoặc cuối combination; không phải typical wave 2 |
+| Combination | `W-X-Y` hoặc `W-X-Y-X-Z` | Kéo dài correction chủ yếu về thời gian/độ phức tạp; không đồng nhất với multiple zigzag |
 
 Correction khó nhận diện trước khi hoàn tất. Không gắn một cấu trúc ba sóng thành impulse chỉ vì hướng giá phù hợp bias.
+
+Một complete correction không phải motive five đơn giản, nhưng actionary legs A/C vẫn có thể là five. Một initial five ngược trend lớn thường mới là wave A hoặc phần đầu correction, không chứng minh correction đã hoàn tất.
 
 ### 5.5 Guidelines, không phải hard rules
 
@@ -263,7 +270,7 @@ Correction khó nhận diện trước khi hoàn tất. Không gắn một cấu
 
 ### 5.6 Primary/alternate count policy
 
-Mọi Elliott output phải có:
+Mọi Elliott knowledge note phải có:
 
 ```text
 primary count
@@ -279,6 +286,8 @@ confirmed_at
 ```
 
 Ranking count dựa trên: không vi phạm hard rules, subdivision fit, degree consistency, alternation/channel/Fibonacci support và số giả định chưa xác nhận. Không chọn count chỉ vì target hấp dẫn hơn.
+
+Primary là hypothesis được rank cao nhất, không phải sự thật. Target là guideline zone và phải tách khỏi invalidation; relabel cần evidence mới cùng timestamp.
 
 ## 6. Cách hợp nhất ba phương pháp
 
