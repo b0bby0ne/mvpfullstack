@@ -1,0 +1,426 @@
+//@version=6
+indicator("DD · Trading Hub Structure Events [R0.2]", "DD TH Events R0.2", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+
+// Research profile. Trading Hub concepts define the event order; internal pivots,
+// Decision POI selection and important-FVG ranking remain explicit implementation
+// seams until reviewed bar-by-bar by a domain expert.
+
+string GROUP_ENGINE = "01 · Structure engine"
+string GROUP_ZONES = "02 · Zone rules"
+string GROUP_DISPLAY = "03 · Display"
+
+int internalBars = input.int(1, "Internal pivot bars (left/right)", minval = 1, maxval = 10, group = GROUP_ENGINE, tooltip = "Research seam used to surface a possible internal pullback; not every fractal is claimed to be canonical Trading Hub IDM.")
+string confirmationMode = input.string("Sweep / re-entry", "IDM confirmation", options = ["Sweep / re-entry", "Close / break"], group = GROUP_ENGINE, tooltip = "Sweep requires penetration and a close back across IDM. Break requires a confirmed close through IDM.")
+string bootstrapMode = input.string("Auto", "First leg", options = ["Auto", "Confirm high first", "Confirm low first"], group = GROUP_ENGINE)
+
+int zoneLookback = input.int(40, "Zone search bars", minval = 3, maxval = 200, group = GROUP_ZONES)
+int maxZones = input.int(24, "Zones retained", minval = 4, maxval = 80, group = GROUP_ZONES)
+string poiRange = input.string("Full candle", "POI range", options = ["Full candle", "Body"], group = GROUP_ZONES)
+string poiInvalidation = input.string("Close beyond", "POI invalidation", options = ["Close beyond", "Wick beyond"], group = GROUP_ZONES)
+
+bool showIdm = input.bool(true, "Show active and resolved IDM", group = GROUP_DISPLAY)
+bool showSweeps = input.bool(true, "Show liquidity sweep events", group = GROUP_DISPLAY)
+bool showImbalance = input.bool(true, "Show important imbalance", group = GROUP_DISPLAY)
+bool showDecisionPoi = input.bool(true, "Show Decision POI", group = GROUP_DISPLAY)
+bool showExtremePoi = input.bool(true, "Show effective Extreme POI", group = GROUP_DISPLAY)
+bool showConfirmation = input.bool(true, "Show structure confirmation bar", group = GROUP_DISPLAY)
+bool showCandidate = input.bool(false, "Show unconfirmed candidate", group = GROUP_DISPLAY)
+bool showStatus = input.bool(true, "Show engine status", group = GROUP_DISPLAY)
+
+color highColor = color.rgb(255, 101, 92)
+color lowColor = color.rgb(66, 211, 146)
+color idmColor = color.rgb(234, 190, 84)
+color sweepColor = color.rgb(240, 145, 72)
+color bullImbalanceColor = color.rgb(44, 156, 118)
+color bearImbalanceColor = color.rgb(180, 72, 90)
+color decisionColor = color.rgb(79, 132, 219)
+color extremeColor = color.rgb(164, 93, 224)
+color candidateColor = color.new(color.silver, 45)
+
+f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
+    box created = box.new(left = leftBar, top = zoneTop, right = bar_index, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 15), bgcolor = color.new(zoneColor, 82), text = kind + " · ACTIVE", text_color = zoneColor, text_size = size.tiny, text_halign = text.align_left)
+    array.push(boxes, created)
+    array.push(kinds, kind)
+    array.push(directions, direction)
+    array.push(states, 0)
+    array.push(colors, zoneColor)
+    if array.size(boxes) > limit
+        box.delete(array.shift(boxes))
+        array.shift(kinds)
+        array.shift(directions)
+        array.shift(states)
+        array.shift(colors)
+
+f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, string invalidationMode) =>
+    if array.size(boxes) > 0
+        for index = 0 to array.size(boxes) - 1
+            int state = array.get(states, index)
+            if state < 2
+                box zone = array.get(boxes, index)
+                string kind = array.get(kinds, index)
+                int direction = array.get(directions, index)
+                color zoneColor = array.get(colors, index)
+                float zoneTop = box.get_top(zone)
+                float zoneBottom = box.get_bottom(zone)
+                bool touched = direction == 1 ? low <= zoneTop : high >= zoneBottom
+                bool finished = kind == "IMP-FVG" ? (direction == 1 ? low <= zoneBottom : high >= zoneTop) : (direction == 1 ? (invalidationMode == "Close beyond" ? close < zoneBottom : low < zoneBottom) : (invalidationMode == "Close beyond" ? close > zoneTop : high > zoneTop))
+                if finished
+                    array.set(states, index, 2)
+                    box.set_extend(zone, extend.none)
+                    box.set_right(zone, bar_index)
+                    box.set_bgcolor(zone, color.new(zoneColor, 93))
+                    box.set_border_color(zone, color.new(zoneColor, 70))
+                    box.set_text(zone, kind + (kind == "IMP-FVG" ? " · FILLED" : " · INVALID"))
+                    box.set_text_color(zone, color.new(zoneColor, 45))
+                else if state == 0 and touched
+                    array.set(states, index, 1)
+                    box.set_bgcolor(zone, color.new(zoneColor, 87))
+                    box.set_text(zone, kind + " · TOUCHED")
+
+float internalHigh = ta.pivothigh(high, internalBars, internalBars)
+float internalLow = ta.pivotlow(low, internalBars, internalBars)
+
+var int phase = 0 // 1 = confirm a high, -1 = confirm a low, 0 = bootstrap
+var float latestInternalHigh = na
+var int latestInternalHighBar = na
+var float latestInternalHighOpen = na
+var float latestInternalHighLow = na
+var float latestInternalHighClose = na
+var float latestInternalLow = na
+var int latestInternalLowBar = na
+var float latestInternalLowOpen = na
+var float latestInternalLowHigh = na
+var float latestInternalLowClose = na
+
+var float candidateHigh = na
+var int candidateHighBar = na
+var float candidateHighOpen = na
+var float candidateHighLow = na
+var float candidateHighClose = na
+var bool candidateHighSweptReference = false
+var float candidateHighIdm = na
+var int candidateHighIdmBar = na
+var float candidateLow = na
+var int candidateLowBar = na
+var float candidateLowOpen = na
+var float candidateLowHigh = na
+var float candidateLowClose = na
+var bool candidateLowSweptReference = false
+var float candidateLowIdm = na
+var int candidateLowIdmBar = na
+
+var float previousConfirmedHigh = na
+var float previousConfirmedLow = na
+var bool previousHighConsumed = false
+var bool previousLowConsumed = false
+var label liveCandidateLabel = na
+var line liveIdmLine = na
+var label liveIdmLabel = na
+var table statusTable = table.new(position.top_right, 2, 7, border_width = 1)
+
+var array<box> zoneBoxes = array.new<box>()
+var array<string> zoneKinds = array.new<string>()
+var array<int> zoneDirections = array.new<int>()
+var array<int> zoneStates = array.new<int>()
+var array<color> zoneColors = array.new<color>()
+
+bool confirmedHighThisBar = false
+bool confirmedLowThisBar = false
+bool idmSweptThisBar = false
+bool buySideSweptThisBar = false
+bool sellSideSweptThisBar = false
+bool importantImbalanceThisBar = false
+bool decisionPoiThisBar = false
+bool extremePoiThisBar = false
+
+if barstate.isconfirmed
+    f_updateZones(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, poiInvalidation)
+
+    // A structural-liquidity sweep must trade beyond the level and close back
+    // inside. A close beyond consumes the old level as a break, not a sweep.
+    if not na(previousConfirmedHigh) and not previousHighConsumed and high > previousConfirmedHigh
+        previousHighConsumed := true
+        if close < previousConfirmedHigh
+            buySideSweptThisBar := true
+            if showSweeps
+                label.new(bar_index, high, "BSL SWEPT", xloc = xloc.bar_index, yloc = yloc.abovebar, style = label.style_label_down, color = color.new(sweepColor, 12), textcolor = color.white, size = size.tiny)
+    if not na(previousConfirmedLow) and not previousLowConsumed and low < previousConfirmedLow
+        previousLowConsumed := true
+        if close > previousConfirmedLow
+            sellSideSweptThisBar := true
+            if showSweeps
+                label.new(bar_index, low, "SSL SWEPT", xloc = xloc.bar_index, yloc = yloc.belowbar, style = label.style_label_up, color = color.new(sweepColor, 12), textcolor = color.white, size = size.tiny)
+
+    if not na(internalHigh)
+        latestInternalHigh := internalHigh
+        latestInternalHighBar := bar_index - internalBars
+        latestInternalHighOpen := open[internalBars]
+        latestInternalHighLow := low[internalBars]
+        latestInternalHighClose := close[internalBars]
+    if not na(internalLow)
+        latestInternalLow := internalLow
+        latestInternalLowBar := bar_index - internalBars
+        latestInternalLowOpen := open[internalBars]
+        latestInternalLowHigh := high[internalBars]
+        latestInternalLowClose := close[internalBars]
+
+    if phase == 0
+        if bootstrapMode == "Confirm high first"
+            phase := 1
+        else if bootstrapMode == "Confirm low first"
+            phase := -1
+        else if not na(latestInternalHighBar) and not na(latestInternalLowBar)
+            phase := latestInternalHighBar > latestInternalLowBar ? 1 : -1
+
+        if phase == 1 and not na(latestInternalHigh)
+            candidateHigh := latestInternalHigh
+            candidateHighBar := latestInternalHighBar
+            candidateHighOpen := latestInternalHighOpen
+            candidateHighLow := latestInternalHighLow
+            candidateHighClose := latestInternalHighClose
+            candidateHighSweptReference := false
+            if not na(latestInternalLowBar) and latestInternalLowBar < candidateHighBar
+                candidateHighIdm := latestInternalLow
+                candidateHighIdmBar := latestInternalLowBar
+        else if phase == -1 and not na(latestInternalLow)
+            candidateLow := latestInternalLow
+            candidateLowBar := latestInternalLowBar
+            candidateLowOpen := latestInternalLowOpen
+            candidateLowHigh := latestInternalLowHigh
+            candidateLowClose := latestInternalLowClose
+            candidateLowSweptReference := false
+            if not na(latestInternalHighBar) and latestInternalHighBar < candidateLowBar
+                candidateLowIdm := latestInternalHigh
+                candidateLowIdmBar := latestInternalHighBar
+
+    if phase == 1
+        bool extendsHigh = na(candidateHigh) or high > candidateHigh
+        if extendsHigh
+            candidateHigh := high
+            candidateHighBar := bar_index
+            candidateHighOpen := open
+            candidateHighLow := low
+            candidateHighClose := close
+            candidateHighSweptReference := buySideSweptThisBar
+            if not na(latestInternalLowBar) and latestInternalLowBar < candidateHighBar
+                candidateHighIdm := latestInternalLow
+                candidateHighIdmBar := latestInternalLowBar
+
+        bool hasHighSequence = not na(candidateHigh) and not na(candidateHighIdm) and candidateHighIdmBar < candidateHighBar and bar_index > candidateHighBar
+        bool highIdmSweep = low < candidateHighIdm and close >= candidateHighIdm
+        bool highIdmBreak = close < candidateHighIdm
+        bool confirmsHigh = confirmationMode == "Sweep / re-entry" ? highIdmSweep : highIdmBreak
+        if hasHighSequence and confirmsHigh
+            float oldConfirmedHigh = previousConfirmedHigh
+            string highTag = na(oldConfirmedHigh) ? "H" : candidateHigh > oldConfirmedHigh ? "HH" : candidateHigh < oldConfirmedHigh ? "LH" : "EH"
+            label.new(candidateHighBar, candidateHigh, highTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_down, color = highColor, textcolor = color.white, size = size.small, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
+            if showIdm
+                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = idmColor, style = line.style_dashed)
+                label.new(bar_index, candidateHighIdm, confirmationMode == "Sweep / re-entry" ? "IDM SWEPT ↓" : "IDM BROKEN ↓", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_down, color = color.new(idmColor, 15), textcolor = color.rgb(35, 29, 10), size = size.tiny)
+            idmSweptThisBar := confirmationMode == "Sweep / re-entry"
+
+            // Effective bearish Extreme POI: the extreme candle swept the prior
+            // confirmed high and closed back below it. No reference = no E-POI.
+            bool effectiveBearExtreme = not na(oldConfirmedHigh) and candidateHighSweptReference and candidateHigh > oldConfirmedHigh and candidateHighClose < oldConfirmedHigh
+            if showExtremePoi and effectiveBearExtreme
+                float extremeTop = poiRange == "Full candle" ? candidateHigh : math.max(candidateHighOpen, candidateHighClose)
+                float extremeBottom = poiRange == "Full candle" ? candidateHighLow : math.min(candidateHighOpen, candidateHighClose)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateHighBar, extremeTop, extremeBottom, -1, "E-POI", extremeColor, maxZones)
+                extremePoiThisBar := true
+
+            // Decision POI profile seam: nearest bullish candle before the
+            // confirmation event, constrained to the structural leg.
+            int decisionBar = na
+            float decisionTop = na
+            float decisionBottom = na
+            if showDecisionPoi
+                for i = 1 to zoneLookback
+                    bool insideLeg = bar_index - i >= candidateHighBar
+                    if na(decisionBar) and insideLeg and not na(close[i]) and close[i] > open[i]
+                        decisionBar := bar_index - i
+                        decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
+                        decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
+                if not na(decisionBar)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar, decisionTop, decisionBottom, -1, "D-POI", decisionColor, maxZones)
+                    decisionPoiThisBar := true
+
+            // Important imbalance profile seam: most recent unfilled bearish
+            // three-candle FVG inside the newly confirmed leg.
+            int imbalanceBar = na
+            float imbalanceTop = na
+            float imbalanceBottom = na
+            if showImbalance
+                for i = 0 to zoneLookback
+                    bool insideLeg = bar_index - i - 2 >= candidateHighBar
+                    bool bearishGap = insideLeg and not na(low[i + 2]) and high[i] < low[i + 2]
+                    bool unfilled = true
+                    if bearishGap
+                        for j = 0 to zoneLookback
+                            if j < i and high[j] >= low[i + 2]
+                                unfilled := false
+                    if na(imbalanceBar) and bearishGap and unfilled
+                        imbalanceBar := bar_index - i - 2
+                        imbalanceTop := low[i + 2]
+                        imbalanceBottom := high[i]
+                if not na(imbalanceBar)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, maxZones)
+                    importantImbalanceThisBar := true
+
+            if showConfirmation
+                label.new(bar_index, low, "✓ H", xloc = xloc.bar_index, yloc = yloc.belowbar, style = label.style_label_up, color = color.new(highColor, 60), textcolor = color.white, size = size.tiny)
+            previousConfirmedHigh := candidateHigh
+            previousHighConsumed := false
+            confirmedHighThisBar := true
+            phase := -1
+            candidateLow := low
+            candidateLowBar := bar_index
+            candidateLowOpen := open
+            candidateLowHigh := high
+            candidateLowClose := close
+            candidateLowSweptReference := sellSideSweptThisBar
+            candidateLowIdm := not na(latestInternalHighBar) and latestInternalHighBar < candidateLowBar ? latestInternalHigh : na
+            candidateLowIdmBar := not na(latestInternalHighBar) and latestInternalHighBar < candidateLowBar ? latestInternalHighBar : na
+            candidateHigh := na
+            candidateHighBar := na
+            candidateHighIdm := na
+            candidateHighIdmBar := na
+            candidateHighSweptReference := false
+
+    else if phase == -1
+        bool extendsLow = na(candidateLow) or low < candidateLow
+        if extendsLow
+            candidateLow := low
+            candidateLowBar := bar_index
+            candidateLowOpen := open
+            candidateLowHigh := high
+            candidateLowClose := close
+            candidateLowSweptReference := sellSideSweptThisBar
+            if not na(latestInternalHighBar) and latestInternalHighBar < candidateLowBar
+                candidateLowIdm := latestInternalHigh
+                candidateLowIdmBar := latestInternalHighBar
+
+        bool hasLowSequence = not na(candidateLow) and not na(candidateLowIdm) and candidateLowIdmBar < candidateLowBar and bar_index > candidateLowBar
+        bool lowIdmSweep = high > candidateLowIdm and close <= candidateLowIdm
+        bool lowIdmBreak = close > candidateLowIdm
+        bool confirmsLow = confirmationMode == "Sweep / re-entry" ? lowIdmSweep : lowIdmBreak
+        if hasLowSequence and confirmsLow
+            float oldConfirmedLow = previousConfirmedLow
+            string lowTag = na(oldConfirmedLow) ? "L" : candidateLow > oldConfirmedLow ? "HL" : candidateLow < oldConfirmedLow ? "LL" : "EL"
+            label.new(candidateLowBar, candidateLow, lowTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_up, color = lowColor, textcolor = color.rgb(6, 24, 18), size = size.small, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
+            if showIdm
+                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = idmColor, style = line.style_dashed)
+                label.new(bar_index, candidateLowIdm, confirmationMode == "Sweep / re-entry" ? "IDM SWEPT ↑" : "IDM BROKEN ↑", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_up, color = color.new(idmColor, 15), textcolor = color.rgb(35, 29, 10), size = size.tiny)
+            idmSweptThisBar := confirmationMode == "Sweep / re-entry"
+
+            bool effectiveBullExtreme = not na(oldConfirmedLow) and candidateLowSweptReference and candidateLow < oldConfirmedLow and candidateLowClose > oldConfirmedLow
+            if showExtremePoi and effectiveBullExtreme
+                float extremeTop = poiRange == "Full candle" ? candidateLowHigh : math.max(candidateLowOpen, candidateLowClose)
+                float extremeBottom = poiRange == "Full candle" ? candidateLow : math.min(candidateLowOpen, candidateLowClose)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateLowBar, extremeTop, extremeBottom, 1, "E-POI", extremeColor, maxZones)
+                extremePoiThisBar := true
+
+            int decisionBar = na
+            float decisionTop = na
+            float decisionBottom = na
+            if showDecisionPoi
+                for i = 1 to zoneLookback
+                    bool insideLeg = bar_index - i >= candidateLowBar
+                    if na(decisionBar) and insideLeg and not na(close[i]) and close[i] < open[i]
+                        decisionBar := bar_index - i
+                        decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
+                        decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
+                if not na(decisionBar)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar, decisionTop, decisionBottom, 1, "D-POI", decisionColor, maxZones)
+                    decisionPoiThisBar := true
+
+            int imbalanceBar = na
+            float imbalanceTop = na
+            float imbalanceBottom = na
+            if showImbalance
+                for i = 0 to zoneLookback
+                    bool insideLeg = bar_index - i - 2 >= candidateLowBar
+                    bool bullishGap = insideLeg and not na(high[i + 2]) and low[i] > high[i + 2]
+                    bool unfilled = true
+                    if bullishGap
+                        for j = 0 to zoneLookback
+                            if j < i and low[j] <= high[i + 2]
+                                unfilled := false
+                    if na(imbalanceBar) and bullishGap and unfilled
+                        imbalanceBar := bar_index - i - 2
+                        imbalanceTop := low[i]
+                        imbalanceBottom := high[i + 2]
+                if not na(imbalanceBar)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, maxZones)
+                    importantImbalanceThisBar := true
+
+            if showConfirmation
+                label.new(bar_index, high, "✓ L", xloc = xloc.bar_index, yloc = yloc.abovebar, style = label.style_label_down, color = color.new(lowColor, 60), textcolor = color.white, size = size.tiny)
+            previousConfirmedLow := candidateLow
+            previousLowConsumed := false
+            confirmedLowThisBar := true
+            phase := 1
+            candidateHigh := high
+            candidateHighBar := bar_index
+            candidateHighOpen := open
+            candidateHighLow := low
+            candidateHighClose := close
+            candidateHighSweptReference := buySideSweptThisBar
+            candidateHighIdm := not na(latestInternalLowBar) and latestInternalLowBar < candidateHighBar ? latestInternalLow : na
+            candidateHighIdmBar := not na(latestInternalLowBar) and latestInternalLowBar < candidateHighBar ? latestInternalLowBar : na
+            candidateLow := na
+            candidateLowBar := na
+            candidateLowIdm := na
+            candidateLowIdmBar := na
+            candidateLowSweptReference := false
+
+if barstate.islast
+    if not na(liveCandidateLabel)
+        label.delete(liveCandidateLabel)
+        liveCandidateLabel := na
+    if not na(liveIdmLine)
+        line.delete(liveIdmLine)
+        liveIdmLine := na
+    if not na(liveIdmLabel)
+        label.delete(liveIdmLabel)
+        liveIdmLabel := na
+
+    if showCandidate
+        if phase == 1 and not na(candidateHigh)
+            liveCandidateLabel := label.new(candidateHighBar, candidateHigh, "H?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_down, color = candidateColor, textcolor = color.white, size = size.tiny)
+        else if phase == -1 and not na(candidateLow)
+            liveCandidateLabel := label.new(candidateLowBar, candidateLow, "L?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_up, color = candidateColor, textcolor = color.white, size = size.tiny)
+
+    if showIdm
+        if phase == 1 and not na(candidateHighIdm)
+            liveIdmLine := line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 20), style = line.style_dotted)
+            liveIdmLabel := label.new(bar_index, candidateHighIdm, "IDM ACTIVE ↓", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
+        else if phase == -1 and not na(candidateLowIdm)
+            liveIdmLine := line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 20), style = line.style_dotted)
+            liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM ACTIVE ↑", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
+
+    if showStatus
+        table.cell(statusTable, 0, 0, "DD TH R0.2", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
+        table.cell(statusTable, 1, 0, "RESEARCH", text_color = idmColor, bgcolor = color.rgb(26, 31, 36))
+        table.cell(statusTable, 0, 1, "Seeking", text_color = color.silver)
+        table.cell(statusTable, 1, 1, phase == 1 ? "HIGH" : phase == -1 ? "LOW" : "BOOTSTRAP", text_color = phase == 1 ? highColor : lowColor)
+        table.cell(statusTable, 0, 2, "IDM gate", text_color = color.silver)
+        table.cell(statusTable, 1, 2, confirmationMode, text_color = color.white)
+        table.cell(statusTable, 0, 3, "IDM", text_color = color.silver)
+        table.cell(statusTable, 1, 3, phase == 1 and not na(candidateHighIdm) or phase == -1 and not na(candidateLowIdm) ? "ACTIVE" : "WAIT", text_color = idmColor)
+        table.cell(statusTable, 0, 4, "Zones kept", text_color = color.silver)
+        table.cell(statusTable, 1, 4, str.tostring(array.size(zoneBoxes)), text_color = color.white)
+        table.cell(statusTable, 0, 5, "POI invalid", text_color = color.silver)
+        table.cell(statusTable, 1, 5, poiInvalidation, text_color = color.white)
+        table.cell(statusTable, 0, 6, "Evaluation", text_color = color.silver)
+        table.cell(statusTable, 1, 6, "CLOSED BAR", text_color = lowColor)
+    else
+        table.clear(statusTable, 0, 0, 1, 6)
+
+alertcondition(confirmedHighThisBar, "Trading Hub high confirmed", "A structure high was confirmed after its IDM event on {{ticker}} {{interval}}.")
+alertcondition(confirmedLowThisBar, "Trading Hub low confirmed", "A structure low was confirmed after its IDM event on {{ticker}} {{interval}}.")
+alertcondition(idmSweptThisBar, "IDM swept", "An active IDM was swept and price closed back across it on {{ticker}} {{interval}}.")
+alertcondition(buySideSweptThisBar, "Buy-side liquidity swept", "A confirmed structure high was swept with re-entry on {{ticker}} {{interval}}.")
+alertcondition(sellSideSweptThisBar, "Sell-side liquidity swept", "A confirmed structure low was swept with re-entry on {{ticker}} {{interval}}.")
+alertcondition(importantImbalanceThisBar, "Important imbalance created", "A profile-selected important imbalance was created on {{ticker}} {{interval}}.")
+alertcondition(decisionPoiThisBar, "Decision POI created", "A profile-selected Decision POI was created on {{ticker}} {{interval}}.")
+alertcondition(extremePoiThisBar, "Effective Extreme POI created", "An Extreme POI passed the sweep-and-re-entry validity gate on {{ticker}} {{interval}}.")

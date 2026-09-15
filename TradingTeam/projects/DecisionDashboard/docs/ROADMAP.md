@@ -2,19 +2,28 @@
 
 ## Active
 
-### `TH-SWING-R0.1`
+### `TH-EVENTS-R0.2`
 
-- Mark candidate high/low.
-- Confirm extreme only after opposing IDM is swept or broken.
-- Separate extreme bar from confirmation bar.
-- Review wick mode versus close mode on XAU and BTC.
+- Mark confirmed H/L after the opposing IDM event.
+- Separate `IDM SWEPT` from `IDM BROKEN`.
+- Mark one-shot BSL/SSL sweep events with re-entry.
+- Select one important unfilled FVG and one Decision POI per confirmed leg.
+- Promote an Extreme POI only after sweep and re-entry of prior structure.
+- Track zone lifecycle: active, touched, filled/invalid.
 
-## Next gates
+## Review gates
 
-1. Resolve internal-pivot selection and IDM reset disagreements.
-2. Add protected/weak high-low lifecycle.
-3. Add BOS and CHoCH only against already confirmed structure.
-4. Add MTF projection without future leak.
-5. Start separate Wyckoff and Elliott indicators; do not merge their labels into SMC ontology.
+1. Validate internal-pivot selection and IDM reset behavior.
+2. Review Decision POI proxy against Trading Hub examples.
+3. Review important-FVG ranking when multiple gaps coexist.
+4. Validate close-versus-wick POI invalidation on XAU and BTC.
+5. Resolve disagreements before implementing nested major/minor structure.
+
+## Later increments
+
+1. Add protected/weak high-low lifecycle.
+2. Add BOS and CHoCH only against already confirmed structure.
+3. Add MTF projection without future leak.
+4. Keep Wyckoff and Elliott in separate indicators and ontologies.
 
 No broker execution, web dashboard, macro ingestion or server runtime belongs to this workspace.

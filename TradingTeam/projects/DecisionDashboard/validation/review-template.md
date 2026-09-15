@@ -2,28 +2,48 @@
 
 ## Context
 
-- Profile: `TH-SWING-R0.1`
+- Profile: `TH-EVENTS-R0.2`
 - Reviewer:
 - Review date:
 - Symbol and venue:
 - Timeframe:
 - TradingView data range:
-- IDM mode: `Wick / sweep` | `Close / break`
+- IDM mode: `Sweep / re-entry` | `Close / break`
 - Internal pivot bars:
+- Zone search bars:
+- POI range: `Full candle` | `Body`
+- POI invalidation: `Close beyond` | `Wick beyond`
 
-## Case
+## Structure event case
 
-- Extreme bar time:
-- Expected label: `H` | `HH` | `LH` | `L` | `HL` | `LL` | none
-- Expected IDM bar and price:
+- Candidate extreme time:
+- Expected H/L label:
+- Expected IDM time and price:
+- Expected IDM event: `SWEPT` | `BROKEN` | none
 - Expected confirmation bar:
-- Actual label:
-- Actual confirmation bar:
-- Replay observed before confirmation: yes | no
-- Result: agree | disagree | ambiguous
-- Screenshot before confirmation:
-- Screenshot after confirmation:
-- Notes:
+- Actual result:
+- Replay result: agree | disagree | ambiguous
+
+## Liquidity sweep case
+
+- Reference H/L time and price:
+- Sweep candle:
+- Wick crossed level: yes | no
+- Close re-entered: yes | no
+- Expected event: `BSL SWEPT` | `SSL SWEPT` | break | none
+- Actual result:
+
+## Zone case
+
+- Zone type: `IMP-FVG` | `D-POI` | `E-POI`
+- Source candle(s):
+- Expected bounds:
+- Validity gate checked:
+- Expected lifecycle: `ACTIVE` | `TOUCHED` | `FILLED` | `INVALID`
+- Actual lifecycle:
+- Screenshot at creation:
+- Screenshot at first touch:
+- Screenshot at termination:
 
 ## Decision
 
