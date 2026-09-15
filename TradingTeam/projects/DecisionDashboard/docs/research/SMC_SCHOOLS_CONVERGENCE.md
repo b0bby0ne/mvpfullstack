@@ -1,5 +1,7 @@
 # SMC Schools: HenrySMC, ICT và Trading Hub 3.0 của Mr Khan
 
+> Knowledge-only companion: [SMC Knowledge Atlas](./SMC_KNOWLEDGE_ATLAS.md). Atlas ưu tiên học thuật ngữ, cách đọc chart và provenance; tài liệu hiện tại giữ phần ontology/architecture để tham khảo về sau.
+
 Status: `RESEARCH_BASELINE v0.4 — canonical channels confirmed`
 
 Scope: ontology, workflow, điểm hội tụ và detector contract cho `XAU/USD`, `BTC/USD`
