@@ -7,6 +7,8 @@ import { startDailyScheduler } from "./goldMacroOps.mjs";
 import { handleEnsureRequest } from "./httpHelpers.mjs";
 import { handleLiquidityEnsureRequest } from "./liquidityHttp.mjs";
 import { handleCmeStatusRequest } from "./cmeHttp.mjs";
+import { handleTechnicalAnalysisEnsureRequest } from "./technicalAnalysisHttp.mjs";
+import { startTechnicalAnalysisScheduler } from "./technicalAnalysisOps.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const port = Number(process.env.PORT || 4173);
@@ -17,6 +19,7 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/gold-macro/ensure") return handleEnsureRequest(request, response);
   if (url.pathname === "/api/liquidity/ensure") return handleLiquidityEnsureRequest(request, response);
   if (url.pathname === "/api/cme/status") return handleCmeStatusRequest(request, response);
+  if (url.pathname === "/api/technical-analysis/ensure") return handleTechnicalAnalysisEnsureRequest(request, response);
 
   const relativePath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
   let filePath = path.resolve(root, relativePath);
@@ -37,6 +40,11 @@ const server = createServer(async (request, response) => {
 startDailyScheduler({
   onResult: (snapshot) => console.log(`[macro-data] ${snapshot.businessDate}: ${snapshot.status}`),
   onError: (error) => console.error("[macro-data] scheduled refresh failed", error),
+});
+
+startTechnicalAnalysisScheduler({
+  onResult: (snapshot) => console.log(`[technical-analysis] ${snapshot.market}: ${snapshot.status} at ${snapshot.closedBarAt ?? "blocked"}`),
+  onError: (error, market) => console.error(`[technical-analysis] ${market} refresh failed`, error),
 });
 
 server.listen(port, "127.0.0.1", () => {

@@ -22,6 +22,8 @@ The hosted widgets are iframe integrations. Application code can configure symbo
 
 For that reason, the method layer below the widget is deliberately expert-assisted. It defines required evidence and invalidation guardrails, while the expert validates structure on the visible chart. It must not claim that SMC, Wyckoff or Elliott evidence was computed from inaccessible iframe state.
 
+The closed-bar analyzer is a separate, venue-qualified path. It reads Coinbase `BTC-USD` or credentialed OANDA `XAU_USD` candles matching the chart symbol, evaluates `1D → 4H → 1H → M15`, and reruns after an M15 close. Its output is displayed beside the TradingView-hosted snapshot but is never represented as data extracted from the iframe. See `docs/operations/TECHNICAL_ANALYSIS.md`.
+
 Technical-analysis notes entered in the DecisionDashboard side panel are currently stored per canonical instrument in browser `localStorage`. They are not synchronized with drawings inside TradingView.
 
 ## Upgrade path

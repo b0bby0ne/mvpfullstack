@@ -11,6 +11,8 @@ Baseline SMC `DD-SMC-R0.3` và decision set `D1-D16` nằm tại `src/domain/smc
 
 `AnalysisWorkbench` is rendered directly below the chart and keeps the official TradingView Technical Analysis Widget aligned to the selected symbol and timeframe. The widget displays the TradingView oscillator/moving-average snapshot. Its SMC, Wyckoff and Elliott tabs define evidence for expert review; the app does not claim access to raw OHLC, indicator values or drawings inside the hosted iframe.
 
+`ClosedBarAnalysis` adds a separate deterministic path using venue-matched raw bars. It evaluates 1D, 4H, 1H and M15 after each M15 close through `/api/technical-analysis/ensure`; runtime and failure contracts are documented in `docs/operations/TECHNICAL_ANALYSIS.md`.
+
 ## Local development
 
 ```bash

@@ -25,6 +25,7 @@ MVP là hệ thống `research + decision support + paper validation`. Live exec
 - [Technical Analysis Rulebook](./docs/product/TECHNICAL_RULEBOOK.md)
 - [SMC Method Specification](./docs/product/SMC_METHOD_SPEC.md)
 - [Daily Macro Data Operations](./docs/operations/DAILY_MACRO_DATA.md)
+- [Multi-timeframe Technical Analysis Operations](./docs/operations/TECHNICAL_ANALYSIS.md)
 - [Futures and Options Liquidity Data](./docs/operations/LIQUIDITY_DATA.md)
 - [Source Workspace](./src/README.md)
 - [Test Evidence](./tests/README.md)

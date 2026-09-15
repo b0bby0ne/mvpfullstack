@@ -8,7 +8,18 @@ beforeEach(() => {
   window.history.replaceState(null, "", "/");
   vi.stubGlobal("fetch", vi.fn().mockImplementation((input: unknown) => {
     const url = String(input);
-    const payload = url.includes("/api/liquidity/") ? {
+    const payload = url.includes("/api/technical-analysis/") ? {
+      market: "XAU_USD",
+      status: "blocked",
+      trigger: "credential-check",
+      checkedAt: "2026-09-11T02:30:00.000Z",
+      closedBarAt: null,
+      nextAnalysisAt: "2026-09-11T02:45:00.000Z",
+      source: { provider: "OANDA v20", venue: "OANDA", instrument: "XAU_USD", volumeType: "tick", chartSymbol: "OANDA:XAUUSD" },
+      error: "Thiếu OANDA_API_TOKEN",
+      timeframes: [],
+      synthesis: null,
+    } : url.includes("/api/liquidity/") ? {
       market: "BTC_USD",
       status: "current",
       checkedAt: "2026-09-11T02:31:00.000Z",
@@ -62,6 +73,7 @@ describe("market to section flow", () => {
     expect(screen.getByText("DERIBIT:BTC")).toBeTruthy();
     expect(screen.getByRole("heading", { name: /Bộ phân tích kỹ thuật/i })).toBeTruthy();
     expect(screen.getByText("Oscillators & moving averages")).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Mở bộ phân tích/ }).getAttribute("href")).toBe("#analysis-workbench");
   });
 
   it("explains the approved SMC models and XAU venue boundary", () => {

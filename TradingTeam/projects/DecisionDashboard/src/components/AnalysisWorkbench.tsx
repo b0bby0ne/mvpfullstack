@@ -1,59 +1,11 @@
-import { useState } from "react";
 import type { Market, Timeframe } from "../domain/markets";
+import { ClosedBarAnalysis } from "./ClosedBarAnalysis";
 import { TradingViewTechnicalAnalysis } from "./TradingViewTechnicalAnalysis";
 
 type AnalysisWorkbenchProps = {
   market: Market;
   timeframe: Timeframe;
 };
-
-type MethodId = "smc" | "wyckoff" | "elliott";
-
-const METHOD_PLAYBOOKS: Array<{
-  id: MethodId;
-  code: string;
-  title: string;
-  role: string;
-  outputs: string[];
-  guardrail: string;
-}> = [
-  {
-    id: "smc",
-    code: "01",
-    title: "SMC",
-    role: "Location & liquidity",
-    outputs: [
-      "External structure và draw-on-liquidity",
-      "Sweep/displacement cùng protected swing",
-      "POI, confirmation và thesis invalidation",
-    ],
-    guardrail: "TradingView rating không thay thế sweep, BOS/CHoCH hay POI evidence.",
-  },
-  {
-    id: "wyckoff",
-    code: "02",
-    title: "Wyckoff",
-    role: "Regime & trading range",
-    outputs: [
-      "Trend đi vào và provisional range boundaries",
-      "Candidate event → response → test → dominance",
-      "Primary/alternate phase cùng volume venue",
-    ],
-    guardrail: "Moving-average summary không chứng minh accumulation hoặc distribution.",
-  },
-  {
-    id: "elliott",
-    code: "03",
-    title: "Elliott",
-    role: "Path & invalidation",
-    outputs: [
-      "Degree, scale và audited price extremes",
-      "Primary/alternate count qua hard-rule filter",
-      "Confirmation, invalidation và target tách biệt",
-    ],
-    guardrail: "Oscillator consensus không được dùng để cứu wave count vi phạm rule.",
-  },
-];
 
 function timeframeLabel(timeframe: Timeframe) {
   if (timeframe === "D") return "1D";
@@ -63,9 +15,6 @@ function timeframeLabel(timeframe: Timeframe) {
 }
 
 export function AnalysisWorkbench({ market, timeframe }: AnalysisWorkbenchProps) {
-  const [activeMethod, setActiveMethod] = useState<MethodId>("smc");
-  const method = METHOD_PLAYBOOKS.find((item) => item.id === activeMethod) ?? METHOD_PLAYBOOKS[0];
-
   return (
     <section id="analysis-workbench" className="analysis-workbench" aria-labelledby="analysis-workbench-title">
       <header className="analysis-workbench__header">
@@ -75,7 +24,7 @@ export function AnalysisWorkbench({ market, timeframe }: AnalysisWorkbenchProps)
           <p>TradingView cung cấp technical snapshot; DecisionDashboard tổ chức evidence trước khi chuyên gia kết luận.</p>
         </div>
         <div className="analysis-source-pills" aria-label="Nguồn phân tích">
-          <span>TradingView data</span>
+          <span>TradingView widget</span>
           <strong>{market.tradingViewSymbol}</strong>
           <strong>{timeframeLabel(timeframe)}</strong>
         </div>
@@ -108,33 +57,7 @@ export function AnalysisWorkbench({ market, timeframe }: AnalysisWorkbenchProps)
         </article>
       </div>
 
-      <div className="method-lab">
-        <div className="method-tabs" role="tablist" aria-label="Chọn phương pháp phân tích">
-          {METHOD_PLAYBOOKS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={activeMethod === item.id}
-              className={activeMethod === item.id ? "is-active" : ""}
-              onClick={() => setActiveMethod(item.id)}
-            >
-              <span>{item.code}</span>
-              <div><strong>{item.title}</strong><small>{item.role}</small></div>
-            </button>
-          ))}
-        </div>
-
-        <div className="method-output" role="tabpanel" aria-label={`Khung phân tích ${method.title}`}>
-          <div><p className="eyebrow">Required evidence</p><h4>{method.title} · {method.role}</h4></div>
-          <div className="method-output__items">
-            {method.outputs.map((output, index) => (
-              <p key={output}><span>{String(index + 1).padStart(2, "0")}</span>{output}</p>
-            ))}
-          </div>
-          <div className="method-guardrail"><span>Guardrail</span><p>{method.guardrail}</p></div>
-        </div>
-      </div>
+      <ClosedBarAnalysis market={market} />
     </section>
   );
 }

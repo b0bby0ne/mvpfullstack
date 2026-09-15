@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import { startDailyScheduler } from "./server/goldMacroOps.mjs";
 import { handleEnsureRequest } from "./server/httpHelpers.mjs";
 import { handleLiquidityEnsureRequest } from "./server/liquidityHttp.mjs";
+import { handleTechnicalAnalysisEnsureRequest } from "./server/technicalAnalysisHttp.mjs";
+import { startTechnicalAnalysisScheduler } from "./server/technicalAnalysisOps.mjs";
 
 export default defineConfig({
   plugins: [
@@ -12,8 +14,13 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use("/api/gold-macro/ensure", handleEnsureRequest);
         server.middlewares.use("/api/liquidity/ensure", handleLiquidityEnsureRequest);
+        server.middlewares.use("/api/technical-analysis/ensure", handleTechnicalAnalysisEnsureRequest);
         const stopScheduler = startDailyScheduler();
-        server.httpServer?.once("close", stopScheduler);
+        const stopTechnicalScheduler = startTechnicalAnalysisScheduler();
+        server.httpServer?.once("close", () => {
+          stopScheduler();
+          stopTechnicalScheduler();
+        });
       },
     },
   ],

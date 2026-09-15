@@ -87,7 +87,10 @@ function MarketWorkspace({ marketId }: { marketId: MarketId }) {
 
       <div className="workspace-grid">
         <section className="chart-card">
-          <div className="chart-toolbar"><div className="chart-status"><span className="status-pulse" />TradingView connected</div><p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p></div>
+          <div className="chart-toolbar">
+            <div className="chart-status"><span className="status-pulse" />TradingView connected</div>
+            <div className="chart-toolbar-actions"><p>Dùng thanh công cụ bên trái để vẽ phân tích trực tiếp</p><a href="#analysis-workbench">Mở bộ phân tích ↓</a></div>
+          </div>
           <TradingViewChart market={market} timeframe={timeframe} />
         </section>
         <aside className="analysis-panel" id="analysis-note">
