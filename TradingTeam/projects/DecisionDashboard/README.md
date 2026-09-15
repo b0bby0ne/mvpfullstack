@@ -1,5 +1,7 @@
 # DecisionDashboard
 
+The Chart section keeps the official TradingView Advanced Chart and Technical Analysis widgets aligned to the selected XAU or BTC symbol and timeframe. The analysis workbench appears below the chart with the TradingView oscillator/moving-average snapshot and expert evidence contracts for SMC, Wyckoff and Elliott. This remains research support without a broker write path.
+
 Webapp hỗ trợ trader hợp nhất ba lớp quyết định:
 
 1. bối cảnh vĩ mô và research từ quant/investment firms;

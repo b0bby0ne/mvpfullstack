@@ -60,6 +60,8 @@ describe("market to section flow", () => {
     expect(screen.getByText("DD-SMC-R0.3")).toBeTruthy();
     expect(screen.getAllByText("COINBASE:BTCUSD").length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("DERIBIT:BTC")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /Bộ phân tích kỹ thuật/i })).toBeTruthy();
+    expect(screen.getByText("Oscillators & moving averages")).toBeTruthy();
   });
 
   it("explains the approved SMC models and XAU venue boundary", () => {

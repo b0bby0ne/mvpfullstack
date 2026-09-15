@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { GoldMacroDashboard } from "./components/GoldMacroDashboard";
+import { AnalysisWorkbench } from "./components/AnalysisWorkbench";
 import { LiquidityDashboard } from "./components/LiquidityDashboard";
 import { SmcMethodGuide } from "./components/SmcMethodGuide";
 import { TradingViewChart } from "./components/TradingViewChart";
@@ -98,6 +99,7 @@ function MarketWorkspace({ marketId }: { marketId: MarketId }) {
           <div className="data-note"><span>i</span><p>Giá hiển thị do TradingView cung cấp. Feed này chưa phải nguồn dữ liệu xác nhận cho detector.</p></div>
         </aside>
       </div>
+      <AnalysisWorkbench market={market} timeframe={timeframe} />
     </section>
   );
 }
