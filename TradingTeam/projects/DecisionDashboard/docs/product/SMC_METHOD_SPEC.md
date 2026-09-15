@@ -434,6 +434,8 @@ Caps:
 
 ### 14.3 Golden charts
 
+Trạng thái collection ngày `2026-09-14`: đã có 20 ứng viên BTC M15 từ Coinbase Exchange, cân bằng hai core model và giữ nguyên raw bars/checksum/SVG. Tất cả vẫn là `unreviewed`, `confirmedAt = null`; đây chưa phải golden label. XAU đang `blocked_by_credentials` cho tới khi OANDA token được cấu hình. Chi tiết và lệnh vận hành nằm tại `tests/fixtures/golden_charts/README.md`.
+
 Tối thiểu 30 cases cho mỗi school adapter và 40 cases cho core models, cân bằng:
 
 - reversal positive/negative;

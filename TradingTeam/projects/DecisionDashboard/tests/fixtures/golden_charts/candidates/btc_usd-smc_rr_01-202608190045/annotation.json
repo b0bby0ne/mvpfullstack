@@ -1,0 +1,47 @@
+{
+  "caseId": "btc_usd-smc_rr_01-202608190045",
+  "methodVersion": "DD-SMC-R0.3",
+  "market": "BTC_USD",
+  "chartSymbol": "COINBASE:BTCUSD",
+  "evidenceVenues": [
+    "COINBASE"
+  ],
+  "profile": "INTRADAY_4H_1H_15M",
+  "model": "SMC_RR_01",
+  "direction": "bearish",
+  "expectedClass": "ambiguous",
+  "state": "candidate",
+  "reviewStatus": "unreviewed",
+  "rawBarsChecksum": "3d18125e66601a16f0c920ddfb356ed7157672ee1b4cc45ec4377e3db2e523d5",
+  "contextStructureId": null,
+  "poiZoneIds": [],
+  "triggerLiquidityIds": [
+    "PH-2026-08-18T21:00:00.000Z"
+  ],
+  "targetLiquidityIds": [],
+  "evidenceEventIds": [
+    "pre-existing-liquidity",
+    "sweep",
+    "displacement",
+    "accepted-break"
+  ],
+  "evidenceGroupIds": [
+    "PRICE-2026-08-19T00:45:00.000Z"
+  ],
+  "candidateAt": "2026-08-19T00:15:00.000Z",
+  "machineObservedAt": "2026-08-19T00:45:00.000Z",
+  "confirmedAt": null,
+  "thesisInvalidation": {
+    "type": "price",
+    "value": null
+  },
+  "schoolResults": {
+    "henry": "not_evaluable",
+    "ict": "not_evaluable",
+    "khan": "not_evaluable"
+  },
+  "agreement": "CORE_ONLY",
+  "dataQuality": "valid",
+  "reviewers": [],
+  "notes": "Machine-selected candidate. Expert review is required; this is not an accepted golden label."
+}

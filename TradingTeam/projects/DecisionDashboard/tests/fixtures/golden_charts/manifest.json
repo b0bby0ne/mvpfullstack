@@ -23,5 +23,255 @@
     "event-shock",
     "cross-venue-divergence"
   ],
-  "cases": []
+  "cases": [
+    {
+      "caseId": "btc_usd-smc_rr_01-202608181415",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-18T13:45:00.000Z",
+      "machineObservedAt": "2026-08-18T14:15:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202608181415/annotation.json",
+      "rawBarsChecksum": "273067c78b78e1f02422a9ae00fa0ef2a887fc477e625a855772af779147e110"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202608190045",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-19T00:15:00.000Z",
+      "machineObservedAt": "2026-08-19T00:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202608190045/annotation.json",
+      "rawBarsChecksum": "3d18125e66601a16f0c920ddfb356ed7157672ee1b4cc45ec4377e3db2e523d5"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202608200300",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-20T03:00:00.000Z",
+      "machineObservedAt": "2026-08-20T03:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202608200300/annotation.json",
+      "rawBarsChecksum": "0b4fd046a57dcb971017f04496ccb7d51daadd031898036c3cbd8ac297358275"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202608210845",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-21T08:45:00.000Z",
+      "machineObservedAt": "2026-08-21T09:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202608210845/annotation.json",
+      "rawBarsChecksum": "61de93db1309841ec5e28c0135c162fb21b413bafc818d6df3fe24612d906c37"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202608220215",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-22T02:15:00.000Z",
+      "machineObservedAt": "2026-08-22T05:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202608220215/annotation.json",
+      "rawBarsChecksum": "4fa0127aa4220b3ce86380f4a6847dc15cc2f9db20fe33ec58a0ca22bc957a9d"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202608222145",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-22T21:45:00.000Z",
+      "machineObservedAt": "2026-08-22T22:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202608222145/annotation.json",
+      "rawBarsChecksum": "77f5ccb2fab4f226753a175cb46c3a455d0d7848d96e1eb471e2ad0f23b587cc"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202608271415",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-08-27T13:45:00.000Z",
+      "machineObservedAt": "2026-08-27T14:15:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202608271415/annotation.json",
+      "rawBarsChecksum": "a14da86f0f112d2f5858a86fd6bcc330c745095fc328fc0e67ae8f00e979379d"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202609010815",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-01T08:15:00.000Z",
+      "machineObservedAt": "2026-09-01T14:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202609010815/annotation.json",
+      "rawBarsChecksum": "6ca47a43f86dcbc6a4c310ac30ce82b69ea1b870af868025f2e3001d558d03ef"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202609020830",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-02T08:30:00.000Z",
+      "machineObservedAt": "2026-09-02T13:30:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202609020830/annotation.json",
+      "rawBarsChecksum": "91f757ca404797e322bab417d0a29a34c86d452392bb746c3cd4965fbd98d641"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609030100",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-03T01:00:00.000Z",
+      "machineObservedAt": "2026-09-03T01:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609030100/annotation.json",
+      "rawBarsChecksum": "8f1fb0fe9e94cd91f5fc8f95b78182452890f4a826db5725bb87be6d013e8999"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609040815",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-04T08:00:00.000Z",
+      "machineObservedAt": "2026-09-04T08:15:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609040815/annotation.json",
+      "rawBarsChecksum": "2f01f28443ca0b6072716c3480bdf0d1f930e29de1dc4f5b521fcf977a49e472"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202609061315",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-06T13:15:00.000Z",
+      "machineObservedAt": "2026-09-06T18:15:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202609061315/annotation.json",
+      "rawBarsChecksum": "4f11f30145ea6786f7ade7996b48e0f72d8131d8c8675a6afb083185f838f46c"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202609070715",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-07T07:15:00.000Z",
+      "machineObservedAt": "2026-09-07T13:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202609070715/annotation.json",
+      "rawBarsChecksum": "1b516569db6f9150237f33d67606716e72ce107ffe97055175a230a89ccee2eb"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609080245",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-08T02:30:00.000Z",
+      "machineObservedAt": "2026-09-08T02:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609080245/annotation.json",
+      "rawBarsChecksum": "3115fb41fd7f0f5e926baf85cd8dfe8a8b3e07327eb9ef405fd65f4efbde9b9a"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609081100",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-08T10:45:00.000Z",
+      "machineObservedAt": "2026-09-08T11:00:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609081100/annotation.json",
+      "rawBarsChecksum": "64cce71a2403c246cdbbb4ff3f83fabf78262278d4040a23d6903a32ded52bae"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609091145",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-09T11:15:00.000Z",
+      "machineObservedAt": "2026-09-09T11:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609091145/annotation.json",
+      "rawBarsChecksum": "70c3987a84c9c7e7609b341f47b4c249a4547da1fd33d762113e2bc9d72151d8"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609101145",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bearish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-10T11:15:00.000Z",
+      "machineObservedAt": "2026-09-10T11:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609101145/annotation.json",
+      "rawBarsChecksum": "0777c5c36c79d1f048a4b3fc78764c84e2380193b12155a19604125fad0893ea"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609111245",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-11T12:30:00.000Z",
+      "machineObservedAt": "2026-09-11T12:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609111245/annotation.json",
+      "rawBarsChecksum": "86b9152016df7efd8031777caf4c680012f9748c8086cf0261465374a3fcd2bb"
+    },
+    {
+      "caseId": "btc_usd-smc_rr_01-202609121345",
+      "market": "BTC_USD",
+      "model": "SMC_RR_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-12T13:30:00.000Z",
+      "machineObservedAt": "2026-09-12T13:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_rr_01-202609121345/annotation.json",
+      "rawBarsChecksum": "ea8f1354479f09a2fe9457f2e2001d5fb4dab8d6c9df063f68ee89e5761c7965"
+    },
+    {
+      "caseId": "btc_usd-smc_tc_01-202609130515",
+      "market": "BTC_USD",
+      "model": "SMC_TC_01",
+      "direction": "bullish",
+      "status": "unreviewed",
+      "candidateAt": "2026-09-13T05:15:00.000Z",
+      "machineObservedAt": "2026-09-13T06:45:00.000Z",
+      "confirmedAt": null,
+      "path": "candidates/btc_usd-smc_tc_01-202609130515/annotation.json",
+      "rawBarsChecksum": "a4dc56dcdb2768d75b7cadf8ddf837ec6a405cb613fc41a546140ca6cb321cfb"
+    }
+  ],
+  "collection": {
+    "updatedAt": "2026-09-14T04:11:31.003Z",
+    "sourceStatus": {
+      "BTC_USD": "collected",
+      "XAU_USD": "blocked_by_credentials"
+    },
+    "accepted": 0,
+    "unreviewed": 20
+  }
 }
