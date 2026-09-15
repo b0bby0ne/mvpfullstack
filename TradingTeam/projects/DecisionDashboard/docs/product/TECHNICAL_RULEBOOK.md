@@ -237,7 +237,7 @@ Một impulse tiêu chuẩn có cấu trúc `5-3-5-3-5` và phải thỏa:
 4. wave 4 không đi vào price territory của wave 1 đối với impulse tiêu chuẩn;
 5. subwaves 1, 3, 5 là motive; wave 3 luôn là impulse.
 
-No-overlap rule không áp dụng cho diagonal. Với futures có thể xuất hiện extreme intraday/overlap hiếm; knowledge note phải ghi caveat, instrument và wick/close policy nhất quán, không dùng ngoại lệ để cứu count.
+No-overlap rule không áp dụng cho diagonal. Với futures có thể xuất hiện extreme intraday/overlap hiếm, nhưng canonical Elliott vẫn đánh giá recorded price extremes. Suspected bad tick/roll artifact phải được audit; close-only count là `SYNTHESIS` riêng và không được dùng để cứu impulse.
 
 ### 5.3 Motive patterns
 
@@ -251,8 +251,8 @@ No-overlap rule không áp dụng cho diagonal. Với futures có thể xuất h
 | Pattern | Subdivision | Ghi chú |
 |---|---|---|
 | Zigzag | `5-3-5` | Correction sắc; multiple zigzag dùng W-X-Y(-X-Z) |
-| Flat | `3-3-5` | Regular, expanded, running |
-| Triangle | `3-3-3-3-3` qua A–B–C–D–E | Thường ở wave 4, B hoặc cuối combination; không phải typical wave 2 |
+| Flat | `3-3-5` | A/B corrective, C motive; E2 convention yêu cầu B retrace tối thiểu 90% A |
+| Triangle | `3-3-3-3-3` qua A–B–C–D–E | Chỉ ở wave 4, B, final X/final component; không label trực tiếp làm complete wave 2 |
 | Combination | `W-X-Y` hoặc `W-X-Y-X-Z` | Kéo dài correction chủ yếu về thời gian/độ phức tạp; không đồng nhất với multiple zigzag |
 
 Correction khó nhận diện trước khi hoàn tất. Không gắn một cấu trúc ba sóng thành impulse chỉ vì hướng giá phù hợp bias.
@@ -288,6 +288,8 @@ confirmed_at
 Ranking count dựa trên: không vi phạm hard rules, subdivision fit, degree consistency, alternation/channel/Fibonacci support và số giả định chưa xác nhận. Không chọn count chỉ vì target hấp dẫn hơn.
 
 Primary là hypothesis được rank cao nhất, không phải sự thật. Target là guideline zone và phải tách khỏi invalidation; relabel cần evidence mới cùng timestamp.
+
+Hard-rule/allowed-position violation mới trực tiếp loại count. Fibonacci miss, channel break hoặc “right look” kém chỉ làm giảm rank hay yêu cầu kiểm tra alternate; chúng không tự động là structural invalidation.
 
 ## 6. Cách hợp nhất ba phương pháp
 

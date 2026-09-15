@@ -1,6 +1,6 @@
 # Elliott Wave Knowledge Atlas
 
-Status: `KNOWLEDGE_BASE v1.0 — LOGIC_AUDITED`
+Status: `KNOWLEDGE_BASE v1.1 — SECOND_PASS_LOGIC_AUDITED`
 
 Ngày rà soát: `2026-09-15`
 
@@ -36,6 +36,10 @@ Elliott Wave hiện được sử dụng qua nhiều lớp lịch sử. Atlas t�
 | Degree bị gắn cứng với timeframe | Degree là kích thước tương đối và quan hệ parent–child, không phải mapping cố định như “H1 = Minute”. |
 | Primary count được coi là sự thật | Primary chỉ là interpretation được rank cao nhất hiện tại; alternate hợp lệ và invalidation phải tồn tại song song. |
 | “Impulse” của Elliott và SMC impulse | Không alias. Elliott impulse là pattern 5-3-5-3-5 có hard rules; SMC impulse/displacement mô tả leg mạnh tạo structural progress. |
+| Dùng candle close để bỏ qua wick vi phạm | Canonical Elliott dùng price extremes. Close-only là convention `SYNTHESIS` riêng, không được trình bày như cách cứu impulse overlap. |
+| Triangle được gắn trực tiếp làm wave 2 | Trong current codification, triangle không phải complete wave 2; apparent triangle ở vị trí này thường là component cuối của combination lớn hơn. |
+| Target miss bị gọi là invalidation | Target/Fibonacci/channel là guideline. Count chỉ invalid khi vi phạm rule, sai allowed position hoặc evidence buộc relabel structure. |
+| “Right look” bị dùng để override rule | Proportion/visual fit giúp rank degree và count nhưng không hợp thức hóa structural violation. |
 
 ## 3. Bản chất phương pháp
 
@@ -57,6 +61,17 @@ Phương pháp là recursive: một wave ở degree lớn gồm các subwaves de
 | Conditional conclusion | expected path, confirmation, invalidation, target zone |
 
 Wave labels không phải dữ liệu thô. Khi label thay đổi, analyst phải nói rõ evidence mới hoặc rule nào đã loại count cũ; không được relabel chỉ vì target trước đó không đạt.
+
+### 3.2 Price-extreme policy
+
+Elliott rules được đánh giá trên price extremes của data series đã chọn, không phải tùy ý chuyển sang candle close khi wick làm count bất tiện. Đối với futures hoặc fragmented crypto feeds:
+
+- xác minh extreme có phải bad tick, rollover artifact hay venue-specific print;
+- giữ canonical count trên feed đã khai báo;
+- nếu một feed khác tạo count khác, ghi alternate/data conflict;
+- close-only count, nếu dùng để nghiên cứu, phải gắn `SYNTHESIS` và không được gọi là canonical Elliott validation.
+
+`Confirmed close` có thể hữu ích cho SMC acceptance hoặc execution context, nhưng không thay thế price extreme trong Elliott pattern rule.
 
 ## 4. Degree và notation
 
@@ -81,6 +96,7 @@ Các điểm phải giữ:
 - Typography như số La Mã, số thường, vòng tròn hay ngoặc chỉ là notation; charting tool khác nhau có thể hiển thị khác nhau.
 - Không đổi degree giữa chừng để tránh một overlap hoặc làm Fibonacci đẹp hơn.
 - Hai analyst có thể chọn degree name khác nhau nhưng vẫn cùng structural count; điều cần so là parent–child relationship và invalidation.
+- Các waves cùng degree nên có proportionality hợp lý về price/time và đủ rõ khi xem ở cùng scale. Đây là “right look” guideline, không phải tỷ lệ cứng.
 
 Knowledge note nên ghi tối thiểu:
 
@@ -105,6 +121,21 @@ as_of timestamp
 
 Actionary không đồng nghĩa “up”, reactionary không đồng nghĩa “down”. Trong bear trend, actionary motive waves hướng xuống. Cũng không nên định nghĩa mode chỉ bằng momentum: một C wave corrective ở degree lớn có thể rất mạnh nhưng vẫn là motive ở degree nhỏ hơn.
 
+### 5.1 Pattern-position grammar
+
+Allowed position là một phần của pattern definition, không chỉ là guideline thẩm mỹ:
+
+| Pattern | Vị trí hợp lệ/chính | Ghi chú |
+|---|---|---|
+| Impulse | Waves 1, 3, 5; wave A của zigzag; wave C của zigzag/flat | Wave 3 của impulse luôn là impulse, không phải diagonal |
+| Leading diagonal | Wave 1; wave A của zigzag | Không dùng làm wave 3, 5 hay wave C |
+| Ending diagonal | Wave 5; terminal wave C | Nằm ở điểm kết thúc pattern lớn hơn |
+| Zigzag | Wave 2/4; A/B/X; W/Y/Z hoặc correction độc lập | Position cụ thể quyết định degree và labeling |
+| Flat | Wave 2/4; B/X; W/Y/Z hoặc correction độc lập | A/B corrective, C motive; triangle không thể là wave A của flat |
+| Triangle | Wave 4, wave B, final X hoặc final component của combination | Không label triangle trực tiếp là complete wave 2 |
+
+Một five-wave move không tự nói nó là wave 1 hay C; parent context và move trước/sau mới quyết định allowed position.
+
 ## 6. Hard rules của motive và impulse
 
 ### 6.1 Rules áp dụng cho motive structure
@@ -114,7 +145,7 @@ Actionary không đồng nghĩa “up”, reactionary không đồng nghĩa “d
 3. Wave 3 phải đi vượt extreme của wave 1.
 4. Wave 3 không bao giờ là actionary wave ngắn nhất trong 1, 3 và 5.
 
-Length metric phải nhất quán. Ở degree lớn hoặc asset có thay đổi giá theo cấp số nhân, analyst phải khai báo so arithmetic points hay percentage/log distance; không đổi metric sau khi biết kết quả.
+“Wave 3 không ngắn nhất” nói về price length, không phải duration. Length metric phải nhất quán. Ở degree lớn hoặc asset có thay đổi giá theo cấp số nhân, analyst phải khai báo so arithmetic points hay percentage/log distance; không đổi metric sau khi biết kết quả.
 
 ### 6.2 Rules riêng của impulse
 
@@ -201,13 +232,22 @@ Wave X là corrective connector. Mục tiêu của double/triple zigzag thườn
 
 Flat là A–B–C với subdivision `3-3-5`.
 
+Pattern grammar:
+
+- wave A là corrective structure nhưng không phải triangle;
+- wave B là corrective structure và quay lại gần origin A;
+- wave C là một motive wave;
+- trong `E2` textbook convention, B phải retrace ít nhất 90% A để phân loại là flat. Public Waveopedia mô tả định tính là “near the start of A”, nên mọi numeric threshold phải ghi là codified `E2`, không gán ngược thành câu chữ của `E1`.
+
 | Variant | Behavior khái quát | Điểm dễ nhầm |
 |---|---|---|
-| Regular flat | B trở lại gần origin A; C đi hơi qua end A | Không yêu cầu equality tuyệt đối |
-| Expanded flat | B vượt origin A; C vượt end A | New high/low của B không tự động invalidate correction |
-| Running flat | B vượt origin A; C không tới end A | Hiếm; phải có C-wave five rõ, không dùng để cứu count |
+| Regular flat | B trở lại gần origin A; E2 measurement convention thường xếp khoảng 90% đến dưới 105% A; C đi hơi qua end A | Không yêu cầu equality tuyệt đối |
+| Expanded flat | E2 convention thường dùng B từ khoảng 105% A trở lên; C vượt end A đáng kể | New high/low của B không tự động invalidate correction |
+| Running flat | B vượt origin A; C không tới end A | Cực hiếm; phải có C-wave five rõ, không dùng để cứu count |
 
 Nếu presumed B subdivides thành motive five thay vì corrective structure, flat hypothesis cần bị xem xét lại. Một B wave đi qua origin A có thể hợp lệ trong expanded/running flat, nên invalidation phải dựa trên pattern rule chứ không dựa vào cảm giác “đã vượt đỉnh/đáy”.
+
+`90%` là family separator giữa flat và các correction khác trong codified convention, không phải tín hiệu hoàn tất. Phép đo dùng endpoints/extremes của A và B trên cùng scale/data feed. Running flat đặc biệt hiếm; chỉ cân nhắc sau khi C có complete motive subdivision và alternate impulse/combination đã được kiểm tra.
 
 ## 12. Triangle
 
@@ -220,6 +260,15 @@ Các dạng chính trong current reference:
 - expanding triangle;
 - running variation.
 
+| Geometry | Cách đọc đúng |
+|---|---|
+| Contracting | Hai boundary A–C và B–D hội tụ; same-side endpoints co dần |
+| Barrier | Một boundary gần ngang và boundary kia hội tụ; phía ngang là phía thrust kế tiếp thường vượt |
+| Expanding | Boundaries phân kỳ và successive swings mở rộng; hiếm hơn contracting |
+| Running variation | Wave B vượt origin A nhưng wave E vẫn tạo net retracement của move trước triangle |
+
+Wave E có thể overshoot/undershoot đường A–C. Overshoot một trendline không đồng nghĩa E được phép phá mọi structural endpoint của triangle; geometry phải được xét cùng subdivisions và variant.
+
 Structural position quan trọng hơn hình tam giác vẽ bằng trendline. Triangle thường xuất hiện:
 
 - wave 4 của impulse;
@@ -227,7 +276,7 @@ Structural position quan trọng hơn hình tam giác vẽ bằng trendline. Tri
 - final X trong double/triple correction;
 - final actionary component trong combination.
 
-Triangle không phải typical wave 2. Nó thường đứng trước final actionary wave của pattern lớn hơn. Wave E có thể undershoot hoặc overshoot boundary; chỉ dựa vào trendline chạm đủ năm lần sẽ gây premature labeling. [Triangles reference](https://www.elliottwave.com/waveopedia/triangles/) cảnh báo triangle thường bị tuyên bố hoàn tất quá sớm.
+Trong current codification, triangle không phải complete wave 2. Nếu một shape giống triangle xuất hiện ở wave-2 position, cách đọc ưu tiên là nó có thể là component cuối của double three chứ không phải toàn wave 2. Triangle thường đứng trước final actionary wave của pattern lớn hơn. Wave E có thể undershoot hoặc overshoot boundary; chỉ dựa vào trendline chạm đủ năm lần sẽ gây premature labeling. [Triangles reference](https://www.elliottwave.com/waveopedia/triangles/) cảnh báo triangle thường bị tuyên bố hoàn tất quá sớm.
 
 Move sau triangle là `thrust`, nhưng độ dài đo từ widest part chỉ là guideline. Không giả định thrust luôn đạt target hoặc luôn là wave 5 ngắn; commodity có thể tạo extended post-triangle wave.
 
@@ -241,6 +290,8 @@ Triple three: W-X-Y-X-Z
 ```
 
 W, Y, Z là corrective components; X là connector. Các components có thể là zigzag, flat hoặc triangle theo structural constraints, trong đó triangle nếu xuất hiện thường là component cuối. [Combinations reference](https://www.elliottwave.com/waveopedia/combinations/) phân biệt mục tiêu sideways/time của combination với price retracement mạnh hơn của multiple zigzag.
+
+Current reference ghi nhận combination thông thường không có hơn một zigzag và không có hơn một triangle; component forms thường alternate. Đây là constraint/tendency của `E2/E3` lineage, không nên gán là phát biểu nguyên văn của Elliott. Triple three được mô tả nhưng cực hiếm, nên simple/double interpretations phải được loại hợp lý trước.
 
 Không gắn W-X-Y chỉ vì không đếm được A-B-C. Analyst phải thử simple correction trước, xác định internal pattern của W/Y và nói rõ vì sao complexity bổ sung là cần thiết.
 
@@ -274,6 +325,12 @@ Hai kỹ thuật học tập phổ biến:
 2. Khi wave 4 đã rõ: nối ends 2–4, vẽ parallel qua end 3 để quan sát vùng wave 5.
 
 Channel break không tự động kết thúc wave; channel chỉ là guideline về geometry và timing. Nếu channel được redrawn, phải giữ lại anchor cũ hoặc ghi version.
+
+### 14.4 Proportionality và “right look”
+
+Count tốt thường có waves cùng degree tương đối cân xứng về price, duration và visual prominence. Nếu một alleged wave 2 chỉ là nhiễu rất nhỏ nhưng wave 4 kéo dài hàng chục lần ở cùng degree, analyst nên thử degree/count khác.
+
+Proportionality không đòi equality. Volatility regime, gaps, 24/7 trading và extension có thể làm waves bất cân xứng. “Right look” chỉ giúp rank count sau hard rules và position grammar.
 
 ## 15. Wave personality và supporting evidence
 
@@ -326,6 +383,20 @@ candidate → structurally valid → guideline-supported → confirmed path
 
 Một incomplete pattern không được gọi `confirmed complete` chỉ vì chạm Fibonacci. Confirmation không biến guideline thành certainty; nó chỉ làm alternate kém phù hợp hơn.
 
+### 16.3 Invalidation hierarchy
+
+| Loại evidence | Hệ quả đúng |
+|---|---|
+| Vi phạm motive/impulse hard rule | Loại hoặc relabel count liên quan |
+| Pattern nằm sai structural position | Loại pattern label, dù geometry đẹp |
+| Internal subdivision không fit | Hạ count về `OPEN` hoặc thử alternate degree/pattern |
+| Fibonacci/channel/typical depth không đạt | Guideline failure; giảm rank, không tự invalid |
+| Target miss | Cập nhật projection hoặc kiểm tra truncation/alternate; không tự động xóa count |
+| Data extreme gây conflict giữa venues | Audit feed; giữ data-conflict alternate, không tùy ý bỏ wick |
+| Move mới xác nhận alternate | Promote alternate và lưu version/invalidation của primary cũ |
+
+`Invalidation price` là boundary phát sinh từ rule của count cụ thể. `Confirmation level` làm path có khả năng cao hơn. `Target zone` là projection. Ba loại level này không được nhập làm một.
+
 ## 17. Workflow đếm sóng phục vụ học tập
 
 1. Chọn instrument, venue, price type và scale.
@@ -359,7 +430,7 @@ Một pivot được gắn ba tên không tạo ba phiếu confluence độc l�
 - Ghi rõ chart là XAU spot, GC futures contract hay continuous futures.
 - Futures rollover/adjustment có thể tạo gap hoặc thay pivot; count phải ghi data construction.
 - Commodity context có thể xuất hiện fifth-wave extension hoặc mạnh sau triangle, nhưng đây là tendency chứ không phải mặc định cho vàng.
-- News spike do CPI/NFP/FOMC có thể làm internal subdivision nhiễu; hard rule và confirmed close policy phải nhất quán.
+- News spike do CPI/NFP/FOMC có thể làm internal subdivision nhiễu; Elliott count vẫn dùng recorded extremes. Suspected bad tick/roll artifact phải được audit thay vì đổi sang close-only rule.
 - COMEX volume/OI chỉ là supporting evidence cho price series phù hợp; không ghép tùy ý volume GC vào pivot của spot mà không ghi basis/session difference.
 
 ### BTC
@@ -388,6 +459,11 @@ Một pivot được gắn ba tên không tạo ba phiếu confluence độc l�
 14. **Đồng nhất Elliott impulse với SMC impulse.** Hai definition contracts khác nhau.
 15. **Đếm nhãn thay vì subdivisions.** Năm swing nhìn bằng mắt chưa chắc là impulse.
 16. **Xem primary count như certainty.** Mọi count là hypothesis có invalidation.
+17. **Bỏ qua wick bằng close-only rule.** Đây không phải canonical Elliott validation.
+18. **Gọi triangle là toàn bộ wave 2.** Shape đó thường là component trong combination nếu position đúng.
+19. **Gọi target miss là hard invalidation.** Projection failure và rule violation là hai lớp khác nhau.
+20. **Dùng “right look” để cứu structure sai.** Visual proportion chỉ rank count sau rules.
+21. **Gọi flat khi B chưa đạt convention threshold.** Giữ correction type `OPEN` cho tới khi structure phân giải.
 
 ## 21. Checklist ghi chú chart
 
@@ -401,7 +477,10 @@ Một pivot được gắn ba tên không tạo ba phiếu confluence độc l�
 - Có hard rule nào bị vi phạm không?
 - Wave 3 length được so bằng points hay percentage?
 - Overlap là impulse invalidation hay diagonal candidate có đủ evidence?
+- Extreme dùng high/low thực tế hay close-only `SYNTHESIS`; có data anomaly nào không?
 - Correction đơn giản có đủ chưa, hay đang mở thành W-X-Y?
+- Nếu gọi flat, B có đáp ứng E2 90% family threshold và A/B/C đúng mode không?
+- Nếu gọi triangle, nó có nằm đúng wave 4/B/final-X/final-component không?
 - Primary và alternate khác nhau ở next path nào?
 - Confirmation và invalidation là gì?
 - Fibonacci/channel/personality đang hỗ trợ hay đang bị dùng để cứu count?
@@ -426,6 +505,7 @@ Một pivot được gắn ba tên không tạo ba phiếu confluence độc l�
 | Nguồn | Lớp | Xác nhận được | Giới hạn |
 |---|---|---|---|
 | [Waveopedia overview](https://www.elliottwave.com/waveopedia/) | `E3` | Motive/corrective, degree, alternate và invalidation | Current codification, không đồng nhất toàn bộ với nguyên văn Elliott |
+| [*Elliott Wave Principle: Key to Market Behavior*](https://www.elliottwave.com/books/elliott-wave-principle/) | `E2` | Definitive codified textbook về rules, guidelines và pattern taxonomy | Landing page không thay thế page-level citation khi cần kiểm chứng threshold |
 | [Motive Waves](https://www.elliottwave.com/waveopedia/motive-waves/) | `E3` | Motive progress rules và wave 3 không ngắn nhất | Tendency về length cần metric/scale nhất quán |
 | [Impulse](https://www.elliottwave.com/waveopedia/impulse/) | `E3` | 5-3-5-3-5, no-overlap và rule/guideline distinction | Futures-overlap caveat rất hẹp |
 | [Diagonals](https://www.elliottwave.com/waveopedia/elliott-wave-pattern-diagonals/) | `E3` | Leading/ending positions, overlap và subdivision caveat | Leading-diagonal subdivision còn convention ambiguity |
@@ -439,9 +519,10 @@ Một pivot được gắn ba tên không tạo ba phiếu confluence độc l�
 | [Alternation](https://www.elliottwave.com/waveopedia/alternation/) | `E3` | Alternation về form/complexity trong impulse/correction | Guideline, không phải hard invalidation |
 | [Equality](https://www.elliottwave.com/waveopedia/equality/) | `E3` | Equality của two non-extended waves | Arithmetic/percentage phụ thuộc degree |
 | [Fibonacci Relationships](https://www.elliottwave.com/waveopedia/fibonacci-relationships/) | `E3` | Ratio dùng sau valid wave interpretation | Không chứng minh count độc lập |
+| [Channeling](https://www.elliottwave.com/waveopedia/channeling/) | `E3` | Channel construction cho impulse | Geometry guideline, không phải completion rule |
 | [Wave Personality](https://www.elliottwave.com/waveopedia/wave-personality/) | `E2/E3` | Typical sentiment, breadth, volume và behavior | Chủ yếu dựa stock-market experience |
 | [R. N. Elliott, *Nature's Law* — WorldCat](https://search.worldcat.org/title/Nature%27s-law-%3A-the-secret-of-the-universe/oclc/35750058) | `E1 metadata` | Tác giả và ấn phẩm năm 1946 | Catalog metadata, không thay việc đọc primary text |
 
 ## Kết luận
 
-Elliott Wave nên được học như một constrained scenario tree: `observable pivots → degree hypothesis → pattern candidates → hard-rule elimination → guideline ranking → confirmation/invalidation → versioned relabel`. Giá trị cốt lõi không nằm ở việc luôn có một count đúng duy nhất, mà ở khả năng nói rõ path nào còn hợp lệ, điều gì không thể xảy ra nếu count đúng và evidence nào buộc analyst thay đổi interpretation.
+Elliott Wave nên được học như một constrained scenario tree: `audited price extremes → degree hypothesis → allowed-position grammar → pattern candidates → hard-rule elimination → guideline ranking → confirmation/invalidation → versioned relabel`. Giá trị cốt lõi không nằm ở việc luôn có một count đúng duy nhất, mà ở khả năng nói rõ path nào còn hợp lệ, điều gì không thể xảy ra nếu count đúng và evidence nào buộc analyst thay đổi interpretation.
