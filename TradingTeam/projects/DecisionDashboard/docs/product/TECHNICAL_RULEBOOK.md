@@ -164,7 +164,7 @@ Kho tri thức học tập chuyên sâu nằm tại [Wyckoff Knowledge Atlas](..
 2. `Cause and Effect`: trading range tạo “cause”; xu hướng sau range là “effect”. Point-and-Figure là công cụ Wyckoff truyền thống để ước lượng objective, không phải target chắc chắn.
 3. `Effort versus Result`: so sánh volume/effort với price progress/result; divergence có thể báo absorption hoặc suy yếu.
 
-Volume phải gắn với venue. Spot XAU không có consolidated volume; ưu tiên COMEX Gold futures volume/OI làm proxy và ghi rõ độ trễ. BTC volume/order flow phải ghi exchange, không giả định một venue đại diện toàn thị trường.
+Volume phải gắn với venue. Spot XAU không có consolidated volume; ưu tiên COMEX Gold futures volume/OI làm proxy và ghi rõ độ trễ. BTC volume/order flow phải ghi exchange, không giả định một venue đại diện toàn thị trường. Volume đo activity/effort, không trực tiếp chia thành “buy volume” và “sell volume”; dominance phải suy từ location, spread, close, progress và follow-through.
 
 ### 4.2 Chu kỳ giá
 
@@ -178,23 +178,27 @@ Chu kỳ là mô hình bối cảnh, không phải yêu cầu mọi chart luôn 
 
 | Phase | Mục tiêu phân tích | Events thường gặp |
 |---|---|---|
-| A | Downtrend cũ có dấu hiệu dừng | PS, SC, AR, ST |
+| A | Downtrend cũ có dấu hiệu dừng | PS, SC, Automatic Rally, ST |
 | B | Xây cause, kiểm tra supply/demand trong range | STs, upthrust nhỏ, range rotation |
 | C | Test quyết định phía dưới range | Spring/shakeout và test; có thể không có spring |
 | D | Demand chiếm ưu thế, rời range | SOS, LPS, BU |
 | E | Markup ngoài range | Higher highs/lows, demand controls |
 
-`Spring` dự thảo: giá xuyên support của range rồi quay lại, sau đó test cho thấy supply giảm. Một wick xuyên support không đủ nếu chưa xác nhận range, close behavior và test.
+`Spring` (khái niệm): giá xuyên support của range rồi quay lại, sau đó test cho thấy supply giảm. Một wick xuyên support không đủ nếu chưa xác nhận range, close behavior và test.
+
+Trong accumulation, `AR` luôn có nghĩa `Automatic Rally`. Không dùng acronym trần ngoài context vì trong distribution `AR` là `Automatic Reaction`.
 
 ### 4.4 Distribution
 
 | Phase | Mục tiêu phân tích | Events thường gặp |
 |---|---|---|
-| A | Uptrend cũ có dấu hiệu dừng | PSY, BC, AR, ST |
+| A | Uptrend cũ có dấu hiệu dừng | PSY, BC, Automatic Reaction, ST |
 | B | Xây cause và phân phối trong range | STs, range rotation |
 | C | Test quyết định phía trên range | UT/UTAD và test; có thể không có UTAD |
 | D | Supply chiếm ưu thế | SOW, LPSY |
 | E | Markdown ngoài range | Lower highs/lows, supply controls |
+
+Trong distribution, `AR` luôn có nghĩa `Automatic Reaction`. `UT` có thể xuất hiện trong range; `UTAD` là late-stage event và không phải tên của mọi false breakout.
 
 ### 4.5 Evidence và ambiguity policy
 
@@ -206,6 +210,8 @@ Chuyên gia phải ghi:
 - price spread, close location, relative volume và follow-through;
 - invalidation của schematic;
 - confidence giảm nếu volume source không đại diện hoặc range chưa đủ maturity.
+
+Range boundary, phase và event đều là provisional labels. Mọi revision cần evidence mới; không dời biên hoặc phase hồi tố để giữ schematic. `Accumulation`/`distribution` là campaign hypothesis chứ không phải quan sát trực tiếp inventory. Wyckoff `ChoC` mô tả thay đổi price–volume behavior và không được alias với SMC `CHoCH`.
 
 Không bắt buộc mọi accumulation có spring hoặc mọi distribution có UTAD. Nếu cả re-accumulation và distribution đều còn hợp lệ, output phải là `ambiguous` cùng điều kiện phân giải.
 
