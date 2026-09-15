@@ -52,6 +52,9 @@ describe("AnalysisWorkbench", () => {
     expect(screen.getAllByText("OANDA:XAUUSD").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("1H")).toBeTruthy();
     expect(screen.getByText("Oscillators & moving averages")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: /Trading Hub · đỉnh\/đáy theo IDM/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Sao chép Pine Script" })).toBeTruthy();
+    expect(screen.getByText(/không tuyên bố mọi pivot đó đều là IDM canonical/i)).toBeTruthy();
   });
 
   it("renders all four closed-bar timeframes and method-specific evidence", async () => {

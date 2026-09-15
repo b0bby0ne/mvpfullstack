@@ -1,5 +1,6 @@
 import type { Market, Timeframe } from "../domain/markets";
 import { ClosedBarAnalysis } from "./ClosedBarAnalysis";
+import { TradingHubIndicatorLab } from "./TradingHubIndicatorLab";
 import { TradingViewTechnicalAnalysis } from "./TradingViewTechnicalAnalysis";
 
 type AnalysisWorkbenchProps = {
@@ -29,6 +30,8 @@ export function AnalysisWorkbench({ market, timeframe }: AnalysisWorkbenchProps)
           <strong>{timeframeLabel(timeframe)}</strong>
         </div>
       </header>
+
+      <TradingHubIndicatorLab market={market} />
 
       <div className="analysis-workbench__grid">
         <article className="tv-analysis-card">
