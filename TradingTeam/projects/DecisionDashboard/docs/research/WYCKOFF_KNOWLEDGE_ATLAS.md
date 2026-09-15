@@ -265,7 +265,7 @@ Ví dụ bounded synthesis:
 
 Wyckoff so instrument với market/industry proxy bằng các waves và swing highs/lows. Khi market tạo lower low nhưng instrument giữ higher low, instrument biểu hiện relative strength; trường hợp ngược lại gợi relative weakness.
 
-Đối với DecisionDashboard knowledge scope:
+Đối với phạm vi thiết kế indicator:
 
 - XAU có thể được so với real yield/USD/broad commodity context, nhưng đây không phải bản thay thế trực tiếp cho stock-versus-index trong five-step method.
 - BTC có thể so với crypto market index hoặc ETH theo mục đích rõ ràng; dominance và cross-venue differences phải ghi riêng.

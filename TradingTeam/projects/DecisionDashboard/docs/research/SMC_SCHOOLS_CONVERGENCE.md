@@ -31,7 +31,7 @@ Khác biệt cốt lõi nằm ở bằng chứng được ưu tiên:
 - **ICT** tổ chức câu chuyện quanh price delivery: internal/external range liquidity, market structure shift, displacement, fair value gap, premium/discount, PD arrays và thời điểm trong ngày. Time và price là hai trục đồng thời; một pattern đúng hình học nhưng sai bối cảnh thời gian vẫn có thể bị loại.[^4][^5][^6]
 - **Trading Hub 3.0 của Mr Khan** thiên về mapping cơ giới hơn: impulse/correction, cấu trúc, IDM/inducement, BOS/CHoCH, “Order Flow” zone, OB/IFC/SCOB và các module CHoCH/Flip. Giáo trình chính thức cho thấy liquidity ngày và session là các lớp riêng trong workflow.[^7][^8]
 
-DecisionDashboard không nên tạo một nhãn `SMC signal` tổng hợp. Kiến trúc phù hợp là một lớp observation trung lập, ba school adapters độc lập và một confluence engine chỉ công bố bằng chứng nào đồng thuận hoặc mâu thuẫn. Không có detector nào được production hóa trước khi có threshold, golden chart positive/negative, quy tắc `confirmed_at` và invalidation do chuyên gia ký duyệt.
+Indicator workspace không nên tạo một nhãn `SMC signal` tổng hợp. Kiến trúc phù hợp là một lớp observation trung lập, ba school adapters độc lập và một confluence engine chỉ công bố bằng chứng nào đồng thuận hoặc mâu thuẫn. Không có detector nào được production hóa trước khi có threshold, golden chart positive/negative, quy tắc `confirmed_at` và invalidation do chuyên gia ký duyệt.
 
 ### Kết quả logic audit
 
@@ -48,7 +48,7 @@ DecisionDashboard không nên tạo một nhãn `SMC signal` tổng hợp. Kiế
 | Score 0–10 dễ bị hiểu là xác suất | Pseudo-precision | Gọi là `research_rank`, hiển thị thành phần và version; không quy đổi sang win rate |
 | XAU spot chart và COMEX footprint có thể bị nối trực tiếp | Sai venue | Bắt buộc symbol/contract/basis metadata và trạng thái `cross_venue_support` |
 
-Đặc tả SMC đã chuẩn hóa sau audit nằm tại [SMC Method Specification](../product/SMC_METHOD_SPEC.md).
+Đặc tả Pine đang triển khai nằm tại [Trading Hub swing indicator](../specs/trading-hub-swing-r0.1.md).
 
 ## 1. Phạm vi và độ tin cậy nguồn
 
@@ -169,7 +169,7 @@ Workflow sau là synthesis từ curriculum, chưa phải detector canonical:
 
 ### 3.3 Quasimodo, Flip và 3 Drive
 
-Quasimodo (QML) thường được mô tả bằng cấu trúc tạo một extreme, phá swing đối diện rồi hồi về vùng nguồn/shoulder. Đối với dashboard, không nên hard-code “QML line” trước khi chốt:
+Quasimodo (QML) thường được mô tả bằng cấu trúc tạo một extreme, phá swing đối diện rồi hồi về vùng nguồn/shoulder. Đối với indicator, không nên hard-code “QML line” trước khi chốt:
 
 - sequence pivot tối thiểu;
 - swing degree;
@@ -185,7 +185,7 @@ Flip và 3 Drive cũng cần được lưu dưới dạng school-specific patter
 
 Footprint hiển thị volume khớp tại bid/ask theo mức giá khi feed hỗ trợ. VSA diễn giải quan hệ spread, volume và kết quả của nến. Hai lớp này khác bản chất với OB được suy ra từ OHLC.
 
-Khi triển khai XAU, dashboard chỉ được gắn `footprint_confirmed` nếu dữ liệu đến từ hợp đồng COMEX xác định rõ và có trade/aggressor semantics. CME định nghĩa trade messages bằng price và size, còn Market by Order cho biết các lệnh riêng lẻ theo mức giá nhưng vẫn ẩn danh.[^11][^12] Không được dùng tick volume của broker XAU/USD rồi đặt nhãn như volume hợp nhất của thị trường vàng toàn cầu.
+Khi triển khai indicator XAU, script chỉ được gắn `footprint_confirmed` nếu dữ liệu đến từ hợp đồng COMEX xác định rõ và có trade/aggressor semantics. CME định nghĩa trade messages bằng price và size, còn Market by Order cho biết các lệnh riêng lẻ theo mức giá nhưng vẫn ẩn danh.[^11][^12] Không được dùng tick volume của broker XAU/USD rồi đặt nhãn như volume hợp nhất của thị trường vàng toàn cầu.
 
 ### 3.5 Điểm mạnh và rủi ro khi tự động hóa
 
@@ -219,7 +219,7 @@ Một workflow implementation-safe, không giả vờ bao phủ toàn bộ ICT:
 8. target internal rồi external liquidity phù hợp;
 9. invalidate khi causal swing/PD array bị phá theo rule.
 
-Chuỗi `raid → displacement/MSS → FVG retracement` là một candidate model hữu ích cho dashboard, nhưng không đại diện cho mọi ICT model.
+Chuỗi `raid → displacement/MSS → FVG retracement` là một candidate model hữu ích cho indicator, nhưng không đại diện cho mọi ICT model.
 
 ### 4.3 Liquidity và dealing range
 
@@ -365,7 +365,7 @@ Daily Candle Liquidity, Session Liquidity và Session Liquidity Entry là ba ph�
 | Invalidation | Ngoài zone/causal structure | Ngoài swing/array theo model | Ngoài structural/zone rule | `invalidation_rule` |
 | Automation | Cần nhiều reviewer judgment | Chỉ tốt khi scope model hẹp | Tốt nếu IDM/zone rules được chốt | School adapters |
 
-## 7. Điểm hội tụ có thể đưa vào DecisionDashboard
+## 7. Điểm hội tụ có thể đưa vào indicator workspace
 
 ### 7.1 Convergence kernel và cấp đồng thuận
 

@@ -1,61 +1,45 @@
-# DecisionDashboard
+# TradingView Indicator Lab
 
-The Chart section keeps the official TradingView Advanced Chart and Technical Analysis widgets aligned to the selected XAU or BTC symbol and timeframe. The analysis workbench appears below the chart with the TradingView oscillator/moving-average snapshot and expert evidence contracts for SMC, Wyckoff and Elliott. This remains research support without a broker write path.
+Workspace này chỉ phát triển indicator cho TradingView bằng Pine Script. Webapp DecisionDashboard, API server, macro/liquidity dashboard và TradingView iframe đã được loại bỏ khỏi nhánh này.
 
-Webapp hỗ trợ trader hợp nhất ba lớp quyết định:
+## Indicator hiện tại
 
-1. bối cảnh vĩ mô và research từ quant/investment firms;
-2. phân tích kỹ thuật theo SMC/Trading Hub, Elliott/Impulse Waves và Wyckoff/Trading Zone;
-3. môi trường giao dịch gồm session, timing phase, imbalance và vùng giá quan trọng.
+| Profile | Pine source | Trạng thái |
+|---|---|---|
+| `TH-SWING-R0.1` | [`indicators/trading-hub/swing-structure-r0.1.pine`](./indicators/trading-hub/swing-structure-r0.1.pine) | Research — chờ review chart |
 
-MVP là hệ thống `research + decision support + paper validation`. Live execution, tự động đặt lệnh và thay đổi tài khoản real nằm ngoài phạm vi cho tới khi có epic, risk gate và phê duyệt riêng.
+Mục tiêu đầu tiên là đánh dấu đỉnh/đáy theo chuỗi cơ học Trading Hub: candidate extreme chỉ được xác nhận sau khi internal pullback/IDM đối diện bị break hoặc sweep.
 
-## Điều hướng
+## Cấu trúc
 
-- [Product Backlog](./docs/planning/PRODUCT_BACKLOG.md)
-- [Planning Rules](./docs/planning/README.md)
-- [Delivery Workflow](./docs/planning/DELIVERY_WORKFLOW.md)
-- [TradingView Integration](./docs/architecture/TRADINGVIEW_INTEGRATION.md)
-- [Trading Hub swing indicator R0.1](./docs/product/TRADING_HUB_INDICATOR_SPEC.md)
-- [Gold Macro Snapshot](./docs/research/GOLD_MACRO_SNAPSHOT_2026-09-11.md)
-- [SMC Schools: HenrySMC, ICT và Trading Hub 3.0](./docs/research/SMC_SCHOOLS_CONVERGENCE.md)
-- [SMC Knowledge Atlas — học thuật ngữ và đối chiếu trường phái](./docs/research/SMC_KNOWLEDGE_ATLAS.md)
-- [Wyckoff Knowledge Atlas — price, volume và trading range](./docs/research/WYCKOFF_KNOWLEDGE_ATLAS.md)
-- [Elliott Wave Knowledge Atlas — degree, pattern và invalidation](./docs/research/ELLIOTT_WAVE_KNOWLEDGE_ATLAS.md)
-- [UX Flow](./docs/product/UX_FLOW.md)
-- [Technical Analysis Rulebook](./docs/product/TECHNICAL_RULEBOOK.md)
-- [SMC Method Specification](./docs/product/SMC_METHOD_SPEC.md)
-- [Daily Macro Data Operations](./docs/operations/DAILY_MACRO_DATA.md)
-- [Multi-timeframe Technical Analysis Operations](./docs/operations/TECHNICAL_ANALYSIS.md)
-- [Futures and Options Liquidity Data](./docs/operations/LIQUIDITY_DATA.md)
-- [Source Workspace](./src/README.md)
-- [Test Evidence](./tests/README.md)
-- [Release Workspace](./releases/README.md)
-- [Archive](./archive/README.md)
-
-## Chạy webapp
-
-```bash
-npm install
-npm run dev
+```text
+indicators/          Pine Script dùng trực tiếp trên TradingView
+docs/specs/          State machine, repaint contract và acceptance rules
+docs/research/       Tri thức SMC, Wyckoff và Elliott phục vụ thiết kế
+tools/               Kiểm tra tĩnh không phụ thuộc web stack
+validation/          Checklist review và evidence cũ được bảo toàn
 ```
 
-Mở `http://127.0.0.1:4173` để xem biểu đồ TradingView cho XAU/USD và BTC/USD. Đây là reference chart phục vụ research; không có broker write path.
+## Kiểm tra
 
-Section `Liquid` thu thập Deribit BTC futures depth, taker trades và option OI theo strike. XAU dùng CME Daily Bulletin: futures settlement/volume/OI và options block activity được hiển thị theo trade date; order-book depth chỉ bật khi có nguồn COMEX được cấp quyền.
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/verify-indicator.ps1
+```
 
-Kết nối CME có sẵn OAuth, DataMine và Market Data WebSocket. Sao chép `.env.example` thành `.env.local`, điền API ID/password trực tiếp trên máy rồi chạy `npm run cme:check`. Khi mở `XAU → Liquid`, app tự gọi connector và hiển thị trạng thái `TOB / TRD / STAT`; `.env.local` đã bị loại khỏi Git.
+Sau khi kiểm tra tĩnh pass:
 
-Webapp tự gọi daily ensure khi mở. Cài lịch kiểm tra nguồn XAU lúc 06:05 hằng ngày trên Windows bằng `npm run data:install-cron`; chi tiết nguồn, freshness và cách xử lý lỗi nằm trong tài liệu Daily Macro Data Operations.
+1. Sao chép Pine source vào TradingView Pine Editor.
+2. Add to chart trên đúng symbol và timeframe.
+3. Dùng Bar Replay để kiểm tra thời điểm `H/L` được xác nhận.
+4. Ghi kết quả vào [`validation/review-template.md`](./validation/review-template.md).
+5. Chỉ nâng profile sau khi các case bất đồng đã được giải quyết.
 
-Sau mỗi bước triển khai, chạy `npm run verify` rồi `npm run view`. Lệnh `view` tự mở webapp để thực hiện gate View & Debug trước khi commit.
+TradingView widget không còn là một phần của repository. Bước View & Debug từ đây mở trực tiếp TradingView; việc paste/save script vẫn cần phiên đăng nhập của người dùng.
 
-## Trách nhiệm theo project
+## Nguồn phương pháp
 
-- `Agent 0`: Product Backlog, sprint, dependency và delivery evidence.
-- `Agent 1`: trading requirements, glossary, signal/pattern contracts và acceptance criteria.
-- `Agent 2`: full-stack implementation, chart UI và deterministic analysis engines.
-- `Agent 3`: market/macro data, scheduled jobs, alerts và integration contracts.
-- `Agent 4`: data-quality, look-ahead/repainting test, security, regression và release gate.
-
-Các vai trò trên là specialization trong project; các approval gate và nguyên tắc an toàn của TradingTeam vẫn được giữ nguyên.
+- [TRADiNG hub chính chủ](https://www.youtube.com/@TRADiNGhub)
+- [True SMC Structure Mapping](https://www.youtube.com/watch?v=U3G1WR81RqY)
+- [SMC Market Structure Updated](https://www.youtube.com/watch?v=pYd0l4p7T6Y)
+- [True SMC Mechanical Structure](https://www.youtube.com/watch?v=4RROOTrB7u8)
+- [Real Pullback Identification](https://www.youtube.com/watch?v=5rDjjfxrPu0)

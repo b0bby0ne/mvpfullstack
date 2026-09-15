@@ -15,7 +15,7 @@ Elliott Wave hiện được sử dụng qua nhiều lớp lịch sử. Atlas t�
 | `E1 — original` | *The Wave Principle* (1938), các market letters và *Nature's Law* (1946) của R. N. Elliott | Nguồn lịch sử cho wave principle, degree và pattern foundation |
 | `E2 — codified lineage` | Frost/Prechter và hệ thống Wave Principle được chuẩn hóa về notation, rules, guidelines và pattern variants | Dùng cho taxonomy và cách đếm phổ biến hiện nay; không gọi mọi convention là nguyên văn của Elliott |
 | `E3 — current reference` | Waveopedia của Elliott Wave International | Reference công khai cho impulse, diagonal, corrections, alternation, Fibonacci, channel và terminology |
-| `SYNTHESIS` | Quy ước học tập của DecisionDashboard cho XAU/BTC và giao thoa SMC/Wyckoff | Dùng để giữ reasoning nhất quán, không phải canonical Elliott rule |
+| `SYNTHESIS` | Quy ước học tập của indicator workspace cho XAU/BTC và giao thoa SMC/Wyckoff | Dùng để giữ reasoning nhất quán, không phải canonical Elliott rule |
 | `OPEN` | Count/pattern chưa đủ data hoặc có nhiều interpretation hợp lệ | Giữ alternate; không ép nhãn |
 
 [Waveopedia](https://www.elliottwave.com/waveopedia/) trình bày method hiện hành như một catalog pattern có rules, guidelines, degree và alternate counts. [WorldCat](https://search.worldcat.org/title/Nature%27s-law-%3A-the-secret-of-the-universe/oclc/35750058) xác nhận *Nature's Law* của R. N. Elliott là ấn phẩm năm 1946; metadata lịch sử không tự xác nhận mọi diễn giải hậu kỳ.
