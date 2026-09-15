@@ -156,6 +156,8 @@ Không triển khai detector cho các mục trên trước khi chốt:
 
 ## 4. Wyckoff
 
+Kho tri thức học tập chuyên sâu nằm tại [Wyckoff Knowledge Atlas](../research/WYCKOFF_KNOWLEDGE_ATLAS.md). Phần dưới đây chỉ giữ baseline ngắn gọn dùng chung với rulebook.
+
 ### 4.1 Ba luật nền tảng
 
 1. `Supply and Demand`: demand vượt supply hỗ trợ tăng giá; supply vượt demand hỗ trợ giảm giá.
