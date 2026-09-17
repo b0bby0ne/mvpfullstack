@@ -1,9 +1,10 @@
 //@version=6
-indicator("DD · Trading Hub Price Map + Elliott [R0.9]", "DD TH Map R0.9", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · SMC Price Map + Elliott [R1.0]", "DD SMC Elliott R1.0", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research price-map profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
-// seams until reviewed bar-by-bar by a domain expert.
+// seams until reviewed bar-by-bar by a domain expert. Elliott is a separate profile layer:
+// it consumes confirmed SMC H/L and the lifecycle of their outgoing important FVGs.
 
 string GROUP_ENGINE = "01 · Structure engine"
 string GROUP_ZONES = "02 · Zone rules"
@@ -28,15 +29,15 @@ bool showDecisionPoi = input.bool(true, "Show Decision POI", group = GROUP_DISPL
 bool showExtremePoi = input.bool(true, "Show effective Extreme POI", group = GROUP_DISPLAY)
 bool showStatus = input.bool(false, "Show diagnostics status", group = GROUP_DISPLAY)
 
-int corePivotBars = input.int(5, "Core pivot bars (left/right)", minval = 2, maxval = 50, group = GROUP_CORE, tooltip = "Higher-order confirmed pivot strength. The newest core pivot can move until an opposing core reversal is accepted.")
-float coreMinReversalAtr = input.float(1.0, "Minimum reversal (ATR)", minval = 0.0, maxval = 10.0, step = 0.1, group = GROUP_CORE)
-float coreMinReversalPercent = input.float(0.0, "Minimum reversal (%)", minval = 0.0, maxval = 20.0, step = 0.1, group = GROUP_CORE)
+float coreMinReversalAtr = input.float(1.0, "Minimum SMC reversal (ATR)", minval = 0.0, maxval = 10.0, step = 0.1, group = GROUP_CORE, tooltip = "Filters the confirmed Trading Hub H/L stream; it does not create an independent fractal pivot.")
+float coreMinReversalPercent = input.float(0.0, "Minimum SMC reversal (%)", minval = 0.0, maxval = 20.0, step = 0.1, group = GROUP_CORE)
 bool showCoreSwings = input.bool(true, "Show core H/L", group = GROUP_CORE)
 bool showCorePath = input.bool(false, "Connect core pivots", group = GROUP_CORE)
 int corePivotsRetained = input.int(40, "Core pivots retained", minval = 12, maxval = 80, group = GROUP_CORE)
 
 bool showElliott = input.bool(true, "Show validated Elliott impulse", group = GROUP_ELLIOTT)
 bool showElliottCorrection = input.bool(true, "Show A-B-C candidates", group = GROUP_ELLIOTT, tooltip = "A?/B?/C? remain candidates until a strict zigzag correction is complete.")
+string elliottImbalanceRule = input.string("Latest motive IMB", "SMC imbalance support", options = ["Latest motive IMB", "At least 2 motive IMBs", "All 3 motive IMBs"], group = GROUP_ELLIOTT, tooltip = "Every mode requires the latest motive-leg IMP-FVG to remain unfilled. Stricter modes also require earlier motive imbalances to remain valid.")
 
 string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 string idmSweepSymbol = input.string("Diamond", "IDM sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
@@ -69,13 +70,14 @@ f_addEventSymbol(array<label> markers, float price, string symbolStyle, color sy
     if array.size(markers) > limit
         label.delete(array.shift(markers))
 
-f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions, array<label> pivotLabels, array<line> pivotLines, float pivotPrice, int pivotBar, int direction, float reversalFloor, float labelPadding, bool drawLabels, bool drawPath, color pivotColor, int limit) =>
+f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions, array<int> supportImbalanceIds, array<label> pivotLabels, array<line> pivotLines, float pivotPrice, int pivotBar, int direction, int outgoingImbalanceId, float reversalFloor, float labelPadding, bool drawLabels, bool drawPath, color pivotColor, int limit) =>
     int event = 0 // 0 ignored, 1 appended, 2 newest developing pivot replaced
     int count = array.size(prices)
     if count == 0
         array.push(prices, pivotPrice)
         array.push(bars, pivotBar)
         array.push(directions, direction)
+        array.push(supportImbalanceIds, outgoingImbalanceId)
         label firstLabel = drawLabels ? label.new(pivotBar, pivotPrice + direction * labelPadding, direction == 1 ? "C-H" : "C-L", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = pivotColor, size = size.tiny, tooltip = "Confirmed higher-order core pivot") : na
         array.push(pivotLabels, firstLabel)
         event := 1
@@ -88,6 +90,7 @@ f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions,
             if moreExtreme
                 array.set(prices, lastIndex, pivotPrice)
                 array.set(bars, lastIndex, pivotBar)
+                array.set(supportImbalanceIds, lastIndex, outgoingImbalanceId)
                 label lastLabel = array.get(pivotLabels, lastIndex)
                 if not na(lastLabel)
                     label.set_xy(lastLabel, pivotBar, pivotPrice + direction * labelPadding)
@@ -102,6 +105,7 @@ f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions,
             array.push(prices, pivotPrice)
             array.push(bars, pivotBar)
             array.push(directions, direction)
+            array.push(supportImbalanceIds, outgoingImbalanceId)
             array.push(pivotLabels, nextLabel)
             array.push(pivotLines, nextLine)
             event := 1
@@ -110,6 +114,7 @@ f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions,
         array.shift(prices)
         array.shift(bars)
         array.shift(directions)
+        array.shift(supportImbalanceIds)
         label expiredLabel = array.shift(pivotLabels)
         if not na(expiredLabel)
             label.delete(expiredLabel)
@@ -159,7 +164,30 @@ f_clearElliott(array<label> waveLabels, array<line> waveLines) =>
             line.delete(array.get(waveLines, index))
         array.clear(waveLines)
 
-f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, bool drawCorrection, color impulseColor, color abcColor) =>
+f_zoneState(array<int> zoneIds, array<int> states, int targetId) =>
+    int result = 2 // Missing/pruned support fails closed as invalid.
+    if not na(targetId) and array.size(zoneIds) > 0
+        for index = 0 to array.size(zoneIds) - 1
+            if array.get(zoneIds, index) == targetId
+                result := array.get(states, index)
+    result
+
+f_validImbalanceCount(array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, int start) =>
+    int validCount = 0
+    for motiveOffset = 0 to 4 by 2
+        int supportId = array.get(supportImbalanceIds, start + motiveOffset)
+        if f_zoneState(zoneIds, zoneStates, supportId) < 2
+            validCount += 1
+    validCount
+
+f_impulseHasSmcSupport(array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, int start, string supportRule) =>
+    int latestMotiveImbalanceId = array.get(supportImbalanceIds, start + 4)
+    bool latestIsValid = f_zoneState(zoneIds, zoneStates, latestMotiveImbalanceId) < 2
+    int validCount = f_validImbalanceCount(supportImbalanceIds, zoneIds, zoneStates, start)
+    bool rulePasses = supportRule == "Latest motive IMB" or (supportRule == "At least 2 motive IMBs" and validCount >= 2) or (supportRule == "All 3 motive IMBs" and validCount == 3)
+    latestIsValid and rulePasses
+
+f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, bool drawCorrection, string supportRule, color impulseColor, color abcColor) =>
     f_clearElliott(waveLabels, waveLines)
     int foundStart = -1
     int foundDirection = 0
@@ -167,15 +195,17 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
     if drawImpulse and count >= 6
         for start = 0 to count - 6
             int direction = f_impulseDirection(prices, directions, start)
-            if direction != 0
+            if direction != 0 and f_impulseHasSmcSupport(supportImbalanceIds, zoneIds, zoneStates, start, supportRule)
                 foundStart := start
                 foundDirection := direction
     if foundStart >= 0
+        int validImbalances = f_validImbalanceCount(supportImbalanceIds, zoneIds, zoneStates, foundStart)
         for offset = 0 to 5
             int index = foundStart + offset
             string waveText = offset == 0 ? "E0" : str.tostring(offset)
             float labelPrice = array.get(prices, index) + array.get(directions, index) * labelPadding
-            label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = impulseColor, size = size.small, tooltip = offset == 0 ? "Validated Elliott impulse origin" : "Validated Elliott impulse wave " + waveText)
+            string impulseTooltip = (offset == 0 ? "SMC-supported Elliott impulse origin" : "SMC-supported Elliott impulse wave " + waveText) + " · valid motive IMB " + str.tostring(validImbalances) + "/3"
+            label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = impulseColor, size = size.small, tooltip = impulseTooltip)
             array.push(waveLabels, waveLabel)
             if offset > 0
                 line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, 18), width = 1)
@@ -197,24 +227,30 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
                     array.push(waveLabels, correctionLabel)
                     line correctionLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(abcColor, 24), style = line.style_dashed, width = 1)
                     array.push(waveLines, correctionLine)
-    foundStart
+    int activeSupportId = foundStart >= 0 ? array.get(supportImbalanceIds, foundStart + 4) : na
+    [foundStart, activeSupportId]
 
-f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
+f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, array<bool> visibility, array<int> ids, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, bool visible, int zoneId, int limit) =>
     int initialRight = math.max(bar_index, leftBar)
-    box created = box.new(left = leftBar, top = zoneTop, right = initialRight, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 48), bgcolor = color.new(zoneColor, 90), text = kind, text_color = color.new(zoneColor, 8), text_size = size.tiny, text_halign = text.align_left)
+    box created = box.new(left = leftBar, top = zoneTop, right = initialRight, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, visible ? 48 : 100), bgcolor = color.new(zoneColor, visible ? 90 : 100), text = visible ? kind : "", text_color = color.new(zoneColor, visible ? 8 : 100), text_size = size.tiny, text_halign = text.align_left)
     array.push(boxes, created)
     array.push(kinds, kind)
     array.push(directions, direction)
     array.push(states, 0)
     array.push(colors, zoneColor)
+    array.push(visibility, visible)
+    array.push(ids, zoneId)
     if array.size(boxes) > limit
         box.delete(array.shift(boxes))
         array.shift(kinds)
         array.shift(directions)
         array.shift(states)
         array.shift(colors)
+        array.shift(visibility)
+        array.shift(ids)
+    created
 
-f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, string invalidationMode) =>
+f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, array<bool> visibility, string invalidationMode) =>
     if array.size(boxes) > 0
         for index = 0 to array.size(boxes) - 1
             int state = array.get(states, index)
@@ -223,6 +259,7 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
                 string kind = array.get(kinds, index)
                 int direction = array.get(directions, index)
                 color zoneColor = array.get(colors, index)
+                bool visible = array.get(visibility, index)
                 float zoneTop = box.get_top(zone)
                 float zoneBottom = box.get_bottom(zone)
                 bool touched = direction == 1 ? low <= zoneTop : high >= zoneBottom
@@ -231,19 +268,19 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
                     array.set(states, index, 2)
                     box.set_extend(zone, extend.none)
                     box.set_right(zone, bar_index)
-                    box.set_bgcolor(zone, color.new(zoneColor, 96))
-                    box.set_border_color(zone, color.new(zoneColor, 82))
-                    box.set_text(zone, kind + (kind == "IMP-FVG" ? " · ✓" : " · ×"))
-                    box.set_text_color(zone, color.new(zoneColor, 58))
+                    if visible
+                        box.set_bgcolor(zone, color.new(zoneColor, 96))
+                        box.set_border_color(zone, color.new(zoneColor, 82))
+                        box.set_text(zone, kind + (kind == "IMP-FVG" ? " · ✓" : " · ×"))
+                        box.set_text_color(zone, color.new(zoneColor, 58))
                 else if state == 0 and touched
                     array.set(states, index, 1)
-                    box.set_bgcolor(zone, color.new(zoneColor, 93))
-                    box.set_text(zone, kind + " · T")
+                    if visible
+                        box.set_bgcolor(zone, color.new(zoneColor, 93))
+                        box.set_text(zone, kind + " · T")
 
 float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
-float coreHigh = ta.pivothigh(high, corePivotBars, corePivotBars)
-float coreLow = ta.pivotlow(low, corePivotBars, corePivotBars)
 float atrBasis = nz(ta.atr(14), high - low)
 float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
 
@@ -289,14 +326,19 @@ var array<string> zoneKinds = array.new<string>()
 var array<int> zoneDirections = array.new<int>()
 var array<int> zoneStates = array.new<int>()
 var array<color> zoneColors = array.new<color>()
+var array<bool> zoneVisibility = array.new<bool>()
+var array<int> zoneIds = array.new<int>()
 var array<label> eventSymbolLabels = array.new<label>()
 var array<float> corePrices = array.new<float>()
 var array<int> coreBars = array.new<int>()
 var array<int> coreDirections = array.new<int>()
+var array<int> coreSupportImbalanceIds = array.new<int>()
 var array<label> coreLabels = array.new<label>()
 var array<line> coreLines = array.new<line>()
 var array<label> elliottLabels = array.new<label>()
 var array<line> elliottLines = array.new<line>()
+var int activeElliottImbalanceId = na
+var int nextImbalanceId = 0
 
 bool confirmedHighThisBar = false
 bool confirmedLowThisBar = false
@@ -310,9 +352,11 @@ bool decisionPoiThisBar = false
 bool extremePoiThisBar = false
 bool corePivotThisBar = false
 bool elliottImpulseThisBar = false
+bool elliottImpulseInvalidatedThisBar = false
+int coreEvent = 0
 
 if barstate.isconfirmed
-    f_updateZones(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, poiInvalidation)
+    f_updateZones(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, poiInvalidation)
 
     // A structural-liquidity sweep must trade beyond the level and close back
     // inside. A close beyond consumes the old level as a break, not a sweep.
@@ -405,7 +449,7 @@ if barstate.isconfirmed
             if showExtremePoi and effectiveBearExtreme
                 float extremeTop = poiRange == "Full candle" ? candidateHigh : math.max(candidateHighOpen, candidateHighClose)
                 float extremeBottom = poiRange == "Full candle" ? candidateHighLow : math.min(candidateHighOpen, candidateHighClose)
-                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateHighBar + zoneStartPaddingBars, extremeTop, extremeBottom, -1, "E-POI", extremeColor, maxZones)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, candidateHighBar + zoneStartPaddingBars, extremeTop, extremeBottom, -1, "E-POI", extremeColor, true, 0, maxZones)
                 extremePoiThisBar := true
 
             // Decision POI profile seam: nearest bullish candle before the
@@ -421,7 +465,7 @@ if barstate.isconfirmed
                         decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
                         decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
                 if not na(decisionBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, -1, "D-POI", decisionColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, -1, "D-POI", decisionColor, true, 0, maxZones)
                     decisionPoiThisBar := true
 
             // Important imbalance profile seam: most recent unfilled bearish
@@ -429,7 +473,8 @@ if barstate.isconfirmed
             int imbalanceBar = na
             float imbalanceTop = na
             float imbalanceBottom = na
-            if showImbalance
+            int outgoingHighImbalanceId = na
+            if showImbalance or showElliott
                 for i = 0 to zoneLookback
                     bool insideLeg = bar_index - i - 2 >= candidateHighBar
                     bool bearishGap = insideLeg and not na(low[i + 2]) and high[i] < low[i + 2]
@@ -443,8 +488,13 @@ if barstate.isconfirmed
                         imbalanceTop := low[i + 2]
                         imbalanceBottom := high[i]
                 if not na(imbalanceBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, maxZones)
+                    nextImbalanceId += 1
+                    outgoingHighImbalanceId := nextImbalanceId
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, showImbalance, outgoingHighImbalanceId, maxZones)
                     importantImbalanceThisBar := true
+
+            float coreReversalFloor = math.max(atrBasis * coreMinReversalAtr, math.abs(candidateHigh) * coreMinReversalPercent * 0.01)
+            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreSupportImbalanceIds, coreLabels, coreLines, candidateHigh, candidateHighBar, 1, outgoingHighImbalanceId, coreReversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
 
             previousConfirmedHigh := candidateHigh
             previousConfirmedHighBar := candidateHighBar
@@ -497,7 +547,7 @@ if barstate.isconfirmed
             if showExtremePoi and effectiveBullExtreme
                 float extremeTop = poiRange == "Full candle" ? candidateLowHigh : math.max(candidateLowOpen, candidateLowClose)
                 float extremeBottom = poiRange == "Full candle" ? candidateLow : math.min(candidateLowOpen, candidateLowClose)
-                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateLowBar + zoneStartPaddingBars, extremeTop, extremeBottom, 1, "E-POI", extremeColor, maxZones)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, candidateLowBar + zoneStartPaddingBars, extremeTop, extremeBottom, 1, "E-POI", extremeColor, true, 0, maxZones)
                 extremePoiThisBar := true
 
             int decisionBar = na
@@ -511,13 +561,14 @@ if barstate.isconfirmed
                         decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
                         decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
                 if not na(decisionBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, 1, "D-POI", decisionColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, 1, "D-POI", decisionColor, true, 0, maxZones)
                     decisionPoiThisBar := true
 
             int imbalanceBar = na
             float imbalanceTop = na
             float imbalanceBottom = na
-            if showImbalance
+            int outgoingLowImbalanceId = na
+            if showImbalance or showElliott
                 for i = 0 to zoneLookback
                     bool insideLeg = bar_index - i - 2 >= candidateLowBar
                     bool bullishGap = insideLeg and not na(high[i + 2]) and low[i] > high[i + 2]
@@ -531,8 +582,13 @@ if barstate.isconfirmed
                         imbalanceTop := low[i]
                         imbalanceBottom := high[i + 2]
                 if not na(imbalanceBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, maxZones)
+                    nextImbalanceId += 1
+                    outgoingLowImbalanceId := nextImbalanceId
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, zoneVisibility, zoneIds, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, showImbalance, outgoingLowImbalanceId, maxZones)
                     importantImbalanceThisBar := true
+
+            float coreReversalFloor = math.max(atrBasis * coreMinReversalAtr, math.abs(candidateLow) * coreMinReversalPercent * 0.01)
+            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreSupportImbalanceIds, coreLabels, coreLines, candidateLow, candidateLowBar, -1, outgoingLowImbalanceId, coreReversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
 
             previousConfirmedLow := candidateLow
             previousConfirmedLowBar := candidateLowBar
@@ -564,36 +620,20 @@ if barstate.isconfirmed
     if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1
         f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmSweepSymbol, true), idmColor, eventSymbolsRetained)
 
-    // Core pivots use a wider confirmed fractal plus a minimum reversal gate.
-    // The last core point is developing and may be replaced by a more extreme
-    // same-direction pivot; all earlier alternating points are locked.
-    int coreEvent = 0
-    int corePivotBar = bar_index - corePivotBars
-    float coreAtr = nz(atrBasis[corePivotBars], atrBasis)
-    bool ambiguousCoreBar = not na(coreHigh) and not na(coreLow)
-    if ambiguousCoreBar
-        int lastCoreDirection = array.size(coreDirections) > 0 ? array.get(coreDirections, array.size(coreDirections) - 1) : 0
-        if lastCoreDirection == 1
-            float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreLow) * coreMinReversalPercent * 0.01)
-            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreLow, corePivotBar, -1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
-        else
-            float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreHigh) * coreMinReversalPercent * 0.01)
-            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreHigh, corePivotBar, 1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
-    else if not na(coreHigh)
-        float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreHigh) * coreMinReversalPercent * 0.01)
-        coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreHigh, corePivotBar, 1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
-    else if not na(coreLow)
-        float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreLow) * coreMinReversalPercent * 0.01)
-        coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreLow, corePivotBar, -1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
-
-    if coreEvent > 0
+    // Elliott is rebuilt only when the confirmed SMC H/L stream changes or
+    // when its latest motive IMP-FVG becomes filled/pruned. This keeps the
+    // active wave tied to SMC structure and imbalance lifecycle.
+    bool activeSupportInvalidated = not na(activeElliottImbalanceId) and f_zoneState(zoneIds, zoneStates, activeElliottImbalanceId) >= 2
+    if coreEvent > 0 or activeSupportInvalidated
         corePivotThisBar := coreEvent == 1
-        int latestImpulseStart = f_renderElliott(corePrices, coreBars, coreDirections, elliottLabels, elliottLines, markerSpacing * 1.25, showElliott, showElliottCorrection, elliottColor, correctionColor)
+        elliottImpulseInvalidatedThisBar := activeSupportInvalidated
+        [latestImpulseStart, refreshedSupportId] = f_renderElliott(corePrices, coreBars, coreDirections, coreSupportImbalanceIds, zoneIds, zoneStates, elliottLabels, elliottLines, markerSpacing * 1.25, showElliott, showElliottCorrection, elliottImbalanceRule, elliottColor, correctionColor)
+        activeElliottImbalanceId := refreshedSupportId
         elliottImpulseThisBar := coreEvent == 1 and latestImpulseStart >= 0 and latestImpulseStart + 5 == array.size(corePrices) - 1
 
 if barstate.islast
     if showStatus
-        table.cell(statusTable, 0, 0, "TH R0.9", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 0, "SMC R1.0", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
         table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)
@@ -614,4 +654,5 @@ alertcondition(importantImbalanceThisBar, "Important imbalance created", "A prof
 alertcondition(decisionPoiThisBar, "Decision POI created", "A profile-selected Decision POI was created on {{ticker}} {{interval}}.")
 alertcondition(extremePoiThisBar, "Effective Extreme POI created", "An Extreme POI passed the sweep-and-re-entry validity gate on {{ticker}} {{interval}}.")
 alertcondition(corePivotThisBar, "Core pivot confirmed", "A higher-order core pivot was confirmed on {{ticker}} {{interval}}.")
-alertcondition(elliottImpulseThisBar, "Elliott impulse validated", "A strict 1-2-3-4-5 Elliott impulse was validated on {{ticker}} {{interval}}.")
+alertcondition(elliottImpulseThisBar, "SMC-supported Elliott impulse validated", "A strict 1-2-3-4-5 Elliott impulse with valid motive imbalance support was validated on {{ticker}} {{interval}}.")
+alertcondition(elliottImpulseInvalidatedThisBar, "Elliott impulse IMB invalidated", "The latest motive imbalance supporting the active Elliott impulse was filled or pruned on {{ticker}} {{interval}}.")

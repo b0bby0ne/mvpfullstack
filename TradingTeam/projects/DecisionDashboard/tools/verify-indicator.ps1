@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r0.9.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r1.0.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -15,7 +15,7 @@ if (-not $resolvedPath.StartsWith($workspaceRoot + [IO.Path]::DirectorySeparator
 $source = Get-Content -LiteralPath $resolvedPath -Raw -Encoding UTF8
 $required = [ordered]@{
   "Pine v6" = "//@version=6"
-  "Price-map profile" = 'Trading Hub Price Map + Elliott [R0.9]'
+  "Price-map profile" = 'SMC Price Map + Elliott [R1.0]'
   "Overlay indicator" = "overlay = true"
   "Closed-bar gate" = "if barstate.isconfirmed"
   "High IDM ordering" = "candidateHighIdmBar < candidateHighBar"
@@ -54,7 +54,7 @@ $required = [ordered]@{
   "Tiny event symbols" = "size = size.tiny"
   "Text-only structure labels" = "style = label.style_none, color = na, textcolor = highColor, size = size.tiny"
   "Compact status table" = "table.new(position.top_right, 2, 4, border_width = 0)"
-  "Subtle active zones" = "bgcolor = color.new(zoneColor, 90)"
+  "Subtle active zones" = "bgcolor = color.new(zoneColor, visible ? 90 : 100)"
   "Thin sweep lines" = "style = line.style_dashed, width = 1"
   "BSL symbol call" = "high + markerSpacing, f_labelStyle(liquiditySweepSymbol, false)"
   "SSL symbol call" = "low - markerSpacing, f_labelStyle(liquiditySweepSymbol, true)"
@@ -65,11 +65,10 @@ $required = [ordered]@{
   "FVG starts after pattern" = "imbalanceBar + 2 + zoneStartPaddingBars"
   "Lifecycle respects padding" = "bar_index >= box.get_left(zone)"
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
-  "Core pivot strength" = 'input.int(5, "Core pivot bars (left/right)"'
-  "Core ATR reversal gate" = 'input.float(1.0, "Minimum reversal (ATR)"'
-  "Core percentage reversal gate" = 'input.float(0.0, "Minimum reversal (%)"'
-  "Core high source" = "ta.pivothigh(high, corePivotBars, corePivotBars)"
-  "Core low source" = "ta.pivotlow(low, corePivotBars, corePivotBars)"
+  "Core ATR reversal gate" = 'input.float(1.0, "Minimum SMC reversal (ATR)"'
+  "Core percentage reversal gate" = 'input.float(0.0, "Minimum SMC reversal (%)"'
+  "SMC high drives core" = "candidateHigh, candidateHighBar, 1, outgoingHighImbalance"
+  "SMC low drives core" = "candidateLow, candidateLowBar, -1, outgoingLowImbalance"
   "Core alternation engine" = "f_registerCorePivot("
   "Developing core replacement" = "newest developing pivot replaced"
   "Core high marker" = '"C-H"'
@@ -80,7 +79,16 @@ $required = [ordered]@{
   "Elliott wave-three rule" = "wave3NotShortest"
   "Strict correction engine" = "f_strictCorrectionComplete("
   "Developing correction labels" = 'baseText + "?"'
-  "Elliott core-driven render" = "if coreEvent > 0"
+  "Elliott core-driven render" = "if coreEvent > 0 or activeSupportInvalidated"
+  "Elliott imbalance mode" = 'input.string("Latest motive IMB", "SMC imbalance support"'
+  "Motive imbalance references" = "coreSupportImbalanceIds"
+  "Stable imbalance zone IDs" = "nextImbalanceId"
+  "Imbalance support gate" = "f_impulseHasSmcSupport("
+  "Latest imbalance mandatory" = "latestIsValid and rulePasses"
+  "Hidden imbalance tracking" = "showImbalance or showElliott"
+  "Hidden zone visuals" = 'text = visible ? kind : ""'
+  "Support invalidation check" = "activeSupportInvalidated"
+  "Support invalidation alert" = "alertcondition(elliottImpulseInvalidatedThisBar"
   "Core pivot alert" = "alertcondition(corePivotThisBar"
   "Elliott impulse alert" = "alertcondition(elliottImpulseThisBar"
 }
@@ -107,6 +115,9 @@ $forbidden = [ordered]@{
   "Extreme POI event symbol option" = '"Extreme POI", options'
   "Zone event padding" = "zoneSymbolPaddingAtr"
   "Zone event direction" = "zoneEventDirectionThisBar"
+  "Independent core high fractal" = "ta.pivothigh(high, corePivotBars"
+  "Independent core low fractal" = "ta.pivotlow(low, corePivotBars"
+  "Legacy core pivot bars input" = '"Core pivot bars (left/right)"'
 }
 
 $failed = $false
