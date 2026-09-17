@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.6.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.7.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -29,7 +29,7 @@ $required = [ordered]@{
   "IDM break alert" = "alertcondition(idmBrokenThisBar"
   "Buy-side sweep re-entry" = "if close < previousConfirmedHigh"
   "Sell-side sweep re-entry" = "if close > previousConfirmedLow"
-  "Active IDM" = "IDM ACTIVE"
+  "Active IDM" = 'liveIdmLabel := label.new'
   "Important imbalance" = '"IMP-FVG"'
   "Decision POI" = '"D-POI"'
   "Extreme POI" = '"E-POI"'
@@ -50,6 +50,11 @@ $required = [ordered]@{
   "Text-free event symbol" = 'text = ""'
   "Event symbol retention" = "eventSymbolsRetained"
   "Runtime smoke state" = '"LOADED"'
+  "Tiny event symbols" = "size = size.tiny"
+  "Text-only structure labels" = "style = label.style_none, color = na, textcolor = highColor, size = size.tiny"
+  "Compact status table" = "table.new(position.top_right, 2, 4, border_width = 0)"
+  "Subtle active zones" = "bgcolor = color.new(zoneColor, 90)"
+  "Thin sweep lines" = "style = line.style_dashed, width = 1"
   "BSL symbol call" = "high + markerSpacing, f_labelStyle(liquiditySweepSymbol, false)"
   "SSL symbol call" = "low - markerSpacing, f_labelStyle(liquiditySweepSymbol, true)"
   "IDM sweep symbol call" = "f_labelStyle(idmSweepSymbol, false)"

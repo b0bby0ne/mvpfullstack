@@ -2,7 +2,7 @@
 
 ## Active
 
-### `TH-EVENTS-R0.6`
+### `TH-EVENTS-R0.7`
 
 - Mark confirmed H/L after the opposing IDM event.
 - Confirm H/L on any IDM take by default, then classify `IDM SWEPT` versus `IDM BROKEN`.
@@ -11,6 +11,7 @@
 - Start POI/FVG projection one bar after its source pattern by default.
 - Require a visible `LOADED` runtime smoke state before chart review.
 - Keep dynamic event shapes on managed label objects; forbid custom-style `plotshape` regressions.
+- Keep the default visual layer compact, translucent and price-first.
 - Connect each liquidity/IDM source to its sweep candle with a finite line.
 - Mark one-shot BSL/SSL sweep events with re-entry.
 - Select one important unfilled FVG and one Decision POI per confirmed leg.

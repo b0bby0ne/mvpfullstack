@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `TH-EVENTS-R0.6` | [`indicators/trading-hub/structure-events-r0.6.pine`](./indicators/trading-hub/structure-events-r0.6.pine) | Research — chờ review chart |
+| `TH-EVENTS-R0.7` | [`indicators/trading-hub/structure-events-r0.7.pine`](./indicators/trading-hub/structure-events-r0.7.pine) | Research — chờ review chart |
 
-R0.6 dùng label-object rỗng cho custom event shape, tránh lỗi render của custom `plotshape`. Status table hiện `LOADED` khi runtime hoạt động. POI/FVG vẫn có padding 1 bar và 1 ATR mặc định.
+R0.7 dùng visual compact: H/L không nền, event `tiny`, zone/line nhẹ hơn và status table 4 hàng. Runtime `LOADED`, custom shapes và POI/FVG padding vẫn được giữ.
 
 ## Cấu trúc
 

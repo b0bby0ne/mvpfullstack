@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · Trading Hub Structure Events [R0.6]", "DD TH Events R0.6", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · Trading Hub Structure Events [R0.7]", "DD TH Events R0.7", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -60,14 +60,14 @@ f_labelStyle(string selection, bool pointsUp) =>
         => pointsUp ? label.style_triangleup : label.style_triangledown
 
 f_addEventSymbol(array<label> markers, float price, string symbolStyle, color symbolColor, int limit) =>
-    label marker = label.new(x = bar_index, y = price, text = "", xloc = xloc.bar_index, yloc = yloc.price, style = symbolStyle, color = symbolColor, textcolor = color.new(symbolColor, 100), size = size.small)
+    label marker = label.new(x = bar_index, y = price, text = "", xloc = xloc.bar_index, yloc = yloc.price, style = symbolStyle, color = color.new(symbolColor, 8), textcolor = color.new(symbolColor, 100), size = size.tiny)
     array.push(markers, marker)
     if array.size(markers) > limit
         label.delete(array.shift(markers))
 
 f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
     int initialRight = math.max(bar_index, leftBar)
-    box created = box.new(left = leftBar, top = zoneTop, right = initialRight, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 15), bgcolor = color.new(zoneColor, 82), text = kind + " · ACTIVE", text_color = zoneColor, text_size = size.tiny, text_halign = text.align_left)
+    box created = box.new(left = leftBar, top = zoneTop, right = initialRight, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 48), bgcolor = color.new(zoneColor, 90), text = kind, text_color = color.new(zoneColor, 8), text_size = size.tiny, text_halign = text.align_left)
     array.push(boxes, created)
     array.push(kinds, kind)
     array.push(directions, direction)
@@ -97,14 +97,14 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
                     array.set(states, index, 2)
                     box.set_extend(zone, extend.none)
                     box.set_right(zone, bar_index)
-                    box.set_bgcolor(zone, color.new(zoneColor, 93))
-                    box.set_border_color(zone, color.new(zoneColor, 70))
-                    box.set_text(zone, kind + (kind == "IMP-FVG" ? " · FILLED" : " · INVALID"))
-                    box.set_text_color(zone, color.new(zoneColor, 45))
+                    box.set_bgcolor(zone, color.new(zoneColor, 96))
+                    box.set_border_color(zone, color.new(zoneColor, 82))
+                    box.set_text(zone, kind + (kind == "IMP-FVG" ? " · ✓" : " · ×"))
+                    box.set_text_color(zone, color.new(zoneColor, 58))
                 else if state == 0 and touched
                     array.set(states, index, 1)
-                    box.set_bgcolor(zone, color.new(zoneColor, 87))
-                    box.set_text(zone, kind + " · TOUCHED")
+                    box.set_bgcolor(zone, color.new(zoneColor, 93))
+                    box.set_text(zone, kind + " · T")
 
 float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
@@ -150,7 +150,7 @@ var bool previousLowConsumed = false
 var label liveCandidateLabel = na
 var line liveIdmLine = na
 var label liveIdmLabel = na
-var table statusTable = table.new(position.top_right, 2, 7, border_width = 1)
+var table statusTable = table.new(position.top_right, 2, 4, border_width = 0)
 
 var array<box> zoneBoxes = array.new<box>()
 var array<string> zoneKinds = array.new<string>()
@@ -181,13 +181,13 @@ if barstate.isconfirmed
         if close < previousConfirmedHigh
             buySideSweptThisBar := true
             if showSweeps
-                line.new(previousConfirmedHighBar, previousConfirmedHigh, bar_index, previousConfirmedHigh, xloc = xloc.bar_index, color = sweepColor, style = line.style_dashed, width = 2)
+                line.new(previousConfirmedHighBar, previousConfirmedHigh, bar_index, previousConfirmedHigh, xloc = xloc.bar_index, color = color.new(sweepColor, 20), style = line.style_dashed, width = 1)
     if not na(previousConfirmedLow) and not previousLowConsumed and low < previousConfirmedLow
         previousLowConsumed := true
         if close > previousConfirmedLow
             sellSideSweptThisBar := true
             if showSweeps
-                line.new(previousConfirmedLowBar, previousConfirmedLow, bar_index, previousConfirmedLow, xloc = xloc.bar_index, color = sweepColor, style = line.style_dashed, width = 2)
+                line.new(previousConfirmedLowBar, previousConfirmedLow, bar_index, previousConfirmedLow, xloc = xloc.bar_index, color = color.new(sweepColor, 20), style = line.style_dashed, width = 1)
 
     if not na(internalHigh)
         latestInternalHigh := internalHigh
@@ -252,9 +252,9 @@ if barstate.isconfirmed
         if hasHighSequence and confirmsHigh
             float oldConfirmedHigh = previousConfirmedHigh
             string highTag = na(oldConfirmedHigh) ? "H" : candidateHigh > oldConfirmedHigh ? "HH" : candidateHigh < oldConfirmedHigh ? "LH" : "EH"
-            label.new(candidateHighBar, candidateHigh, highTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_down, color = highColor, textcolor = color.white, size = size.small, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
+            label.new(candidateHighBar, candidateHigh + markerSpacing * 0.35, highTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = highColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
             if highIdmSweep ? showSweeps : showIdm
-                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = idmColor, style = highIdmSweep ? line.style_solid : line.style_dotted, width = highIdmSweep ? 2 : 1)
+                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, highIdmSweep ? 22 : 48), style = highIdmSweep ? line.style_solid : line.style_dotted, width = 1)
             idmSweptThisBar := highIdmSweep
             idmBrokenThisBar := highIdmBreak
             idmEventDirectionThisBar := -1
@@ -349,9 +349,9 @@ if barstate.isconfirmed
         if hasLowSequence and confirmsLow
             float oldConfirmedLow = previousConfirmedLow
             string lowTag = na(oldConfirmedLow) ? "L" : candidateLow > oldConfirmedLow ? "HL" : candidateLow < oldConfirmedLow ? "LL" : "EL"
-            label.new(candidateLowBar, candidateLow, lowTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_up, color = lowColor, textcolor = color.rgb(6, 24, 18), size = size.small, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
+            label.new(candidateLowBar, candidateLow - markerSpacing * 0.35, lowTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = lowColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
             if lowIdmSweep ? showSweeps : showIdm
-                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = idmColor, style = lowIdmSweep ? line.style_solid : line.style_dotted, width = lowIdmSweep ? 2 : 1)
+                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, lowIdmSweep ? 22 : 48), style = lowIdmSweep ? line.style_solid : line.style_dotted, width = 1)
             idmSweptThisBar := lowIdmSweep
             idmBrokenThisBar := lowIdmBreak
             idmEventDirectionThisBar := 1
@@ -465,35 +465,29 @@ if barstate.islast
 
     if showCandidate
         if phase == 1 and not na(candidateHigh)
-            liveCandidateLabel := label.new(candidateHighBar, candidateHigh, "H?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_down, color = candidateColor, textcolor = color.white, size = size.tiny)
+            liveCandidateLabel := label.new(candidateHighBar, candidateHigh + markerSpacing * 0.35, "H?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = candidateColor, size = size.tiny)
         else if phase == -1 and not na(candidateLow)
-            liveCandidateLabel := label.new(candidateLowBar, candidateLow, "L?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_up, color = candidateColor, textcolor = color.white, size = size.tiny)
+            liveCandidateLabel := label.new(candidateLowBar, candidateLow - markerSpacing * 0.35, "L?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = candidateColor, size = size.tiny)
 
     if showIdm
         if phase == 1 and not na(candidateHighIdm)
-            liveIdmLine := line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 20), style = line.style_dotted)
-            liveIdmLabel := label.new(bar_index, candidateHighIdm, "IDM ACTIVE ↓", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
+            liveIdmLine := line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 55), style = line.style_dotted)
+            liveIdmLabel := label.new(bar_index, candidateHighIdm, "IDM", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(idmColor, 18), size = size.tiny)
         else if phase == -1 and not na(candidateLowIdm)
-            liveIdmLine := line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 20), style = line.style_dotted)
-            liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM ACTIVE ↑", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
+            liveIdmLine := line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 55), style = line.style_dotted)
+            liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(idmColor, 18), size = size.tiny)
 
     if showStatus
-        table.cell(statusTable, 0, 0, "DD TH R0.6", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
-        table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.rgb(26, 31, 36))
-        table.cell(statusTable, 0, 1, "Seeking", text_color = color.silver)
-        table.cell(statusTable, 1, 1, phase == 1 ? "HIGH" : phase == -1 ? "LOW" : "BOOTSTRAP", text_color = phase == 1 ? highColor : lowColor)
-        table.cell(statusTable, 0, 2, "IDM gate", text_color = color.silver)
-        table.cell(statusTable, 1, 2, confirmationMode, text_color = color.white)
-        table.cell(statusTable, 0, 3, "IDM", text_color = color.silver)
-        table.cell(statusTable, 1, 3, phase == 1 and not na(candidateHighIdm) or phase == -1 and not na(candidateLowIdm) ? "ACTIVE" : "WAIT", text_color = idmColor)
-        table.cell(statusTable, 0, 4, "Zones kept", text_color = color.silver)
-        table.cell(statusTable, 1, 4, str.tostring(array.size(zoneBoxes)), text_color = color.white)
-        table.cell(statusTable, 0, 5, "POI invalid", text_color = color.silver)
-        table.cell(statusTable, 1, 5, poiInvalidation, text_color = color.white)
-        table.cell(statusTable, 0, 6, "Evaluation", text_color = color.silver)
-        table.cell(statusTable, 1, 6, "CLOSED BAR", text_color = lowColor)
+        table.cell(statusTable, 0, 0, "TH R0.7", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
+        table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)
+        table.cell(statusTable, 0, 2, "IDM", text_color = color.new(color.silver, 25), text_size = size.tiny)
+        table.cell(statusTable, 1, 2, phase == 1 and not na(candidateHighIdm) or phase == -1 and not na(candidateLowIdm) ? "●" : "○", text_color = idmColor, text_size = size.tiny)
+        table.cell(statusTable, 0, 3, "ZONE", text_color = color.new(color.silver, 25), text_size = size.tiny)
+        table.cell(statusTable, 1, 3, str.tostring(array.size(zoneBoxes)), text_color = color.new(color.white, 12), text_size = size.tiny)
     else
-        table.clear(statusTable, 0, 0, 1, 6)
+        table.clear(statusTable, 0, 0, 1, 3)
 
 alertcondition(confirmedHighThisBar, "Trading Hub high confirmed", "A structure high was confirmed after its IDM event on {{ticker}} {{interval}}.")
 alertcondition(confirmedLowThisBar, "Trading Hub low confirmed", "A structure low was confirmed after its IDM event on {{ticker}} {{interval}}.")
