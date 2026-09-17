@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · SMC Price Map + Elliott [R1.0]", "DD SMC Elliott R1.0", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · SMC Price Map + Elliott [R1.1]", "DD SMC Elliott R1.1", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research price-map profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -24,6 +24,7 @@ string poiInvalidation = input.string("Close beyond", "POI invalidation", option
 int zoneStartPaddingBars = input.int(1, "POI/FVG start padding (bars)", minval = 0, maxval = 10, group = GROUP_ZONES, tooltip = "Starts the projected zone after its source candle, or after the third FVG candle, so the box does not cover the pattern that created it.")
 
 bool showSweeps = input.bool(true, "Show sweep symbols and origin lines", group = GROUP_DISPLAY)
+bool showIdmEvents = input.bool(true, "Show IDM sweep/break events", group = GROUP_DISPLAY)
 bool showImbalance = input.bool(true, "Show important imbalance", group = GROUP_DISPLAY)
 bool showDecisionPoi = input.bool(true, "Show Decision POI", group = GROUP_DISPLAY)
 bool showExtremePoi = input.bool(true, "Show effective Extreme POI", group = GROUP_DISPLAY)
@@ -31,7 +32,7 @@ bool showStatus = input.bool(false, "Show diagnostics status", group = GROUP_DIS
 
 float coreMinReversalAtr = input.float(1.0, "Minimum SMC reversal (ATR)", minval = 0.0, maxval = 10.0, step = 0.1, group = GROUP_CORE, tooltip = "Filters the confirmed Trading Hub H/L stream; it does not create an independent fractal pivot.")
 float coreMinReversalPercent = input.float(0.0, "Minimum SMC reversal (%)", minval = 0.0, maxval = 20.0, step = 0.1, group = GROUP_CORE)
-bool showCoreSwings = input.bool(true, "Show core H/L", group = GROUP_CORE)
+bool showCoreSwings = input.bool(false, "Show extra core H/L", group = GROUP_CORE, tooltip = "Off by default because the SMC H/L layer already marks the same structural stream.")
 bool showCorePath = input.bool(false, "Connect core pivots", group = GROUP_CORE)
 int corePivotsRetained = input.int(40, "Core pivots retained", minval = 12, maxval = 80, group = GROUP_CORE)
 
@@ -41,12 +42,14 @@ string elliottImbalanceRule = input.string("Latest motive IMB", "SMC imbalance s
 
 string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 string idmSweepSymbol = input.string("Diamond", "IDM sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string idmBreakSymbol = input.string("Square", "IDM break", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 float eventSymbolPaddingAtr = input.float(0.18, "Sweep symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
 int eventSymbolsRetained = input.int(120, "Sweep symbols retained", minval = 20, maxval = 300, group = GROUP_SYMBOLS)
 
 color highColor = color.rgb(255, 101, 92)
 color lowColor = color.rgb(66, 211, 146)
 color idmColor = color.rgb(234, 190, 84)
+color idmBreakColor = color.rgb(218, 112, 96)
 color sweepColor = color.rgb(240, 145, 72)
 color bullImbalanceColor = color.rgb(44, 156, 118)
 color bearImbalanceColor = color.rgb(180, 72, 90)
@@ -141,6 +144,37 @@ f_impulseDirection(array<float> prices, array<int> directions, int start) =>
     bool bearRules = bearDirections and p2 < p0 and p3 < p1 and p4 < p1 and p5 < p3 and wave3NotShortest
     bullRules ? 1 : bearRules ? -1 : 0
 
+f_partialImpulseDirection(array<float> prices, array<int> directions, int start, int finish) =>
+    int lastOffset = finish - start
+    int originDirection = array.get(directions, start)
+    int impulseDirection = originDirection == -1 ? 1 : originDirection == 1 ? -1 : 0
+    bool directionsMatch = impulseDirection != 0
+    for offset = 0 to lastOffset
+        int expectedDirection = impulseDirection == 1 ? (offset % 2 == 0 ? -1 : 1) : (offset % 2 == 0 ? 1 : -1)
+        if array.get(directions, start + offset) != expectedDirection
+            directionsMatch := false
+
+    float p0 = array.get(prices, start)
+    float p1 = array.get(prices, start + 1)
+    bool rulesPass = directionsMatch
+    if lastOffset >= 2
+        float p2 = array.get(prices, start + 2)
+        rulesPass := rulesPass and (impulseDirection == 1 ? p2 > p0 : p2 < p0)
+    if lastOffset >= 3
+        float p3 = array.get(prices, start + 3)
+        rulesPass := rulesPass and (impulseDirection == 1 ? p3 > p1 : p3 < p1)
+    if lastOffset >= 4
+        float p4 = array.get(prices, start + 4)
+        rulesPass := rulesPass and (impulseDirection == 1 ? p4 > p1 : p4 < p1)
+    if lastOffset >= 5
+        rulesPass := rulesPass and f_impulseDirection(prices, directions, start) == impulseDirection
+    rulesPass ? impulseDirection : 0
+
+f_partialSupportId(array<int> supportImbalanceIds, int start, int finish) =>
+    int lastOffset = finish - start
+    int motiveOffset = lastOffset >= 5 ? 4 : lastOffset >= 3 ? 2 : 0
+    array.get(supportImbalanceIds, start + motiveOffset)
+
 f_strictCorrectionComplete(array<float> prices, array<int> directions, int impulseEnd, int impulseDirection) =>
     bool enoughPoints = array.size(prices) > impulseEnd + 3
     bool valid = false
@@ -189,35 +223,56 @@ f_impulseHasSmcSupport(array<int> supportImbalanceIds, array<int> zoneIds, array
 
 f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, bool drawCorrection, string supportRule, color impulseColor, color abcColor) =>
     f_clearElliott(waveLabels, waveLines)
-    int foundStart = -1
-    int foundDirection = 0
+    int completedStart = -1
+    int renderStart = -1
+    int renderEnd = -1
+    int renderDirection = 0
     int count = array.size(prices)
     if drawImpulse and count >= 6
         for start = 0 to count - 6
             int direction = f_impulseDirection(prices, directions, start)
             if direction != 0 and f_impulseHasSmcSupport(supportImbalanceIds, zoneIds, zoneStates, start, supportRule)
-                foundStart := start
-                foundDirection := direction
-    if foundStart >= 0
-        int validImbalances = f_validImbalanceCount(supportImbalanceIds, zoneIds, zoneStates, foundStart)
-        for offset = 0 to 5
-            int index = foundStart + offset
-            string waveText = offset == 0 ? "E0" : str.tostring(offset)
+                completedStart := start
+                renderStart := start
+                renderEnd := start + 5
+                renderDirection := direction
+
+    // Fail-visible fallback: when no complete 1-5 passes yet, show the longest
+    // current SMC-pivot sequence ending at the latest core point. Question marks
+    // disclose that these counts are developing, not completed Elliott waves.
+    if drawImpulse and completedStart < 0 and count >= 2
+        int firstStart = math.max(0, count - 6)
+        for start = firstStart to count - 2
+            int finish = count - 1
+            int direction = f_partialImpulseDirection(prices, directions, start, finish)
+            int supportId = f_partialSupportId(supportImbalanceIds, start, finish)
+            if renderStart < 0 and direction != 0 and f_zoneState(zoneIds, zoneStates, supportId) < 2
+                renderStart := start
+                renderEnd := finish
+                renderDirection := direction
+
+    if renderStart >= 0
+        bool completed = completedStart >= 0
+        int lastWaveOffset = renderEnd - renderStart
+        int validImbalances = completed ? f_validImbalanceCount(supportImbalanceIds, zoneIds, zoneStates, renderStart) : 1
+        for offset = 0 to lastWaveOffset
+            int index = renderStart + offset
+            string waveText = offset == 0 ? "E0" : str.tostring(offset) + (completed ? "" : "?")
             float labelPrice = array.get(prices, index) + array.get(directions, index) * labelPadding
-            string impulseTooltip = (offset == 0 ? "SMC-supported Elliott impulse origin" : "SMC-supported Elliott impulse wave " + waveText) + " · valid motive IMB " + str.tostring(validImbalances) + "/3"
-            label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = impulseColor, size = size.small, tooltip = impulseTooltip)
+            string impulseTooltip = (completed ? "Validated" : "Developing") + " SMC-supported Elliott " + (offset == 0 ? "origin" : "wave " + str.tostring(offset)) + " · valid motive IMB " + str.tostring(validImbalances) + (completed ? "/3" : " current")
+            label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(impulseColor, completed ? 0 : 24), size = size.small, tooltip = impulseTooltip)
             array.push(waveLabels, waveLabel)
             if offset > 0
-                line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, 18), width = 1)
+                line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, completed ? 18 : 52), style = completed ? line.style_solid : line.style_dotted, width = 1)
                 array.push(waveLines, waveLine)
 
-        int impulseEnd = foundStart + 5
+        int impulseEnd = renderStart + 5
         int availableCorrectionPoints = math.min(3, count - impulseEnd - 1)
-        bool correctionComplete = f_strictCorrectionComplete(prices, directions, impulseEnd, foundDirection)
-        if drawCorrection and availableCorrectionPoints > 0
+        bool correctionComplete = completed and f_strictCorrectionComplete(prices, directions, impulseEnd, renderDirection)
+        if completed and drawCorrection and availableCorrectionPoints > 0
             for offset = 1 to availableCorrectionPoints
                 int index = impulseEnd + offset
-                int expectedDirection = foundDirection == 1 ? (offset % 2 == 1 ? -1 : 1) : (offset % 2 == 1 ? 1 : -1)
+                int expectedDirection = renderDirection == 1 ? (offset % 2 == 1 ? -1 : 1) : (offset % 2 == 1 ? 1 : -1)
                 bool directionMatches = array.get(directions, index) == expectedDirection
                 if directionMatches
                     string baseText = offset == 1 ? "A" : offset == 2 ? "B" : "C"
@@ -227,8 +282,8 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
                     array.push(waveLabels, correctionLabel)
                     line correctionLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(abcColor, 24), style = line.style_dashed, width = 1)
                     array.push(waveLines, correctionLine)
-    int activeSupportId = foundStart >= 0 ? array.get(supportImbalanceIds, foundStart + 4) : na
-    [foundStart, activeSupportId]
+    int activeSupportId = renderStart >= 0 ? f_partialSupportId(supportImbalanceIds, renderStart, renderEnd) : na
+    [completedStart, activeSupportId]
 
 f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, array<bool> visibility, array<int> ids, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, bool visible, int zoneId, int limit) =>
     int initialRight = math.max(bar_index, leftBar)
@@ -278,6 +333,21 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
                     if visible
                         box.set_bgcolor(zone, color.new(zoneColor, 93))
                         box.set_text(zone, kind + " · T")
+
+f_styleSupportingImbalance(array<box> boxes, array<string> kinds, array<int> states, array<color> colors, array<bool> visibility, array<int> ids, int activeSupportId) =>
+    if array.size(boxes) > 0
+        for index = 0 to array.size(boxes) - 1
+            bool isImbalance = array.get(kinds, index) == "IMP-FVG"
+            bool visible = array.get(visibility, index)
+            int state = array.get(states, index)
+            if isImbalance and visible and state < 2
+                box zone = array.get(boxes, index)
+                color zoneColor = array.get(colors, index)
+                bool supportsWave = not na(activeSupportId) and array.get(ids, index) == activeSupportId
+                box.set_border_width(zone, supportsWave ? 2 : 1)
+                box.set_border_color(zone, color.new(zoneColor, supportsWave ? 12 : 48))
+                box.set_bgcolor(zone, color.new(zoneColor, supportsWave ? 84 : state == 1 ? 93 : 90))
+                box.set_text(zone, (supportsWave ? "W-IMB" : "IMP-FVG") + (state == 1 ? " · T" : ""))
 
 float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
@@ -437,8 +507,8 @@ if barstate.isconfirmed
             float oldConfirmedHigh = previousConfirmedHigh
             string highTag = na(oldConfirmedHigh) ? "H" : candidateHigh > oldConfirmedHigh ? "HH" : candidateHigh < oldConfirmedHigh ? "LH" : "EH"
             label.new(candidateHighBar, candidateHigh + markerSpacing * 0.35, highTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = highColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
-            if highIdmSweep and showSweeps
-                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 22), style = line.style_solid, width = 1)
+            if (highIdmSweep or highIdmBreak) and showIdmEvents
+                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(highIdmSweep ? idmColor : idmBreakColor, 22), style = highIdmSweep ? line.style_solid : line.style_dotted, width = 1)
             idmSweptThisBar := highIdmSweep
             idmBrokenThisBar := highIdmBreak
             idmEventDirectionThisBar := -1
@@ -537,8 +607,8 @@ if barstate.isconfirmed
             float oldConfirmedLow = previousConfirmedLow
             string lowTag = na(oldConfirmedLow) ? "L" : candidateLow > oldConfirmedLow ? "HL" : candidateLow < oldConfirmedLow ? "LL" : "EL"
             label.new(candidateLowBar, candidateLow - markerSpacing * 0.35, lowTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = lowColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
-            if lowIdmSweep and showSweeps
-                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 22), style = line.style_solid, width = 1)
+            if (lowIdmSweep or lowIdmBreak) and showIdmEvents
+                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(lowIdmSweep ? idmColor : idmBreakColor, 22), style = lowIdmSweep ? line.style_solid : line.style_dotted, width = 1)
             idmSweptThisBar := lowIdmSweep
             idmBrokenThisBar := lowIdmBreak
             idmEventDirectionThisBar := 1
@@ -615,10 +685,14 @@ if barstate.isconfirmed
         f_addEventSymbol(eventSymbolLabels, high + markerSpacing, f_labelStyle(liquiditySweepSymbol, false), sweepColor, eventSymbolsRetained)
     if showSweeps and sellSideSweptThisBar
         f_addEventSymbol(eventSymbolLabels, low - markerSpacing, f_labelStyle(liquiditySweepSymbol, true), sweepColor, eventSymbolsRetained)
-    if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == -1
+    if showIdmEvents and idmSweptThisBar and idmEventDirectionThisBar == -1
         f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 2, f_labelStyle(idmSweepSymbol, false), idmColor, eventSymbolsRetained)
-    if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1
+    if showIdmEvents and idmSweptThisBar and idmEventDirectionThisBar == 1
         f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmSweepSymbol, true), idmColor, eventSymbolsRetained)
+    if showIdmEvents and idmBrokenThisBar and idmEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 2, f_labelStyle(idmBreakSymbol, false), idmBreakColor, eventSymbolsRetained)
+    if showIdmEvents and idmBrokenThisBar and idmEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmBreakSymbol, true), idmBreakColor, eventSymbolsRetained)
 
     // Elliott is rebuilt only when the confirmed SMC H/L stream changes or
     // when its latest motive IMP-FVG becomes filled/pruned. This keeps the
@@ -631,9 +705,11 @@ if barstate.isconfirmed
         activeElliottImbalanceId := refreshedSupportId
         elliottImpulseThisBar := coreEvent == 1 and latestImpulseStart >= 0 and latestImpulseStart + 5 == array.size(corePrices) - 1
 
+    f_styleSupportingImbalance(zoneBoxes, zoneKinds, zoneStates, zoneColors, zoneVisibility, zoneIds, activeElliottImbalanceId)
+
 if barstate.islast
     if showStatus
-        table.cell(statusTable, 0, 0, "SMC R1.0", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 0, "SMC R1.1", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
         table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)

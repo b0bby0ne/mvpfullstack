@@ -42,6 +42,23 @@ function Test-ImbalanceSupport {
   return $latestIsValid -and $rulePasses
 }
 
+function Get-PartialImpulseDirection {
+  param([double[]]$Prices, [int[]]$Directions)
+
+  if ($Prices.Count -lt 2 -or $Prices.Count -gt 6) { return 0 }
+  $impulseDirection = if ($Directions[0] -eq -1) { 1 } elseif ($Directions[0] -eq 1) { -1 } else { 0 }
+  if ($impulseDirection -eq 0) { return 0 }
+  for ($offset = 0; $offset -lt $Directions.Count; $offset++) {
+    $expected = if ($impulseDirection -eq 1) { if ($offset % 2 -eq 0) { -1 } else { 1 } } else { if ($offset % 2 -eq 0) { 1 } else { -1 } }
+    if ($Directions[$offset] -ne $expected) { return 0 }
+  }
+  if ($Prices.Count -ge 3 -and (($impulseDirection -eq 1 -and $Prices[2] -le $Prices[0]) -or ($impulseDirection -eq -1 -and $Prices[2] -ge $Prices[0]))) { return 0 }
+  if ($Prices.Count -ge 4 -and (($impulseDirection -eq 1 -and $Prices[3] -le $Prices[1]) -or ($impulseDirection -eq -1 -and $Prices[3] -ge $Prices[1]))) { return 0 }
+  if ($Prices.Count -ge 5 -and (($impulseDirection -eq 1 -and $Prices[4] -le $Prices[1]) -or ($impulseDirection -eq -1 -and $Prices[4] -ge $Prices[1]))) { return 0 }
+  if ($Prices.Count -eq 6) { return Get-ImpulseDirection $Prices $Directions }
+  return $impulseDirection
+}
+
 function Get-ZoneState {
   param([int[]]$Ids, [int[]]$States, [int]$TargetId)
 
@@ -71,7 +88,11 @@ $cases = @(
   @{ Name = "All-IMB mode rejects a filled support"; Actual = Test-ImbalanceSupport @(0, 2, 0) "All 3 motive IMBs"; Expected = $false },
   @{ Name = "Stable zone ID resolves active"; Actual = Get-ZoneState @(11, 12, 13) @(2, 0, 1) 12; Expected = 0 },
   @{ Name = "Stable zone ID resolves touched"; Actual = Get-ZoneState @(11, 12, 13) @(2, 0, 1) 13; Expected = 1 },
-  @{ Name = "Pruned zone ID fails closed"; Actual = Get-ZoneState @(11, 12, 13) @(2, 0, 1) 99; Expected = 2 }
+  @{ Name = "Pruned zone ID fails closed"; Actual = Get-ZoneState @(11, 12, 13) @(2, 0, 1) 99; Expected = 2 },
+  @{ Name = "Developing bull waves count on pivots"; Actual = Get-PartialImpulseDirection @(100, 110, 104, 122, 114) @(-1, 1, -1, 1, -1); Expected = 1 },
+  @{ Name = "Developing bear waves count on pivots"; Actual = Get-PartialImpulseDirection @(128, 118, 124, 106) @(1, -1, 1, -1); Expected = -1 },
+  @{ Name = "Developing count rejects wave-two breach"; Actual = Get-PartialImpulseDirection @(100, 110, 99) @(-1, 1, -1); Expected = 0 },
+  @{ Name = "Developing count rejects wave-four overlap"; Actual = Get-PartialImpulseDirection @(100, 110, 104, 122, 109) @(-1, 1, -1, 1, -1); Expected = 0 }
 )
 
 $failed = $false

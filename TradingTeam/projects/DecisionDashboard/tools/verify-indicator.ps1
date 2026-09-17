@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r1.0.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r1.1.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -15,7 +15,7 @@ if (-not $resolvedPath.StartsWith($workspaceRoot + [IO.Path]::DirectorySeparator
 $source = Get-Content -LiteralPath $resolvedPath -Raw -Encoding UTF8
 $required = [ordered]@{
   "Pine v6" = "//@version=6"
-  "Price-map profile" = 'SMC Price Map + Elliott [R1.0]'
+  "Price-map profile" = 'SMC Price Map + Elliott [R1.1]'
   "Overlay indicator" = "overlay = true"
   "Closed-bar gate" = "if barstate.isconfirmed"
   "High IDM ordering" = "candidateHighIdmBar < candidateHighBar"
@@ -61,6 +61,9 @@ $required = [ordered]@{
   "IDM sweep symbol call" = "f_labelStyle(idmSweepSymbol, false)"
   "Liquidity shape option" = 'input.string("Triangle", "Liquidity sweep"'
   "IDM shape option" = 'input.string("Diamond", "IDM sweep"'
+  "IDM event layer enabled" = 'input.bool(true, "Show IDM sweep/break events"'
+  "IDM break shape option" = 'input.string("Square", "IDM break"'
+  "IDM break event line" = "highIdmSweep or highIdmBreak"
   "Zone bar padding" = 'input.int(1, "POI/FVG start padding (bars)"'
   "FVG starts after pattern" = "imbalanceBar + 2 + zoneStartPaddingBars"
   "Lifecycle respects padding" = "bar_index >= box.get_left(zone)"
@@ -79,6 +82,9 @@ $required = [ordered]@{
   "Elliott wave-three rule" = "wave3NotShortest"
   "Strict correction engine" = "f_strictCorrectionComplete("
   "Developing correction labels" = 'baseText + "?"'
+  "Developing impulse engine" = "f_partialImpulseDirection("
+  "Developing wave labels" = 'str.tostring(offset) + (completed ? "" : "?")'
+  "Fail-visible wave fallback" = "Fail-visible fallback"
   "Elliott core-driven render" = "if coreEvent > 0 or activeSupportInvalidated"
   "Elliott imbalance mode" = 'input.string("Latest motive IMB", "SMC imbalance support"'
   "Motive imbalance references" = "coreSupportImbalanceIds"
@@ -89,6 +95,9 @@ $required = [ordered]@{
   "Hidden zone visuals" = 'text = visible ? kind : ""'
   "Support invalidation check" = "activeSupportInvalidated"
   "Support invalidation alert" = "alertcondition(elliottImpulseInvalidatedThisBar"
+  "Wave-support imbalance style" = 'supportsWave ? "W-IMB" : "IMP-FVG"'
+  "Wave-support border" = "box.set_border_width(zone, supportsWave ? 2 : 1)"
+  "Extra core labels hidden" = 'input.bool(false, "Show extra core H/L"'
   "Core pivot alert" = "alertcondition(corePivotThisBar"
   "Elliott impulse alert" = "alertcondition(elliottImpulseThisBar"
 }
@@ -108,7 +117,6 @@ $forbidden = [ordered]@{
   "Candidate visual" = "liveCandidateLabel"
   "Candidate high marker" = '"H?"'
   "Candidate low marker" = '"L?"'
-  "IDM break symbol option" = '"IDM break", options'
   "Confirmation symbol option" = '"H/L confirmation", options'
   "Imbalance event symbol option" = '"Imbalance / FVG", options'
   "Decision POI event symbol option" = '"Decision POI", options'
@@ -140,10 +148,10 @@ foreach ($entry in $forbidden.GetEnumerator()) {
 }
 
 $eventRenderCallCount = ([regex]::Matches($source, "f_addEventSymbol\(")).Count - 1
-if ($eventRenderCallCount -eq 4) {
-  Write-Host "[PASS] Only 4 sweep render paths"
+if ($eventRenderCallCount -eq 6) {
+  Write-Host "[PASS] Exactly 6 sweep/IDM render paths"
 } else {
-  Write-Host "[FAIL] Expected exactly 4 sweep render paths, found $eventRenderCallCount" -ForegroundColor Red
+  Write-Host "[FAIL] Expected exactly 6 sweep/IDM render paths, found $eventRenderCallCount" -ForegroundColor Red
   $failed = $true
 }
 
