@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `TH-EVENTS-R0.7` | [`indicators/trading-hub/structure-events-r0.7.pine`](./indicators/trading-hub/structure-events-r0.7.pine) | Research — chờ review chart |
+| `TH-MAP-R0.8` | [`indicators/trading-hub/price-map-r0.8.pine`](./indicators/trading-hub/price-map-r0.8.pine) | Research — chờ review chart |
 
-R0.7 dùng visual compact: H/L không nền, event `tiny`, zone/line nhẹ hơn và status table 4 hàng. Runtime `LOADED`, custom shapes và POI/FVG padding vẫn được giữ.
+R0.8 chỉ hiển thị H/L, sweep symbol + origin line, Decision/Extreme POI và IMP-FVG zones. Các event phụ, active IDM, candidate và confirmation marker đã được loại khỏi chart.
 
 ## Cấu trúc
 

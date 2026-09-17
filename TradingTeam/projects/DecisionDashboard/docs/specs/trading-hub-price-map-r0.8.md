@@ -1,8 +1,8 @@
-# Trading Hub structure events — `TH-EVENTS-R0.7`
+# Trading Hub price map — `TH-MAP-R0.8`
 
 ## Mục tiêu
 
-Profile R0.7 giữ engine R0.6 nhưng thu gọn toàn bộ visual layer để giảm che giá. Indicator không tạo tín hiệu mua/bán.
+Profile R0.8 giữ structure engine nhưng giới hạn chart output thành một price map tối giản. Indicator không tạo tín hiệu mua/bán.
 
 ```text
 IDM ACTIVE
@@ -13,7 +13,7 @@ IDM ACTIVE
   -> theo dõi vùng ACTIVE -> TOUCHED -> INVALID/FILLED
 ```
 
-Pine source: [`indicators/trading-hub/structure-events-r0.7.pine`](../../indicators/trading-hub/structure-events-r0.7.pine).
+Pine source: [`indicators/trading-hub/price-map-r0.8.pine`](../../indicators/trading-hub/price-map-r0.8.pine).
 
 ## Nguồn curriculum chính chủ
 
@@ -33,16 +33,13 @@ Pine source: [`indicators/trading-hub/structure-events-r0.7.pine`](../../indicat
 - `Any take` (mặc định): lần xuyên IDM đầu tiên xác nhận H/L, sau đó phân loại event theo close.
 - `Sweep / re-entry`: chế độ nghiêm ngặt, chỉ nhận wick xuyên IDM và đóng quay lại phía ban đầu.
 - `Close / break`: chế độ nghiêm ngặt, chỉ nhận giá đóng hẳn qua IDM.
-- Hai trường hợp được ghi nhãn khác nhau: `IDM SWEPT` và `IDM BROKEN`.
-- H/L chỉ được xác nhận trên closed bar sau event; nhãn extreme được backfill nhưng bar `✓ H/L` cho thấy đúng latency.
-- Event không dùng text label. Mỗi nhóm có selector riêng: `Triangle`, `Diamond`, `Circle`, `Square` hoặc `Cross`.
-- R0.7 dùng `label.style_*` object với text rỗng thay cho custom `plotshape(style=...)`; label object cho phép tạo có điều kiện và đổi style an toàn tại runtime.
-- `Event symbols retained` mặc định giữ 160 symbol gần nhất và chủ động xóa symbol cũ để bảo vệ giới hạn 500 label.
-- Nhóm tùy chỉnh gồm liquidity sweep, IDM sweep, IDM break, H/L confirmation, imbalance/FVG, Decision POI và Extreme POI.
+- Hai trường hợp vẫn được phân loại nội bộ nhưng chỉ IDM sweep được vẽ; IDM break không có visual output.
+- H/L chỉ được xác nhận trên closed bar sau event và được backfill về extreme.
+- Sweep không dùng text label. Liquidity sweep và IDM sweep có selector riêng: `Triangle`, `Diamond`, `Circle`, `Square` hoặc `Cross`.
+- R0.8 dùng `label.style_*` object với text rỗng; `Sweep symbols retained` mặc định giữ 120 symbol gần nhất.
 - Khi chọn `Triangle`, chiều của tam giác tự theo hướng bullish/bearish.
-- `Structure symbol padding (ATR)` điều chỉnh khoảng cách cho sweep, break và confirmation.
-- `POI/FVG symbol padding (ATR)` mặc định `1.0`, tạo một khoảng rõ ràng giữa nến và các symbol zone.
-- Line BSL/SSL chạy từ confirmed H/L gốc tới candle sweep. Line IDM chạy từ candle IDM gốc tới candle sweep/break; sweep dùng nét liền dày, break dùng nét chấm mảnh.
+- `Sweep symbol padding (ATR)` điều chỉnh khoảng cách của sweep symbol.
+- Line BSL/SSL chạy từ confirmed H/L gốc tới candle sweep. Line IDM chỉ chạy từ IDM gốc tới candle IDM sweep.
 
 ### Sweep thanh khoản cấu trúc
 
@@ -57,7 +54,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.7.pine`](../../indicat
 - Sau confirmation, profile chọn FVG gần confirmation nhất, nằm trong structural leg và chưa bị full-fill.
 - `POI/FVG start padding (bars)` mặc định `1`: box FVG bắt đầu sau candle thứ ba của pattern; box POI bắt đầu sau source candle.
 - Lifecycle chỉ bắt đầu đánh giá `TOUCHED/FILLED/INVALID` khi bar hiện tại đã tới mép trái sau padding của zone.
-- Đây là ranking rule của R0.7, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
+- Đây là ranking rule của R0.8, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
 - Vòng đời: `ACTIVE -> TOUCHED -> FILLED`; full fill là chạm mép xa của gap.
 
 ### Decision POI
@@ -70,7 +67,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.7.pine`](../../indicat
 
 ### Effective Extreme POI
 
-R0.7 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
+R0.8 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
 
 1. Có confirmed extreme cùng loại trước đó làm mức tham chiếu.
 2. Extreme candle mới là lần đầu xuyên mức tham chiếu chưa bị consume.
@@ -82,7 +79,6 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 
 - Chỉ commit event và lifecycle trong `barstate.isconfirmed`.
 - Không dùng `request.security()`, `lookahead_on`, future values hoặc tick strategy.
-- `IDM ACTIVE`, `H?`, `L?` là trạng thái live và có thể di chuyển; chúng không phát alert cấu trúc.
 - Event lịch sử không thay đổi sau khi bar confirmation đóng.
 - Zone bắt đầu ở candle nguồn nhưng chỉ được biết tại confirmation bar; đây là backfill có công bố latency.
 
@@ -97,20 +93,21 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 7. Review riêng 15m, 1H, 4H, 1D trên `OANDA:XAUUSD` và `COINBASE:BTCUSD`.
 8. Ghi disagreement trước khi đổi pivot, search window, POI range hoặc invalidation mode.
 
-## Compact visual contract
+## Price-map visual contract
 
 - H/L dùng chữ `tiny`, không nền và cách extreme một khoảng nhỏ theo ATR.
-- Event symbol dùng `size.tiny`; origin line rộng 1 px và có transparency.
-- Active IDM chỉ hiện `IDM` không nền; line live mờ hơn resolved line.
+- Chỉ BSL/SSL sweep và IDM sweep có symbol `tiny` cùng origin line rộng 1 px.
 - Active zone dùng nền transparency 90%, lifecycle rút gọn thành `T`, `✓`, `×`.
-- Status table còn 4 hàng, chữ `tiny`, không border.
+- Decision POI, Extreme POI và IMP-FVG chỉ hiển thị bằng zone, không có creation marker.
+- Không hiển thị IDM break, confirmation marker, active IDM, H?/L? hoặc event summary.
+- Diagnostics status tắt mặc định; khi bật có 4 hàng, chữ `tiny`, không border.
 
 ## Runtime smoke check
 
-- Status table phải hiện `TH R0.7 | LOADED` ngay khi indicator thực thi thành công.
+- Khi bật diagnostics, status table phải hiện `TH R0.8 | LOADED`.
 - Nếu không thấy `LOADED`, coi là compile/runtime failure và không review logic event.
-- Static verifier cấm `plotshape()` trong profile này và đếm đủ 14 event-render call ngoài helper.
+- Static verifier cấm các visual event đã loại bỏ và chỉ cho phép đúng 4 sweep-render call ngoài helper.
 
-## Ngoài phạm vi R0.7
+## Ngoài phạm vi R0.8
 
 BOS/CHoCH, protected/weak high-low, nested/major-minor IDM, multi-timeframe projection, order-flow volume và entry model chưa được tự động hóa. `D-POI` và `IMP-FVG` vẫn là candidate theo profile cho đến khi qua review chart.

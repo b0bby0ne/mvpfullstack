@@ -1,14 +1,14 @@
 //@version=6
-indicator("DD · Trading Hub Structure Events [R0.7]", "DD TH Events R0.7", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · Trading Hub Price Map [R0.8]", "DD TH Map R0.8", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
-// Research profile. Trading Hub concepts define the event order; internal pivots,
+// Research price-map profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
 // seams until reviewed bar-by-bar by a domain expert.
 
 string GROUP_ENGINE = "01 · Structure engine"
 string GROUP_ZONES = "02 · Zone rules"
 string GROUP_DISPLAY = "03 · Display"
-string GROUP_SYMBOLS = "04 · Event symbols"
+string GROUP_SYMBOLS = "04 · Sweep symbols"
 
 int internalBars = input.int(1, "Internal pivot bars (left/right)", minval = 1, maxval = 10, group = GROUP_ENGINE, tooltip = "Research seam used to surface a possible internal pullback; not every fractal is claimed to be canonical Trading Hub IDM.")
 string confirmationMode = input.string("Any take", "IDM confirmation", options = ["Any take", "Sweep / re-entry", "Close / break"], group = GROUP_ENGINE, tooltip = "Any take confirms on the first penetration and classifies it as sweep or break. Strict modes accept only the selected event type.")
@@ -20,26 +20,16 @@ string poiRange = input.string("Full candle", "POI range", options = ["Full cand
 string poiInvalidation = input.string("Close beyond", "POI invalidation", options = ["Close beyond", "Wick beyond"], group = GROUP_ZONES)
 int zoneStartPaddingBars = input.int(1, "POI/FVG start padding (bars)", minval = 0, maxval = 10, group = GROUP_ZONES, tooltip = "Starts the projected zone after its source candle, or after the third FVG candle, so the box does not cover the pattern that created it.")
 
-bool showIdm = input.bool(true, "Show active and resolved IDM", group = GROUP_DISPLAY)
 bool showSweeps = input.bool(true, "Show sweep symbols and origin lines", group = GROUP_DISPLAY)
 bool showImbalance = input.bool(true, "Show important imbalance", group = GROUP_DISPLAY)
 bool showDecisionPoi = input.bool(true, "Show Decision POI", group = GROUP_DISPLAY)
 bool showExtremePoi = input.bool(true, "Show effective Extreme POI", group = GROUP_DISPLAY)
-bool showEventSymbols = input.bool(true, "Show event symbols", group = GROUP_DISPLAY)
-bool showConfirmation = input.bool(true, "Show structure confirmation bar", group = GROUP_DISPLAY)
-bool showCandidate = input.bool(false, "Show unconfirmed candidate", group = GROUP_DISPLAY)
-bool showStatus = input.bool(true, "Show engine status", group = GROUP_DISPLAY)
+bool showStatus = input.bool(false, "Show diagnostics status", group = GROUP_DISPLAY)
 
 string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 string idmSweepSymbol = input.string("Diamond", "IDM sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-string idmBreakSymbol = input.string("Cross", "IDM break", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-string confirmationSymbol = input.string("Square", "H/L confirmation", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-string imbalanceSymbol = input.string("Square", "Imbalance / FVG", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-string decisionPoiSymbol = input.string("Circle", "Decision POI", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-string extremePoiSymbol = input.string("Diamond", "Extreme POI", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
-float eventSymbolPaddingAtr = input.float(0.18, "Structure symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
-float zoneSymbolPaddingAtr = input.float(1.0, "POI/FVG symbol padding (ATR)", minval = 0.1, maxval = 5.0, step = 0.1, group = GROUP_SYMBOLS)
-int eventSymbolsRetained = input.int(160, "Event symbols retained", minval = 20, maxval = 300, group = GROUP_SYMBOLS)
+float eventSymbolPaddingAtr = input.float(0.18, "Sweep symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
+int eventSymbolsRetained = input.int(120, "Sweep symbols retained", minval = 20, maxval = 300, group = GROUP_SYMBOLS)
 
 color highColor = color.rgb(255, 101, 92)
 color lowColor = color.rgb(66, 211, 146)
@@ -49,7 +39,6 @@ color bullImbalanceColor = color.rgb(44, 156, 118)
 color bearImbalanceColor = color.rgb(180, 72, 90)
 color decisionColor = color.rgb(79, 132, 219)
 color extremeColor = color.rgb(164, 93, 224)
-color candidateColor = color.new(color.silver, 45)
 
 f_labelStyle(string selection, bool pointsUp) =>
     switch selection
@@ -110,7 +99,6 @@ float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
 float atrBasis = nz(ta.atr(14), high - low)
 float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
-float zoneMarkerPadding = math.max(atrBasis * zoneSymbolPaddingAtr, markerSpacing * 2)
 
 var int phase = 0 // 1 = confirm a high, -1 = confirm a low, 0 = bootstrap
 var float latestInternalHigh = na
@@ -147,9 +135,6 @@ var float previousConfirmedLow = na
 var int previousConfirmedLowBar = na
 var bool previousHighConsumed = false
 var bool previousLowConsumed = false
-var label liveCandidateLabel = na
-var line liveIdmLine = na
-var label liveIdmLabel = na
 var table statusTable = table.new(position.top_right, 2, 4, border_width = 0)
 
 var array<box> zoneBoxes = array.new<box>()
@@ -169,7 +154,6 @@ bool sellSideSweptThisBar = false
 bool importantImbalanceThisBar = false
 bool decisionPoiThisBar = false
 bool extremePoiThisBar = false
-int zoneEventDirectionThisBar = 0
 
 if barstate.isconfirmed
     f_updateZones(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, poiInvalidation)
@@ -253,8 +237,8 @@ if barstate.isconfirmed
             float oldConfirmedHigh = previousConfirmedHigh
             string highTag = na(oldConfirmedHigh) ? "H" : candidateHigh > oldConfirmedHigh ? "HH" : candidateHigh < oldConfirmedHigh ? "LH" : "EH"
             label.new(candidateHighBar, candidateHigh + markerSpacing * 0.35, highTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = highColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
-            if highIdmSweep ? showSweeps : showIdm
-                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, highIdmSweep ? 22 : 48), style = highIdmSweep ? line.style_solid : line.style_dotted, width = 1)
+            if highIdmSweep and showSweeps
+                line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 22), style = line.style_solid, width = 1)
             idmSweptThisBar := highIdmSweep
             idmBrokenThisBar := highIdmBreak
             idmEventDirectionThisBar := -1
@@ -267,7 +251,6 @@ if barstate.isconfirmed
                 float extremeBottom = poiRange == "Full candle" ? candidateHighLow : math.min(candidateHighOpen, candidateHighClose)
                 f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateHighBar + zoneStartPaddingBars, extremeTop, extremeBottom, -1, "E-POI", extremeColor, maxZones)
                 extremePoiThisBar := true
-                zoneEventDirectionThisBar := -1
 
             // Decision POI profile seam: nearest bullish candle before the
             // confirmation event, constrained to the structural leg.
@@ -284,7 +267,6 @@ if barstate.isconfirmed
                 if not na(decisionBar)
                     f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, -1, "D-POI", decisionColor, maxZones)
                     decisionPoiThisBar := true
-                    zoneEventDirectionThisBar := -1
 
             // Important imbalance profile seam: most recent unfilled bearish
             // three-candle FVG inside the newly confirmed leg.
@@ -307,7 +289,6 @@ if barstate.isconfirmed
                 if not na(imbalanceBar)
                     f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, maxZones)
                     importantImbalanceThisBar := true
-                    zoneEventDirectionThisBar := -1
 
             previousConfirmedHigh := candidateHigh
             previousConfirmedHighBar := candidateHighBar
@@ -350,8 +331,8 @@ if barstate.isconfirmed
             float oldConfirmedLow = previousConfirmedLow
             string lowTag = na(oldConfirmedLow) ? "L" : candidateLow > oldConfirmedLow ? "HL" : candidateLow < oldConfirmedLow ? "LL" : "EL"
             label.new(candidateLowBar, candidateLow - markerSpacing * 0.35, lowTag, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = lowColor, size = size.tiny, tooltip = "Confirmed at bar " + str.tostring(bar_index) + " after the opposing IDM event.")
-            if lowIdmSweep ? showSweeps : showIdm
-                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, lowIdmSweep ? 22 : 48), style = lowIdmSweep ? line.style_solid : line.style_dotted, width = 1)
+            if lowIdmSweep and showSweeps
+                line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 22), style = line.style_solid, width = 1)
             idmSweptThisBar := lowIdmSweep
             idmBrokenThisBar := lowIdmBreak
             idmEventDirectionThisBar := 1
@@ -362,7 +343,6 @@ if barstate.isconfirmed
                 float extremeBottom = poiRange == "Full candle" ? candidateLow : math.min(candidateLowOpen, candidateLowClose)
                 f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateLowBar + zoneStartPaddingBars, extremeTop, extremeBottom, 1, "E-POI", extremeColor, maxZones)
                 extremePoiThisBar := true
-                zoneEventDirectionThisBar := 1
 
             int decisionBar = na
             float decisionTop = na
@@ -377,7 +357,6 @@ if barstate.isconfirmed
                 if not na(decisionBar)
                     f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, 1, "D-POI", decisionColor, maxZones)
                     decisionPoiThisBar := true
-                    zoneEventDirectionThisBar := 1
 
             int imbalanceBar = na
             float imbalanceTop = na
@@ -398,7 +377,6 @@ if barstate.isconfirmed
                 if not na(imbalanceBar)
                     f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, maxZones)
                     importantImbalanceThisBar := true
-                    zoneEventDirectionThisBar := 1
 
             previousConfirmedLow := candidateLow
             previousConfirmedLowBar := candidateLowBar
@@ -430,55 +408,9 @@ if barstate.isconfirmed
     if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1
         f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmSweepSymbol, true), idmColor, eventSymbolsRetained)
 
-    if showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == -1
-        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 2, f_labelStyle(idmBreakSymbol, false), highColor, eventSymbolsRetained)
-    if showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == 1
-        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmBreakSymbol, true), lowColor, eventSymbolsRetained)
-    if showEventSymbols and showConfirmation and confirmedHighThisBar
-        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 3, f_labelStyle(confirmationSymbol, false), highColor, eventSymbolsRetained)
-    if showEventSymbols and showConfirmation and confirmedLowThisBar
-        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 3, f_labelStyle(confirmationSymbol, true), lowColor, eventSymbolsRetained)
-
-    if showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == -1
-        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding, f_labelStyle(imbalanceSymbol, false), bearImbalanceColor, eventSymbolsRetained)
-    if showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == 1
-        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding, f_labelStyle(imbalanceSymbol, true), bullImbalanceColor, eventSymbolsRetained)
-    if showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == -1
-        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding + markerSpacing, f_labelStyle(decisionPoiSymbol, false), decisionColor, eventSymbolsRetained)
-    if showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == 1
-        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding - markerSpacing, f_labelStyle(decisionPoiSymbol, true), decisionColor, eventSymbolsRetained)
-    if showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == -1
-        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding + markerSpacing * 2, f_labelStyle(extremePoiSymbol, false), extremeColor, eventSymbolsRetained)
-    if showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == 1
-        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding - markerSpacing * 2, f_labelStyle(extremePoiSymbol, true), extremeColor, eventSymbolsRetained)
-
 if barstate.islast
-    if not na(liveCandidateLabel)
-        label.delete(liveCandidateLabel)
-        liveCandidateLabel := na
-    if not na(liveIdmLine)
-        line.delete(liveIdmLine)
-        liveIdmLine := na
-    if not na(liveIdmLabel)
-        label.delete(liveIdmLabel)
-        liveIdmLabel := na
-
-    if showCandidate
-        if phase == 1 and not na(candidateHigh)
-            liveCandidateLabel := label.new(candidateHighBar, candidateHigh + markerSpacing * 0.35, "H?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = candidateColor, size = size.tiny)
-        else if phase == -1 and not na(candidateLow)
-            liveCandidateLabel := label.new(candidateLowBar, candidateLow - markerSpacing * 0.35, "L?", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = candidateColor, size = size.tiny)
-
-    if showIdm
-        if phase == 1 and not na(candidateHighIdm)
-            liveIdmLine := line.new(candidateHighIdmBar, candidateHighIdm, bar_index, candidateHighIdm, xloc = xloc.bar_index, color = color.new(idmColor, 55), style = line.style_dotted)
-            liveIdmLabel := label.new(bar_index, candidateHighIdm, "IDM", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(idmColor, 18), size = size.tiny)
-        else if phase == -1 and not na(candidateLowIdm)
-            liveIdmLine := line.new(candidateLowIdmBar, candidateLowIdm, bar_index, candidateLowIdm, xloc = xloc.bar_index, color = color.new(idmColor, 55), style = line.style_dotted)
-            liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(idmColor, 18), size = size.tiny)
-
     if showStatus
-        table.cell(statusTable, 0, 0, "TH R0.7", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 0, "TH R0.8", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
         table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)

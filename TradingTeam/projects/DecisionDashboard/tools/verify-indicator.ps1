@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.7.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r0.8.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -15,6 +15,7 @@ if (-not $resolvedPath.StartsWith($workspaceRoot + [IO.Path]::DirectorySeparator
 $source = Get-Content -LiteralPath $resolvedPath -Raw -Encoding UTF8
 $required = [ordered]@{
   "Pine v6" = "//@version=6"
+  "Price-map profile" = 'Trading Hub Price Map [R0.8]'
   "Overlay indicator" = "overlay = true"
   "Closed-bar gate" = "if barstate.isconfirmed"
   "High IDM ordering" = "candidateHighIdmBar < candidateHighBar"
@@ -29,7 +30,6 @@ $required = [ordered]@{
   "IDM break alert" = "alertcondition(idmBrokenThisBar"
   "Buy-side sweep re-entry" = "if close < previousConfirmedHigh"
   "Sell-side sweep re-entry" = "if close > previousConfirmedLow"
-  "Active IDM" = 'liveIdmLabel := label.new'
   "Important imbalance" = '"IMP-FVG"'
   "Decision POI" = '"D-POI"'
   "Extreme POI" = '"E-POI"'
@@ -48,8 +48,9 @@ $required = [ordered]@{
   "Cross label style" = "label.style_xcross"
   "Managed event symbols" = "f_addEventSymbol("
   "Text-free event symbol" = 'text = ""'
-  "Event symbol retention" = "eventSymbolsRetained"
+  "Sweep symbol retention" = "eventSymbolsRetained"
   "Runtime smoke state" = '"LOADED"'
+  "Diagnostics hidden by default" = 'input.bool(false, "Show diagnostics status"'
   "Tiny event symbols" = "size = size.tiny"
   "Text-only structure labels" = "style = label.style_none, color = na, textcolor = highColor, size = size.tiny"
   "Compact status table" = "table.new(position.top_right, 2, 4, border_width = 0)"
@@ -60,11 +61,7 @@ $required = [ordered]@{
   "IDM sweep symbol call" = "f_labelStyle(idmSweepSymbol, false)"
   "Liquidity shape option" = 'input.string("Triangle", "Liquidity sweep"'
   "IDM shape option" = 'input.string("Diamond", "IDM sweep"'
-  "Imbalance shape option" = 'input.string("Square", "Imbalance / FVG"'
-  "Decision POI shape option" = 'input.string("Circle", "Decision POI"'
-  "Extreme POI shape option" = 'input.string("Diamond", "Extreme POI"'
   "Zone bar padding" = 'input.int(1, "POI/FVG start padding (bars)"'
-  "Zone ATR padding" = 'input.float(1.0, "POI/FVG symbol padding (ATR)"'
   "FVG starts after pattern" = "imbalanceBar + 2 + zoneStartPaddingBars"
   "Lifecycle respects padding" = "bar_index >= box.get_left(zone)"
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
@@ -80,6 +77,18 @@ $forbidden = [ordered]@{
   "Custom plotshape rendering" = "plotshape("
   "Input-derived shape variable" = "liquidityUpShape"
   "Plotshape style constants" = "shape."
+  "Active IDM visual" = "liveIdmLabel"
+  "Active IDM line" = "liveIdmLine"
+  "Candidate visual" = "liveCandidateLabel"
+  "Candidate high marker" = '"H?"'
+  "Candidate low marker" = '"L?"'
+  "IDM break symbol option" = '"IDM break", options'
+  "Confirmation symbol option" = '"H/L confirmation", options'
+  "Imbalance event symbol option" = '"Imbalance / FVG", options'
+  "Decision POI event symbol option" = '"Decision POI", options'
+  "Extreme POI event symbol option" = '"Extreme POI", options'
+  "Zone event padding" = "zoneSymbolPaddingAtr"
+  "Zone event direction" = "zoneEventDirectionThisBar"
 }
 
 $failed = $false
@@ -102,10 +111,10 @@ foreach ($entry in $forbidden.GetEnumerator()) {
 }
 
 $eventRenderCallCount = ([regex]::Matches($source, "f_addEventSymbol\(")).Count - 1
-if ($eventRenderCallCount -eq 14) {
-  Write-Host "[PASS] All 14 event render paths"
+if ($eventRenderCallCount -eq 4) {
+  Write-Host "[PASS] Only 4 sweep render paths"
 } else {
-  Write-Host "[FAIL] Expected 14 event render paths, found $eventRenderCallCount" -ForegroundColor Red
+  Write-Host "[FAIL] Expected exactly 4 sweep render paths, found $eventRenderCallCount" -ForegroundColor Red
   $failed = $true
 }
 
