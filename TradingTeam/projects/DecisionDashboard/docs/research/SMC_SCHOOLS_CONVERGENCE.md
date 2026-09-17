@@ -48,7 +48,7 @@ Indicator workspace không nên tạo một nhãn `SMC signal` tổng hợp. Ki�
 | Score 0–10 dễ bị hiểu là xác suất | Pseudo-precision | Gọi là `research_rank`, hiển thị thành phần và version; không quy đổi sang win rate |
 | XAU spot chart và COMEX footprint có thể bị nối trực tiếp | Sai venue | Bắt buộc symbol/contract/basis metadata và trạng thái `cross_venue_support` |
 
-Đặc tả Pine đang triển khai nằm tại [Trading Hub price map R0.8](../specs/trading-hub-price-map-r0.8.md).
+Đặc tả Pine đang triển khai nằm tại [Trading Hub price map + Elliott R0.9](../specs/trading-hub-price-map-r0.9.md).
 
 ## 1. Phạm vi và độ tin cậy nguồn
 

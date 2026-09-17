@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · Trading Hub Price Map [R0.8]", "DD TH Map R0.8", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · Trading Hub Price Map + Elliott [R0.9]", "DD TH Map R0.9", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research price-map profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -9,6 +9,8 @@ string GROUP_ENGINE = "01 · Structure engine"
 string GROUP_ZONES = "02 · Zone rules"
 string GROUP_DISPLAY = "03 · Display"
 string GROUP_SYMBOLS = "04 · Sweep symbols"
+string GROUP_CORE = "05 · Core swings"
+string GROUP_ELLIOTT = "06 · Elliott overlay"
 
 int internalBars = input.int(1, "Internal pivot bars (left/right)", minval = 1, maxval = 10, group = GROUP_ENGINE, tooltip = "Research seam used to surface a possible internal pullback; not every fractal is claimed to be canonical Trading Hub IDM.")
 string confirmationMode = input.string("Any take", "IDM confirmation", options = ["Any take", "Sweep / re-entry", "Close / break"], group = GROUP_ENGINE, tooltip = "Any take confirms on the first penetration and classifies it as sweep or break. Strict modes accept only the selected event type.")
@@ -26,6 +28,16 @@ bool showDecisionPoi = input.bool(true, "Show Decision POI", group = GROUP_DISPL
 bool showExtremePoi = input.bool(true, "Show effective Extreme POI", group = GROUP_DISPLAY)
 bool showStatus = input.bool(false, "Show diagnostics status", group = GROUP_DISPLAY)
 
+int corePivotBars = input.int(5, "Core pivot bars (left/right)", minval = 2, maxval = 50, group = GROUP_CORE, tooltip = "Higher-order confirmed pivot strength. The newest core pivot can move until an opposing core reversal is accepted.")
+float coreMinReversalAtr = input.float(1.0, "Minimum reversal (ATR)", minval = 0.0, maxval = 10.0, step = 0.1, group = GROUP_CORE)
+float coreMinReversalPercent = input.float(0.0, "Minimum reversal (%)", minval = 0.0, maxval = 20.0, step = 0.1, group = GROUP_CORE)
+bool showCoreSwings = input.bool(true, "Show core H/L", group = GROUP_CORE)
+bool showCorePath = input.bool(false, "Connect core pivots", group = GROUP_CORE)
+int corePivotsRetained = input.int(40, "Core pivots retained", minval = 12, maxval = 80, group = GROUP_CORE)
+
+bool showElliott = input.bool(true, "Show validated Elliott impulse", group = GROUP_ELLIOTT)
+bool showElliottCorrection = input.bool(true, "Show A-B-C candidates", group = GROUP_ELLIOTT, tooltip = "A?/B?/C? remain candidates until a strict zigzag correction is complete.")
+
 string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 string idmSweepSymbol = input.string("Diamond", "IDM sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 float eventSymbolPaddingAtr = input.float(0.18, "Sweep symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
@@ -39,6 +51,9 @@ color bullImbalanceColor = color.rgb(44, 156, 118)
 color bearImbalanceColor = color.rgb(180, 72, 90)
 color decisionColor = color.rgb(79, 132, 219)
 color extremeColor = color.rgb(164, 93, 224)
+color coreColor = color.rgb(226, 226, 218)
+color elliottColor = color.rgb(70, 174, 214)
+color correctionColor = color.rgb(225, 174, 73)
 
 f_labelStyle(string selection, bool pointsUp) =>
     switch selection
@@ -53,6 +68,136 @@ f_addEventSymbol(array<label> markers, float price, string symbolStyle, color sy
     array.push(markers, marker)
     if array.size(markers) > limit
         label.delete(array.shift(markers))
+
+f_registerCorePivot(array<float> prices, array<int> bars, array<int> directions, array<label> pivotLabels, array<line> pivotLines, float pivotPrice, int pivotBar, int direction, float reversalFloor, float labelPadding, bool drawLabels, bool drawPath, color pivotColor, int limit) =>
+    int event = 0 // 0 ignored, 1 appended, 2 newest developing pivot replaced
+    int count = array.size(prices)
+    if count == 0
+        array.push(prices, pivotPrice)
+        array.push(bars, pivotBar)
+        array.push(directions, direction)
+        label firstLabel = drawLabels ? label.new(pivotBar, pivotPrice + direction * labelPadding, direction == 1 ? "C-H" : "C-L", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = pivotColor, size = size.tiny, tooltip = "Confirmed higher-order core pivot") : na
+        array.push(pivotLabels, firstLabel)
+        event := 1
+    else
+        int lastIndex = count - 1
+        float lastPrice = array.get(prices, lastIndex)
+        int lastDirection = array.get(directions, lastIndex)
+        if direction == lastDirection
+            bool moreExtreme = direction == 1 ? pivotPrice > lastPrice : pivotPrice < lastPrice
+            if moreExtreme
+                array.set(prices, lastIndex, pivotPrice)
+                array.set(bars, lastIndex, pivotBar)
+                label lastLabel = array.get(pivotLabels, lastIndex)
+                if not na(lastLabel)
+                    label.set_xy(lastLabel, pivotBar, pivotPrice + direction * labelPadding)
+                if array.size(pivotLines) > 0
+                    line lastLine = array.get(pivotLines, array.size(pivotLines) - 1)
+                    if not na(lastLine)
+                        line.set_xy2(lastLine, pivotBar, pivotPrice)
+                event := 2
+        else if math.abs(pivotPrice - lastPrice) >= reversalFloor
+            line nextLine = drawPath ? line.new(array.get(bars, lastIndex), lastPrice, pivotBar, pivotPrice, xloc = xloc.bar_index, color = color.new(pivotColor, 58), width = 1) : na
+            label nextLabel = drawLabels ? label.new(pivotBar, pivotPrice + direction * labelPadding, direction == 1 ? "C-H" : "C-L", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = pivotColor, size = size.tiny, tooltip = "Confirmed higher-order core pivot") : na
+            array.push(prices, pivotPrice)
+            array.push(bars, pivotBar)
+            array.push(directions, direction)
+            array.push(pivotLabels, nextLabel)
+            array.push(pivotLines, nextLine)
+            event := 1
+
+    if array.size(prices) > limit
+        array.shift(prices)
+        array.shift(bars)
+        array.shift(directions)
+        label expiredLabel = array.shift(pivotLabels)
+        if not na(expiredLabel)
+            label.delete(expiredLabel)
+        if array.size(pivotLines) > 0
+            line expiredLine = array.shift(pivotLines)
+            if not na(expiredLine)
+                line.delete(expiredLine)
+    event
+
+f_impulseDirection(array<float> prices, array<int> directions, int start) =>
+    float p0 = array.get(prices, start)
+    float p1 = array.get(prices, start + 1)
+    float p2 = array.get(prices, start + 2)
+    float p3 = array.get(prices, start + 3)
+    float p4 = array.get(prices, start + 4)
+    float p5 = array.get(prices, start + 5)
+    bool bullDirections = array.get(directions, start) == -1 and array.get(directions, start + 1) == 1 and array.get(directions, start + 2) == -1 and array.get(directions, start + 3) == 1 and array.get(directions, start + 4) == -1 and array.get(directions, start + 5) == 1
+    bool bearDirections = array.get(directions, start) == 1 and array.get(directions, start + 1) == -1 and array.get(directions, start + 2) == 1 and array.get(directions, start + 3) == -1 and array.get(directions, start + 4) == 1 and array.get(directions, start + 5) == -1
+    float wave1 = math.abs(p1 - p0)
+    float wave3 = math.abs(p3 - p2)
+    float wave5 = math.abs(p5 - p4)
+    bool wave3NotShortest = wave3 >= math.min(wave1, wave5)
+    bool bullRules = bullDirections and p2 > p0 and p3 > p1 and p4 > p1 and p5 > p3 and wave3NotShortest
+    bool bearRules = bearDirections and p2 < p0 and p3 < p1 and p4 < p1 and p5 < p3 and wave3NotShortest
+    bullRules ? 1 : bearRules ? -1 : 0
+
+f_strictCorrectionComplete(array<float> prices, array<int> directions, int impulseEnd, int impulseDirection) =>
+    bool enoughPoints = array.size(prices) > impulseEnd + 3
+    bool valid = false
+    if enoughPoints
+        float wave5 = array.get(prices, impulseEnd)
+        float a = array.get(prices, impulseEnd + 1)
+        float b = array.get(prices, impulseEnd + 2)
+        float c = array.get(prices, impulseEnd + 3)
+        bool bullCorrection = impulseDirection == 1 and array.get(directions, impulseEnd + 1) == -1 and array.get(directions, impulseEnd + 2) == 1 and array.get(directions, impulseEnd + 3) == -1 and a < wave5 and b > a and b < wave5 and c < a
+        bool bearCorrection = impulseDirection == -1 and array.get(directions, impulseEnd + 1) == 1 and array.get(directions, impulseEnd + 2) == -1 and array.get(directions, impulseEnd + 3) == 1 and a > wave5 and b < a and b > wave5 and c > a
+        valid := bullCorrection or bearCorrection
+    valid
+
+f_clearElliott(array<label> waveLabels, array<line> waveLines) =>
+    if array.size(waveLabels) > 0
+        for index = 0 to array.size(waveLabels) - 1
+            label.delete(array.get(waveLabels, index))
+        array.clear(waveLabels)
+    if array.size(waveLines) > 0
+        for index = 0 to array.size(waveLines) - 1
+            line.delete(array.get(waveLines, index))
+        array.clear(waveLines)
+
+f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, bool drawCorrection, color impulseColor, color abcColor) =>
+    f_clearElliott(waveLabels, waveLines)
+    int foundStart = -1
+    int foundDirection = 0
+    int count = array.size(prices)
+    if drawImpulse and count >= 6
+        for start = 0 to count - 6
+            int direction = f_impulseDirection(prices, directions, start)
+            if direction != 0
+                foundStart := start
+                foundDirection := direction
+    if foundStart >= 0
+        for offset = 0 to 5
+            int index = foundStart + offset
+            string waveText = offset == 0 ? "E0" : str.tostring(offset)
+            float labelPrice = array.get(prices, index) + array.get(directions, index) * labelPadding
+            label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = impulseColor, size = size.small, tooltip = offset == 0 ? "Validated Elliott impulse origin" : "Validated Elliott impulse wave " + waveText)
+            array.push(waveLabels, waveLabel)
+            if offset > 0
+                line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, 18), width = 1)
+                array.push(waveLines, waveLine)
+
+        int impulseEnd = foundStart + 5
+        int availableCorrectionPoints = math.min(3, count - impulseEnd - 1)
+        bool correctionComplete = f_strictCorrectionComplete(prices, directions, impulseEnd, foundDirection)
+        if drawCorrection and availableCorrectionPoints > 0
+            for offset = 1 to availableCorrectionPoints
+                int index = impulseEnd + offset
+                int expectedDirection = foundDirection == 1 ? (offset % 2 == 1 ? -1 : 1) : (offset % 2 == 1 ? 1 : -1)
+                bool directionMatches = array.get(directions, index) == expectedDirection
+                if directionMatches
+                    string baseText = offset == 1 ? "A" : offset == 2 ? "B" : "C"
+                    string correctionText = correctionComplete ? baseText : baseText + "?"
+                    float labelPrice = array.get(prices, index) + array.get(directions, index) * labelPadding
+                    label correctionLabel = label.new(array.get(bars, index), labelPrice, correctionText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = abcColor, size = size.small, tooltip = correctionComplete ? "Strict Elliott zigzag correction" : "Developing Elliott correction candidate")
+                    array.push(waveLabels, correctionLabel)
+                    line correctionLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(abcColor, 24), style = line.style_dashed, width = 1)
+                    array.push(waveLines, correctionLine)
+    foundStart
 
 f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
     int initialRight = math.max(bar_index, leftBar)
@@ -97,6 +242,8 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
 
 float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
+float coreHigh = ta.pivothigh(high, corePivotBars, corePivotBars)
+float coreLow = ta.pivotlow(low, corePivotBars, corePivotBars)
 float atrBasis = nz(ta.atr(14), high - low)
 float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
 
@@ -143,6 +290,13 @@ var array<int> zoneDirections = array.new<int>()
 var array<int> zoneStates = array.new<int>()
 var array<color> zoneColors = array.new<color>()
 var array<label> eventSymbolLabels = array.new<label>()
+var array<float> corePrices = array.new<float>()
+var array<int> coreBars = array.new<int>()
+var array<int> coreDirections = array.new<int>()
+var array<label> coreLabels = array.new<label>()
+var array<line> coreLines = array.new<line>()
+var array<label> elliottLabels = array.new<label>()
+var array<line> elliottLines = array.new<line>()
 
 bool confirmedHighThisBar = false
 bool confirmedLowThisBar = false
@@ -154,6 +308,8 @@ bool sellSideSweptThisBar = false
 bool importantImbalanceThisBar = false
 bool decisionPoiThisBar = false
 bool extremePoiThisBar = false
+bool corePivotThisBar = false
+bool elliottImpulseThisBar = false
 
 if barstate.isconfirmed
     f_updateZones(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, poiInvalidation)
@@ -408,9 +564,36 @@ if barstate.isconfirmed
     if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1
         f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmSweepSymbol, true), idmColor, eventSymbolsRetained)
 
+    // Core pivots use a wider confirmed fractal plus a minimum reversal gate.
+    // The last core point is developing and may be replaced by a more extreme
+    // same-direction pivot; all earlier alternating points are locked.
+    int coreEvent = 0
+    int corePivotBar = bar_index - corePivotBars
+    float coreAtr = nz(atrBasis[corePivotBars], atrBasis)
+    bool ambiguousCoreBar = not na(coreHigh) and not na(coreLow)
+    if ambiguousCoreBar
+        int lastCoreDirection = array.size(coreDirections) > 0 ? array.get(coreDirections, array.size(coreDirections) - 1) : 0
+        if lastCoreDirection == 1
+            float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreLow) * coreMinReversalPercent * 0.01)
+            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreLow, corePivotBar, -1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
+        else
+            float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreHigh) * coreMinReversalPercent * 0.01)
+            coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreHigh, corePivotBar, 1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
+    else if not na(coreHigh)
+        float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreHigh) * coreMinReversalPercent * 0.01)
+        coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreHigh, corePivotBar, 1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
+    else if not na(coreLow)
+        float reversalFloor = math.max(coreAtr * coreMinReversalAtr, math.abs(coreLow) * coreMinReversalPercent * 0.01)
+        coreEvent := f_registerCorePivot(corePrices, coreBars, coreDirections, coreLabels, coreLines, coreLow, corePivotBar, -1, reversalFloor, markerSpacing * 0.7, showCoreSwings, showCorePath, coreColor, corePivotsRetained)
+
+    if coreEvent > 0
+        corePivotThisBar := coreEvent == 1
+        int latestImpulseStart = f_renderElliott(corePrices, coreBars, coreDirections, elliottLabels, elliottLines, markerSpacing * 1.25, showElliott, showElliottCorrection, elliottColor, correctionColor)
+        elliottImpulseThisBar := coreEvent == 1 and latestImpulseStart >= 0 and latestImpulseStart + 5 == array.size(corePrices) - 1
+
 if barstate.islast
     if showStatus
-        table.cell(statusTable, 0, 0, "TH R0.8", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 0, "TH R0.9", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
         table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)
@@ -430,3 +613,5 @@ alertcondition(sellSideSweptThisBar, "Sell-side liquidity swept", "A confirmed s
 alertcondition(importantImbalanceThisBar, "Important imbalance created", "A profile-selected important imbalance was created on {{ticker}} {{interval}}.")
 alertcondition(decisionPoiThisBar, "Decision POI created", "A profile-selected Decision POI was created on {{ticker}} {{interval}}.")
 alertcondition(extremePoiThisBar, "Effective Extreme POI created", "An Extreme POI passed the sweep-and-re-entry validity gate on {{ticker}} {{interval}}.")
+alertcondition(corePivotThisBar, "Core pivot confirmed", "A higher-order core pivot was confirmed on {{ticker}} {{interval}}.")
+alertcondition(elliottImpulseThisBar, "Elliott impulse validated", "A strict 1-2-3-4-5 Elliott impulse was validated on {{ticker}} {{interval}}.")

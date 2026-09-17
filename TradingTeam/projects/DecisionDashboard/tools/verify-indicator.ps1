@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r0.8.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r0.9.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -15,7 +15,7 @@ if (-not $resolvedPath.StartsWith($workspaceRoot + [IO.Path]::DirectorySeparator
 $source = Get-Content -LiteralPath $resolvedPath -Raw -Encoding UTF8
 $required = [ordered]@{
   "Pine v6" = "//@version=6"
-  "Price-map profile" = 'Trading Hub Price Map [R0.8]'
+  "Price-map profile" = 'Trading Hub Price Map + Elliott [R0.9]'
   "Overlay indicator" = "overlay = true"
   "Closed-bar gate" = "if barstate.isconfirmed"
   "High IDM ordering" = "candidateHighIdmBar < candidateHighBar"
@@ -65,6 +65,24 @@ $required = [ordered]@{
   "FVG starts after pattern" = "imbalanceBar + 2 + zoneStartPaddingBars"
   "Lifecycle respects padding" = "bar_index >= box.get_left(zone)"
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
+  "Core pivot strength" = 'input.int(5, "Core pivot bars (left/right)"'
+  "Core ATR reversal gate" = 'input.float(1.0, "Minimum reversal (ATR)"'
+  "Core percentage reversal gate" = 'input.float(0.0, "Minimum reversal (%)"'
+  "Core high source" = "ta.pivothigh(high, corePivotBars, corePivotBars)"
+  "Core low source" = "ta.pivotlow(low, corePivotBars, corePivotBars)"
+  "Core alternation engine" = "f_registerCorePivot("
+  "Developing core replacement" = "newest developing pivot replaced"
+  "Core high marker" = '"C-H"'
+  "Core low marker" = '"C-L"'
+  "Elliott impulse engine" = "f_impulseDirection("
+  "Elliott wave-two rule" = "p2 > p0"
+  "Elliott wave-four non-overlap" = "p4 > p1"
+  "Elliott wave-three rule" = "wave3NotShortest"
+  "Strict correction engine" = "f_strictCorrectionComplete("
+  "Developing correction labels" = 'baseText + "?"'
+  "Elliott core-driven render" = "if coreEvent > 0"
+  "Core pivot alert" = "alertcondition(corePivotThisBar"
+  "Elliott impulse alert" = "alertcondition(elliottImpulseThisBar"
 }
 
 $forbidden = [ordered]@{

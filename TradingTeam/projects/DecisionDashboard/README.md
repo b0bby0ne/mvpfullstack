@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `TH-MAP-R0.8` | [`indicators/trading-hub/price-map-r0.8.pine`](./indicators/trading-hub/price-map-r0.8.pine) | Research — chờ review chart |
+| `TH-MAP-R0.9` | [`indicators/trading-hub/price-map-r0.9.pine`](./indicators/trading-hub/price-map-r0.9.pine) | Research — chờ review chart |
 
-R0.8 chỉ hiển thị H/L, sweep symbol + origin line, Decision/Extreme POI và IMP-FVG zones. Các event phụ, active IDM, candidate và confirmation marker đã được loại khỏi chart.
+R0.9 giữ H/L, sweep, POI và IMP-FVG của price map; bổ sung core swing `C-H/C-L` và Elliott 1–5/A–B–C bảo thủ dựa trên core pivots. Các event phụ, active IDM, candidate và confirmation marker vẫn được loại khỏi chart.
 
 ## Cấu trúc
 
@@ -24,6 +24,8 @@ validation/          Checklist review và evidence cũ được bảo toàn
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/verify-indicator.ps1
+powershell -ExecutionPolicy Bypass -File tools/test-core-swings-r0.9.ps1
+powershell -ExecutionPolicy Bypass -File tools/test-elliott-r0.9.ps1
 ```
 
 Sau khi kiểm tra tĩnh pass:
