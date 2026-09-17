@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · Trading Hub Structure Events [R0.4]", "DD TH Events R0.4", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · Trading Hub Structure Events [R0.5]", "DD TH Events R0.5", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -8,6 +8,7 @@ indicator("DD · Trading Hub Structure Events [R0.4]", "DD TH Events R0.4", over
 string GROUP_ENGINE = "01 · Structure engine"
 string GROUP_ZONES = "02 · Zone rules"
 string GROUP_DISPLAY = "03 · Display"
+string GROUP_SYMBOLS = "04 · Event symbols"
 
 int internalBars = input.int(1, "Internal pivot bars (left/right)", minval = 1, maxval = 10, group = GROUP_ENGINE, tooltip = "Research seam used to surface a possible internal pullback; not every fractal is claimed to be canonical Trading Hub IDM.")
 string confirmationMode = input.string("Any take", "IDM confirmation", options = ["Any take", "Sweep / re-entry", "Close / break"], group = GROUP_ENGINE, tooltip = "Any take confirms on the first penetration and classifies it as sweep or break. Strict modes accept only the selected event type.")
@@ -17,6 +18,7 @@ int zoneLookback = input.int(40, "Zone search bars", minval = 3, maxval = 200, g
 int maxZones = input.int(24, "Zones retained", minval = 4, maxval = 80, group = GROUP_ZONES)
 string poiRange = input.string("Full candle", "POI range", options = ["Full candle", "Body"], group = GROUP_ZONES)
 string poiInvalidation = input.string("Close beyond", "POI invalidation", options = ["Close beyond", "Wick beyond"], group = GROUP_ZONES)
+int zoneStartPaddingBars = input.int(1, "POI/FVG start padding (bars)", minval = 0, maxval = 10, group = GROUP_ZONES, tooltip = "Starts the projected zone after its source candle, or after the third FVG candle, so the box does not cover the pattern that created it.")
 
 bool showIdm = input.bool(true, "Show active and resolved IDM", group = GROUP_DISPLAY)
 bool showSweeps = input.bool(true, "Show sweep symbols and origin lines", group = GROUP_DISPLAY)
@@ -27,6 +29,31 @@ bool showEventSymbols = input.bool(true, "Show event symbols", group = GROUP_DIS
 bool showConfirmation = input.bool(true, "Show structure confirmation bar", group = GROUP_DISPLAY)
 bool showCandidate = input.bool(false, "Show unconfirmed candidate", group = GROUP_DISPLAY)
 bool showStatus = input.bool(true, "Show engine status", group = GROUP_DISPLAY)
+
+string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string idmSweepSymbol = input.string("Diamond", "IDM sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string idmBreakSymbol = input.string("Cross", "IDM break", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string confirmationSymbol = input.string("Square", "H/L confirmation", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string imbalanceSymbol = input.string("Square", "Imbalance / FVG", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string decisionPoiSymbol = input.string("Circle", "Decision POI", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+string extremePoiSymbol = input.string("Diamond", "Extreme POI", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
+float eventSymbolPaddingAtr = input.float(0.18, "Structure symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
+float zoneSymbolPaddingAtr = input.float(1.0, "POI/FVG symbol padding (ATR)", minval = 0.1, maxval = 5.0, step = 0.1, group = GROUP_SYMBOLS)
+
+string liquidityUpShape = liquiditySweepSymbol == "Diamond" ? shape.diamond : liquiditySweepSymbol == "Circle" ? shape.circle : liquiditySweepSymbol == "Square" ? shape.square : liquiditySweepSymbol == "Cross" ? shape.xcross : shape.triangleup
+string liquidityDownShape = liquiditySweepSymbol == "Diamond" ? shape.diamond : liquiditySweepSymbol == "Circle" ? shape.circle : liquiditySweepSymbol == "Square" ? shape.square : liquiditySweepSymbol == "Cross" ? shape.xcross : shape.triangledown
+string idmSweepUpShape = idmSweepSymbol == "Diamond" ? shape.diamond : idmSweepSymbol == "Circle" ? shape.circle : idmSweepSymbol == "Square" ? shape.square : idmSweepSymbol == "Cross" ? shape.xcross : shape.triangleup
+string idmSweepDownShape = idmSweepSymbol == "Diamond" ? shape.diamond : idmSweepSymbol == "Circle" ? shape.circle : idmSweepSymbol == "Square" ? shape.square : idmSweepSymbol == "Cross" ? shape.xcross : shape.triangledown
+string idmBreakUpShape = idmBreakSymbol == "Diamond" ? shape.diamond : idmBreakSymbol == "Circle" ? shape.circle : idmBreakSymbol == "Square" ? shape.square : idmBreakSymbol == "Cross" ? shape.xcross : shape.triangleup
+string idmBreakDownShape = idmBreakSymbol == "Diamond" ? shape.diamond : idmBreakSymbol == "Circle" ? shape.circle : idmBreakSymbol == "Square" ? shape.square : idmBreakSymbol == "Cross" ? shape.xcross : shape.triangledown
+string confirmationUpShape = confirmationSymbol == "Diamond" ? shape.diamond : confirmationSymbol == "Circle" ? shape.circle : confirmationSymbol == "Square" ? shape.square : confirmationSymbol == "Cross" ? shape.xcross : shape.triangleup
+string confirmationDownShape = confirmationSymbol == "Diamond" ? shape.diamond : confirmationSymbol == "Circle" ? shape.circle : confirmationSymbol == "Square" ? shape.square : confirmationSymbol == "Cross" ? shape.xcross : shape.triangledown
+string imbalanceUpShape = imbalanceSymbol == "Diamond" ? shape.diamond : imbalanceSymbol == "Circle" ? shape.circle : imbalanceSymbol == "Square" ? shape.square : imbalanceSymbol == "Cross" ? shape.xcross : shape.triangleup
+string imbalanceDownShape = imbalanceSymbol == "Diamond" ? shape.diamond : imbalanceSymbol == "Circle" ? shape.circle : imbalanceSymbol == "Square" ? shape.square : imbalanceSymbol == "Cross" ? shape.xcross : shape.triangledown
+string decisionUpShape = decisionPoiSymbol == "Diamond" ? shape.diamond : decisionPoiSymbol == "Circle" ? shape.circle : decisionPoiSymbol == "Square" ? shape.square : decisionPoiSymbol == "Cross" ? shape.xcross : shape.triangleup
+string decisionDownShape = decisionPoiSymbol == "Diamond" ? shape.diamond : decisionPoiSymbol == "Circle" ? shape.circle : decisionPoiSymbol == "Square" ? shape.square : decisionPoiSymbol == "Cross" ? shape.xcross : shape.triangledown
+string extremeUpShape = extremePoiSymbol == "Diamond" ? shape.diamond : extremePoiSymbol == "Circle" ? shape.circle : extremePoiSymbol == "Square" ? shape.square : extremePoiSymbol == "Cross" ? shape.xcross : shape.triangleup
+string extremeDownShape = extremePoiSymbol == "Diamond" ? shape.diamond : extremePoiSymbol == "Circle" ? shape.circle : extremePoiSymbol == "Square" ? shape.square : extremePoiSymbol == "Cross" ? shape.xcross : shape.triangledown
 
 color highColor = color.rgb(255, 101, 92)
 color lowColor = color.rgb(66, 211, 146)
@@ -39,7 +66,8 @@ color extremeColor = color.rgb(164, 93, 224)
 color candidateColor = color.new(color.silver, 45)
 
 f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
-    box created = box.new(left = leftBar, top = zoneTop, right = bar_index, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 15), bgcolor = color.new(zoneColor, 82), text = kind + " · ACTIVE", text_color = zoneColor, text_size = size.tiny, text_halign = text.align_left)
+    int initialRight = math.max(bar_index, leftBar)
+    box created = box.new(left = leftBar, top = zoneTop, right = initialRight, bottom = zoneBottom, xloc = xloc.bar_index, extend = extend.right, border_color = color.new(zoneColor, 15), bgcolor = color.new(zoneColor, 82), text = kind + " · ACTIVE", text_color = zoneColor, text_size = size.tiny, text_halign = text.align_left)
     array.push(boxes, created)
     array.push(kinds, kind)
     array.push(directions, direction)
@@ -56,8 +84,8 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
     if array.size(boxes) > 0
         for index = 0 to array.size(boxes) - 1
             int state = array.get(states, index)
-            if state < 2
-                box zone = array.get(boxes, index)
+            box zone = array.get(boxes, index)
+            if state < 2 and bar_index >= box.get_left(zone)
                 string kind = array.get(kinds, index)
                 int direction = array.get(directions, index)
                 color zoneColor = array.get(colors, index)
@@ -233,7 +261,7 @@ if barstate.isconfirmed
             if showExtremePoi and effectiveBearExtreme
                 float extremeTop = poiRange == "Full candle" ? candidateHigh : math.max(candidateHighOpen, candidateHighClose)
                 float extremeBottom = poiRange == "Full candle" ? candidateHighLow : math.min(candidateHighOpen, candidateHighClose)
-                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateHighBar, extremeTop, extremeBottom, -1, "E-POI", extremeColor, maxZones)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateHighBar + zoneStartPaddingBars, extremeTop, extremeBottom, -1, "E-POI", extremeColor, maxZones)
                 extremePoiThisBar := true
                 zoneEventDirectionThisBar := -1
 
@@ -250,7 +278,7 @@ if barstate.isconfirmed
                         decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
                         decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
                 if not na(decisionBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar, decisionTop, decisionBottom, -1, "D-POI", decisionColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, -1, "D-POI", decisionColor, maxZones)
                     decisionPoiThisBar := true
                     zoneEventDirectionThisBar := -1
 
@@ -273,7 +301,7 @@ if barstate.isconfirmed
                         imbalanceTop := low[i + 2]
                         imbalanceBottom := high[i]
                 if not na(imbalanceBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, -1, "IMP-FVG", bearImbalanceColor, maxZones)
                     importantImbalanceThisBar := true
                     zoneEventDirectionThisBar := -1
 
@@ -328,7 +356,7 @@ if barstate.isconfirmed
             if showExtremePoi and effectiveBullExtreme
                 float extremeTop = poiRange == "Full candle" ? candidateLowHigh : math.max(candidateLowOpen, candidateLowClose)
                 float extremeBottom = poiRange == "Full candle" ? candidateLow : math.min(candidateLowOpen, candidateLowClose)
-                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateLowBar, extremeTop, extremeBottom, 1, "E-POI", extremeColor, maxZones)
+                f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, candidateLowBar + zoneStartPaddingBars, extremeTop, extremeBottom, 1, "E-POI", extremeColor, maxZones)
                 extremePoiThisBar := true
                 zoneEventDirectionThisBar := 1
 
@@ -343,7 +371,7 @@ if barstate.isconfirmed
                         decisionTop := poiRange == "Full candle" ? high[i] : math.max(open[i], close[i])
                         decisionBottom := poiRange == "Full candle" ? low[i] : math.min(open[i], close[i])
                 if not na(decisionBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar, decisionTop, decisionBottom, 1, "D-POI", decisionColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, decisionBar + zoneStartPaddingBars, decisionTop, decisionBottom, 1, "D-POI", decisionColor, maxZones)
                     decisionPoiThisBar := true
                     zoneEventDirectionThisBar := 1
 
@@ -364,7 +392,7 @@ if barstate.isconfirmed
                         imbalanceTop := low[i]
                         imbalanceBottom := high[i + 2]
                 if not na(imbalanceBar)
-                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, maxZones)
+                    f_addZone(zoneBoxes, zoneKinds, zoneDirections, zoneStates, zoneColors, imbalanceBar + 2 + zoneStartPaddingBars, imbalanceTop, imbalanceBottom, 1, "IMP-FVG", bullImbalanceColor, maxZones)
                     importantImbalanceThisBar := true
                     zoneEventDirectionThisBar := 1
 
@@ -413,7 +441,7 @@ if barstate.islast
             liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM ACTIVE ↑", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
 
     if showStatus
-        table.cell(statusTable, 0, 0, "DD TH R0.4", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
+        table.cell(statusTable, 0, 0, "DD TH R0.5", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
         table.cell(statusTable, 1, 0, "RESEARCH", text_color = idmColor, bgcolor = color.rgb(26, 31, 36))
         table.cell(statusTable, 0, 1, "Seeking", text_color = color.silver)
         table.cell(statusTable, 1, 1, phase == 1 ? "HIGH" : phase == -1 ? "LOW" : "BOOTSTRAP", text_color = phase == 1 ? highColor : lowColor)
@@ -430,22 +458,27 @@ if barstate.islast
     else
         table.clear(statusTable, 0, 0, 1, 6)
 
-// Symbol-only event layer. No event text is rendered on the chart.
-float markerSpacing = math.max(nz(ta.atr(14), high - low) * 0.18, syminfo.mintick * 10)
+// Symbol-only event layer. Shape and padding are user-configurable.
+float atrBasis = nz(ta.atr(14), high - low)
+float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
+float zoneMarkerPadding = math.max(atrBasis * zoneSymbolPaddingAtr, markerSpacing * 2)
 
-plotshape(showSweeps and buySideSweptThisBar ? high + markerSpacing : na, title = "BSL sweep", style = shape.triangledown, location = location.absolute, color = sweepColor, size = size.small)
-plotshape(showSweeps and sellSideSweptThisBar ? low - markerSpacing : na, title = "SSL sweep", style = shape.triangleup, location = location.absolute, color = sweepColor, size = size.small)
-plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside sweep", style = shape.diamond, location = location.absolute, color = idmColor, size = size.tiny)
-plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside sweep", style = shape.diamond, location = location.absolute, color = idmColor, size = size.tiny)
+plotshape(showSweeps and buySideSweptThisBar ? high + markerSpacing : na, title = "BSL sweep", style = liquidityDownShape, location = location.absolute, color = sweepColor, size = size.small)
+plotshape(showSweeps and sellSideSweptThisBar ? low - markerSpacing : na, title = "SSL sweep", style = liquidityUpShape, location = location.absolute, color = sweepColor, size = size.small)
+plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside sweep", style = idmSweepDownShape, location = location.absolute, color = idmColor, size = size.tiny)
+plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside sweep", style = idmSweepUpShape, location = location.absolute, color = idmColor, size = size.tiny)
 
-plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside break", style = shape.xcross, location = location.absolute, color = highColor, size = size.tiny)
-plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside break", style = shape.xcross, location = location.absolute, color = lowColor, size = size.tiny)
-plotshape(showEventSymbols and showConfirmation and confirmedHighThisBar ? high + markerSpacing * 3 : na, title = "High confirmed", style = shape.square, location = location.absolute, color = highColor, size = size.tiny)
-plotshape(showEventSymbols and showConfirmation and confirmedLowThisBar ? low - markerSpacing * 3 : na, title = "Low confirmed", style = shape.square, location = location.absolute, color = lowColor, size = size.tiny)
+plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside break", style = idmBreakDownShape, location = location.absolute, color = highColor, size = size.tiny)
+plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside break", style = idmBreakUpShape, location = location.absolute, color = lowColor, size = size.tiny)
+plotshape(showEventSymbols and showConfirmation and confirmedHighThisBar ? high + markerSpacing * 3 : na, title = "High confirmed", style = confirmationDownShape, location = location.absolute, color = highColor, size = size.tiny)
+plotshape(showEventSymbols and showConfirmation and confirmedLowThisBar ? low - markerSpacing * 3 : na, title = "Low confirmed", style = confirmationUpShape, location = location.absolute, color = lowColor, size = size.tiny)
 
-plotshape(showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == -1 ? high + markerSpacing * 4 : showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == 1 ? low - markerSpacing * 4 : na, title = "Important imbalance created", style = shape.square, location = location.absolute, color = zoneEventDirectionThisBar == 1 ? bullImbalanceColor : bearImbalanceColor, size = size.tiny)
-plotshape(showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == -1 ? high + markerSpacing * 5 : showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == 1 ? low - markerSpacing * 5 : na, title = "Decision POI created", style = shape.circle, location = location.absolute, color = decisionColor, size = size.tiny)
-plotshape(showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == -1 ? high + markerSpacing * 6 : showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == 1 ? low - markerSpacing * 6 : na, title = "Extreme POI validated", style = shape.diamond, location = location.absolute, color = extremeColor, size = size.small)
+plotshape(showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding : na, title = "Bearish important imbalance created", style = imbalanceDownShape, location = location.absolute, color = bearImbalanceColor, size = size.tiny)
+plotshape(showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding : na, title = "Bullish important imbalance created", style = imbalanceUpShape, location = location.absolute, color = bullImbalanceColor, size = size.tiny)
+plotshape(showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding + markerSpacing : na, title = "Bearish Decision POI created", style = decisionDownShape, location = location.absolute, color = decisionColor, size = size.tiny)
+plotshape(showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding - markerSpacing : na, title = "Bullish Decision POI created", style = decisionUpShape, location = location.absolute, color = decisionColor, size = size.tiny)
+plotshape(showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding + markerSpacing * 2 : na, title = "Bearish Extreme POI validated", style = extremeDownShape, location = location.absolute, color = extremeColor, size = size.small)
+plotshape(showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding - markerSpacing * 2 : na, title = "Bullish Extreme POI validated", style = extremeUpShape, location = location.absolute, color = extremeColor, size = size.small)
 
 alertcondition(confirmedHighThisBar, "Trading Hub high confirmed", "A structure high was confirmed after its IDM event on {{ticker}} {{interval}}.")
 alertcondition(confirmedLowThisBar, "Trading Hub low confirmed", "A structure low was confirmed after its IDM event on {{ticker}} {{interval}}.")

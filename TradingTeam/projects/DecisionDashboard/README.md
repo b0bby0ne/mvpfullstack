@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `TH-EVENTS-R0.4` | [`indicators/trading-hub/structure-events-r0.4.pine`](./indicators/trading-hub/structure-events-r0.4.pine) | Research — chờ review chart |
+| `TH-EVENTS-R0.5` | [`indicators/trading-hub/structure-events-r0.5.pine`](./indicators/trading-hub/structure-events-r0.5.pine) | Research — chờ review chart |
 
-R0.4 đánh dấu H/L khi IDM bị lấy bởi sweep hoặc break; toàn bộ event dùng symbol không chữ. Sweep có line nối từ confirmed H/L hoặc IDM gốc tới candle sweep. Indicator tiếp tục hiển thị important imbalance, Decision POI và Extreme POI có sweep/re-entry hợp lệ.
+R0.5 cho phép đổi shape riêng của từng nhóm event. POI/FVG box mặc định bắt đầu cách source pattern 1 bar và symbol zone cách nến 1 ATR. Sweep vẫn có line nối từ confirmed H/L hoặc IDM gốc tới candle sweep.
 
 ## Cấu trúc
 

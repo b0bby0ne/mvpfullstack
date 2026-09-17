@@ -2,7 +2,7 @@
 
 ## Context
 
-- Profile: `TH-EVENTS-R0.4`
+- Profile: `TH-EVENTS-R0.5`
 - Reviewer:
 - Review date:
 - Symbol and venue:
@@ -13,6 +13,10 @@
 - Zone search bars:
 - POI range: `Full candle` | `Body`
 - POI invalidation: `Close beyond` | `Wick beyond`
+- POI/FVG start padding (bars):
+- Structure symbol padding (ATR):
+- POI/FVG symbol padding (ATR):
+- Custom event symbols:
 
 ## Structure event case
 

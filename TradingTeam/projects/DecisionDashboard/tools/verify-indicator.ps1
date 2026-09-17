@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.4.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.5.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -44,6 +44,15 @@ $required = [ordered]@{
   "BSL symbol" = 'title = "BSL sweep"'
   "SSL symbol" = 'title = "SSL sweep"'
   "IDM sweep symbol" = 'title = "IDM downside sweep"'
+  "Liquidity shape option" = 'input.string("Triangle", "Liquidity sweep"'
+  "IDM shape option" = 'input.string("Diamond", "IDM sweep"'
+  "Imbalance shape option" = 'input.string("Square", "Imbalance / FVG"'
+  "Decision POI shape option" = 'input.string("Circle", "Decision POI"'
+  "Extreme POI shape option" = 'input.string("Diamond", "Extreme POI"'
+  "Zone bar padding" = 'input.int(1, "POI/FVG start padding (bars)"'
+  "Zone ATR padding" = 'input.float(1.0, "POI/FVG symbol padding (ATR)"'
+  "FVG starts after pattern" = "imbalanceBar + 2 + zoneStartPaddingBars"
+  "Lifecycle respects padding" = "bar_index >= box.get_left(zone)"
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
 }
 
