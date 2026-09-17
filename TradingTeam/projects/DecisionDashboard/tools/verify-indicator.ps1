@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r1.1.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\price-map-r1.2.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -15,7 +15,7 @@ if (-not $resolvedPath.StartsWith($workspaceRoot + [IO.Path]::DirectorySeparator
 $source = Get-Content -LiteralPath $resolvedPath -Raw -Encoding UTF8
 $required = [ordered]@{
   "Pine v6" = "//@version=6"
-  "Price-map profile" = 'SMC Price Map + Elliott [R1.1]'
+  "Price-map profile" = 'SMC Price Map + Elliott [R1.2]'
   "Overlay indicator" = "overlay = true"
   "Closed-bar gate" = "if barstate.isconfirmed"
   "High IDM ordering" = "candidateHighIdmBar < candidateHighBar"
@@ -80,11 +80,11 @@ $required = [ordered]@{
   "Elliott wave-two rule" = "p2 > p0"
   "Elliott wave-four non-overlap" = "p4 > p1"
   "Elliott wave-three rule" = "wave3NotShortest"
-  "Strict correction engine" = "f_strictCorrectionComplete("
-  "Developing correction labels" = 'baseText + "?"'
   "Developing impulse engine" = "f_partialImpulseDirection("
   "Developing wave labels" = 'str.tostring(offset) + (completed ? "" : "?")'
   "Fail-visible wave fallback" = "Fail-visible fallback"
+  "Motive-leg classification" = "bool motiveLeg = offset % 2 == 1"
+  "Motive legs emphasized" = "width = motiveLeg ? 2 : 1"
   "Elliott core-driven render" = "if coreEvent > 0 or activeSupportInvalidated"
   "Elliott imbalance mode" = 'input.string("Latest motive IMB", "SMC imbalance support"'
   "Motive imbalance references" = "coreSupportImbalanceIds"
@@ -126,6 +126,10 @@ $forbidden = [ordered]@{
   "Independent core high fractal" = "ta.pivothigh(high, corePivotBars"
   "Independent core low fractal" = "ta.pivotlow(low, corePivotBars"
   "Legacy core pivot bars input" = '"Core pivot bars (left/right)"'
+  "ABC display input" = '"Show A-B-C candidates"'
+  "ABC correction engine" = "f_strictCorrectionComplete("
+  "ABC label builder" = 'offset == 1 ? "A"'
+  "Correction color layer" = "correctionColor"
 }
 
 $failed = $false

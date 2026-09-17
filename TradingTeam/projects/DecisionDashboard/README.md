@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `SMC-ELLIOTT-R1.1` | [`indicators/trading-hub/price-map-r1.1.pine`](./indicators/trading-hub/price-map-r1.1.pine) | Research — chờ review chart |
+| `SMC-ELLIOTT-R1.2` | [`indicators/trading-hub/price-map-r1.2.pine`](./indicators/trading-hub/price-map-r1.2.pine) | Research — chờ review chart |
 
-R1.1 hiển thị SMC H/L, liquidity sweep, IDM sweep/break, POI và important FVG. Elliott đếm tại SMC pivots; developing wave có dấu `?`, còn motive FVG đang giữ sóng được làm nổi thành `W-IMB`.
+R1.2 hiển thị SMC H/L, liquidity sweep, IDM sweep/break, POI và important FVG. Elliott chỉ đánh dấu impulse `E0–1–2–3–4–5`; developing wave có dấu `?`, motive FVG đang giữ sóng được làm nổi thành `W-IMB`, không còn A/B/C.
 
 ## Cấu trúc
 
@@ -24,8 +24,8 @@ validation/          Checklist review và evidence cũ được bảo toàn
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/verify-indicator.ps1
-powershell -ExecutionPolicy Bypass -File tools/test-core-swings-r1.1.ps1
-powershell -ExecutionPolicy Bypass -File tools/test-elliott-r1.1.ps1
+powershell -ExecutionPolicy Bypass -File tools/test-core-swings-r1.2.ps1
+powershell -ExecutionPolicy Bypass -File tools/test-elliott-r1.2.ps1
 ```
 
 Sau khi kiểm tra tĩnh pass:

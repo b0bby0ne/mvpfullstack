@@ -1,8 +1,8 @@
-# SMC price map + imbalance-supported Elliott — `SMC-ELLIOTT-R1.1`
+# SMC price map + imbalance-supported Elliott — `SMC-ELLIOTT-R1.2`
 
 ## Mục tiêu
 
-Profile R1.1 phục hồi contract hiển thị rõ ràng: SMC H/L, liquidity sweep, IDM sweep/break, POI; Elliott đếm ngay tại SMC pivot và làm nổi motive imbalance đang giữ sóng. Indicator không tạo tín hiệu mua/bán.
+Profile R1.2 giữ contract hiển thị SMC hiện tại nhưng giới hạn Elliott vào impulse `E0–1–2–3–4–5`. Không vẽ hoặc phân loại A/B/C. Indicator không tạo tín hiệu mua/bán.
 
 ```text
 IDM ACTIVE
@@ -13,7 +13,7 @@ IDM ACTIVE
   -> theo dõi vùng ACTIVE -> TOUCHED -> INVALID/FILLED
 ```
 
-Pine source: [`indicators/trading-hub/price-map-r1.1.pine`](../../indicators/trading-hub/price-map-r1.1.pine).
+Pine source: [`indicators/trading-hub/price-map-r1.2.pine`](../../indicators/trading-hub/price-map-r1.2.pine).
 
 ## Nguồn curriculum chính chủ
 
@@ -36,7 +36,7 @@ Pine source: [`indicators/trading-hub/price-map-r1.1.pine`](../../indicators/tra
 - Hai trường hợp vẫn được phân loại nội bộ nhưng chỉ IDM sweep được vẽ; IDM break không có visual output.
 - H/L chỉ được xác nhận trên closed bar sau event và được backfill về extreme.
 - Sweep không dùng text label. Liquidity sweep và IDM sweep có selector riêng: `Triangle`, `Diamond`, `Circle`, `Square` hoặc `Cross`.
-- R1.1 dùng `label.style_*` object với text rỗng; `Sweep symbols retained` mặc định giữ 120 symbol gần nhất.
+- R1.2 dùng `label.style_*` object với text rỗng; `Sweep symbols retained` mặc định giữ 120 symbol gần nhất.
 - Khi chọn `Triangle`, chiều của tam giác tự theo hướng bullish/bearish.
 - `Sweep symbol padding (ATR)` điều chỉnh khoảng cách của sweep symbol.
 - Line BSL/SSL chạy từ confirmed H/L gốc tới candle sweep. Line IDM chỉ chạy từ IDM gốc tới candle IDM sweep.
@@ -54,7 +54,7 @@ Pine source: [`indicators/trading-hub/price-map-r1.1.pine`](../../indicators/tra
 - Sau confirmation, profile chọn FVG gần confirmation nhất, nằm trong structural leg và chưa bị full-fill.
 - `POI/FVG start padding (bars)` mặc định `1`: box FVG bắt đầu sau candle thứ ba của pattern; box POI bắt đầu sau source candle.
 - Lifecycle chỉ bắt đầu đánh giá `TOUCHED/FILLED/INVALID` khi bar hiện tại đã tới mép trái sau padding của zone.
-- Đây là ranking rule của R1.1, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
+- Đây là ranking rule của R1.2, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
 - Vòng đời: `ACTIVE -> TOUCHED -> FILLED`; full fill là chạm mép xa của gap.
 
 ### Decision POI
@@ -67,7 +67,7 @@ Pine source: [`indicators/trading-hub/price-map-r1.1.pine`](../../indicators/tra
 
 ### Effective Extreme POI
 
-R1.1 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
+R1.2 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
 
 1. Có confirmed extreme cùng loại trước đó làm mức tham chiếu.
 2. Extreme candle mới là lần đầu xuyên mức tham chiếu chưa bị consume.
@@ -84,7 +84,7 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 - Mỗi core pivot giữ reference tới IMP-FVG đi ra khỏi pivot đó: confirmed low liên kết bullish IMP-FVG, confirmed high liên kết bearish IMP-FVG.
 - Chart dùng nhãn nhỏ `C-H`/`C-L`. Core path tắt mặc định để không làm rối price map.
 
-## Elliott overlay R1.1
+## Elliott overlay R1.2 — impulse only
 
 Elliott chỉ chạy trên core pivots, không chạy trên mọi fractal. Một impulse tăng cần chuỗi `L-H-L-H-L-H`; impulse giảm là chuỗi đối xứng. Nhãn 1–5 chỉ xuất hiện sau khi cả năm sóng đã vượt qua các luật cứng:
 
@@ -96,7 +96,7 @@ Elliott chỉ chạy trên core pivots, không chạy trên mọi fractal. Một
 
 ### Hợp nhất SMC imbalance
 
-Ba motive leg 1, 3, 5 lấy IMP-FVG tại các pivot nguồn `E0`, wave 2 và wave 4. R1.1 luôn yêu cầu IMP-FVG của motive leg gần nhất còn `ACTIVE` hoặc `TOUCHED`; trạng thái `FILLED` không còn hỗ trợ impulse.
+Ba motive leg 1, 3, 5 lấy IMP-FVG tại các pivot nguồn `E0`, wave 2 và wave 4. R1.2 luôn yêu cầu IMP-FVG của motive leg gần nhất còn `ACTIVE` hoặc `TOUCHED`; trạng thái `FILLED` không còn hỗ trợ impulse.
 
 Setting `SMC imbalance support` có ba mức:
 
@@ -104,15 +104,13 @@ Setting `SMC imbalance support` có ba mức:
 - `At least 2 motive IMBs`: imbalance nguồn wave 5 và ít nhất một motive imbalance trước đó còn valid.
 - `All 3 motive IMBs`: cả ba imbalance nguồn wave 1, 3, 5 đều còn valid.
 
-Nếu `Show important imbalance` tắt nhưng Elliott bật, engine vẫn theo dõi lifecycle IMP-FVG bằng box ẩn. Khi imbalance hỗ trợ gần nhất full-fill hoặc bị prune khỏi retention, impulse active bị loại và engine tìm pattern hợp lệ gần nhất còn được SMC/IMB hỗ trợ. Đây là rule profile của R1.1, không phải khẳng định rằng Elliott cổ điển bắt buộc dùng FVG.
+Nếu `Show important imbalance` tắt nhưng Elliott bật, engine vẫn theo dõi lifecycle IMP-FVG bằng box ẩn. Khi imbalance hỗ trợ gần nhất full-fill hoặc bị prune khỏi retention, impulse active bị loại và engine tìm pattern hợp lệ gần nhất còn được SMC/IMB hỗ trợ. Đây là rule profile của R1.2, không phải khẳng định rằng Elliott cổ điển bắt buộc dùng FVG.
 
-Nếu chưa đủ sáu pivot cho impulse hoàn chỉnh, R1.1 dùng fail-visible fallback: chọn chuỗi SMC pivot dài nhất kết thúc tại core pivot mới nhất, vẫn phải có motive IMB hiện hành, rồi hiển thị `1?` đến `5?`. Dấu `?` công bố wave còn developing; pattern hoàn chỉnh mới dùng `1` đến `5` không dấu hỏi.
+Nếu chưa đủ sáu pivot cho impulse hoàn chỉnh, R1.2 dùng fail-visible fallback: chọn chuỗi SMC pivot dài nhất kết thúc tại core pivot mới nhất, vẫn phải có motive IMB hiện hành, rồi hiển thị `1?` đến `5?`. Dấu `?` công bố wave còn developing; pattern hoàn chỉnh mới dùng `1` đến `5` không dấu hỏi.
 
-Overlay giữ pattern hợp lệ và được IMB hỗ trợ gần nhất. Điểm đầu ghi `E0`; tooltip công bố trạng thái developing/validated và bằng chứng IMB. Sau wave 5:
+Overlay chỉ giữ impulse hợp lệ và được IMB hỗ trợ gần nhất. Điểm đầu ghi `E0`; tooltip công bố trạng thái developing/validated và bằng chứng IMB. Leg motive 1/3/5 dùng line solid 2 px; leg hồi 2/4 chỉ dùng line dotted 1 px để giữ hình học đếm sóng. Sau wave 5, engine không tạo thêm nhãn Elliott cho tới khi một impulse mới đủ điều kiện.
 
-- Pivot đúng hướng được ghi `A?`, `B?`, `C?` khi correction còn phát triển.
-- Chỉ bỏ dấu `?` khi hoàn tất strict zigzag: B không vượt wave 5 và C vượt A theo hướng correction.
-- Expanded/running flat, triangle, diagonal, extension/Fibonacci scoring và degree nesting chưa được tự động phân loại; không được suy diễn các mẫu này từ nhãn R1.1.
+Corrective A/B/C, expanded/running flat, triangle, diagonal, extension/Fibonacci scoring và degree nesting nằm ngoài R1.2.
 
 ## Repaint contract
 
@@ -135,7 +133,7 @@ Overlay giữ pattern hợp lệ và được IMB hỗ trợ gần nhất. Đi�
 8. Ghi disagreement trước khi đổi pivot, search window, POI range hoặc invalidation mode.
 9. Core pivots phải lấy đúng từ confirmed SMC H/L, xen kẽ; shallow reversal bị loại và extreme cùng hướng chỉ được dời ở pivot cuối.
 10. Elliott 1–5 không được vẽ nếu vi phạm wave 2, overlap wave 4, truncated wave 5 hoặc wave 3 ngắn nhất.
-11. A/B/C chỉ bỏ dấu `?` khi strict zigzag hoàn tất; B vượt wave 5 hoặc C không vượt A phải bị từ chối.
+11. Không được có input, label, line hoặc detector A/B/C trong source.
 12. Mọi active impulse phải có latest motive IMP-FVG ở state `ACTIVE/TOUCHED`; full-fill phải loại support trên chính closed bar đó.
 13. Ba mode support phải lần lượt pass đúng `1/3`, `2/3`, `3/3` valid motive imbalances và luôn fail nếu latest motive IMB invalid.
 14. Khi chưa đủ impulse hoàn chỉnh, wave count developing phải xuất hiện tại SMC pivot dưới dạng `1?…5?` nếu motive IMB hiện hành valid.
@@ -149,17 +147,17 @@ Overlay giữ pattern hợp lệ và được IMB hỗ trợ gần nhất. Đi�
 - Active zone dùng nền transparency 90%, lifecycle rút gọn thành `T`, `✓`, `×`.
 - Decision POI, Extreme POI và IMP-FVG chỉ hiển thị bằng zone, không có creation marker.
 - Extra core label `C-H/C-L` và đường nối core đều tắt mặc định để không trùng SMC H/L.
-- Elliott validated dùng đường xanh mảnh và `E0, 1..5`; developing dùng đường dotted nhạt và `1?…5?`.
+- Elliott chỉ dùng `E0, 1..5`; developing dùng `1?…5?`. Leg motive 1/3/5 nổi hơn leg hồi 2/4.
 - IMP-FVG đang giữ motive leg được đổi nhãn thành `W-IMB`, border 2 px và nền rõ hơn; các important FVG khác giữ `IMP-FVG`.
 - Không hiển thị IDM break, confirmation marker, active IDM, H?/L? hoặc event summary.
 - Diagnostics status tắt mặc định; khi bật có 4 hàng, chữ `tiny`, không border.
 
 ## Runtime smoke check
 
-- Khi bật diagnostics, status table phải hiện `SMC R1.1 | LOADED`.
+- Khi bật diagnostics, status table phải hiện `SMC R1.2 | LOADED`.
 - Nếu không thấy `LOADED`, coi là compile/runtime failure và không review logic event.
 - Static verifier cấm các visual event đã loại bỏ và chỉ cho phép đúng 4 sweep-render call ngoài helper.
 
-## Ngoài phạm vi R1.1
+## Ngoài phạm vi R1.2
 
 BOS/CHoCH, protected/weak high-low, nested/major-minor IDM, multi-timeframe projection, order-flow volume và entry model chưa được tự động hóa. `D-POI` và `IMP-FVG` vẫn là candidate theo profile cho đến khi qua review chart.

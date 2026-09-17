@@ -20,19 +20,6 @@ function Get-ImpulseDirection {
   return 0
 }
 
-function Test-StrictCorrection {
-  param([double[]]$Prices, [int[]]$Directions, [int]$ImpulseDirection)
-
-  if ($Prices.Count -ne 4 -or $Directions.Count -ne 4) {
-    throw "Correction fixture must contain wave 5 followed by A, B and C."
-  }
-
-  if ($ImpulseDirection -eq 1) {
-    return ($Directions -join ",") -eq "1,-1,1,-1" -and $Prices[1] -lt $Prices[0] -and $Prices[2] -gt $Prices[1] -and $Prices[2] -lt $Prices[0] -and $Prices[3] -lt $Prices[1]
-  }
-  return ($Directions -join ",") -eq "-1,1,-1,1" -and $Prices[1] -gt $Prices[0] -and $Prices[2] -lt $Prices[1] -and $Prices[2] -gt $Prices[0] -and $Prices[3] -gt $Prices[1]
-}
-
 function Test-ImbalanceSupport {
   param([int[]]$States, [string]$Rule)
 
@@ -76,10 +63,6 @@ $cases = @(
   @{ Name = "Reject wave 4 overlap"; Actual = Get-ImpulseDirection @(100, 110, 104, 122, 109, 128) @(-1, 1, -1, 1, -1, 1); Expected = 0 },
   @{ Name = "Reject shortest wave 3"; Actual = Get-ImpulseDirection @(100, 120, 110, 125, 121, 142) @(-1, 1, -1, 1, -1, 1); Expected = 0 },
   @{ Name = "Reject truncated wave 5"; Actual = Get-ImpulseDirection @(100, 110, 104, 122, 114, 121) @(-1, 1, -1, 1, -1, 1); Expected = 0 },
-  @{ Name = "Accept bull strict zigzag"; Actual = Test-StrictCorrection @(128, 119, 124, 113) @(1, -1, 1, -1) 1; Expected = $true },
-  @{ Name = "Reject B beyond wave 5"; Actual = Test-StrictCorrection @(128, 119, 129, 113) @(1, -1, 1, -1) 1; Expected = $false },
-  @{ Name = "Accept bear strict zigzag"; Actual = Test-StrictCorrection @(99, 108, 103, 114) @(-1, 1, -1, 1) -1; Expected = $true },
-  @{ Name = "Reject C inside A"; Actual = Test-StrictCorrection @(99, 108, 103, 107) @(-1, 1, -1, 1) -1; Expected = $false },
   @{ Name = "Latest IMB keeps impulse active"; Actual = Test-ImbalanceSupport @(2, 2, 0) "Latest motive IMB"; Expected = $true },
   @{ Name = "Filled latest IMB invalidates impulse"; Actual = Test-ImbalanceSupport @(0, 0, 2) "Latest motive IMB"; Expected = $false },
   @{ Name = "Two-IMB mode accepts two valid"; Actual = Test-ImbalanceSupport @(0, 2, 1) "At least 2 motive IMBs"; Expected = $true },

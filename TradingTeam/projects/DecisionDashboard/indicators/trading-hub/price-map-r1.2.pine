@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · SMC Price Map + Elliott [R1.1]", "DD SMC Elliott R1.1", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · SMC Price Map + Elliott [R1.2]", "DD SMC Elliott R1.2", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research price-map profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -37,7 +37,6 @@ bool showCorePath = input.bool(false, "Connect core pivots", group = GROUP_CORE)
 int corePivotsRetained = input.int(40, "Core pivots retained", minval = 12, maxval = 80, group = GROUP_CORE)
 
 bool showElliott = input.bool(true, "Show validated Elliott impulse", group = GROUP_ELLIOTT)
-bool showElliottCorrection = input.bool(true, "Show A-B-C candidates", group = GROUP_ELLIOTT, tooltip = "A?/B?/C? remain candidates until a strict zigzag correction is complete.")
 string elliottImbalanceRule = input.string("Latest motive IMB", "SMC imbalance support", options = ["Latest motive IMB", "At least 2 motive IMBs", "All 3 motive IMBs"], group = GROUP_ELLIOTT, tooltip = "Every mode requires the latest motive-leg IMP-FVG to remain unfilled. Stricter modes also require earlier motive imbalances to remain valid.")
 
 string liquiditySweepSymbol = input.string("Triangle", "Liquidity sweep", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
@@ -57,7 +56,6 @@ color decisionColor = color.rgb(79, 132, 219)
 color extremeColor = color.rgb(164, 93, 224)
 color coreColor = color.rgb(226, 226, 218)
 color elliottColor = color.rgb(70, 174, 214)
-color correctionColor = color.rgb(225, 174, 73)
 
 f_labelStyle(string selection, bool pointsUp) =>
     switch selection
@@ -175,19 +173,6 @@ f_partialSupportId(array<int> supportImbalanceIds, int start, int finish) =>
     int motiveOffset = lastOffset >= 5 ? 4 : lastOffset >= 3 ? 2 : 0
     array.get(supportImbalanceIds, start + motiveOffset)
 
-f_strictCorrectionComplete(array<float> prices, array<int> directions, int impulseEnd, int impulseDirection) =>
-    bool enoughPoints = array.size(prices) > impulseEnd + 3
-    bool valid = false
-    if enoughPoints
-        float wave5 = array.get(prices, impulseEnd)
-        float a = array.get(prices, impulseEnd + 1)
-        float b = array.get(prices, impulseEnd + 2)
-        float c = array.get(prices, impulseEnd + 3)
-        bool bullCorrection = impulseDirection == 1 and array.get(directions, impulseEnd + 1) == -1 and array.get(directions, impulseEnd + 2) == 1 and array.get(directions, impulseEnd + 3) == -1 and a < wave5 and b > a and b < wave5 and c < a
-        bool bearCorrection = impulseDirection == -1 and array.get(directions, impulseEnd + 1) == 1 and array.get(directions, impulseEnd + 2) == -1 and array.get(directions, impulseEnd + 3) == 1 and a > wave5 and b < a and b > wave5 and c > a
-        valid := bullCorrection or bearCorrection
-    valid
-
 f_clearElliott(array<label> waveLabels, array<line> waveLines) =>
     if array.size(waveLabels) > 0
         for index = 0 to array.size(waveLabels) - 1
@@ -221,12 +206,11 @@ f_impulseHasSmcSupport(array<int> supportImbalanceIds, array<int> zoneIds, array
     bool rulePasses = supportRule == "Latest motive IMB" or (supportRule == "At least 2 motive IMBs" and validCount >= 2) or (supportRule == "All 3 motive IMBs" and validCount == 3)
     latestIsValid and rulePasses
 
-f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, bool drawCorrection, string supportRule, color impulseColor, color abcColor) =>
+f_renderElliott(array<float> prices, array<int> bars, array<int> directions, array<int> supportImbalanceIds, array<int> zoneIds, array<int> zoneStates, array<label> waveLabels, array<line> waveLines, float labelPadding, bool drawImpulse, string supportRule, color impulseColor) =>
     f_clearElliott(waveLabels, waveLines)
     int completedStart = -1
     int renderStart = -1
     int renderEnd = -1
-    int renderDirection = 0
     int count = array.size(prices)
     if drawImpulse and count >= 6
         for start = 0 to count - 6
@@ -235,7 +219,6 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
                 completedStart := start
                 renderStart := start
                 renderEnd := start + 5
-                renderDirection := direction
 
     // Fail-visible fallback: when no complete 1-5 passes yet, show the longest
     // current SMC-pivot sequence ending at the latest core point. Question marks
@@ -249,7 +232,6 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
             if renderStart < 0 and direction != 0 and f_zoneState(zoneIds, zoneStates, supportId) < 2
                 renderStart := start
                 renderEnd := finish
-                renderDirection := direction
 
     if renderStart >= 0
         bool completed = completedStart >= 0
@@ -263,25 +245,10 @@ f_renderElliott(array<float> prices, array<int> bars, array<int> directions, arr
             label waveLabel = label.new(array.get(bars, index), labelPrice, waveText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = color.new(impulseColor, completed ? 0 : 24), size = size.small, tooltip = impulseTooltip)
             array.push(waveLabels, waveLabel)
             if offset > 0
-                line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, completed ? 18 : 52), style = completed ? line.style_solid : line.style_dotted, width = 1)
+                bool motiveLeg = offset % 2 == 1
+                int legTransparency = completed ? (motiveLeg ? 10 : 58) : (motiveLeg ? 36 : 72)
+                line waveLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(impulseColor, legTransparency), style = motiveLeg ? line.style_solid : line.style_dotted, width = motiveLeg ? 2 : 1)
                 array.push(waveLines, waveLine)
-
-        int impulseEnd = renderStart + 5
-        int availableCorrectionPoints = math.min(3, count - impulseEnd - 1)
-        bool correctionComplete = completed and f_strictCorrectionComplete(prices, directions, impulseEnd, renderDirection)
-        if completed and drawCorrection and availableCorrectionPoints > 0
-            for offset = 1 to availableCorrectionPoints
-                int index = impulseEnd + offset
-                int expectedDirection = renderDirection == 1 ? (offset % 2 == 1 ? -1 : 1) : (offset % 2 == 1 ? 1 : -1)
-                bool directionMatches = array.get(directions, index) == expectedDirection
-                if directionMatches
-                    string baseText = offset == 1 ? "A" : offset == 2 ? "B" : "C"
-                    string correctionText = correctionComplete ? baseText : baseText + "?"
-                    float labelPrice = array.get(prices, index) + array.get(directions, index) * labelPadding
-                    label correctionLabel = label.new(array.get(bars, index), labelPrice, correctionText, xloc = xloc.bar_index, yloc = yloc.price, style = label.style_none, color = na, textcolor = abcColor, size = size.small, tooltip = correctionComplete ? "Strict Elliott zigzag correction" : "Developing Elliott correction candidate")
-                    array.push(waveLabels, correctionLabel)
-                    line correctionLine = line.new(array.get(bars, index - 1), array.get(prices, index - 1), array.get(bars, index), array.get(prices, index), xloc = xloc.bar_index, color = color.new(abcColor, 24), style = line.style_dashed, width = 1)
-                    array.push(waveLines, correctionLine)
     int activeSupportId = renderStart >= 0 ? f_partialSupportId(supportImbalanceIds, renderStart, renderEnd) : na
     [completedStart, activeSupportId]
 
@@ -701,7 +668,7 @@ if barstate.isconfirmed
     if coreEvent > 0 or activeSupportInvalidated
         corePivotThisBar := coreEvent == 1
         elliottImpulseInvalidatedThisBar := activeSupportInvalidated
-        [latestImpulseStart, refreshedSupportId] = f_renderElliott(corePrices, coreBars, coreDirections, coreSupportImbalanceIds, zoneIds, zoneStates, elliottLabels, elliottLines, markerSpacing * 1.25, showElliott, showElliottCorrection, elliottImbalanceRule, elliottColor, correctionColor)
+        [latestImpulseStart, refreshedSupportId] = f_renderElliott(corePrices, coreBars, coreDirections, coreSupportImbalanceIds, zoneIds, zoneStates, elliottLabels, elliottLines, markerSpacing * 1.25, showElliott, elliottImbalanceRule, elliottColor)
         activeElliottImbalanceId := refreshedSupportId
         elliottImpulseThisBar := coreEvent == 1 and latestImpulseStart >= 0 and latestImpulseStart + 5 == array.size(corePrices) - 1
 
@@ -709,7 +676,7 @@ if barstate.isconfirmed
 
 if barstate.islast
     if showStatus
-        table.cell(statusTable, 0, 0, "SMC R1.1", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
+        table.cell(statusTable, 0, 0, "SMC R1.2", text_color = color.new(color.white, 12), bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.new(color.rgb(26, 31, 36), 12), text_size = size.tiny)
         table.cell(statusTable, 0, 1, "SEEK", text_color = color.new(color.silver, 25), text_size = size.tiny)
         table.cell(statusTable, 1, 1, phase == 1 ? "H" : phase == -1 ? "L" : "…", text_color = phase == 1 ? highColor : lowColor, text_size = size.tiny)
