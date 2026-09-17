@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.3.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.4.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -36,10 +36,14 @@ $required = [ordered]@{
   "Zone lifecycle update" = "f_updateZones("
   "Extreme validity gate" = "effectiveBullExtreme"
   "First-breach Extreme gate" = "candidateHighSweptReference"
-  "Event summary marker" = "Show event summary markers"
-  "Event marker retention" = "eventMarkerLimit"
-  "High event marker" = 'eventText + "H CONFIRMED'
-  "Low event marker" = 'eventText + "L CONFIRMED'
+  "Structural sweep origin" = "previousConfirmedHighBar"
+  "BSL origin line" = "line.new(previousConfirmedHighBar, previousConfirmedHigh, bar_index"
+  "SSL origin line" = "line.new(previousConfirmedLowBar, previousConfirmedLow, bar_index"
+  "IDM source line" = "line.new(candidateHighIdmBar, candidateHighIdm, bar_index"
+  "Symbol-only event layer" = "Symbol-only event layer"
+  "BSL symbol" = 'title = "BSL sweep"'
+  "SSL symbol" = 'title = "SSL sweep"'
+  "IDM sweep symbol" = 'title = "IDM downside sweep"'
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
 }
 
@@ -47,6 +51,9 @@ $forbidden = [ordered]@{
   "Cross-timeframe request" = "request.security("
   "Future lookahead" = "lookahead_on"
   "Tick strategy execution" = "calc_on_every_tick"
+  "Legacy event summary text" = "eventText"
+  "BSL text label" = 'label.new(bar_index, high, "BSL SWEPT"'
+  "SSL text label" = 'label.new(bar_index, low, "SSL SWEPT"'
 }
 
 $failed = $false

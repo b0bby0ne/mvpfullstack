@@ -1,8 +1,8 @@
-# Trading Hub structure events — `TH-EVENTS-R0.3`
+# Trading Hub structure events — `TH-EVENTS-R0.4`
 
 ## Mục tiêu
 
-Profile R0.3 hiển thị thứ tự sự kiện SMC và khôi phục H/L khi IDM bị lấy bởi cả sweep lẫn break, không tạo tín hiệu mua/bán:
+Profile R0.4 hiển thị thứ tự sự kiện SMC bằng ký hiệu và line gốc, đồng thời xác nhận H/L khi IDM bị lấy bởi cả sweep lẫn break. Indicator không tạo tín hiệu mua/bán.
 
 ```text
 IDM ACTIVE
@@ -13,7 +13,7 @@ IDM ACTIVE
   -> theo dõi vùng ACTIVE -> TOUCHED -> INVALID/FILLED
 ```
 
-Pine source: [`indicators/trading-hub/structure-events-r0.3.pine`](../../indicators/trading-hub/structure-events-r0.3.pine).
+Pine source: [`indicators/trading-hub/structure-events-r0.4.pine`](../../indicators/trading-hub/structure-events-r0.4.pine).
 
 ## Nguồn curriculum chính chủ
 
@@ -35,8 +35,11 @@ Pine source: [`indicators/trading-hub/structure-events-r0.3.pine`](../../indicat
 - `Close / break`: chế độ nghiêm ngặt, chỉ nhận giá đóng hẳn qua IDM.
 - Hai trường hợp được ghi nhãn khác nhau: `IDM SWEPT` và `IDM BROKEN`.
 - H/L chỉ được xác nhận trên closed bar sau event; nhãn extreme được backfill nhưng bar `✓ H/L` cho thấy đúng latency.
-- `Show event summary markers` ghi toàn bộ event cùng bar: liquidity sweep, IDM event, confirmation và zone mới.
-- `Event markers retained` giới hạn riêng số summary label để chúng không đẩy H/L ra khỏi hạn mức label của TradingView quá sớm.
+- Event không dùng text label. Ký hiệu được đặt cách nến theo ATR để các event cùng bar không chồng lên nhau.
+- Tam giác cam: BSL/SSL sweep. Kim cương vàng: IDM sweep. Dấu `×`: IDM break.
+- Hình vuông đỏ/xanh: H/L confirmation. Hình vuông zone-color: important imbalance.
+- Hình tròn xanh dương: Decision POI. Kim cương tím: effective Extreme POI.
+- Line BSL/SSL chạy từ confirmed H/L gốc tới candle sweep. Line IDM chạy từ candle IDM gốc tới candle sweep/break; sweep dùng nét liền dày, break dùng nét chấm mảnh.
 
 ### Sweep thanh khoản cấu trúc
 
@@ -49,7 +52,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.3.pine`](../../indicat
 
 - Imbalance dùng mẫu FVG ba nến: bullish `low > high[2]`, bearish `high < low[2]`.
 - Sau confirmation, profile chọn FVG gần confirmation nhất, nằm trong structural leg và chưa bị full-fill.
-- Đây là ranking rule của R0.3, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
+- Đây là ranking rule của R0.4, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
 - Vòng đời: `ACTIVE -> TOUCHED -> FILLED`; full fill là chạm mép xa của gap.
 
 ### Decision POI
@@ -62,7 +65,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.3.pine`](../../indicat
 
 ### Effective Extreme POI
 
-R0.3 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
+R0.4 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
 
 1. Có confirmed extreme cùng loại trước đó làm mức tham chiếu.
 2. Extreme candle mới là lần đầu xuyên mức tham chiếu chưa bị consume.
@@ -89,6 +92,6 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 7. Review riêng 15m, 1H, 4H, 1D trên `OANDA:XAUUSD` và `COINBASE:BTCUSD`.
 8. Ghi disagreement trước khi đổi pivot, search window, POI range hoặc invalidation mode.
 
-## Ngoài phạm vi R0.3
+## Ngoài phạm vi R0.4
 
 BOS/CHoCH, protected/weak high-low, nested/major-minor IDM, multi-timeframe projection, order-flow volume và entry model chưa được tự động hóa. `D-POI` và `IMP-FVG` vẫn là candidate theo profile cho đến khi qua review chart.

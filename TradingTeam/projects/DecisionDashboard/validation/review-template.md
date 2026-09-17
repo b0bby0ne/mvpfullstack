@@ -2,7 +2,7 @@
 
 ## Context
 
-- Profile: `TH-EVENTS-R0.3`
+- Profile: `TH-EVENTS-R0.4`
 - Reviewer:
 - Review date:
 - Symbol and venue:
