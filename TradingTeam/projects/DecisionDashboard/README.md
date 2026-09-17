@@ -6,9 +6,9 @@ Workspace này chỉ phát triển indicator TradingView bằng Pine Script. Web
 
 | Profile | Pine source | Trạng thái |
 |---|---|---|
-| `TH-EVENTS-R0.5` | [`indicators/trading-hub/structure-events-r0.5.pine`](./indicators/trading-hub/structure-events-r0.5.pine) | Research — chờ review chart |
+| `TH-EVENTS-R0.6` | [`indicators/trading-hub/structure-events-r0.6.pine`](./indicators/trading-hub/structure-events-r0.6.pine) | Research — chờ review chart |
 
-R0.5 cho phép đổi shape riêng của từng nhóm event. POI/FVG box mặc định bắt đầu cách source pattern 1 bar và symbol zone cách nến 1 ATR. Sweep vẫn có line nối từ confirmed H/L hoặc IDM gốc tới candle sweep.
+R0.6 dùng label-object rỗng cho custom event shape, tránh lỗi render của custom `plotshape`. Status table hiện `LOADED` khi runtime hoạt động. POI/FVG vẫn có padding 1 bar và 1 ATR mặc định.
 
 ## Cấu trúc
 

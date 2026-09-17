@@ -2,7 +2,8 @@
 
 ## Context
 
-- Profile: `TH-EVENTS-R0.5`
+- Profile: `TH-EVENTS-R0.6`
+- Runtime status shows `LOADED`: yes | no
 - Reviewer:
 - Review date:
 - Symbol and venue:

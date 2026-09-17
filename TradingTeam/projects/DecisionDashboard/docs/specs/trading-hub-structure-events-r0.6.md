@@ -1,8 +1,8 @@
-# Trading Hub structure events — `TH-EVENTS-R0.5`
+# Trading Hub structure events — `TH-EVENTS-R0.6`
 
 ## Mục tiêu
 
-Profile R0.5 hiển thị thứ tự sự kiện SMC bằng ký hiệu tùy chỉnh và line gốc, đồng thời xác nhận H/L khi IDM bị lấy bởi cả sweep lẫn break. Indicator không tạo tín hiệu mua/bán.
+Profile R0.6 hiển thị thứ tự sự kiện SMC bằng ký hiệu tùy chỉnh và line gốc, đồng thời xác nhận H/L khi IDM bị lấy bởi cả sweep lẫn break. Indicator không tạo tín hiệu mua/bán.
 
 ```text
 IDM ACTIVE
@@ -13,7 +13,7 @@ IDM ACTIVE
   -> theo dõi vùng ACTIVE -> TOUCHED -> INVALID/FILLED
 ```
 
-Pine source: [`indicators/trading-hub/structure-events-r0.5.pine`](../../indicators/trading-hub/structure-events-r0.5.pine).
+Pine source: [`indicators/trading-hub/structure-events-r0.6.pine`](../../indicators/trading-hub/structure-events-r0.6.pine).
 
 ## Nguồn curriculum chính chủ
 
@@ -36,6 +36,8 @@ Pine source: [`indicators/trading-hub/structure-events-r0.5.pine`](../../indicat
 - Hai trường hợp được ghi nhãn khác nhau: `IDM SWEPT` và `IDM BROKEN`.
 - H/L chỉ được xác nhận trên closed bar sau event; nhãn extreme được backfill nhưng bar `✓ H/L` cho thấy đúng latency.
 - Event không dùng text label. Mỗi nhóm có selector riêng: `Triangle`, `Diamond`, `Circle`, `Square` hoặc `Cross`.
+- R0.6 dùng `label.style_*` object với text rỗng thay cho custom `plotshape(style=...)`; label object cho phép tạo có điều kiện và đổi style an toàn tại runtime.
+- `Event symbols retained` mặc định giữ 160 symbol gần nhất và chủ động xóa symbol cũ để bảo vệ giới hạn 500 label.
 - Nhóm tùy chỉnh gồm liquidity sweep, IDM sweep, IDM break, H/L confirmation, imbalance/FVG, Decision POI và Extreme POI.
 - Khi chọn `Triangle`, chiều của tam giác tự theo hướng bullish/bearish.
 - `Structure symbol padding (ATR)` điều chỉnh khoảng cách cho sweep, break và confirmation.
@@ -55,7 +57,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.5.pine`](../../indicat
 - Sau confirmation, profile chọn FVG gần confirmation nhất, nằm trong structural leg và chưa bị full-fill.
 - `POI/FVG start padding (bars)` mặc định `1`: box FVG bắt đầu sau candle thứ ba của pattern; box POI bắt đầu sau source candle.
 - Lifecycle chỉ bắt đầu đánh giá `TOUCHED/FILLED/INVALID` khi bar hiện tại đã tới mép trái sau padding của zone.
-- Đây là ranking rule của R0.5, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
+- Đây là ranking rule của R0.6, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
 - Vòng đời: `ACTIVE -> TOUCHED -> FILLED`; full fill là chạm mép xa của gap.
 
 ### Decision POI
@@ -68,7 +70,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.5.pine`](../../indicat
 
 ### Effective Extreme POI
 
-R0.5 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
+R0.6 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
 
 1. Có confirmed extreme cùng loại trước đó làm mức tham chiếu.
 2. Extreme candle mới là lần đầu xuyên mức tham chiếu chưa bị consume.
@@ -95,6 +97,12 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 7. Review riêng 15m, 1H, 4H, 1D trên `OANDA:XAUUSD` và `COINBASE:BTCUSD`.
 8. Ghi disagreement trước khi đổi pivot, search window, POI range hoặc invalidation mode.
 
-## Ngoài phạm vi R0.5
+## Runtime smoke check
+
+- Status table phải hiện `DD TH R0.6 | LOADED` ngay khi indicator thực thi thành công.
+- Nếu không thấy `LOADED`, coi là compile/runtime failure và không review logic event.
+- Static verifier cấm `plotshape()` trong profile này và đếm đủ 14 event-render call ngoài helper.
+
+## Ngoài phạm vi R0.6
 
 BOS/CHoCH, protected/weak high-low, nested/major-minor IDM, multi-timeframe projection, order-flow volume và entry model chưa được tự động hóa. `D-POI` và `IMP-FVG` vẫn là candidate theo profile cho đến khi qua review chart.

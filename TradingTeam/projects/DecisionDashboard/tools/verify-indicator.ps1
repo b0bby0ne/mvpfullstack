@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.5.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.6.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -40,10 +40,19 @@ $required = [ordered]@{
   "BSL origin line" = "line.new(previousConfirmedHighBar, previousConfirmedHigh, bar_index"
   "SSL origin line" = "line.new(previousConfirmedLowBar, previousConfirmedLow, bar_index"
   "IDM source line" = "line.new(candidateHighIdmBar, candidateHighIdm, bar_index"
-  "Symbol-only event layer" = "Symbol-only event layer"
-  "BSL symbol" = 'title = "BSL sweep"'
-  "SSL symbol" = 'title = "SSL sweep"'
-  "IDM sweep symbol" = 'title = "IDM downside sweep"'
+  "Dynamic label style map" = "f_labelStyle("
+  "Triangle style fallback" = "pointsUp ? label.style_triangleup : label.style_triangledown"
+  "Diamond label style" = "label.style_diamond"
+  "Circle label style" = "label.style_circle"
+  "Square label style" = "label.style_square"
+  "Cross label style" = "label.style_xcross"
+  "Managed event symbols" = "f_addEventSymbol("
+  "Text-free event symbol" = 'text = ""'
+  "Event symbol retention" = "eventSymbolsRetained"
+  "Runtime smoke state" = '"LOADED"'
+  "BSL symbol call" = "high + markerSpacing, f_labelStyle(liquiditySweepSymbol, false)"
+  "SSL symbol call" = "low - markerSpacing, f_labelStyle(liquiditySweepSymbol, true)"
+  "IDM sweep symbol call" = "f_labelStyle(idmSweepSymbol, false)"
   "Liquidity shape option" = 'input.string("Triangle", "Liquidity sweep"'
   "IDM shape option" = 'input.string("Diamond", "IDM sweep"'
   "Imbalance shape option" = 'input.string("Square", "Imbalance / FVG"'
@@ -63,6 +72,9 @@ $forbidden = [ordered]@{
   "Legacy event summary text" = "eventText"
   "BSL text label" = 'label.new(bar_index, high, "BSL SWEPT"'
   "SSL text label" = 'label.new(bar_index, low, "SSL SWEPT"'
+  "Custom plotshape rendering" = "plotshape("
+  "Input-derived shape variable" = "liquidityUpShape"
+  "Plotshape style constants" = "shape."
 }
 
 $failed = $false
@@ -82,6 +94,22 @@ foreach ($entry in $forbidden.GetEnumerator()) {
   } else {
     Write-Host "[PASS] No $($entry.Key)"
   }
+}
+
+$eventRenderCallCount = ([regex]::Matches($source, "f_addEventSymbol\(")).Count - 1
+if ($eventRenderCallCount -eq 14) {
+  Write-Host "[PASS] All 14 event render paths"
+} else {
+  Write-Host "[FAIL] Expected 14 event render paths, found $eventRenderCallCount" -ForegroundColor Red
+  $failed = $true
+}
+
+$atrBasisCount = ([regex]::Matches($source, "float atrBasis =")).Count
+if ($atrBasisCount -eq 1) {
+  Write-Host "[PASS] Single ATR padding basis"
+} else {
+  Write-Host "[FAIL] Expected one ATR padding basis, found $atrBasisCount" -ForegroundColor Red
+  $failed = $true
 }
 
 if ($failed) {

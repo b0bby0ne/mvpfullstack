@@ -2,7 +2,7 @@
 
 Các raw bars, annotations và SVG trong thư mục này được giữ lại để không làm mất evidence đã thu thập trước khi repository chuyển sang indicator-only.
 
-Chúng là candidate của detector DecisionDashboard cũ, không phải golden label cho `TH-EVENTS-R0.5`. Không dùng trực tiếp các annotation `smc_rr_01` hoặc `smc_tc_01` để tuyên bố indicator Trading Hub đúng.
+Chúng là candidate của detector DecisionDashboard cũ, không phải golden label cho `TH-EVENTS-R0.6`. Không dùng trực tiếp các annotation `smc_rr_01` hoặc `smc_tc_01` để tuyên bố indicator Trading Hub đúng.
 
 Khi một case được review cho indicator mới:
 

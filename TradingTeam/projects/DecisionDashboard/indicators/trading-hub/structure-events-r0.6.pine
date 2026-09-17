@@ -1,5 +1,5 @@
 //@version=6
-indicator("DD · Trading Hub Structure Events [R0.5]", "DD TH Events R0.5", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
+indicator("DD · Trading Hub Structure Events [R0.6]", "DD TH Events R0.6", overlay = true, max_bars_back = 5000, max_labels_count = 500, max_lines_count = 500, max_boxes_count = 500)
 
 // Research profile. Trading Hub concepts define the event order; internal pivots,
 // Decision POI selection and important-FVG ranking remain explicit implementation
@@ -39,21 +39,7 @@ string decisionPoiSymbol = input.string("Circle", "Decision POI", options = ["Tr
 string extremePoiSymbol = input.string("Diamond", "Extreme POI", options = ["Triangle", "Diamond", "Circle", "Square", "Cross"], group = GROUP_SYMBOLS)
 float eventSymbolPaddingAtr = input.float(0.18, "Structure symbol padding (ATR)", minval = 0.05, maxval = 3.0, step = 0.05, group = GROUP_SYMBOLS)
 float zoneSymbolPaddingAtr = input.float(1.0, "POI/FVG symbol padding (ATR)", minval = 0.1, maxval = 5.0, step = 0.1, group = GROUP_SYMBOLS)
-
-string liquidityUpShape = liquiditySweepSymbol == "Diamond" ? shape.diamond : liquiditySweepSymbol == "Circle" ? shape.circle : liquiditySweepSymbol == "Square" ? shape.square : liquiditySweepSymbol == "Cross" ? shape.xcross : shape.triangleup
-string liquidityDownShape = liquiditySweepSymbol == "Diamond" ? shape.diamond : liquiditySweepSymbol == "Circle" ? shape.circle : liquiditySweepSymbol == "Square" ? shape.square : liquiditySweepSymbol == "Cross" ? shape.xcross : shape.triangledown
-string idmSweepUpShape = idmSweepSymbol == "Diamond" ? shape.diamond : idmSweepSymbol == "Circle" ? shape.circle : idmSweepSymbol == "Square" ? shape.square : idmSweepSymbol == "Cross" ? shape.xcross : shape.triangleup
-string idmSweepDownShape = idmSweepSymbol == "Diamond" ? shape.diamond : idmSweepSymbol == "Circle" ? shape.circle : idmSweepSymbol == "Square" ? shape.square : idmSweepSymbol == "Cross" ? shape.xcross : shape.triangledown
-string idmBreakUpShape = idmBreakSymbol == "Diamond" ? shape.diamond : idmBreakSymbol == "Circle" ? shape.circle : idmBreakSymbol == "Square" ? shape.square : idmBreakSymbol == "Cross" ? shape.xcross : shape.triangleup
-string idmBreakDownShape = idmBreakSymbol == "Diamond" ? shape.diamond : idmBreakSymbol == "Circle" ? shape.circle : idmBreakSymbol == "Square" ? shape.square : idmBreakSymbol == "Cross" ? shape.xcross : shape.triangledown
-string confirmationUpShape = confirmationSymbol == "Diamond" ? shape.diamond : confirmationSymbol == "Circle" ? shape.circle : confirmationSymbol == "Square" ? shape.square : confirmationSymbol == "Cross" ? shape.xcross : shape.triangleup
-string confirmationDownShape = confirmationSymbol == "Diamond" ? shape.diamond : confirmationSymbol == "Circle" ? shape.circle : confirmationSymbol == "Square" ? shape.square : confirmationSymbol == "Cross" ? shape.xcross : shape.triangledown
-string imbalanceUpShape = imbalanceSymbol == "Diamond" ? shape.diamond : imbalanceSymbol == "Circle" ? shape.circle : imbalanceSymbol == "Square" ? shape.square : imbalanceSymbol == "Cross" ? shape.xcross : shape.triangleup
-string imbalanceDownShape = imbalanceSymbol == "Diamond" ? shape.diamond : imbalanceSymbol == "Circle" ? shape.circle : imbalanceSymbol == "Square" ? shape.square : imbalanceSymbol == "Cross" ? shape.xcross : shape.triangledown
-string decisionUpShape = decisionPoiSymbol == "Diamond" ? shape.diamond : decisionPoiSymbol == "Circle" ? shape.circle : decisionPoiSymbol == "Square" ? shape.square : decisionPoiSymbol == "Cross" ? shape.xcross : shape.triangleup
-string decisionDownShape = decisionPoiSymbol == "Diamond" ? shape.diamond : decisionPoiSymbol == "Circle" ? shape.circle : decisionPoiSymbol == "Square" ? shape.square : decisionPoiSymbol == "Cross" ? shape.xcross : shape.triangledown
-string extremeUpShape = extremePoiSymbol == "Diamond" ? shape.diamond : extremePoiSymbol == "Circle" ? shape.circle : extremePoiSymbol == "Square" ? shape.square : extremePoiSymbol == "Cross" ? shape.xcross : shape.triangleup
-string extremeDownShape = extremePoiSymbol == "Diamond" ? shape.diamond : extremePoiSymbol == "Circle" ? shape.circle : extremePoiSymbol == "Square" ? shape.square : extremePoiSymbol == "Cross" ? shape.xcross : shape.triangledown
+int eventSymbolsRetained = input.int(160, "Event symbols retained", minval = 20, maxval = 300, group = GROUP_SYMBOLS)
 
 color highColor = color.rgb(255, 101, 92)
 color lowColor = color.rgb(66, 211, 146)
@@ -64,6 +50,20 @@ color bearImbalanceColor = color.rgb(180, 72, 90)
 color decisionColor = color.rgb(79, 132, 219)
 color extremeColor = color.rgb(164, 93, 224)
 color candidateColor = color.new(color.silver, 45)
+
+f_labelStyle(string selection, bool pointsUp) =>
+    switch selection
+        "Diamond" => label.style_diamond
+        "Circle" => label.style_circle
+        "Square" => label.style_square
+        "Cross" => label.style_xcross
+        => pointsUp ? label.style_triangleup : label.style_triangledown
+
+f_addEventSymbol(array<label> markers, float price, string symbolStyle, color symbolColor, int limit) =>
+    label marker = label.new(x = bar_index, y = price, text = "", xloc = xloc.bar_index, yloc = yloc.price, style = symbolStyle, color = symbolColor, textcolor = color.new(symbolColor, 100), size = size.small)
+    array.push(markers, marker)
+    if array.size(markers) > limit
+        label.delete(array.shift(markers))
 
 f_addZone(array<box> boxes, array<string> kinds, array<int> directions, array<int> states, array<color> colors, int leftBar, float zoneTop, float zoneBottom, int direction, string kind, color zoneColor, int limit) =>
     int initialRight = math.max(bar_index, leftBar)
@@ -108,6 +108,9 @@ f_updateZones(array<box> boxes, array<string> kinds, array<int> directions, arra
 
 float internalHigh = ta.pivothigh(high, internalBars, internalBars)
 float internalLow = ta.pivotlow(low, internalBars, internalBars)
+float atrBasis = nz(ta.atr(14), high - low)
+float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
+float zoneMarkerPadding = math.max(atrBasis * zoneSymbolPaddingAtr, markerSpacing * 2)
 
 var int phase = 0 // 1 = confirm a high, -1 = confirm a low, 0 = bootstrap
 var float latestInternalHigh = na
@@ -154,6 +157,7 @@ var array<string> zoneKinds = array.new<string>()
 var array<int> zoneDirections = array.new<int>()
 var array<int> zoneStates = array.new<int>()
 var array<color> zoneColors = array.new<color>()
+var array<label> eventSymbolLabels = array.new<label>()
 
 bool confirmedHighThisBar = false
 bool confirmedLowThisBar = false
@@ -415,6 +419,39 @@ if barstate.isconfirmed
             candidateLowIdmBar := na
             candidateLowSweptReference := false
 
+    // Label objects support conditional creation and dynamic label.style_* values.
+    // Empty text keeps the event layer symbol-only.
+    if showSweeps and buySideSweptThisBar
+        f_addEventSymbol(eventSymbolLabels, high + markerSpacing, f_labelStyle(liquiditySweepSymbol, false), sweepColor, eventSymbolsRetained)
+    if showSweeps and sellSideSweptThisBar
+        f_addEventSymbol(eventSymbolLabels, low - markerSpacing, f_labelStyle(liquiditySweepSymbol, true), sweepColor, eventSymbolsRetained)
+    if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 2, f_labelStyle(idmSweepSymbol, false), idmColor, eventSymbolsRetained)
+    if showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmSweepSymbol, true), idmColor, eventSymbolsRetained)
+
+    if showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 2, f_labelStyle(idmBreakSymbol, false), highColor, eventSymbolsRetained)
+    if showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 2, f_labelStyle(idmBreakSymbol, true), lowColor, eventSymbolsRetained)
+    if showEventSymbols and showConfirmation and confirmedHighThisBar
+        f_addEventSymbol(eventSymbolLabels, high + markerSpacing * 3, f_labelStyle(confirmationSymbol, false), highColor, eventSymbolsRetained)
+    if showEventSymbols and showConfirmation and confirmedLowThisBar
+        f_addEventSymbol(eventSymbolLabels, low - markerSpacing * 3, f_labelStyle(confirmationSymbol, true), lowColor, eventSymbolsRetained)
+
+    if showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding, f_labelStyle(imbalanceSymbol, false), bearImbalanceColor, eventSymbolsRetained)
+    if showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding, f_labelStyle(imbalanceSymbol, true), bullImbalanceColor, eventSymbolsRetained)
+    if showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding + markerSpacing, f_labelStyle(decisionPoiSymbol, false), decisionColor, eventSymbolsRetained)
+    if showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding - markerSpacing, f_labelStyle(decisionPoiSymbol, true), decisionColor, eventSymbolsRetained)
+    if showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == -1
+        f_addEventSymbol(eventSymbolLabels, high + zoneMarkerPadding + markerSpacing * 2, f_labelStyle(extremePoiSymbol, false), extremeColor, eventSymbolsRetained)
+    if showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == 1
+        f_addEventSymbol(eventSymbolLabels, low - zoneMarkerPadding - markerSpacing * 2, f_labelStyle(extremePoiSymbol, true), extremeColor, eventSymbolsRetained)
+
 if barstate.islast
     if not na(liveCandidateLabel)
         label.delete(liveCandidateLabel)
@@ -441,8 +478,8 @@ if barstate.islast
             liveIdmLabel := label.new(bar_index, candidateLowIdm, "IDM ACTIVE ↑", xloc = xloc.bar_index, yloc = yloc.price, style = label.style_label_left, color = color.new(idmColor, 75), textcolor = idmColor, size = size.tiny)
 
     if showStatus
-        table.cell(statusTable, 0, 0, "DD TH R0.5", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
-        table.cell(statusTable, 1, 0, "RESEARCH", text_color = idmColor, bgcolor = color.rgb(26, 31, 36))
+        table.cell(statusTable, 0, 0, "DD TH R0.6", text_color = color.white, bgcolor = color.rgb(26, 31, 36))
+        table.cell(statusTable, 1, 0, "LOADED", text_color = lowColor, bgcolor = color.rgb(26, 31, 36))
         table.cell(statusTable, 0, 1, "Seeking", text_color = color.silver)
         table.cell(statusTable, 1, 1, phase == 1 ? "HIGH" : phase == -1 ? "LOW" : "BOOTSTRAP", text_color = phase == 1 ? highColor : lowColor)
         table.cell(statusTable, 0, 2, "IDM gate", text_color = color.silver)
@@ -457,28 +494,6 @@ if barstate.islast
         table.cell(statusTable, 1, 6, "CLOSED BAR", text_color = lowColor)
     else
         table.clear(statusTable, 0, 0, 1, 6)
-
-// Symbol-only event layer. Shape and padding are user-configurable.
-float atrBasis = nz(ta.atr(14), high - low)
-float markerSpacing = math.max(atrBasis * eventSymbolPaddingAtr, syminfo.mintick * 10)
-float zoneMarkerPadding = math.max(atrBasis * zoneSymbolPaddingAtr, markerSpacing * 2)
-
-plotshape(showSweeps and buySideSweptThisBar ? high + markerSpacing : na, title = "BSL sweep", style = liquidityDownShape, location = location.absolute, color = sweepColor, size = size.small)
-plotshape(showSweeps and sellSideSweptThisBar ? low - markerSpacing : na, title = "SSL sweep", style = liquidityUpShape, location = location.absolute, color = sweepColor, size = size.small)
-plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside sweep", style = idmSweepDownShape, location = location.absolute, color = idmColor, size = size.tiny)
-plotshape(showSweeps and idmSweptThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside sweep", style = idmSweepUpShape, location = location.absolute, color = idmColor, size = size.tiny)
-
-plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == -1 ? low - markerSpacing * 2 : na, title = "IDM downside break", style = idmBreakDownShape, location = location.absolute, color = highColor, size = size.tiny)
-plotshape(showEventSymbols and idmBrokenThisBar and idmEventDirectionThisBar == 1 ? high + markerSpacing * 2 : na, title = "IDM upside break", style = idmBreakUpShape, location = location.absolute, color = lowColor, size = size.tiny)
-plotshape(showEventSymbols and showConfirmation and confirmedHighThisBar ? high + markerSpacing * 3 : na, title = "High confirmed", style = confirmationDownShape, location = location.absolute, color = highColor, size = size.tiny)
-plotshape(showEventSymbols and showConfirmation and confirmedLowThisBar ? low - markerSpacing * 3 : na, title = "Low confirmed", style = confirmationUpShape, location = location.absolute, color = lowColor, size = size.tiny)
-
-plotshape(showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding : na, title = "Bearish important imbalance created", style = imbalanceDownShape, location = location.absolute, color = bearImbalanceColor, size = size.tiny)
-plotshape(showEventSymbols and importantImbalanceThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding : na, title = "Bullish important imbalance created", style = imbalanceUpShape, location = location.absolute, color = bullImbalanceColor, size = size.tiny)
-plotshape(showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding + markerSpacing : na, title = "Bearish Decision POI created", style = decisionDownShape, location = location.absolute, color = decisionColor, size = size.tiny)
-plotshape(showEventSymbols and decisionPoiThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding - markerSpacing : na, title = "Bullish Decision POI created", style = decisionUpShape, location = location.absolute, color = decisionColor, size = size.tiny)
-plotshape(showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == -1 ? high + zoneMarkerPadding + markerSpacing * 2 : na, title = "Bearish Extreme POI validated", style = extremeDownShape, location = location.absolute, color = extremeColor, size = size.small)
-plotshape(showEventSymbols and extremePoiThisBar and zoneEventDirectionThisBar == 1 ? low - zoneMarkerPadding - markerSpacing * 2 : na, title = "Bullish Extreme POI validated", style = extremeUpShape, location = location.absolute, color = extremeColor, size = size.small)
 
 alertcondition(confirmedHighThisBar, "Trading Hub high confirmed", "A structure high was confirmed after its IDM event on {{ticker}} {{interval}}.")
 alertcondition(confirmedLowThisBar, "Trading Hub low confirmed", "A structure low was confirmed after its IDM event on {{ticker}} {{interval}}.")
