@@ -2,13 +2,13 @@
 
 ## Context
 
-- Profile: `TH-EVENTS-R0.2`
+- Profile: `TH-EVENTS-R0.3`
 - Reviewer:
 - Review date:
 - Symbol and venue:
 - Timeframe:
 - TradingView data range:
-- IDM mode: `Sweep / re-entry` | `Close / break`
+- IDM mode: `Any take` | `Sweep / re-entry` | `Close / break`
 - Internal pivot bars:
 - Zone search bars:
 - POI range: `Full candle` | `Body`

@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $workspaceRoot = Split-Path -Parent $PSScriptRoot
-$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.2.pine"
+$defaultPath = Join-Path $workspaceRoot "indicators\trading-hub\structure-events-r0.3.pine"
 $targetPath = if ($IndicatorPath) { $IndicatorPath } else { $defaultPath }
 $resolvedPath = (Resolve-Path -LiteralPath $targetPath).Path
 
@@ -21,8 +21,12 @@ $required = [ordered]@{
   "Low IDM ordering" = "candidateLowIdmBar < candidateLowBar"
   "High confirmation" = "confirmsHigh"
   "Low confirmation" = "confirmsLow"
+  "Any-take default" = 'input.string("Any take"'
+  "High any-take gate" = 'confirmationMode == "Any take" ? highIdmTaken'
+  "Low any-take gate" = 'confirmationMode == "Any take" ? lowIdmTaken'
   "High alert" = "alertcondition(confirmedHighThisBar"
   "Low alert" = "alertcondition(confirmedLowThisBar"
+  "IDM break alert" = "alertcondition(idmBrokenThisBar"
   "Buy-side sweep re-entry" = "if close < previousConfirmedHigh"
   "Sell-side sweep re-entry" = "if close > previousConfirmedLow"
   "Active IDM" = "IDM ACTIVE"
@@ -32,6 +36,10 @@ $required = [ordered]@{
   "Zone lifecycle update" = "f_updateZones("
   "Extreme validity gate" = "effectiveBullExtreme"
   "First-breach Extreme gate" = "candidateHighSweptReference"
+  "Event summary marker" = "Show event summary markers"
+  "Event marker retention" = "eventMarkerLimit"
+  "High event marker" = 'eventText + "H CONFIRMED'
+  "Low event marker" = 'eventText + "L CONFIRMED'
   "Research disclosure" = "not every fractal is claimed to be canonical Trading Hub IDM"
 }
 

@@ -1,8 +1,8 @@
-# Trading Hub structure events — `TH-EVENTS-R0.2`
+# Trading Hub structure events — `TH-EVENTS-R0.3`
 
 ## Mục tiêu
 
-Profile R0.2 mở rộng bộ máy H/L của R0.1 để hiển thị thứ tự sự kiện SMC, không tạo tín hiệu mua/bán:
+Profile R0.3 hiển thị thứ tự sự kiện SMC và khôi phục H/L khi IDM bị lấy bởi cả sweep lẫn break, không tạo tín hiệu mua/bán:
 
 ```text
 IDM ACTIVE
@@ -13,7 +13,7 @@ IDM ACTIVE
   -> theo dõi vùng ACTIVE -> TOUCHED -> INVALID/FILLED
 ```
 
-Pine source: [`indicators/trading-hub/structure-events-r0.2.pine`](../../indicators/trading-hub/structure-events-r0.2.pine).
+Pine source: [`indicators/trading-hub/structure-events-r0.3.pine`](../../indicators/trading-hub/structure-events-r0.3.pine).
 
 ## Nguồn curriculum chính chủ
 
@@ -30,10 +30,13 @@ Pine source: [`indicators/trading-hub/structure-events-r0.2.pine`](../../indicat
 ### IDM và confirmation
 
 - Internal pivot chỉ surface một IDM candidate; đây là implementation seam.
-- `Sweep / re-entry`: giá xuyên IDM bằng wick và đóng quay lại phía ban đầu.
-- `Close / break`: giá đóng hẳn qua IDM.
+- `Any take` (mặc định): lần xuyên IDM đầu tiên xác nhận H/L, sau đó phân loại event theo close.
+- `Sweep / re-entry`: chế độ nghiêm ngặt, chỉ nhận wick xuyên IDM và đóng quay lại phía ban đầu.
+- `Close / break`: chế độ nghiêm ngặt, chỉ nhận giá đóng hẳn qua IDM.
 - Hai trường hợp được ghi nhãn khác nhau: `IDM SWEPT` và `IDM BROKEN`.
 - H/L chỉ được xác nhận trên closed bar sau event; nhãn extreme được backfill nhưng bar `✓ H/L` cho thấy đúng latency.
+- `Show event summary markers` ghi toàn bộ event cùng bar: liquidity sweep, IDM event, confirmation và zone mới.
+- `Event markers retained` giới hạn riêng số summary label để chúng không đẩy H/L ra khỏi hạn mức label của TradingView quá sớm.
 
 ### Sweep thanh khoản cấu trúc
 
@@ -46,7 +49,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.2.pine`](../../indicat
 
 - Imbalance dùng mẫu FVG ba nến: bullish `low > high[2]`, bearish `high < low[2]`.
 - Sau confirmation, profile chọn FVG gần confirmation nhất, nằm trong structural leg và chưa bị full-fill.
-- Đây là ranking rule của R0.2, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
+- Đây là ranking rule của R0.3, không phải tuyên bố rằng mọi FVG được chọn đều là “important” canonical.
 - Vòng đời: `ACTIVE -> TOUCHED -> FILLED`; full fill là chạm mép xa của gap.
 
 ### Decision POI
@@ -59,7 +62,7 @@ Pine source: [`indicators/trading-hub/structure-events-r0.2.pine`](../../indicat
 
 ### Effective Extreme POI
 
-R0.2 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
+R0.3 fail closed. Extreme POI chỉ được tạo khi có đủ ba điều kiện:
 
 1. Có confirmed extreme cùng loại trước đó làm mức tham chiếu.
 2. Extreme candle mới là lần đầu xuyên mức tham chiếu chưa bị consume.
@@ -78,14 +81,14 @@ Do đó extreme đầu tiên, extreme chỉ break, hoặc extreme thiếu re-ent
 ## Acceptance checklist
 
 1. Pine Editor compile không báo lỗi trên Pine v6.
-2. Replay xác nhận wick xuyên nhưng close không re-entry không được gọi là sweep.
-3. Replay xác nhận close xuyên IDM chỉ hoạt động ở `Close / break`.
+2. Ở `Any take`, wick re-entry và close-through đều tạo H/L nhưng mang event khác nhau.
+3. Ở chế độ nghiêm ngặt, sweep không nhận break và break không nhận sweep.
 4. Mỗi `E-POI` phải có prior confirmed H/L, sweep và re-entry tại extreme candle.
 5. `IMP-FVG` chỉ nằm trong leg vừa xác nhận và chưa full-fill tại thời điểm tạo.
 6. Kiểm tra `ACTIVE -> TOUCHED -> INVALID/FILLED` trên closed bars.
 7. Review riêng 15m, 1H, 4H, 1D trên `OANDA:XAUUSD` và `COINBASE:BTCUSD`.
 8. Ghi disagreement trước khi đổi pivot, search window, POI range hoặc invalidation mode.
 
-## Ngoài phạm vi R0.2
+## Ngoài phạm vi R0.3
 
 BOS/CHoCH, protected/weak high-low, nested/major-minor IDM, multi-timeframe projection, order-flow volume và entry model chưa được tự động hóa. `D-POI` và `IMP-FVG` vẫn là candidate theo profile cho đến khi qua review chart.

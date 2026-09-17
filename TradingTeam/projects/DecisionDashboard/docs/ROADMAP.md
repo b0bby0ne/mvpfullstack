@@ -2,10 +2,11 @@
 
 ## Active
 
-### `TH-EVENTS-R0.2`
+### `TH-EVENTS-R0.3`
 
 - Mark confirmed H/L after the opposing IDM event.
-- Separate `IDM SWEPT` from `IDM BROKEN`.
+- Confirm H/L on any IDM take by default, then classify `IDM SWEPT` versus `IDM BROKEN`.
+- Render a closed-bar summary marker for every structure and zone-creation event.
 - Mark one-shot BSL/SSL sweep events with re-entry.
 - Select one important unfilled FVG and one Decision POI per confirmed leg.
 - Promote an Extreme POI only after sweep and re-entry of prior structure.
