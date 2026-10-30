@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+xmlns:html="http://www.w3.org/TR/REC-html40">
+<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+<Title>IndiSingle_BobVolman_H1 XAUUSDm,H1 2023.01.02-2025.12.31</Title>
+<Author>MetaQuotes Ltd.</Author>
+<Revision>1</Revision>
+<Created>2026-10-14T9:36:36Z</Created>
+<Company>Copyright 2000-2026, MetaQuotes Ltd.</Company>
+<Version>500</Version>
+<Build>64</Build>
+<Server>Exness-MT5Trial7</Server>
+<Deposit>10000 USD</Deposit>
+<Leverage>100</Leverage>
+<Condition>0</Condition>
+</DocumentProperties>
+<Styles>
+<Style ss:ID="ce0"><NumberFormat ss:Format="0"/></Style>
+<Style ss:ID="ce1"><NumberFormat ss:Format="0.0"/></Style>
+<Style ss:ID="ce2"><NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="ce3"><NumberFormat ss:Format="0.000"/></Style>
+<Style ss:ID="ce4"><NumberFormat ss:Format="0.0000"/></Style>
+<Style ss:ID="ce5"><NumberFormat ss:Format="0.00000"/></Style>
+<Style ss:ID="ce6"><NumberFormat ss:Format="0.000000"/></Style>
+<Style ss:ID="ce7"><NumberFormat ss:Format="0.0000000"/></Style>
+<Style ss:ID="ce8"><NumberFormat ss:Format="0.00000000"/></Style>
+<Style ss:ID="ce11"><NumberFormat ss:Format="Fixed"/></Style>
+<Style ss:ID="ce12"><NumberFormat ss:Format="General Date"/></Style>
+<Style ss:ID="ce13"><NumberFormat ss:Format="0.00000"/></Style>
+</Styles>
+<Worksheet ss:Name="Tester Optimizator Results">
+<Table>
+<Row>
+<Cell><Data ss:Type="String">Pass</Data></Cell>
+<Cell><Data ss:Type="String">Result</Data></Cell>
+<Cell><Data ss:Type="String">Profit</Data></Cell>
+<Cell><Data ss:Type="String">Expected Payoff</Data></Cell>
+<Cell><Data ss:Type="String">Profit Factor</Data></Cell>
+<Cell><Data ss:Type="String">Recovery Factor</Data></Cell>
+<Cell><Data ss:Type="String">Sharpe Ratio</Data></Cell>
+<Cell><Data ss:Type="String">Custom</Data></Cell>
+<Cell><Data ss:Type="String">Equity DD %</Data></Cell>
+<Cell><Data ss:Type="String">Trades</Data></Cell>
+<Cell><Data ss:Type="String">Inp_SBExtraSLBufferATR</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">70.00</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">3561.66</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">118.722000</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">4.203738</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">11.830006</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">25.556880</Data></Cell>
+<Cell><Data ss:Type="Number">70</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.3157</Data></Cell>
+<Cell><Data ss:Type="Number">30</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">1</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">68.97</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">3315.31</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">114.321034</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">4.032388</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">9.898221</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">24.453156</Data></Cell>
+<Cell><Data ss:Type="Number">68.965517241379317</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.5147</Data></Cell>
+<Cell><Data ss:Type="Number">29</Data></Cell>
+<Cell><Data ss:Type="Number">0.05</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">2</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">64.29</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">2706.94</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">96.676429</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">3.360985</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">9.236181</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">21.362731</Data></Cell>
+<Cell><Data ss:Type="Number">64.285714285714292</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.3094</Data></Cell>
+<Cell><Data ss:Type="Number">28</Data></Cell>
+<Cell><Data ss:Type="Number">0.10</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">3</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">61.90</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">1837.88</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">87.518095</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">3.029820</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">7.840116</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">20.565179</Data></Cell>
+<Cell><Data ss:Type="Number">61.904761904761905</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">1.9418</Data></Cell>
+<Cell><Data ss:Type="Number">21</Data></Cell>
+<Cell><Data ss:Type="Number">0.15</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">8</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">-3.81</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">-1.270000</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">0.980333</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">-0.016985</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">-0.004108</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.2414</Data></Cell>
+<Cell><Data ss:Type="Number">3</Data></Cell>
+<Cell><Data ss:Type="Number">0.40</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">7</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">281.53</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">46.921667</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.945842</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.226390</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">0.810263</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.2515</Data></Cell>
+<Cell><Data ss:Type="Number">6</Data></Cell>
+<Cell><Data ss:Type="Number">0.35</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">6</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">385.37</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">35.033636</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.637175</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.003385</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.939212</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">3.5663</Data></Cell>
+<Cell><Data ss:Type="Number">11</Data></Cell>
+<Cell><Data ss:Type="Number">0.30</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">5</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">677.26</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">48.375714</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.935287</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">1.762963</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">4.478391</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">3.4730</Data></Cell>
+<Cell><Data ss:Type="Number">14</Data></Cell>
+<Cell><Data ss:Type="Number">0.25</Data></Cell>
+</Row>
+<Row>
+<Cell><Data ss:Type="Number">4</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce2"><Data ss:Type="Number">1615.94</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">95.055294</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">3.470441</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">7.298735</Data></Cell>
+<Cell ss:StyleID="ce13"><Data ss:Type="Number">14.464856</Data></Cell>
+<Cell><Data ss:Type="Number">0</Data></Cell>
+<Cell ss:StyleID="ce11"><Data ss:Type="Number">2.0563</Data></Cell>
+<Cell><Data ss:Type="Number">17</Data></Cell>
+<Cell><Data ss:Type="Number">0.20</Data></Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>

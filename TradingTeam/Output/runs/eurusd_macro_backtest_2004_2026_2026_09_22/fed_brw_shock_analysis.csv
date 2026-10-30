@@ -1,0 +1,10 @@
+horizon,sample,sample_start,sample_end,shock_unit,outcome_unit,observations,correlation,intercept,slope,robust_se,robust_t,r_squared,x_standard_deviation,outcome_effect_per_1sd_x,mean_outcome,median_outcome,positive_outcome_rate
+forward_1d,all,2004-09-21,2020-12-16,BRW published unit,EURUSD percent,130,-0.588789,0.081781,-10.990162,1.81987,-6.038983,0.346672,0.047536,-0.522426,0.115489,0.077064,0.553846
+forward_1d,positive_shock,2004-09-21,2020-11-05,BRW published unit,EURUSD percent,60,-0.484303,0.117985,-9.891027,2.218784,-4.45786,0.234549,0.032869,-0.325106,-0.218143,-0.22596,0.4
+forward_1d,negative_shock,2005-08-09,2020-12-16,BRW published unit,EURUSD percent,70,-0.552737,-0.15528,-15.987042,4.585561,-3.486387,0.305519,0.032924,-0.52635,0.401459,0.301099,0.685714
+forward_5d,all,2004-09-21,2020-12-16,BRW published unit,EURUSD percent,130,-0.147865,-0.119023,-4.315956,3.136532,-1.376028,0.021864,0.047536,-0.205162,-0.105785,-0.143347,0.469231
+forward_5d,positive_shock,2004-09-21,2020-11-05,BRW published unit,EURUSD percent,60,-0.013161,-0.301214,-0.50935,4.824378,-0.105578,0.000173,0.032869,-0.016742,-0.318523,-0.264159,0.4
+forward_5d,negative_shock,2005-08-09,2020-12-16,BRW published unit,EURUSD percent,70,-0.104454,-0.085159,-4.643898,7.447707,-0.623534,0.010911,0.032924,-0.152894,0.076562,0.280283,0.528571
+forward_20d,all,2004-09-21,2020-12-16,BRW published unit,EURUSD percent,130,-0.001376,-0.352525,-0.069067,5.243977,-0.013171,0.000002,0.047536,-0.003283,-0.352313,-0.24992,0.453846
+forward_20d,positive_shock,2004-09-21,2020-11-05,BRW published unit,EURUSD percent,60,0.002837,-0.57471,0.203095,8.302192,0.024463,0.000008,0.032869,0.006676,-0.567808,-0.581247,0.383333
+forward_20d,negative_shock,2005-08-09,2020-12-16,BRW published unit,EURUSD percent,70,0.156156,0.23123,11.45268,11.678555,0.980659,0.024385,0.032924,0.377063,-0.167603,0.066376,0.514286

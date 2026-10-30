@@ -1,0 +1,36 @@
+{
+  "generated_at_utc": "2026-09-22T09:36:11.417Z",
+  "requested_as_of": "2026-09-22",
+  "eurusd_observations": 5645,
+  "first_price_date": "2004-09-06",
+  "last_price_date": "2026-09-21",
+  "common_evaluation_start": "2006-10-16",
+  "missing_rates": {
+    "ecbDfr": 0,
+    "fedFunds": 0,
+    "eu2": 0,
+    "us2": 0.000177,
+    "eu10": 0,
+    "us10": 0.000177,
+    "vix": 0.000177,
+    "brent": 0.000531
+  },
+  "cross_source_fx_check": {
+    "overlapping_observations": 5451,
+    "level_correlation": 0.999484,
+    "mean_absolute_price_difference": 0.00291297,
+    "max_absolute_price_difference": 0.0318,
+    "note": "ECB and Federal Reserve reference rates have different fixing times; small differences are expected."
+  },
+  "latest_observation_by_series": {
+    "eurusd_ecb": "2026-09-21",
+    "ecb_dfr": "2026-09-16",
+    "eu_2y": "2026-09-18",
+    "eu_10y": "2026-09-18",
+    "fed_funds": "2026-09-18",
+    "us_2y": "2026-09-18",
+    "us_10y": "2026-09-18",
+    "vix": "2026-09-18",
+    "brent": "2026-09-15"
+  }
+}

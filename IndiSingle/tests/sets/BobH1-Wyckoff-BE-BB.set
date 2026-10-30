@@ -1,0 +1,7 @@
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_DrawWyckoffAnnotations=false
+Inp_SBUseBreakEven=false
+Inp_BBUseBreakEven=true
+Inp_BBBreakEvenTriggerR=1.0
+Inp_BBBreakEvenOffsetR=0.0

@@ -1,0 +1,67 @@
+{
+  "policyId": "smc-xau-m15-h1-v0.6",
+  "status": "research-visual-only",
+  "decision": {
+    "onSemantics": "structure-checklist-and-any-on-event",
+    "onEventOperator": "OR",
+    "offSemantics": "any-off-event-first-veto-wins",
+    "offEventOperator": "OR",
+    "triggerEvent": "LATEST_BEAR_FVG_FULL_FILL_OR_SSL_SWEEP",
+    "closedBarsOnly": true,
+    "failClosed": true,
+    "historicalReplay": "oldest-to-newest-no-lookahead"
+  },
+  "structureChecklist": [
+    "DATA_READY",
+    "OPERATIONAL_READY",
+    "H1_BULLISH_CONTEXT",
+    "CCBSN_FLAT"
+  ],
+  "eventChecklist": [
+    "LATEST_ACTIVE_BEAR_FVG_FULL_FILL",
+    "SELL_SIDE_LIQUIDITY_SWEEP"
+  ],
+  "bearFvgVisual": {
+    "definition": "HIGH_0_LT_LOW_2_MINUS_MIN_FVG_ATR",
+    "fullFill": "SUBSEQUENT_CLOSED_BAR_HIGH_GTE_FVG_TOP",
+    "activeOnly": true,
+    "maxZones": 3,
+    "trim": "DELETE_OLDEST_FIRST"
+  },
+  "offPriority": [
+    "OPERATIONAL_BLOCK",
+    "H1_BEARISH_CONTEXT",
+    "CAUSAL_LOW_INVALIDATED",
+    "BEARISH_DISPLACEMENT_BREAK",
+    "BUY_SIDE_LIQUIDITY_SWEEP",
+    "BEARISH_FVG_OPTIONAL",
+    "TARGET_LIQUIDITY_REACHED",
+    "ENTRY_TIMEOUT",
+    "ONE_SHOT_TOKEN_CONSUMED"
+  ],
+  "defaults": {
+    "contextTimeframe": "H1",
+    "decisionTimeframe": "M15",
+    "onTriggerMode": "bear-fvg-fill-or-ssl-sweep",
+    "maxActiveBearFvgZones": 3,
+    "entryWindowBars": 4,
+    "riskLockBars": 4,
+    "oneShotPerSetup": true,
+    "offOnH1Bearish": true,
+    "offOnBuySideSweep": true,
+    "offOnBearishFvg": false,
+    "controlMode": "visual-only",
+    "drawTradingZoneHistory": true,
+    "tradingZoneHistoryBars": 4500,
+    "maxStoredTradingZones": 100,
+    "drawHistoricalSetupZones": false,
+    "drawHistoricalEventMarkers": false,
+    "maxHistoricalEventMarkers": 250,
+    "drawActiveBearFvgZones": true,
+    "bearFvgOpacityPercent": 18,
+    "zoneRender": "ccbsn-lite-single-range-box",
+    "zoneColor": "blue",
+    "zonePaddingAtr": 0.25,
+    "zoneOpacityPercent": 70
+  }
+}

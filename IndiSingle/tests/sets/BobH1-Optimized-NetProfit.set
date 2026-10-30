@@ -1,0 +1,21 @@
+; Optimized on XAUUSDm H1, 2024.01.01-2026.09.27, M1 OHLC
+; Objective: highest Net Profit in the robust low-trade RB/IRB neighborhood
+Inp_RiskPercent=1.0
+Inp_TargetRR=2.25
+Inp_EntryExpiryBars=2
+Inp_EMASlopeBars=4
+Inp_MaxSignalRangeATR=1.25
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_EnableDDB=false
+Inp_EnableFB=false
+Inp_EnableSB=false
+Inp_EnableBB=false
+Inp_EnableRB=true
+Inp_EnableIRB=true
+Inp_EnableARB=false
+Inp_RangeBars=12
+Inp_RangeMinATR=0.8
+Inp_RangeMaxATR=2.75
+Inp_MinRangeTouches=3
+Inp_EdgeZonePct=0.25

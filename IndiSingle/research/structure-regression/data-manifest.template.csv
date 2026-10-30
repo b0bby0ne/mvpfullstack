@@ -1,0 +1,10 @@
+dataset,path_or_uri,symbol_or_series,frequency,timezone,observed_at_field,available_at_field,start,end,source,version_or_downloaded_at,missing_pct,notes
+trades,,,,,,,,,,,,
+xau_h1,,,,,,,,,,,,
+xau_h4,,,,,,,,,,,,
+xau_d1,,,,,,,,,,,,
+dxy,,,,,,,,,,,,
+gc_futures,,,,,,,,,,,,
+macro,,,,,,,,,,,,
+events,,,,,,,,,,,,
+gold_options,,,,,,,,,,,,

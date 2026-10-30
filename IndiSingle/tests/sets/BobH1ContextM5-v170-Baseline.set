@@ -1,0 +1,16 @@
+Inp_RiskPercent=1.0
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_EnableDDB=true
+Inp_EnableFB=true
+Inp_EnableSB=true
+Inp_EnableBB=true
+Inp_EnableRB=true
+Inp_EnableIRB=true
+Inp_EnableARB=true
+Inp_WyckoffFilterMode=1
+Inp_UseSetupEventMatrix=true
+Inp_DrawWyckoffAnnotations=false
+Inp_ExportExcursions=false
+Inp_ExcursionFileName=BobH1ContextM5-v170-Baseline.csv
+Inp_PostExitBars=144

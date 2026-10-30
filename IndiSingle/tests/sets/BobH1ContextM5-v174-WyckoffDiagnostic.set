@@ -1,0 +1,7 @@
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_DrawWyckoffAnnotations=false
+Inp_SBUseWyckoffElliottFilter=false
+Inp_ExportExcursions=true
+Inp_ExcursionFileName=BobH1ContextM5-v174-WyckoffDiagnostic-2023-2026.csv
+Inp_PostExitBars=0

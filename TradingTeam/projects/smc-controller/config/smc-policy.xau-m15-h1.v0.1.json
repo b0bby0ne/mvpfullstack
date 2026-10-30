@@ -1,0 +1,45 @@
+{
+  "policyId": "smc-xau-m15-h1-v0.1",
+  "status": "research-visual-only",
+  "scope": {
+    "symbolPrefix": "XAUUSD",
+    "direction": "buy-only",
+    "contextTimeframe": "H1",
+    "decisionTimeframe": "M15"
+  },
+  "structure": {
+    "contextSwingBars": 2,
+    "decisionSwingBars": 2,
+    "setupPath": "either-continuation-hl-or-ssl-sweep",
+    "liquidityMemoryBars": 8,
+    "breakToleranceAtr": 0.05
+  },
+  "intent": {
+    "bullDisplacementBodyAtr": 0.8,
+    "bullMinCloseLocation": 0.7,
+    "bearDisplacementBodyAtr": 1.2,
+    "bearMaxCloseLocation": 0.3,
+    "minFvgAtr": 0.05
+  },
+  "lifecycle": {
+    "setupExpiryBars": 12,
+    "reclaim": "fvg-midpoint",
+    "entryWindowBars": 4,
+    "oneShotPerSetup": true,
+    "riskLockBars": 4
+  },
+  "risk": {
+    "requireTarget": true,
+    "minResearchRR": 1.2,
+    "offOnBuySideSweep": true,
+    "offOnBearishFvg": false,
+    "failClosed": true
+  },
+  "control": {
+    "defaultMode": "visual-only",
+    "commandPrice": 888888,
+    "onOrderType": "SELL_LIMIT",
+    "offOrderType": "BUY_STOP",
+    "sharedMutexNamespace": "CCBSN.NC.LOCK"
+  }
+}

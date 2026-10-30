@@ -1,0 +1,54 @@
+{
+  "policyId": "smc-xau-m15-h1-v0.2",
+  "status": "research-visual-only",
+  "decision": {
+    "onSemantics": "all-gates-pass",
+    "offSemantics": "first-veto-wins",
+    "closedBarsOnly": true,
+    "failClosed": true
+  },
+  "onGates": [
+    "DATA_READY",
+    "OPERATIONAL_READY",
+    "H1_BULLISH_CONTEXT",
+    "M15_HL_OR_RECENT_SSL_SWEEP",
+    "M15_ACCEPTED_BULL_BREAK",
+    "BULLISH_DISPLACEMENT",
+    "CAUSAL_BULLISH_FVG",
+    "TARGET_AND_RESEARCH_RR",
+    "FVG_RETEST_RECLAIM",
+    "CCBSN_FLAT"
+  ],
+  "offPriority": [
+    "OPERATIONAL_BLOCK",
+    "H1_BEARISH_CONTEXT",
+    "CAUSAL_LOW_INVALIDATED",
+    "BEARISH_DISPLACEMENT_BREAK",
+    "BUY_SIDE_SWEEP_REJECTION",
+    "BEARISH_FVG_OPTIONAL",
+    "BULLISH_FVG_FULL_FILL",
+    "TARGET_LIQUIDITY_REACHED",
+    "SETUP_OR_ENTRY_TIMEOUT",
+    "ONE_SHOT_TOKEN_CONSUMED"
+  ],
+  "defaults": {
+    "contextTimeframe": "H1",
+    "decisionTimeframe": "M15",
+    "setupPath": "either-continuation-hl-or-ssl-sweep",
+    "liquidityMemoryBars": 8,
+    "bullDisplacementBodyAtr": 0.8,
+    "bullMinCloseLocation": 0.7,
+    "bearDisplacementBodyAtr": 1.2,
+    "bearMaxCloseLocation": 0.3,
+    "minFvgAtr": 0.05,
+    "minResearchRR": 1.2,
+    "setupExpiryBars": 12,
+    "entryWindowBars": 4,
+    "riskLockBars": 4,
+    "oneShotPerSetup": true,
+    "offOnH1Bearish": true,
+    "offOnBuySideSweep": true,
+    "offOnBearishFvg": false,
+    "controlMode": "visual-only"
+  }
+}

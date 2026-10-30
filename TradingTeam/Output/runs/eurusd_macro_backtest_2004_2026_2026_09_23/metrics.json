@@ -1,0 +1,252 @@
+{
+  "run_id": "eurusd_macro_backtest_2004_2026_2026_09_23",
+  "generated_at_utc": "2026-09-23T01:45:41.042Z",
+  "config": {
+    "asOf": "2026-09-23",
+    "startDate": "2004-09-06",
+    "priceSeriesStart": "1999-01-04",
+    "executionLagBars": 2,
+    "oneWayCostPips": 1,
+    "costSensitivityPips": [
+      0,
+      0.5,
+      1,
+      2
+    ],
+    "carryDayCount": 360,
+    "fixedModel": {
+      "yieldMomentumLookback": 20,
+      "robustScaleWindow": 252,
+      "zEntry": 0.5,
+      "zExit": 0.25,
+      "trendSma": 200
+    },
+    "robustnessGrid": {
+      "yieldMomentumLookback": [
+        10,
+        20,
+        40
+      ],
+      "robustScaleWindow": [
+        126,
+        252,
+        504
+      ],
+      "zEntry": [
+        0.25,
+        0.5,
+        1
+      ],
+      "trendSma": [
+        100,
+        150,
+        200
+      ]
+    },
+    "bootstrap": {
+      "samples": 1000,
+      "blockLength": 20,
+      "seed": 24092026
+    },
+    "periods": {
+      "development": [
+        "2004-09-06",
+        "2018-12-31"
+      ],
+      "historicalHoldout": [
+        "2019-01-01",
+        "2026-09-23"
+      ],
+      "finalDiagnostic": [
+        "2024-01-01",
+        "2026-09-23"
+      ]
+    },
+    "runDirectory": "../../output/runs/eurusd_macro_backtest_2004_2026_2026_09_23"
+  },
+  "data_quality": {
+    "generated_at_utc": "2026-09-23T01:45:40.836Z",
+    "requested_as_of": "2026-09-23",
+    "eurusd_observations": 5646,
+    "first_price_date": "2004-09-06",
+    "last_price_date": "2026-09-22",
+    "common_evaluation_start": "2006-10-16",
+    "missing_rates": {
+      "ecbDfr": 0,
+      "fedFunds": 0,
+      "eu2": 0,
+      "us2": 0.000177,
+      "eu10": 0,
+      "us10": 0.000177,
+      "vix": 0.000177,
+      "brent": 0.000531
+    },
+    "cross_source_fx_check": {
+      "overlapping_observations": 5451,
+      "level_correlation": 0.999484,
+      "mean_absolute_price_difference": 0.00291297,
+      "max_absolute_price_difference": 0.0318,
+      "note": "ECB and Federal Reserve reference rates have different fixing times; small differences are expected."
+    },
+    "latest_observation_by_series": {
+      "eurusd_ecb": "2026-09-22",
+      "ecb_dfr": "2026-09-16",
+      "eu_2y": "2026-09-21",
+      "eu_10y": "2026-09-21",
+      "fed_funds": "2026-09-21",
+      "us_2y": "2026-09-21",
+      "us_10y": "2026-09-21",
+      "vix": "2026-09-21",
+      "brent": "2026-09-15"
+    }
+  },
+  "latest_state": {
+    "as_of_price_date": "2026-09-22",
+    "eurusd": 1.1463,
+    "ecb_deposit_rate_pct": 2.5,
+    "fed_effective_rate_pct": 3.88,
+    "fed_target_upper_pct": 4,
+    "fed_target_midpoint_pct": 3.875,
+    "policy_spread_eur_minus_us_pct": -1.38,
+    "policy_spread_ecb_dfr_minus_fed_midpoint_pct": -1.375,
+    "euro_2y_pct": 3.1476088412,
+    "us_2y_pct": 4.76,
+    "two_year_spread_eur_minus_us_pct": -1.612391,
+    "vix": 14.87,
+    "trailing_252d_vix_75th_percentile": 19.0825,
+    "risk_regime": "NORMAL_VIX",
+    "brent_usd": 130.8,
+    "sma_50": 1.153806,
+    "sma_200": 1.16266,
+    "distance_to_sma_200_pct": -0.014072,
+    "close_20d_low": 1.146,
+    "close_20d_high": 1.1669,
+    "close_60d_low": 1.1367,
+    "close_60d_high": 1.1699,
+    "return_20d": -0.017064,
+    "realized_volatility_20d_annualized": 0.035684,
+    "two_year_spread_change_20d_pct_points": -0.192834,
+    "robust_macro_z": -1.721397,
+    "macro_state": -1,
+    "technical_state": -1,
+    "hybrid_signal_state": -1,
+    "effective_backtest_position": -1,
+    "execution_note": "Signal is delayed 2 ECB-fix bars in the backtest. Latest state is research context, not an executable quote."
+  },
+  "core_full_metrics": {
+    "start": "2006-10-16",
+    "end": "2026-09-22",
+    "observations": 5102,
+    "total_return": 0.661816,
+    "cagr": 0.025807,
+    "annual_volatility": 0.053163,
+    "sharpe": 0.498491,
+    "sharpe_ci_95_low": 0.041537,
+    "sharpe_ci_95_high": 0.900153,
+    "sortino": 0.726571,
+    "max_drawdown": -0.14469,
+    "max_drawdown_start": "2015-03-10",
+    "max_drawdown_end": "2017-05-11",
+    "calmar": 0.178357,
+    "exposure": 0.380831,
+    "turnover_units": 457,
+    "total_cost_return": 0.038129,
+    "total_carry_return": -0.017069,
+    "trades": 228,
+    "open_trades": 1,
+    "win_rate": 0.45614,
+    "profit_factor": 1.588292,
+    "average_trade_return": 0.002353,
+    "median_holding_days": 7,
+    "newey_west_t_mean_lag5": 2.224255,
+    "daily_var_95": -0.004973,
+    "daily_expected_shortfall_95": -0.008656,
+    "worst_day": -0.028383
+  },
+  "core_break_even_one_way_cost_pips_approx": 14.309,
+  "grid_summary": {
+    "variants": 81,
+    "positive_full_cagr_share": 1,
+    "positive_holdout_cagr_share": 0.728395,
+    "positive_holdout_sharpe_share": 0.765432,
+    "median_full_sharpe": 0.377383,
+    "median_holdout_sharpe": 0.16129,
+    "min_holdout_sharpe": -0.252104,
+    "max_holdout_sharpe": 0.531804,
+    "development_holdout_sharpe_correlation": -0.60241,
+    "fixed_variant_id": "M20_W252_Z0.5_SMA200",
+    "fixed_variant_holdout_rank_of_81": 18,
+    "best_development_variant": {
+      "id": "M10_W252_Z0.25_SMA150",
+      "yield_lookback": 10,
+      "scale_window": 252,
+      "z_entry": 0.25,
+      "z_exit": 0.125,
+      "trend_sma": 150,
+      "full_cagr": 0.029123,
+      "full_sharpe": 0.510378,
+      "full_max_drawdown": -0.156925,
+      "development_sharpe": 0.818135,
+      "holdout_2019_plus_cagr": -0.008286,
+      "holdout_2019_plus_sharpe": -0.153306,
+      "final_2024_plus_sharpe": -0.326813,
+      "full_trades": 419
+    },
+    "best_historical_holdout_variant_hindsight_only": {
+      "id": "M20_W252_Z0.25_SMA100",
+      "yield_lookback": 20,
+      "scale_window": 252,
+      "z_entry": 0.25,
+      "z_exit": 0.125,
+      "trend_sma": 100,
+      "full_cagr": 0.019681,
+      "full_sharpe": 0.33286,
+      "full_max_drawdown": -0.246996,
+      "development_sharpe": 0.249504,
+      "holdout_2019_plus_cagr": 0.026282,
+      "holdout_2019_plus_sharpe": 0.531804,
+      "final_2024_plus_sharpe": 0.854609,
+      "full_trades": 348
+    }
+  },
+  "walk_forward_metrics": {
+    "start": "2014-01-02",
+    "end": "2026-09-22",
+    "observations": 3256,
+    "total_return": 0.060599,
+    "cagr": 0.004636,
+    "annual_volatility": 0.047872,
+    "sharpe": 0.119047,
+    "sharpe_ci_95_low": -0.395819,
+    "sharpe_ci_95_high": 0.578096,
+    "sortino": 0.169012,
+    "max_drawdown": -0.159717,
+    "max_drawdown_start": "2015-03-13",
+    "max_drawdown_end": "2017-12-14",
+    "calmar": 0.029027,
+    "exposure": 0.407248,
+    "turnover_units": 395,
+    "total_cost_return": 0.034745,
+    "total_carry_return": -0.001114,
+    "trades": 197,
+    "open_trades": 1,
+    "win_rate": 0.441624,
+    "profit_factor": 1.0934,
+    "average_trade_return": 0.000319,
+    "median_holding_days": 7,
+    "newey_west_t_mean_lag5": 0.447593,
+    "daily_var_95": -0.004724,
+    "daily_expected_shortfall_95": -0.00796,
+    "worst_day": -0.021638
+  },
+  "limitations": [
+    "ECB reference rates are research fixes, not executable bid/ask quotes.",
+    "Theoretical carry uses ECB deposit rate minus effective fed funds; retail broker swaps and markups are not available.",
+    "The 2Y euro curve is an ECB fitted AAA sovereign curve, not an OIS execution instrument.",
+    "Policy event dates are implementation/rate-change dates, not clean intraday surprise windows.",
+    "Current-vintage daily market data are used; revised monthly macro releases and consensus surprises are intentionally excluded.",
+    "The 2019+ and 2024+ temporal splits are historical/pseudo holdouts, not genuinely untouched tests; the research was designed after those outcomes existed.",
+    "The walk-forward protocol was also specified retrospectively and must be forward-tested before operational use.",
+    "Daily results do not validate H4/H1 entries, stops, targets, or broker-specific execution."
+  ]
+}

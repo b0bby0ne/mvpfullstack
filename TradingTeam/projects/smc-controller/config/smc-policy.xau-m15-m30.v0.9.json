@@ -1,0 +1,75 @@
+{
+  "policyId": "smc-xau-m15-m30-v0.9",
+  "status": "research-visual-only",
+  "decision": {
+    "onSemantics": "structure-checklist-and-any-on-event",
+    "onEventOperator": "OR",
+    "offSemantics": "configurable-any-off-event-first-veto-wins",
+    "offEventOperator": "OR",
+    "triggerEvent": "LATEST_BEAR_FVG_FULL_FILL_OR_SSL_SWEEP",
+    "visualZoneStart": "ON_TRIGGER_DECISION_TIME",
+    "triggerCandleRangeSeeded": true,
+    "closedBarsOnly": true,
+    "failClosed": true,
+    "historicalReplay": "oldest-to-newest-no-lookahead"
+  },
+  "structureChecklist": [
+    "DATA_READY",
+    "OPERATIONAL_READY",
+    "M30_BULLISH_CONTEXT",
+    "LATEST_ACTIVE_BUY_SIDE_FVG_EXISTS",
+    "CCBSN_FLAT"
+  ],
+  "eventChecklist": [
+    "LATEST_ACTIVE_BEAR_FVG_FULL_FILL",
+    "SELL_SIDE_LIQUIDITY_SWEEP"
+  ],
+  "buySideFvg": {
+    "definition": "M15_LOW_0_GT_M15_HIGH_2_PLUS_MIN_FVG_ATR",
+    "retention": "LATEST_ACTIVE_ONLY",
+    "fullFill": "SUBSEQUENT_M15_LOW_LTE_FVG_BOTTOM",
+    "role": "REQUIRED_STRUCTURE_GATE"
+  },
+  "offPriority": [
+    "OPERATIONAL_BLOCK",
+    "M30_BEARISH_CONTEXT_OPTIONAL",
+    "CAUSAL_LOW_INVALIDATED",
+    "BEARISH_DISPLACEMENT_BREAK",
+    "BUY_SIDE_LIQUIDITY_SWEEP",
+    "BEARISH_FVG_OPTIONAL",
+    "TARGET_LIQUIDITY_OPTIONAL",
+    "ENTRY_TIMEOUT",
+    "ONE_SHOT_TOKEN_CONSUMED"
+  ],
+  "defaults": {
+    "contextTimeframe": "M30",
+    "decisionTimeframe": "M15",
+    "onTriggerMode": "bear-fvg-fill-or-ssl-sweep",
+    "entryWindowBars": 8,
+    "riskLockBars": 2,
+    "oneShotPerSetup": true,
+    "offOnM30Bearish": false,
+    "offOnCausalLow": true,
+    "offOnBearishBreak": true,
+    "offOnBuySideSweep": true,
+    "offOnBearishFvg": false,
+    "offOnTargetReached": false,
+    "controlMode": "visual-only",
+    "drawTradingZoneHistory": true,
+    "tradingZoneHistoryBars": 4500,
+    "maxStoredTradingZones": 100,
+    "drawHistoricalEventMarkers": true,
+    "maxHistoricalEventMarkers": 250,
+    "maxActiveBearFvgZones": 3,
+    "drawLatestBuySideFvg": true,
+    "buySideFvgRetention": 1,
+    "zoneRender": "ccbsn-lite-single-range-box",
+    "zoneColor": "blue",
+    "zonePaddingAtr": 0.25,
+    "zoneOpacityPercent": 70,
+    "eventLabelsEditable": true,
+    "structureOnDashboard": "top-left",
+    "offDashboard": "bottom-left",
+    "controllerLiteChartTheme": true
+  }
+}

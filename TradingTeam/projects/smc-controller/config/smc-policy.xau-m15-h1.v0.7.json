@@ -1,0 +1,64 @@
+{
+  "policyId": "smc-xau-m15-h1-v0.7",
+  "status": "research-visual-only",
+  "decision": {
+    "onSemantics": "structure-checklist-and-any-on-event",
+    "onEventOperator": "OR",
+    "offSemantics": "configurable-any-off-event-first-veto-wins",
+    "offEventOperator": "OR",
+    "triggerEvent": "LATEST_BEAR_FVG_FULL_FILL_OR_SSL_SWEEP",
+    "closedBarsOnly": true,
+    "failClosed": true,
+    "historicalReplay": "oldest-to-newest-no-lookahead"
+  },
+  "structureChecklist": [
+    "DATA_READY",
+    "OPERATIONAL_READY",
+    "H1_BULLISH_CONTEXT",
+    "CCBSN_FLAT"
+  ],
+  "eventChecklist": [
+    "LATEST_ACTIVE_BEAR_FVG_FULL_FILL",
+    "SELL_SIDE_LIQUIDITY_SWEEP"
+  ],
+  "offPriority": [
+    "OPERATIONAL_BLOCK",
+    "H1_BEARISH_CONTEXT_OPTIONAL",
+    "CAUSAL_LOW_INVALIDATED",
+    "BEARISH_DISPLACEMENT_BREAK",
+    "BUY_SIDE_LIQUIDITY_SWEEP",
+    "BEARISH_FVG_OPTIONAL",
+    "TARGET_LIQUIDITY_OPTIONAL",
+    "ENTRY_TIMEOUT",
+    "ONE_SHOT_TOKEN_CONSUMED"
+  ],
+  "defaults": {
+    "contextTimeframe": "H1",
+    "decisionTimeframe": "M15",
+    "onTriggerMode": "bear-fvg-fill-or-ssl-sweep",
+    "entryWindowBars": 8,
+    "riskLockBars": 2,
+    "oneShotPerSetup": true,
+    "offOnH1Bearish": false,
+    "offOnCausalLow": true,
+    "offOnBearishBreak": true,
+    "offOnBuySideSweep": true,
+    "offOnBearishFvg": false,
+    "offOnTargetReached": false,
+    "controlMode": "visual-only",
+    "drawTradingZoneHistory": true,
+    "tradingZoneHistoryBars": 4500,
+    "maxStoredTradingZones": 100,
+    "drawHistoricalEventMarkers": true,
+    "maxHistoricalEventMarkers": 250,
+    "maxActiveBearFvgZones": 3,
+    "zoneRender": "ccbsn-lite-single-range-box",
+    "zoneColor": "blue",
+    "zonePaddingAtr": 0.25,
+    "zoneOpacityPercent": 70,
+    "eventLabelsEditable": true,
+    "structureOnDashboard": "top-left",
+    "offDashboard": "bottom-left",
+    "controllerLiteChartTheme": true
+  }
+}

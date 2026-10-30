@@ -3,9 +3,7 @@
 ## Current Teams
 1. **IdeaTeam**: Standardizing documentation.
 2. **SaleTeam**: Market intelligence & Lead enrichment.
-3. **TrendTeam**: Weak signal scanning.
-4. **AgileTeam**: Workspace monitoring & logging.
-5. **CloneTeam**: Repository archaeology, team blueprint design, safe integration & QA.
+3. **AgileTeam**: Workspace monitoring & logging.
 
 ## Open Backlog
 ## BLG-001

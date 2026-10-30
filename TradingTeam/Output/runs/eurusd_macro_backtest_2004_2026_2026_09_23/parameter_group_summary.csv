@@ -1,0 +1,4 @@
+yield_lookback,variants,mean_development_sharpe,mean_holdout_sharpe,median_holdout_sharpe,positive_holdout_sharpe_share,mean_2024_plus_sharpe
+10,27,0.611978,-0.036488,-0.025099,0.37037,-0.066393
+20,27,0.391334,0.203437,0.195192,0.925926,0.26929
+40,27,0.449972,0.288628,0.285594,1,0.392888

@@ -12,6 +12,7 @@
 - Valid until:
 - Freshness status:
 - Refresh triggers:
+- Kịch bản chính theo tài sản:
 
 ## 2. Dữ liệu thiên văn
 
@@ -31,19 +32,36 @@
 - Driver đối trọng:
 - Sự kiện sắp tới:
 
-## 5. Tác động theo tài sản
+## 5. Tác động và kịch bản chính theo tài sản
 
-| Thị trường | Tác động có thể có | Điều kiện xác nhận | Điều kiện phủ định | Confidence |
-|---|---|---|---|---|
+| Thị trường | Kịch bản chính | Active window | Điều kiện xác nhận | Điều kiện vô hiệu | Confidence |
+|---|---|---|---|---|---|
 
-## 6. Các kịch bản
+## 6. Chi tiết kịch bản
 
-### Kịch bản chính
+### [Tên tài sản] — Kịch bản chính
 
+- Trạng thái ưu tiên:
 - Điều kiện:
 - Cơ chế:
 - Biểu hiện có thể quan sát:
-- Yếu tố phủ định:
+- Xác nhận bởi:
+- Vô hiệu khi:
+- Active window:
+- Confidence:
+
+### [Tên tài sản] — Kịch bản thay thế
+
+- Chỉ kích hoạt khi:
+- Trạng thái thay thế:
+- Cơ chế:
+- Confidence:
+
+### Kết luận kịch bản
+
+Mỗi tài sản dùng đúng mẫu:
+
+`Kịch bản chính: [trạng thái] trong [active window] khi [điều kiện]. Vô hiệu khi [điều kiện]; khi đó chuyển sang [kịch bản thay thế].`
 
 ## 7. Điều không thể kết luận
 

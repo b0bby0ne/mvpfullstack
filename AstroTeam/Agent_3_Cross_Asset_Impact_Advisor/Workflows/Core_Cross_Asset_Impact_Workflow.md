@@ -5,8 +5,10 @@
 3. Đọc `02_Market_Context.md`.
 4. Xác định các kênh ảnh hưởng khả dĩ.
 5. Chấm độ nhạy từng asset class.
-6. Xây tối đa 3-5 kịch bản có điều kiện.
-7. Ghi indicator xác nhận và phủ định.
-8. Gắn mức tin cậy.
-9. Tạo `03_Cross_Asset_Impact.md`.
-10. Handoff cho Agent 4.
+6. Xây tối đa ba kịch bản có điều kiện cho mỗi tài sản.
+7. Xếp hạng và chọn đúng một kịch bản chính theo [Scenario Decision Rule](../../Financial_Market/Rules/Scenario_Decision_Rule.md).
+8. Ghi indicator xác nhận, điều kiện vô hiệu và trigger chuyển sang kịch bản thay thế.
+9. Gắn mức tin cậy; nếu không đủ bằng chứng, ghi `Chưa đủ cơ sở chọn kịch bản chính`.
+10. Kiểm tra kết luận không hai chiều.
+11. Tạo `03_Cross_Asset_Impact.md`.
+12. Handoff cho Agent 4.

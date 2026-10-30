@@ -1,0 +1,14 @@
+Inp_DrawAnnotations=false||false||0||true||N
+Inp_ShowStatusPanel=false||false||0||true||N
+Inp_DrawWyckoffAnnotations=false||false||0||true||N
+Inp_EnableDDB=false||false||0||true||N
+Inp_EnableFB=false||false||0||true||N
+Inp_EnableSB=false||false||0||true||N
+Inp_EnableBB=true||false||0||true||N
+Inp_EnableRB=false||false||0||true||N
+Inp_EnableIRB=false||false||0||true||N
+Inp_EnableARB=false||false||0||true||N
+Inp_BBTargetRR=2.25||2.25||0.25||2.25||N
+Inp_BBExtraSLBufferATR=0.00||0.00||0.05||0.40||Y
+Inp_ExportExcursions=false||false||0||true||N
+Inp_TesterMinTrades=5||5||1||5||N

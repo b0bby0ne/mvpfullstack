@@ -23,6 +23,11 @@
 
 - [ ] Mỗi tác động có kênh giải thích.
 - [ ] Có điều kiện xác nhận và phủ định.
+- [ ] Mỗi tài sản có đúng một kịch bản chính được xếp hạng.
+- [ ] Kịch bản thay thế chỉ kích hoạt sau điều kiện vô hiệu của kịch bản chính.
+- [ ] Driver đối trọng được giữ dưới dạng rủi ro, điều kiện vô hiệu hoặc trigger thay thế.
+- [ ] Kết luận không dùng `có thể tăng hoặc giảm`, `phản ứng hai chiều` hoặc `trung tính nghiêng`.
+- [ ] Nếu không đủ bằng chứng, report ghi `Chưa đủ cơ sở chọn kịch bản chính` thay vì kết luận hai chiều.
 - [ ] Confidence không bị dùng như xác suất giá.
 - [ ] Không khẳng định quan hệ nhân quả.
 

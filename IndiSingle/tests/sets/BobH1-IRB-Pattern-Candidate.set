@@ -1,0 +1,17 @@
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_DrawWyckoffAnnotations=false
+Inp_EnableDDB=false
+Inp_EnableFB=false
+Inp_EnableSB=false
+Inp_EnableBB=false
+Inp_EnableRB=false
+Inp_EnableIRB=true
+Inp_EnableARB=false
+Inp_IRBRangeBars=8
+Inp_IRBRangeMinATR=0.80
+Inp_IRBRangeMaxATR=3.25
+Inp_IRBMinRangeTouches=2
+Inp_IRBEdgeZonePct=0.35
+Inp_IRBMaxCandleATR=1.00
+Inp_TesterMinTrades=1

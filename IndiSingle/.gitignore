@@ -1,0 +1,10 @@
+# MetaTrader build artifacts
+*.ex5
+*.log
+
+# Local tester/output data
+Tester/
+Logs/
+
+# Isolated local MetaTrader tester runtime
+.mt5-demo-smma-tester/

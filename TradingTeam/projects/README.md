@@ -16,3 +16,4 @@ Project hiện có:
 
 - [CCBSN Controller](./ccbsn/README.md)
 - [DecisionDashboard](./DecisionDashboard/README.md)
+- [SMC Controller](./smc-controller/README.md)

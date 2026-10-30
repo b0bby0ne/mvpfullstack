@@ -14,7 +14,7 @@ Track này hỗ trợ `AstroTeam` tư vấn tác động của các sự kiện 
 - Đặt sự kiện trong bối cảnh thị trường hiện tại.
 - Phân tích tâm lý nhà đầu tư và kênh ảnh hưởng có thể có.
 - So sánh độ nhạy giữa các tài sản.
-- Xây dựng kịch bản có điều kiện và mức tin cậy.
+- Xây dựng kịch bản có điều kiện, chọn một kịch bản chính cho mỗi tài sản và ghi mức tin cậy.
 
 Track không tạo kế hoạch hoặc chiến lược giao dịch.
 
@@ -23,7 +23,7 @@ Track không tạo kế hoạch hoặc chiến lược giao dịch.
 - `Knowledge/`: mô hình tư vấn, dữ liệu cần thiết và đặc điểm từng tài sản.
 - `Workflows/`: quy trình tư vấn đầy đủ và tư vấn nhanh.
 - `Skills/`: mapping narrative và xác minh nguồn.
-- `Rules/`: intake, phạm vi, confidence và source record.
+- `Rules/`: intake, phạm vi, confidence, chọn kịch bản và source record.
 - `Data/`: event records, market snapshots, sources và advisory archive.
 
 ## Luồng
@@ -33,4 +33,5 @@ Track không tạo kế hoạch hoặc chiến lược giao dịch.
 3. Chụp market context tại một thời điểm rõ ràng.
 4. Xác định kênh ảnh hưởng.
 5. Lập ma trận tác động liên thị trường.
-6. Tổng hợp kịch bản, confidence và giới hạn.
+6. Xếp hạng một kịch bản chính cho mỗi tài sản; kịch bản thay thế chỉ kích hoạt sau điều kiện vô hiệu.
+7. Tổng hợp confidence, giới hạn và refresh trigger mà không đưa kết luận hai chiều.

@@ -1,0 +1,20 @@
+; IndiSingle Bob Volman H1 - baseline
+; 1R = 1% equity, SL outside signal candle, TP = 2R
+Inp_MagicNumber=20261007
+Inp_AllowBuy=true
+Inp_AllowSell=true
+Inp_RiskPercent=1.0
+Inp_TargetRR=2.0
+Inp_EntryExpiryBars=2
+Inp_CooldownBars=1
+Inp_MaxSpreadPoints=500
+Inp_MaxSpreadToRiskPct=15.0
+Inp_DrawAnnotations=true
+Inp_ShowStatusPanel=true
+Inp_EnableDDB=true
+Inp_EnableFB=true
+Inp_EnableSB=true
+Inp_EnableBB=true
+Inp_EnableRB=true
+Inp_EnableIRB=true
+Inp_EnableARB=true

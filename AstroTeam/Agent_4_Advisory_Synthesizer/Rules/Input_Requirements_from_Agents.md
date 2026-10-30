@@ -10,6 +10,7 @@
 - snapshot time;
 - nguồn và giới hạn;
 - confidence của từng lớp.
+- đúng một kịch bản chính đã xếp hạng cho mỗi tài sản, cùng điều kiện xác nhận, vô hiệu và trigger thay thế.
 
 ## Từ chối đầu vào khi
 
@@ -18,3 +19,4 @@
 - impact không có kênh giải thích;
 - chứa chiến lược hoặc chỉ dẫn giao dịch;
 - nhầm diễn giải chiêm tinh thành dữ kiện.
+- kết luận hai chiều hoặc không xếp hạng kịch bản khi bằng chứng đủ.

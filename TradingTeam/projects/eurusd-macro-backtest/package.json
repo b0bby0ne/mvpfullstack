@@ -1,0 +1,15 @@
+{
+  "name": "eurusd-macro-backtest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch": "node src/fetch_data.mjs",
+    "backtest": "node src/run_backtest.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "all": "npm run fetch && npm test && npm run backtest"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

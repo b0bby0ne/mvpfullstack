@@ -6,9 +6,10 @@ Dùng khi người dùng hỏi về một event gần thời điểm hiện tạ
 2. Chốt snapshot time của thị trường.
 3. Chọn tối đa 3-5 market drivers.
 4. Chọn các tài sản liên quan trực tiếp.
-5. Xây tối đa ba kịch bản.
-6. Nêu driver xác nhận và phủ định.
+5. Xây tối đa ba kịch bản và chọn đúng một kịch bản chính cho mỗi tài sản theo [Scenario Decision Rule](../Rules/Scenario_Decision_Rule.md).
+6. Ghi điều kiện xác nhận, điều kiện vô hiệu và trigger chuyển sang kịch bản thay thế.
 7. Gắn confidence và time sensitivity.
-8. Phát hành advisory ngắn.
+8. Kiểm tra phần kết luận không chứa hai hướng đối lập ngang hàng hoặc cụm từ `trung tính nghiêng`.
+9. Phát hành advisory ngắn.
 
 Không được bỏ qua bước xác minh nguồn chỉ vì yêu cầu cần nhanh.

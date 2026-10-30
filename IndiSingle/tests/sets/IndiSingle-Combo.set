@@ -1,0 +1,6 @@
+; IndiSingle baseline - Master Combo, single position
+Inp_EnableL1=true
+Inp_EnableL2=true
+Inp_EnableL3=true
+Inp_MaxPositions=1
+Inp_FastBacktest=true

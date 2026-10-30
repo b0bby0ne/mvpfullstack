@@ -1,0 +1,33 @@
+{
+  "asOf": "2026-09-23",
+  "startDate": "2004-09-06",
+  "priceSeriesStart": "1999-01-04",
+  "executionLagBars": 2,
+  "oneWayCostPips": 1.0,
+  "costSensitivityPips": [0, 0.5, 1.0, 2.0],
+  "carryDayCount": 360,
+  "fixedModel": {
+    "yieldMomentumLookback": 20,
+    "robustScaleWindow": 252,
+    "zEntry": 0.5,
+    "zExit": 0.25,
+    "trendSma": 200
+  },
+  "robustnessGrid": {
+    "yieldMomentumLookback": [10, 20, 40],
+    "robustScaleWindow": [126, 252, 504],
+    "zEntry": [0.25, 0.5, 1.0],
+    "trendSma": [100, 150, 200]
+  },
+  "bootstrap": {
+    "samples": 1000,
+    "blockLength": 20,
+    "seed": 24092026
+  },
+  "periods": {
+    "development": ["2004-09-06", "2018-12-31"],
+    "historicalHoldout": ["2019-01-01", "2026-09-23"],
+    "finalDiagnostic": ["2024-01-01", "2026-09-23"]
+  },
+  "runDirectory": "../../output/runs/eurusd_macro_backtest_2004_2026_2026_09_23"
+}

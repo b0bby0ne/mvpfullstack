@@ -1,0 +1,8 @@
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_DrawWyckoffAnnotations=false
+Inp_SBUseWyckoffElliottFilter=true
+Inp_DDBBlockBuyUpthrustExtended=true
+Inp_ExportExcursions=true
+Inp_ExcursionFileName=BobH1ContextM5-v175-SelectedTelemetry-2023-2026.csv
+Inp_PostExitBars=144

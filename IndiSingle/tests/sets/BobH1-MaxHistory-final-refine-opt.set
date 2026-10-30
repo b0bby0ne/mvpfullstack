@@ -1,0 +1,22 @@
+; Final narrow refinement on all available XAUUSDm history (2023.01.02-2026.09.27)
+Inp_RiskPercent=1.0||1.0||0.1||10.0||N
+Inp_TargetRR=2.5||2.25||0.25||3.0||Y
+Inp_EntryExpiryBars=2||2||1||2||N
+Inp_DrawAnnotations=false||false||0||true||N
+Inp_ShowStatusPanel=false||false||0||true||N
+Inp_EMAPeriod=25||25||1||250||N
+Inp_EMASlopeBars=4||4||1||4||N
+Inp_ATRPeriod=14||14||1||140||N
+Inp_MaxSignalRangeATR=1.25||1.0||0.25||1.5||Y
+Inp_EnableDDB=false||false||0||true||N
+Inp_EnableFB=false||false||0||true||N
+Inp_EnableSB=false||false||0||true||N
+Inp_EnableBB=false||false||0||true||N
+Inp_EnableRB=true||false||0||true||N
+Inp_EnableIRB=true||false||0||true||N
+Inp_EnableARB=false||false||0||true||N
+Inp_RangeBars=12||12||1||12||N
+Inp_RangeMinATR=0.8||0.8||0.1||0.8||N
+Inp_RangeMaxATR=2.75||2.5||0.25||3.0||Y
+Inp_MinRangeTouches=3||3||1||3||N
+Inp_EdgeZonePct=0.25||0.2||0.05||0.3||Y

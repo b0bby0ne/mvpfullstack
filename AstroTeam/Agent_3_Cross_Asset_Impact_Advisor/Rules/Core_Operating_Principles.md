@@ -7,3 +7,5 @@
 - Không đưa entry, exit, stop-loss, take-profit hoặc position sizing.
 - Không đề xuất long/short.
 - Mỗi nhận định phải có điều kiện xác nhận và phủ định.
+- Mỗi tài sản phải có đúng một kịch bản chính; driver đối trọng chỉ đóng vai trò rủi ro, điều kiện vô hiệu hoặc trigger thay thế.
+- Không kết luận `có thể tăng hoặc giảm`, `phản ứng hai chiều` hoặc `trung tính nghiêng`.

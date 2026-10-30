@@ -1,0 +1,15 @@
+Inp_DrawAnnotations=false
+Inp_ShowStatusPanel=false
+Inp_DrawWyckoffAnnotations=false
+Inp_BlockBars=6
+Inp_BlockMaxATR=1.00
+Inp_BBMinOverlapRatio=0.80
+Inp_BBMinPressureBars=2
+Inp_BBPressureZonePct=0.45
+Inp_BBMinSignalBodyRatio=0.00
+Inp_IRBRangeBars=8
+Inp_IRBRangeMinATR=0.80
+Inp_IRBRangeMaxATR=3.25
+Inp_IRBMinRangeTouches=2
+Inp_IRBEdgeZonePct=0.35
+Inp_IRBMaxCandleATR=1.00

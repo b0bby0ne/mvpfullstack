@@ -30,4 +30,6 @@ Mỗi kịch bản phải có:
 - yếu tố phủ định;
 - mức tin cậy.
 
+Mỗi tài sản phải chọn một kịch bản chính và đặt các kịch bản còn lại sau điều kiện vô hiệu. Driver đối trọng không được biến thành kết luận thứ hai có trọng số ngang nhau.
+
 Không dùng các nhãn `chắc chắn tăng` hoặc `chắc chắn giảm`.

@@ -83,3 +83,15 @@
 - Input: mở bộ `_Sample_Mercury_Direct_Oil_Gold`.
 - Kỳ vọng: năm file liên kết được với nhau và cùng ghi `Expired — sample only`.
 - Pass khi: mẫu thể hiện đủ nguồn, freshness, điều kiện xác nhận/phủ định, confidence và không có chỉ dẫn giao dịch.
+
+## TS-15: Loại bỏ kết luận hai chiều
+
+- Input: một tài sản có driver hỗ trợ và driver đối trọng cùng tồn tại.
+- Kỳ vọng: Agent 3 xếp hạng một kịch bản chính; driver đối trọng trở thành rủi ro, điều kiện vô hiệu hoặc trigger thay thế.
+- Pass khi: kết luận dùng cấu trúc `kịch bản chính → xác nhận → vô hiệu → thay thế` và không chứa `có thể tăng hoặc giảm`, `phản ứng hai chiều` hoặc `trung tính nghiêng`.
+
+## TS-16: Không đủ cơ sở xếp hạng
+
+- Input: nguồn mới nhất mâu thuẫn, không có driver nào đủ mạnh để xếp hạng.
+- Kỳ vọng: Agent 4 ghi `Chưa đủ cơ sở chọn kịch bản chính`, nêu dữ liệu thiếu và refresh trigger.
+- Pass khi: team không tạo kết luận hai chiều để lấp khoảng trống bằng chứng.

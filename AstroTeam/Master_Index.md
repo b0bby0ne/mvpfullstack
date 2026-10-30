@@ -65,6 +65,7 @@
 - [Kiểm tra độ đầy đủ đầu vào](./Financial_Market/Rules/Intake_Completeness_Rule.md)
 - [Scope Rule](./Financial_Market/Rules/Advisory_Scope_Rule.md)
 - [Confidence Rule](./Financial_Market/Rules/Evidence_and_Confidence_Rule.md)
+- [Scenario Decision Rule](./Financial_Market/Rules/Scenario_Decision_Rule.md)
 - [Anchor Rule](./Financial_Market/Rules/Anchor_Event_Confidence_Rule.md)
 - [Source Record](./Financial_Market/Rules/Source_Record_Template.md)
 - [Full Advisory Workflow](./Financial_Market/Workflows/Financial_Market_Advisory_Workflow.md)

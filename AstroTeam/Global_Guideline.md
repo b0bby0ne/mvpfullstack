@@ -86,6 +86,10 @@ Mỗi kịch bản phải có:
 
 Không dùng kịch bản như một dự báo chắc chắn.
 
+Mỗi tài sản phải có đúng một `Kịch bản chính` được xếp hạng cao nhất. Kịch bản thay thế chỉ được kích hoạt khi kịch bản chính bị vô hiệu; không kết luận hai chiều hoặc đặt hai hướng đối lập ngang hàng. Áp dụng [Scenario Decision Rule](./Financial_Market/Rules/Scenario_Decision_Rule.md).
+
+Nếu bằng chứng không đủ để chọn một kịch bản chính, ghi `Chưa đủ cơ sở chọn kịch bản chính` và nêu dữ liệu cần bổ sung; không thay bằng kết luận mơ hồ hai chiều.
+
 ## 9. Confidence
 
 - `Cao`: event, bối cảnh và kênh ảnh hưởng cùng hội tụ.

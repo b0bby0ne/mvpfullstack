@@ -6,7 +6,9 @@ Handoff phải có:
 - kênh ảnh hưởng;
 - ma trận tác động;
 - các kịch bản có điều kiện;
-- biến xác nhận và phủ định;
+- một kịch bản chính đã xếp hạng cho mỗi tài sản;
+- biến xác nhận, điều kiện vô hiệu và trigger kịch bản thay thế;
+- kết luận kịch bản một chiều, không dùng `trung tính nghiêng` hoặc hai hướng ngang hàng;
 - confidence;
 - điều không thể kết luận;
 - giới hạn.

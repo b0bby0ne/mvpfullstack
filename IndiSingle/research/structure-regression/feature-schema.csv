@@ -1,0 +1,80 @@
+feature_group,feature_name,frequency,causal_lag_rule,preferred_source,available_local,priority,notes
+identity,trade_id,trade,at signal,EA telemetry,partial,P0,Unique stable identifier
+identity,setup,trade,at signal,EA telemetry,yes,P0,DDB FB SB BB RB IRB ARB
+identity,wyckoff_event,trade,at signal,EA telemetry,yes,P0,SPRING UPTHRUST SOS SOW TEST LPS LPSY
+identity,direction,trade,at signal,EA telemetry,yes,P0,BUY or SELL
+price,ret_1h,H1,last closed bar,XAUUSD H1,no,P0,Log return
+price,ret_4h,H1,last closed bar,XAUUSD H1,no,P0,Past-only cumulative return
+price,ret_24h,H1,last closed bar,XAUUSD H1,no,P0,Past-only cumulative return
+price,atr14_pct,H1,last closed bar,XAUUSD H1,no,P0,ATR divided by close
+price,atr_percentile_252,H1,past 252 closed bars,XAUUSD H1,no,P0,Rolling percentile fit from past only
+price,realized_vol_24h,H1,past 24 closed bars,XAUUSD H1,no,P1,Annualization not required
+price,ema_slope_fast_atr,H1,last closed bar,XAUUSD H1,no,P0,EMA slope normalized by ATR
+price,ema_slope_slow_atr,H1,last closed bar,XAUUSD H1,no,P0,EMA slope normalized by ATR
+price,adx14,H1,last closed bar,XAUUSD H1,no,P0,Trend strength
+price,rolling_slope_r2_24,H1,past 24 closed bars,XAUUSD H1,no,P1,Trend quality
+price,swing_state,H1,confirmed swings only,XAUUSD H1,no,P0,HH_HL LH_LL RANGE
+price,bos_direction,H1,confirmed close only,XAUUSD H1,no,P1,Bull bear none
+price,bars_since_bos,H1,confirmed close only,XAUUSD H1,no,P1,Regime age
+price,range_position_50,H1,past 50 closed bars,XAUUSD H1,no,P0,Zero low to one high
+price,compression_percentile,H1,past-only rolling window,XAUUSD H1,no,P0,Range or bandwidth percentile
+price,body_range_ratio,H1,signal bar closed,XAUUSD H1,no,P1,Candle anatomy
+price,upper_wick_ratio,H1,signal bar closed,XAUUSD H1,no,P1,Candle anatomy
+price,lower_wick_ratio,H1,signal bar closed,XAUUSD H1,no,P1,Candle anatomy
+price,h4_trend_state,H4,last closed H4 bar,XAUUSD H4,no,P0,Multi-timeframe context
+price,d1_trend_state,D1,last closed D1 bar,XAUUSD D1,no,P0,Multi-timeframe context
+location,dist_prior_day_high_atr,H1,previous completed day,XAUUSD,no,P0,Signed distance
+location,dist_prior_day_low_atr,H1,previous completed day,XAUUSD,no,P0,Signed distance
+location,dist_prior_week_high_atr,H1,previous completed week,XAUUSD,no,P1,Signed distance
+location,dist_prior_week_low_atr,H1,previous completed week,XAUUSD,no,P1,Signed distance
+location,dist_asia_high_atr,H1,completed Asia range only,XAUUSD,no,P0,Missing before range completion
+location,dist_asia_low_atr,H1,completed Asia range only,XAUUSD,no,P0,Missing before range completion
+location,vwap_distance_atr,intraday,up to signal only,GC futures preferred,no,P1,Do not use end-of-day VWAP
+location,value_area_state,daily,prior completed profile,GC futures,no,P2,Above inside below
+liquidity,xau_tick_volume_z,H1,past-only rolling window,MT5 XAUUSD,no,P1,Broker-specific proxy
+liquidity,gc_relative_volume,intraday,up to matching timestamp,GC futures,no,P0,Centralized traded volume
+liquidity,gc_open_interest_change,daily,last released value,GC futures,no,P0,Respect publication timestamp
+liquidity,gc_volume_oi_ratio,daily,last released value,GC futures,no,P1,Participation versus stock
+liquidity,spot_future_basis_bps,intraday,matching timestamp,XAU and GC,no,P0,Adjust contract and FX units
+liquidity,calendar_spread_z,intraday,matching timestamp,GC futures curve,no,P1,Handle contract roll
+liquidity,trade_delta_z,intraday,up to signal only,GC trades,no,P2,Requires aggressor classification
+liquidity,book_imbalance,intraday,at or before signal,GC order book,no,P2,Depth source required
+options,atm_iv,daily_or_intraday,last available snapshot,Gold options,no,P2,No backward fill
+options,iv_rank_252,daily,past-only window,Gold options,no,P2,Historical percentile
+options,iv_term_slope,daily,last available snapshot,Gold options,no,P2,Near minus deferred IV
+options,risk_reversal_25d,daily,last available snapshot,Gold options,no,P2,Skew proxy
+options,put_call_oi_ratio,daily,last released value,Gold options,no,P2,Separate volume and OI
+options,dist_gamma_cluster_atr,daily,last available snapshot,Gold options,no,P2,Methodology must be stable
+options,days_to_expiry,daily,calendar known at signal,Exchange calendar,no,P2,Include expiry flag
+intermarket,dxy_ret_1h,H1,last closed aligned bar,DXY or DX futures,no,P0,Align timezone
+intermarket,dxy_ret_24h,H1,last closed aligned bar,DXY or DX futures,no,P0,Past-only return
+intermarket,dxy_vol_z,H1,past-only rolling window,DXY or DX futures,no,P1,USD regime
+intermarket,xau_dxy_corr_60,H1,past 60 aligned bars,XAU and DXY,no,P0,Rolling correlation
+intermarket,xau_dxy_beta_60,H1,past 60 aligned bars,XAU and DXY,no,P1,Rolling beta
+intermarket,xau_dxy_residual_z,H1,model fit on past only,XAU and DXY,no,P0,Divergence measure
+macro,real_yield_10y_change,daily,last released observation,FRED or market source,no,P0,TIPS real yield
+macro,nominal_yield_10y_change,daily,last released observation,Treasury or market,no,P1,Rates context
+macro,breakeven_10y_change,daily,last released observation,FRED or market source,no,P1,Inflation component
+macro,rate_vol_z,daily,last available close,Rates volatility source,no,P2,MOVE or equivalent
+macro,vix_change,daily,last available close,VIX,no,P1,Risk regime
+positioning,cot_managed_money_z,weekly,release timestamp not position date,CFTC,no,P2,Never leak Tuesday value before release
+positioning,gold_etf_flow_z,daily,last published value,ETF provider,no,P2,Publication lag required
+session,signal_hour_utc,trade,convert broker time using DST table,Calendar mapping,no,P0,Do not assume server offset constant
+session,session_name,trade,derived from UTC,Calendar mapping,no,P0,Asia London NY overlap
+session,day_of_week,trade,known at signal,Calendar,no,P1,Cyclical encoding optional
+session,minutes_to_high_impact_event,trade,next event known then,Economic calendar,no,P0,Calendar snapshot should be vintage-safe
+session,minutes_since_high_impact_event,trade,last released event,Economic calendar,no,P0,Use actual release time
+session,is_comex_open_window,trade,exchange calendar and DST,Exchange calendar,no,P1,Fixed window definition
+session,is_london_fix_window,trade,calendar and DST,Calendar,no,P1,Fixed window definition
+execution,spread_points,trade,at signal or fill,MT5 ticks,no,P0,Observed not configured spread
+execution,spread_over_initial_risk,trade,at fill,MT5 ticks,no,P0,Comparable across volatility regimes
+execution,slippage_points,trade,requested versus fill,MT5 deals,no,P0,Separate entry and exit
+execution,tick_density_5m,trade,before signal,MT5 ticks,no,P1,Data and activity proxy
+execution,history_quality,run,known from tester,MT5 report,yes,P0,Control or exclusion field
+target,win,trade,after exit,EA telemetry,yes,P0,One if exit_r positive
+target,target_before_stop,trade,after exit,EA telemetry,partial,P0,Use real ticks when intrabar order matters
+target,exit_r,trade,after exit,EA telemetry,yes,P0,Net R preferred
+target,mfe_r,trade,entry to exit,EA telemetry,yes,P0,Favorable excursion
+target,mae_r,trade,entry to exit,EA telemetry,yes,P0,Adverse excursion stored as positive magnitude
+target,time_to_exit_minutes,trade,after exit,EA telemetry,yes,P1,Survival target
+target,post_best_r,trade,fixed window after exit,EA telemetry,yes,P1,Diagnostic only never a feature
