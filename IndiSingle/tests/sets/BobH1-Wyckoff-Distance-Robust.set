@@ -1,9 +1,0 @@
-Inp_DrawAnnotations=false
-Inp_ShowStatusPanel=false
-Inp_DrawWyckoffAnnotations=false
-Inp_DDBWyckoffMaxDistanceATR=0.75
-Inp_SBWyckoffMaxDistanceATR=1.50
-Inp_BBWyckoffMaxDistanceATR=0.00
-Inp_ARBWyckoffMaxDistanceATR=3.00
-Inp_SBUseBreakEven=false
-Inp_BBUseBreakEven=false

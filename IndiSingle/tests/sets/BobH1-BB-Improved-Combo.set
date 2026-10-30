@@ -1,9 +1,0 @@
-Inp_DrawAnnotations=false
-Inp_ShowStatusPanel=false
-Inp_DrawWyckoffAnnotations=false
-Inp_BlockBars=6
-Inp_BlockMaxATR=1.00
-Inp_BBMinOverlapRatio=0.80
-Inp_BBMinPressureBars=2
-Inp_BBPressureZonePct=0.45
-Inp_BBMinSignalBodyRatio=0.00

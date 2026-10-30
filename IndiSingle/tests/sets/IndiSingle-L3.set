@@ -1,6 +1,0 @@
-; IndiSingle baseline - L3 only, single position
-Inp_EnableL1=false
-Inp_EnableL2=false
-Inp_EnableL3=true
-Inp_MaxPositions=1
-Inp_FastBacktest=true
